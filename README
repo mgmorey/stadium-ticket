@@ -1,0 +1,30 @@
+Stadium Ticket RESTful API for Linux/Unix
+
+0.  To install Prerequisites:
+
+    apt install apache2-utils mariadb mariddb-client python3	# Debian/Ubuntu
+    dnf install apache2-utils mariadb mariddb-client python3	# Fedora
+    pkg install apache2-utils mariadb mariddb-client python3	# BSD/Illumos
+    yum install apache2-utils mariadb mariddb-client python3	# CentOS/RHEL
+    zypper install apache2-utils mariadb mariddb-client python3	# openSUSE/SLED/SLES
+    ./install-prequisites
+
+1.  To initialize database:
+
+    mysql -p <schema.sql
+
+2.  To run unit tests:
+
+    ./test_tickets.py
+
+3.  To start API:
+
+    ./app.py
+
+4.  To test API:
+
+    ./test-app.sh
+
+5.  To load test API:
+
+    ./load-test.sh
