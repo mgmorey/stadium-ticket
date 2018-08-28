@@ -6,7 +6,7 @@ Stadium Ticket RESTful API for Linux/Unix
     dnf install apache2-utils mariadb python3 python3-flask python3-PyMySQL python3-sqlalchemy		# Fedora
     pkg install apache-24 mariadb-101 python-34 pip-34 sqlalchemy		# BSD/Illumos
     yum install apache2-utils mariadb python3		# CentOS/RHEL
-    zypper install apache2-utils mariadb python3	# openSUSE/SLED/SLES
+    sudo zypper install apache2-utils mariadb python3 python3-Flask python3-PyMySQL python3-sqlalchemy	# openSUSE/SLED/SLES
     ./install-prequisites
 
 1.  To initialize database:
