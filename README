@@ -1,6 +1,6 @@
 Stadium Ticket RESTful API for Linux/Unix
 
-0.  To install Prerequisites:
+0.  To install prerequisites:
 
     apt install apache2-utils mariadb python3		# Debian/Ubuntu
     dnf install apache2-utils mariadb python3 python3-PyMySQL python3-flask python3-sqlalchemy	# Fedora
