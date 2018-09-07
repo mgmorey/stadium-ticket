@@ -44,8 +44,10 @@ class Tickets(object):
             if last_serial + count > Tickets.MAX_NUMBER:
                 raise SoldOut(Tickets.FMT_NUMBER.format(Tickets.MAX_NUMBER))
 
-        event.sold = event.sold + count
+        sold = event.sold
+        event.sold = sold + count
         session.commit()
+        return sold, count
 
     @staticmethod
     def last_serial(event_name: str) -> int:
@@ -62,8 +64,7 @@ class Tickets(object):
         pass
 
     def __init__(self, event: str, count: int = 1):
-        last_serial = Tickets.last_serial(event)
-        Tickets.generate_serial(event, count)
+        last_serial, count = Tickets.generate_serial(event, count)
         self._count = count
         self._event = event
         self._issue = datetime.datetime.utcnow()
