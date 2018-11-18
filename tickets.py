@@ -33,7 +33,6 @@ class SoldOut(Exception):
 
 class Tickets(object):
     EVENTS = 'events.json'
-    FMT_NUMBER = 'maximum serial number: {}'
     MAX_NUMBER = 1000
 
     # events = {}
@@ -46,7 +45,7 @@ class Tickets(object):
 
         if Tickets.MAX_NUMBER is not None:
             if last_serial + count > Tickets.MAX_NUMBER:
-                raise SoldOut(Tickets.FMT_NUMBER.format(Tickets.MAX_NUMBER))
+                raise SoldOut(f"maximum serial number: {Tickets.MAX_NUMBER}")
 
         sold = event.sold
         event.sold = sold + count
