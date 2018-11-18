@@ -7,10 +7,9 @@ from flask import Flask, abort, jsonify, request
 
 from tickets import Tickets
 
-Tickets.MAX_NUMBER = None
-
 MAX_COUNT = 10
 MIN_COUNT = 1
+Tickets.MAX_NUMBER = None
 
 app = Flask(__name__)
 
