@@ -1,6 +1,9 @@
 #!/bin/sh
 
 HEADER="Content-Type: application/json"
-TICKET=http://localhost:5000/stadium/ticket
+HOST=localhost
+PORT=5000
 
-ab -H "$HEADER" -u put.json -n 1000 -r -c 10 $TICKET
+URL=http://$HOST:$PORT/stadium/ticket
+
+ab -H "$HEADER" -u put.json -n 1000 -r -c 10 $URL
