@@ -36,10 +36,7 @@ class SoldOut(Exception):
 
 
 class Tickets(object):
-    EVENTS = 'events.json'
     MAX_NUMBER = 1000
-
-    # events = {}
 
     @staticmethod
     def generate_serial(event_name: str, count: int = 1):
