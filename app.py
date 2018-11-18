@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from flask import Flask
-from flask import abort
-from flask import jsonify
-from flask import request
+import logging
 
-import tickets
+from flask import Flask, abort, jsonify, request
+
+from tickets import Tickets
+
+Tickets.MAX_NUMBER = None
 
 MAX_COUNT = 10
 MIN_COUNT = 1
 
 app = Flask(__name__)
-
-tickets.MAX_NUMBER = None
 
 
 @app.route('/stadium/ticket', methods=['PUT'])
@@ -28,9 +27,10 @@ def request_ticket():
         abort(400)
 
     try:
-        t = tickets.Tickets(request.json['event'])
+        t = Tickets(request.json['event'])
     except Exception as e:
-        abort(400)
+        logging.exception("Error requesting ticket: %s", str(e))
+        abort(500)
     return jsonify({'ticket_number': t.serial,
                     'time': t.issue})
 
@@ -58,13 +58,16 @@ def request_tickets():
     count = min(count, MAX_COUNT)
 
     try:
-        t = tickets.Tickets(request.json['event'], count)
+        t = Tickets(request.json['event'], count)
     except Exception as e:
-        abort(400)
+        logging.exception("Error requesting ticket: %s", str(e))
+        abort(500)
     return jsonify({'ticket_number': t.serial,
                     'ticket_count': t.count,
                     'time': t.issue})
 
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',
+                        level=logging.DEBUG)
     app.run(debug=True)
