@@ -24,29 +24,27 @@ session = scoped_session(session_obj)
 Base.metadata.bind = engine
 
 
-class Event(Base):
-    __tablename__ = 'events'
-    name = Column(String(32), primary_key=True)
-    sold = Column(Integer, nullable=False)
-    total = Column(Integer, nullable=False)
-
-
-class SoldOut(Exception):
-    pass
-
-
 class Tickets(object):
     MAX_NUMBER = 1000
 
+    class Event(Base):
+        __tablename__ = 'events'
+        name = Column(String(32), primary_key=True)
+        sold = Column(Integer, nullable=False)
+        total = Column(Integer, nullable=False)
+
+    class SoldOut(Exception):
+        pass
+
     @staticmethod
     def generate_serial(event_name: str, count: int = 1):
-        query = session.query(Event)
-        event = query.filter(Event.name == event_name).first()
+        query = session.query(Tickets.Event)
+        event = query.filter(Tickets.Event.name == event_name).first()
         last_serial = event.sold
 
         if Tickets.MAX_NUMBER is not None:
             if last_serial + count > Tickets.MAX_NUMBER:
-                raise SoldOut(f"maximum serial number: {Tickets.MAX_NUMBER}")
+                raise Tickets.SoldOut(f"maximum serial number: {Tickets.MAX_NUMBER}")
 
         sold = event.sold
         event.sold = sold + count
@@ -55,8 +53,8 @@ class Tickets(object):
 
     @staticmethod
     def last_serial(event_name: str) -> int:
-        query = session.query(Event)
-        event = query.filter(Event.name == event_name).first()
+        query = session.query(Tickets.Event)
+        event = query.filter(Tickets.Event.name == event_name).first()
         return event.sold
 
     @staticmethod

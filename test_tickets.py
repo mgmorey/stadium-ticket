@@ -33,7 +33,7 @@ class TestTicketsMethods(unittest.TestCase):
 
     def sell_out_tickets(self, event: str, count: int = 1):
         tickets.Tickets.MAX_NUMBER = 0
-        with self.assertRaises(tickets.SoldOut):
+        with self.assertRaises(tickets.Tickets.SoldOut):
             t = tickets.Tickets(event, count)
 
     def test_sell_event_1_ticket(self):
