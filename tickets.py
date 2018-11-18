@@ -12,14 +12,14 @@ DRIVER = 'pymysql'
 HOST = 'localhost'
 SCHEMA = 'stadium-tickets'
 
-URL = (f"{DIALECT}+{DRIVER}://{os.getenv('USER')}:" +
-       f"{os.getenv('MYSQL_PASSWORD')}@" +
-       f"{HOST}/{SCHEMA}")
-
-Base = declarative_base()
-engine = create_engine(URL)
+connection = (f"{DIALECT}+{DRIVER}://{os.getenv('USER')}:" +
+              f"{os.getenv('MYSQL_PASSWORD')}@" +
+              f"{HOST}/{SCHEMA}")
+engine = create_engine(connection)
 session_obj = sessionmaker(bind=engine)
 session = scoped_session(session_obj)
+
+Base = declarative_base()
 Base.metadata.bind = engine
 
 
