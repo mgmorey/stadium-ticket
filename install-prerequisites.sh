@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -u
 
 # install-prereuisites: install prerequisites
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
