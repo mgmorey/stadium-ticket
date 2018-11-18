@@ -2,15 +2,19 @@
 
 import datetime
 import json
+import os
 
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
+URL = (f"mysql+pymysql://{os.getenv('USER')}:" +
+       f"{os.getenv('MYSQL_PASSWORD')}@" +
+       f"localhost/stadium-tickets")
+
 Base = declarative_base()
-engine = create_engine("mysql+pymysql://mgmorey:Front.242!"
-                       "@localhost/stadium-tickets")
+engine = create_engine(URL)
 session_obj = sessionmaker(bind=engine)
 session = scoped_session(session_obj)
 Base.metadata.bind = engine
