@@ -9,9 +9,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-URL = (f"mysql+pymysql://{os.getenv('USER')}:" +
+DIALECT = 'mysql'
+DRIVER = 'pymysql'
+HOST = 'localhost'
+SCHEMA = 'stadium-tickets'
+
+URL = (f"{DIALECT}+{DRIVER}://{os.getenv('USER')}:" +
        f"{os.getenv('MYSQL_PASSWORD')}@" +
-       f"localhost/stadium-tickets")
+       f"{HOST}/{SCHEMA}")
 
 Base = declarative_base()
 engine = create_engine(URL)
