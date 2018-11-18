@@ -60,7 +60,7 @@ def request_tickets():
     try:
         t = Tickets(request.json['event'], count)
     except Exception as e:
-        logging.exception("Error requesting ticket: %s", str(e))
+        logging.exception("Error requesting tickets: %s", str(e))
         abort(500)
     return jsonify({'ticket_number': t.serial,
                     'ticket_count': t.count,
