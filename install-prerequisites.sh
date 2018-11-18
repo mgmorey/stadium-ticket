@@ -18,8 +18,7 @@
 
 DEBIAN_PKGS="apache2-utils mariadb-server python3 python3-pip python3-flask \
 python3-pymysql python3-sqlalchemy"
-FEDORA_PKGS="apache2-utils mariadb python3 python3-flask python3-PyMySQL \
-python3-sqlalchemy"
+FEDORA_PKGS="mariadb python3 python3-flask python3-PyMySQL python3-sqlalchemy"
 FREEBSD_PKGS="apache24 mysql56-server python3 py36-pip py36-Flask py36-pymysql \
 py36-sqlalchemy"
 ILLUMOS_PKGS="apache-24 mariadb-101 python-34 pip-34 sqlalchemy"
@@ -41,7 +40,7 @@ case "$kernel_name" in
 		sudo apt-get install "$@" $DEBIAN_PKGS
 		;;
 	    (fedora)
-		sudo dnf install "$@" $DEBIAN_PKGS
+		sudo dnf install "$@" $FEDORA_PKGS
 		;;
 	    (opensuse-*)
 		sudo zypper install "$@" $SUSE_PKGS
