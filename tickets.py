@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import json
 import os
 
 from sqlalchemy import Column, Integer, String, create_engine
@@ -44,7 +43,8 @@ class Tickets(object):
 
         if Tickets.MAX_NUMBER is not None:
             if last_serial + count > Tickets.MAX_NUMBER:
-                raise Tickets.SoldOut(f"maximum serial number: {Tickets.MAX_NUMBER}")
+                raise Tickets.SoldOut("maximum serial number: " +
+                                      f"{Tickets.MAX_NUMBER}")
 
         sold = event.sold
         event.sold = sold + count
