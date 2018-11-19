@@ -16,16 +16,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="apache2-utils mariadb-server python3 \
-python3-flask python3-pip python3-pymysql python3-sqlalchemy"
-FEDORA_PKGS="httpd-tools mariadb python3 \
-python3-flask python3-pip python3-PyMySQL python3-sqlalchemy"
-FREEBSD_PKGS="apache24 mysql56-server python3 \
-py36-Flask py36-pip py36-pymysql py36-sqlalchemy12"
-ILLUMOS_PKGS="apache-24 mariadb-101 python-34 \
-pip-34 sqlalchemy-34"
-SUSE_PKGS="apache2-utils mariadb python3 \
-python3-Flask python3-PyMySQL python3-sqlalchemy"
+DEBIAN_PKGS="apache2-utils mariadb-server python3 python3-pip \
+python3-pymysql python3-sqlalchemy python3-flask"
+
+FEDORA_PKGS="httpd-tools mariadb python3 python3-pip \
+python3-PyMySQL python3-sqlalchemy python3-flask"
+
+FREEBSD_PKGS="apache24 mysql56-server python3 py36-pip \
+py36-pymysql py36-sqlalchemy12 py36-Flask"
+
+ILLUMOS_PKGS="apache-24 mariadb-101 python-34 pip-34 \
+sqlalchemy-34"
+
+SUSE_PKGS="apache2-utils mariadb python3 python3-pip \
+python3-PyMySQL python3-SQLAlchemy python3-Flask"
 
 abort() {
     printf "$@" >&2
