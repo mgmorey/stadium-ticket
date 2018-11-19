@@ -16,8 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-prerequisites=$(sh get-prerequisites.sh)
-install-packages "$@" $prerequisites
+prerequisites=$(sh get-prerequisites.sh | sort)
+
+if [ -n "$prerequisites" ]; then
+    install-packages "$@" $prerequisites
+fi
 
 if [ -r requirements.txt ]; then
     python3 -m pip install --user -r requirements.txt
