@@ -23,7 +23,7 @@ python3-flask python3-pip python3-PyMySQL python3-sqlalchemy"
 FREEBSD_PKGS="apache24 mysql56-server python3 \
 py36-Flask py36-pip py36-pymysql py36-sqlalchemy12"
 ILLUMOS_PKGS="apache-24 mariadb-101 python-34 \
-pip-34 sqlalchemy"
+pip-34 sqlalchemy-34"
 SUSE_PKGS="apache2-utils mariadb python3 \
 python3-Flask python3-PyMySQL python3-sqlalchemy"
 
