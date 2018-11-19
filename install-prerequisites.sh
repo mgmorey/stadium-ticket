@@ -25,11 +25,11 @@ python3-PyMySQL python3-sqlalchemy python3-flask"
 FREEBSD_PKGS="apache24 mysql56-server python3 py36-pip \
 py36-pymysql py36-sqlalchemy12 py36-Flask"
 
-ILLUMOS_PKGS="apache-24 mariadb-101 python-34 pip-34 \
-sqlalchemy-34"
-
-SUSE_PKGS="apache2-utils mariadb python3 python3-pip \
+OPENSUSE_PKGS="apache2-utils mariadb python3 python3-pip \
 python3-PyMySQL python3-SQLAlchemy python3-Flask"
+
+SUNOS_PKGS="apache-24 mariadb-101 python-34 pip-34 \
+sqlalchemy-34"
 
 abort() {
     printf "$@" >&2
@@ -49,7 +49,7 @@ case "$kernel_name" in
 		sudo dnf install "$@" $FEDORA_PKGS
 		;;
 	    (opensuse-*)
-		sudo zypper install "$@" $SUSE_PKGS
+		sudo zypper install "$@" $OPENSUSE_PKGS
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
@@ -60,7 +60,7 @@ case "$kernel_name" in
 	sudo pkg install "$@" $FREEBSD_PKGS
 	;;
     (SunOS)
-	sudo pkg install "$@" $ILLUMOS_PKGS
+	sudo pkg install "$@" $SUNOS_PKGS
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
