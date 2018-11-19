@@ -16,56 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_DBMS="mariadb-server python3-pymysql python3-sqlalchemy"
-DEBIAN_PKGS="apache2-utils python3 python3-pip $DEBIAN_DBMS python3-flask"
-
-FEDORA_DBMS="mariadb python3-PyMySQL python3-sqlalchemy"
-FEDORA_PKGS="httpd-tools python3 python3-pip $FEDORA_DBMS python3-flask"
-
-FREEBSD_DBMS="mysql56-server py36-pymysql py36-sqlalchemy12"
-FREEBSD_PKGS="apache24 python3 py36-pip $FREEBSD_DBMS py36-Flask"
-
-OPENSUSE_DBMS="mariadb python3-PyMySQL python3-SQLAlchemy"
-OPENSUSE_PKGS="apache2-utils python3 python3-pip $OPENSUSE_DBMS python3-Flask"
-
-SUNOS_DBMS="mariadb-101 sqlalchemy-34"
-SUNOS_PKGS="apache-24 python-34 pip-34 $SUNOS_DBMS"
-
-abort() {
-    printf "$@" >&2
-    exit 1
-}
-
-distro_name=$(get-os-distro-name)
-kernel_name=$(get-os-kernel-name)
-
-case "$kernel_name" in
-    (Linux)
-	case "$distro_name" in
-	    (debian|ubuntu)
-		sudo apt-get install "$@" $DEBIAN_PKGS
-		;;
-	    (fedora)
-		sudo dnf install "$@" $FEDORA_PKGS
-		;;
-	    (opensuse-*)
-		sudo zypper install "$@" $OPENSUSE_PKGS
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
-		;;
-	esac
-	;;
-    (FreeBSD)
-	sudo pkg install "$@" $FREEBSD_PKGS
-	;;
-    (SunOS)
-	sudo pkg install "$@" $SUNOS_PKGS
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
-	;;
-esac
+prerequisites=$(sh get-prerequisites.sh)
+install-packages "$@" $prerequisites
 
 if [ -r requirements.txt ]; then
     python3 -m pip install --user -r requirements.txt
