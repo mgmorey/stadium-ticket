@@ -67,4 +67,6 @@ case "$kernel_name" in
 	;;
 esac
 
-python3 -m pip install --user -r requirements.txt
+if [ -r requirements.txt ]; then
+    python3 -m pip install --user -r requirements.txt
+fi
