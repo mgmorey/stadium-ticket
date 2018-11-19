@@ -43,13 +43,13 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian|ubuntu)
-		printf "$DEBIAN_PKGS"
+		printf "%s\n" $DEBIAN_PKGS
 		;;
 	    (fedora)
-		printf "$FEDORA_PKGS"
+		printf "%s\n" $FEDORA_PKGS
 		;;
 	    (opensuse-*)
-		printf "$OPENSUSE_PKGS"
+		printf "%s\n" $OPENSUSE_PKGS
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
@@ -57,10 +57,10 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD)
-	printf "$FREEBSD_PKGS"
+	printf "%s\n" $FREEBSD_PKGS
 	;;
     (SunOS)
-	printf "$SUNOS_PKGS"
+	printf "%s\n" $SUNOS_PKGS
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
