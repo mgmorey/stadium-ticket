@@ -16,20 +16,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="apache2-utils mariadb-server python3 python3-pip \
-python3-pymysql python3-sqlalchemy python3-flask"
+DEBIAN_DBMS="mariadb-server python3-pymysql python3-sqlalchemy"
+DEBIAN_PKGS="apache2-utils python3 python3-pip $DEBIAN_DBMS python3-flask"
 
-FEDORA_PKGS="httpd-tools mariadb python3 python3-pip \
-python3-PyMySQL python3-sqlalchemy python3-flask"
+FEDORA_DBMS="mariadb python3-PyMySQL python3-sqlalchemy"
+FEDORA_PKGS="httpd-tools python3 python3-pip $FEDORA_DBMS python3-flask"
 
-FREEBSD_PKGS="apache24 mysql56-server python3 py36-pip \
-py36-pymysql py36-sqlalchemy12 py36-Flask"
+FREEBSD_DBMS="mysql56-server py36-pymysql py36-sqlalchemy12"
+FREEBSD_PKGS="apache24 python3 py36-pip $FREEBSD_DBMS py36-Flask"
 
-OPENSUSE_PKGS="apache2-utils mariadb python3 python3-pip \
-python3-PyMySQL python3-SQLAlchemy python3-Flask"
+OPENSUSE_DBMS="mariadb python3-PyMySQL python3-SQLAlchemy"
+OPENSUSE_PKGS="apache2-utils python3 python3-pip $OPENSUSE_DBMS python3-Flask"
 
-SUNOS_PKGS="apache-24 mariadb-101 python-34 pip-34 \
-sqlalchemy-34"
+SUNOS_DBMS="mariadb-101 sqlalchemy-34"
+SUNOS_PKGS="apache-24 python-34 pip-34 $SUNOS_DBMS"
 
 abort() {
     printf "$@" >&2
