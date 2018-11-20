@@ -59,14 +59,6 @@ class Tickets(object):
         event = query.filter(Tickets.Events.name == event_name).first()
         return event.sold
 
-    @staticmethod
-    def load():
-        pass
-
-    @staticmethod
-    def save():
-        pass
-
     def __init__(self, event: str, count: int = 1):
         last_serial, count = Tickets.generate_serial(event, count)
         self._count = count
