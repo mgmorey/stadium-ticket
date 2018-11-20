@@ -16,11 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-prerequisites=$(sh get-prerequisites.sh | sort)
+kernel_name=$(get-os-kernel-name)
 
-if [ -n "$prerequisites" ]; then
-    install-packages "$@" $prerequisites
-fi
+case "$kernel_name" in
+    (Linux|FreeBSD|SunOS)
+	prerequisites=$(sh get-prerequisites.sh | sort)
+
+	if [ -n "$prerequisites" ]; then
+	    install-packages "$@" $prerequisites
+	fi
+	;;
+esac
 
 if [ -r requirements.txt ]; then
     python3 -m pip install --user -r requirements.txt
