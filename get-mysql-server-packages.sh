@@ -18,7 +18,7 @@
 
 CENTOS_PKGS="mariadb"
 
-DEBIAN_PKGS="mariadb-server"
+DEBIAN_PKGS="mariadb-server-10.1"
 
 FEDORA_PKGS="mariadb"
 

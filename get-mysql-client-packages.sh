@@ -18,7 +18,7 @@
 
 CENTOS_PKGS="mariadb"
 
-DEBIAN_PKGS="mariadb-client python3-pymysql python3-sqlalchemy"
+DEBIAN_PKGS="mariadb-client-10.1 python3-pymysql python3-sqlalchemy"
 
 FEDORA_PKGS="mariadb python3-PyMySQL python3-sqlalchemy"
 
