@@ -14,9 +14,10 @@ HOST = 'localhost'
 SCHEMA = 'stadium-tickets'
 
 connection = CONNECTION.format(DIALECT, DRIVER,
-                               os.getenv('USER'),
+                               os.getenv('MYSQL_USER', os.getenv('USER')),
                                os.getenv('MYSQL_PASSWORD'),
-                               HOST, SCHEMA)
+                               os.getenv('MYSQL_HOST', HOST),
+                               SCHEMA)
 engine = create_engine(connection)
 session_obj = sessionmaker(bind=engine)
 session = scoped_session(session_obj)
