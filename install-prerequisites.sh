@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+PYTHON=python3
+
 kernel_name=$(get-os-kernel-name)
 
 case "$kernel_name" in
@@ -28,6 +30,10 @@ case "$kernel_name" in
 	;;
 esac
 
-if [ -r requirements.txt ]; then
-    python3 -m pip install --user -r requirements.txt
+$PYTHON -m pip install --user pipenv
+
+if [ -r Pipfile ]; then
+    pipenv update
+elif [ -r requirements.txt ]; then
+    $PYTHON -m pip install --user -r requirements.txt
 fi
