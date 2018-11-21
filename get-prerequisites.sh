@@ -16,4 +16,5 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-(./get-httpd-python-packages.sh && ./get-mysql-client-packages.sh) | sort
+./get-httpd-python-packages.sh
+./get-mysql-client-packages.sh
