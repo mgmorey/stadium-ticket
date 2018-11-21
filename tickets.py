@@ -1,29 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import os
 
 from sqlalchemy import Column, Integer, String, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
 
-CONNECTION = "{0}+{1}://{2}:{3}@{4}/{5}"
-DIALECT = 'mysql'
-DRIVER = 'pymysql'
-HOST = 'localhost'
-SCHEMA = 'stadium-tickets'
-
-connection = CONNECTION.format(DIALECT, DRIVER,
-                               os.getenv('MYSQL_USER', os.getenv('USER')),
-                               os.getenv('MYSQL_PASSWORD'),
-                               os.getenv('MYSQL_HOST', HOST),
-                               SCHEMA)
-engine = create_engine(connection)
-session_obj = sessionmaker(bind=engine)
-session = scoped_session(session_obj)
-
-Base = declarative_base()
-Base.metadata.bind = engine
+from database import Base, engine, session
 
 
 class Tickets(object):
