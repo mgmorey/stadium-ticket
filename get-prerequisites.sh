@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+CENTOS_DBMS="mariadb"
+CENTOS_PKGS="httpd-tools $CENTOS_DBMS"
+
 DEBIAN_DBMS="mariadb-server python3-pymysql python3-sqlalchemy"
 DEBIAN_PKGS="apache2-utils python3 python3-pip $DEBIAN_DBMS python3-flask"
 
@@ -42,6 +45,9 @@ kernel_name=$(get-os-kernel-name)
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
+	    (centos)
+		printf "%s\n" $CENTOS_PKGS
+		;;
 	    (debian|ubuntu)
 		printf "%s\n" $DEBIAN_PKGS
 		;;
