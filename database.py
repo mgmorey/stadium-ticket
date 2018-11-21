@@ -12,6 +12,7 @@ DRIVER = 'pymysql'
 HOST = 'localhost'
 SCHEMA = 'stadium-tickets'
 
+
 def get_connection():
     return CONNECTION.format(DIALECT, DRIVER,
                              os.getenv('MYSQL_USER', os.getenv('USER')),
@@ -19,16 +20,9 @@ def get_connection():
                              os.getenv('MYSQL_HOST', HOST),
                              SCHEMA)
 
-def get_engine():
-    return create_engine(get_connection())
 
-
-def get_session(engine):
-    return scoped_session(sessionmaker(bind=engine))
-
-
-engine = get_engine()
-session = get_session(engine)
+engine = create_engine(get_connection())
+session = scoped_session(sessionmaker(bind=engine))
 
 Base = declarative_base()
 Base.metadata.bind = engine
