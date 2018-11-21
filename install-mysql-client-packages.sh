@@ -20,6 +20,6 @@ kernel_name=$(get-os-kernel-name)
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	install-packages "$@" $(sh get-mysql-client-packages.sh | sort)
+	install-packages "$@" $(./get-mysql-client-packages.sh | sort)
 	;;
 esac
