@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="mariadb"
+CENTOS_PKGS="mariadb-server"
 
 DEBIAN_PKGS="mariadb-server-10.1"
 
