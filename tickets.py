@@ -2,9 +2,9 @@
 
 import datetime
 
-from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy import Column, Integer, String
 
-from database import Base, engine, session
+from database import Base, session
 
 
 class Tickets(object):
