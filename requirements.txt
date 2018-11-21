@@ -1,5 +1,4 @@
-backports.functools-lru-cache >=1.5
-cheroot >=6.5.2
 Flask >=0.12.2
 PyMySQL >=0.7.11
 SQLAlchemy >=1.2.7
+pipenv >=2018.11.14
