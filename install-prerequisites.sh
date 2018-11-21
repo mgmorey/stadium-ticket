@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 PYTHON=python3
-PYTHON_PIP=$PYTHON -m pip
+PYTHON_PIP="$PYTHON -m pip"
 
 kernel_name=$(get-os-kernel-name)
 
