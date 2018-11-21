@@ -17,22 +17,22 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 CENTOS_DBMS="mariadb"
-CENTOS_PKGS="httpd-tools $CENTOS_DBMS"
+CENTOS_PKGS="curl httpd-tools $CENTOS_DBMS"
 
 DEBIAN_DBMS="mariadb-server python3-pymysql python3-sqlalchemy"
-DEBIAN_PKGS="apache2-utils python3 python3-pip $DEBIAN_DBMS python3-flask"
+DEBIAN_PKGS="curl apache2-utils python3 python3-pip $DEBIAN_DBMS python3-flask"
 
 FEDORA_DBMS="mariadb python3-PyMySQL python3-sqlalchemy"
-FEDORA_PKGS="httpd-tools python3 python3-pip $FEDORA_DBMS python3-flask"
+FEDORA_PKGS="curl httpd-tools python3 python3-pip $FEDORA_DBMS python3-flask"
 
 FREEBSD_DBMS="mysql56-server py36-pymysql py36-sqlalchemy12"
-FREEBSD_PKGS="apache24 python3 py36-pip $FREEBSD_DBMS py36-Flask"
+FREEBSD_PKGS="apache24 curl python3 py36-pip $FREEBSD_DBMS py36-Flask"
 
 OPENSUSE_DBMS="mariadb python3-PyMySQL python3-SQLAlchemy"
-OPENSUSE_PKGS="apache2-utils python3 python3-pip $OPENSUSE_DBMS python3-Flask"
+OPENSUSE_PKGS="apache2-utils curl python3 python3-pip $OPENSUSE_DBMS python3-Flask"
 
 SUNOS_DBMS="mariadb-101 sqlalchemy-34"
-SUNOS_PKGS="apache-24 python-34 pip-34 $SUNOS_DBMS"
+SUNOS_PKGS="apache-24 curl python-34 pip-34 $SUNOS_DBMS"
 
 abort() {
     printf "$@" >&2
