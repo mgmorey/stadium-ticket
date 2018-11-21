@@ -2,13 +2,12 @@
 
 import datetime
 
-from sqlalchemy import Column, Integer, String
-
-from database import Base, session
+from database import *
 
 
 class Tickets(object):
     MAX_NUMBER = 1000
+    session = get_session()
 
     class Events(Base):
         __tablename__ = 'events'
@@ -21,7 +20,7 @@ class Tickets(object):
 
     @staticmethod
     def generate_serial(event_name: str, count: int = 1):
-        query = session.query(Tickets.Events)
+        query = Tickets.session.query(Tickets.Events)
         event = query.filter(Tickets.Events.name == event_name).first()
         last_serial = event.sold
 
@@ -32,12 +31,12 @@ class Tickets(object):
 
         sold = event.sold
         event.sold = sold + count
-        session.commit()
+        Tickets.session.commit()
         return sold, count
 
     @staticmethod
     def last_serial(event_name: str) -> int:
-        query = session.query(Tickets.Events)
+        query = Tickets.session.query(Tickets.Events)
         event = query.filter(Tickets.Events.name == event_name).first()
         return event.sold
 

@@ -4,10 +4,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-from connection import get_connection
+from .connection import get_connection
 
 engine = create_engine(get_connection())
-session = scoped_session(sessionmaker(bind=engine))
 
 Base = declarative_base()
 Base.metadata.bind = engine
+
+
+def get_session():
+    return scoped_session(sessionmaker(bind=engine))

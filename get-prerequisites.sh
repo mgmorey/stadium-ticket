@@ -34,6 +34,9 @@ OPENSUSE_PKGS="apache2-utils curl python3 python3-pip $OPENSUSE_DBMS python3-Fla
 SUNOS_DBMS="mariadb-101 sqlalchemy-34"
 SUNOS_PKGS="apache-24 curl python-34 pip-34 $SUNOS_DBMS"
 
+UBUNTU_DBMS="mariadb-server-10.1 python3-pymysql python3-sqlalchemy"
+UBUNTU_PKGS="curl apache2-utils python3 python3-pip $UBUNTU_DBMS python3-flask"
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -48,7 +51,7 @@ case "$kernel_name" in
 	    (centos)
 		printf "%s\n" $CENTOS_PKGS
 		;;
-	    (debian|ubuntu)
+	    (debian)
 		printf "%s\n" $DEBIAN_PKGS
 		;;
 	    (fedora)
@@ -56,6 +59,9 @@ case "$kernel_name" in
 		;;
 	    (opensuse-*)
 		printf "%s\n" $OPENSUSE_PKGS
+		;;
+	    (ubuntu)
+		printf "%s\n" $UBUNTU_PKGS
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
