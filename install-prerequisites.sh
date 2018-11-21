@@ -17,23 +17,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 PYTHON=python3
+PYTHON_PIP=$PYTHON -m pip
 
 kernel_name=$(get-os-kernel-name)
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	prerequisites=$(sh get-prerequisites.sh | sort)
-
-	if [ -n "$prerequisites" ]; then
-	    install-packages "$@" $prerequisites
-	fi
+	install-packages "$@" $(sh get-prerequisites.sh | sort)
 	;;
 esac
 
-$PYTHON -m pip install --user pipenv
-
-if [ -r Pipfile ]; then
-    pipenv update
-elif [ -r requirements.txt ]; then
-    $PYTHON -m pip install --user -r requirements.txt
-fi
+$PYTHON_PIP install --user pipenv
+pipenv update || $PYTHON_PIP install --user -r requirements.txt
