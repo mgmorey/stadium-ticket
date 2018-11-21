@@ -20,7 +20,7 @@ CENTOS_PKGS="mariadb"
 
 DEBIAN_PKGS="mariadb-server-10.1"
 
-FEDORA_PKGS="mariadb"
+FEDORA_PKGS="mariadb-server"
 
 FREEBSD_PKGS="mysql56-server"
 
