@@ -24,7 +24,7 @@ FEDORA_PKGS="mariadb python3-PyMySQL python3-sqlalchemy"
 
 FREEBSD_PKGS="mysql56-client py36-pymysql py36-sqlalchemy12"
 
-OPENSUSE_PKGS="mariadb python3-PyMySQL python3-SQLAlchemy"
+OPENSUSE_PKGS="mariadb-client python3-PyMySQL python3-SQLAlchemy"
 
 SUNOS_PKGS="mariadb-101 sqlalchemy-34"
 
