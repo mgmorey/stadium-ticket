@@ -1,6 +1,6 @@
 #!/bin/sh -u
 
-# install-prerequisites: install prerequisites
+# install-mysql-server-packages: install MySQL server packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PYTHON=python3
-PYTHON_PIP="$PYTHON -m pip"
-
 kernel_name=$(get-os-kernel-name)
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	install-packages "$@" $(sh get-httpd-python-packages.sh | sort)
-	install-packages "$@" $(sh get-mysql-client-packages.sh | sort)
+	install-packages "$@" $(sh get-mysql-server-packages.sh | sort)
 	;;
 esac
-
-$PYTHON_PIP install --user pipenv
-pipenv update || $PYTHON_PIP install --user -r requirements.txt
