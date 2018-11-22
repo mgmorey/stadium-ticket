@@ -22,7 +22,7 @@ DEBIAN_PKGS="mariadb-server-10.1"
 
 FEDORA_PKGS="mariadb-server"
 
-FREEBSD_PKGS="mysql56-server"
+FREEBSD_PKGS="mariadb101-server"
 
 OPENSUSE_PKGS="mariadb"
 
