@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 kernel_name=$(get-os-kernel-name)
-script_dir=$(dirname $0)/scripts
+script_dir=$(dirname $0)
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
