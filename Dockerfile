@@ -10,7 +10,5 @@ COPY database/*.py /app/database/
 COPY Makefile Pipfile* *.py scripts/mysql.sh sql/*.sql /app/
 WORKDIR /app
 RUN pipenv install
-ENV MYSQL_HOST=mysql
-ENV MYSQL_USER=mgmorey
 EXPOSE 5000
 CMD make run
