@@ -1,10 +1,10 @@
 Stadium Ticket RESTful API for Linux/Unix
 
-0.  To install prerequisites:
+0.  To install prerequisite packages as root:
 
     ./install-prerequisites.sh
 
-1.  To initialize database:
+1.  To initialize database schema:
 
     mysql -p <schema.sql
 
@@ -12,14 +12,14 @@ Stadium Ticket RESTful API for Linux/Unix
 
     ./test_tickets.py
 
-3.  To start API:
+3.  To start app:
 
     ./app.py
 
-4.  To test API:
+4.  To test app:
 
     ./test-app.sh
 
-5.  To load test API:
+5.  To load test app:
 
     ./load-test.sh
