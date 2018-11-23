@@ -19,12 +19,6 @@ remove:
 run:	initialize
 	pipenv run ./app.py
 
-reset:
-	./mysql.sh <reset.sql
-
-schema:
-	./mysql.sh <schema.sql
-
 test:
 	./test-app.sh
 
