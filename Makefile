@@ -1,3 +1,5 @@
+all:	install unit
+
 clean:
 	pipenv clean
 
@@ -13,9 +15,6 @@ install:
 load:
 	./load-test.sh
 
-remove:
-	pipenv --rm
-
 run:	initialize
 	pipenv run ./app.py
 
@@ -28,4 +27,4 @@ unit:	initialize
 update:
 	pipenv update
 
-.PHONY: clean graph initialize install load remove run test unit update
+.PHONY: all clean graph initialize install load run test unit update
