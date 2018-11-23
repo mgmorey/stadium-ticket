@@ -8,11 +8,17 @@ initialize:
 	cat sql/schema.sql sql/reset.sql | ./mysql.sh
 	pipenv install
 
-load:
+reset: 
+	./mysql.sh <sql/reset.sql
+
+run:
+	pipenv run ./app.py
+
+stress:
 	./load-test.sh
 
-run:	initialize
-	pipenv run ./app.py
+test:
+	./test-app.sh
 
 unit:	initialize
 	pipenv run ./test_tickets.py
@@ -20,4 +26,4 @@ unit:	initialize
 update:
 	pipenv update
 
-.PHONY: all clean initialize load run unit update
+.PHONY: all clean initialize reset run stress test unit update
