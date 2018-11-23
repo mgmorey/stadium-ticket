@@ -24,7 +24,7 @@ script_dir=$(dirname $0)/scripts
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	install-packages "$@" $($script_dir/get-prerequisites.sh | sort)
+	install-packages "$@" $($script_dir/get-prerequisite-packages.sh | sort)
 	;;
 esac
 
