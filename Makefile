@@ -1,14 +1,14 @@
-all:	initialize unit
+all:	database unit
 
 clean:
 	/bin/rm -r __pycache__ -f
 	pipenv clean
 
-docker:
-	docker build -t mgmorey/stadium-ticket:latest .
-
 initialize:
 	./scripts/mysql.sh <sql/schema.sql
+
+docker:
+	docker build -t mgmorey/stadium-ticket:latest .
 
 pipenv:
 	pipenv install
@@ -28,4 +28,4 @@ test:
 unit:	reset
 	pipenv run ./test_tickets.py
 
-.PHONY: all clean docker initialize pipenv reset run stress test unit
+.PHONY: all clean database docker pipenv reset run stress test unit
