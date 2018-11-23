@@ -16,5 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-./get-httpd-python-packages.sh
-./get-mysql-client-packages.sh
+script_dir=$(dirname $0)
+$script_dir/get-httpd-python-packages.sh
+$script_dir/get-mysql-client-packages.sh

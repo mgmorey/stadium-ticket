@@ -17,9 +17,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 kernel_name=$(get-os-kernel-name)
+script_dir=$(dirname $0)/scripts
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	install-packages "$@" $(./get-mysql-server-packages.sh | sort)
+	install-packages "$@" $($script_dir/get-mysql-server-packages.sh | sort)
 	;;
 esac
