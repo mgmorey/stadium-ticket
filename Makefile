@@ -1,4 +1,4 @@
-all:		database unittest
+all:	database unittest
 
 clean:
 	/bin/rm -r __pycache__ -f
@@ -6,9 +6,6 @@ clean:
 
 database:
 	./scripts/mysql.sh <sql/schema.sql
-
-docker:
-	docker build -t mgmorey/stadium-ticket:latest .
 
 pipenv:
 	pipenv install
@@ -25,7 +22,7 @@ stress:
 test:
 	./app-test.sh
 
-unittest:	reset
+unit:	reset
 	pipenv run ./test_tickets.py
 
-.PHONY: all clean database docker pipenv reset run stress test unittest
+.PHONY: all clean database pipenv reset run stress test unit
