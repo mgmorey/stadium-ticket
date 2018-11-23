@@ -1,12 +1,14 @@
 all:	initialize unit
 
 clean:
-	cat sql/schema.sql sql/reset.sql | ./mysql.sh
 	/bin/rm -r __pycache__ -f
 	pipenv --rm
 
 initialize: 
-	./mysql.sh <sql/schema.sql
+	cat sql/schema.sql sql/reset.sql | ./mysql.sh
+	pipenv install
+
+install: 
 	./install-prerequisites.sh
 
 load:
