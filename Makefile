@@ -5,8 +5,8 @@ clean:
 	pipenv clean
 
 initialize: 
-	cat sql/schema.sql sql/reset.sql | ./mysql.sh
 	pipenv install
+	./mysql.sh <sql/schema.sql
 
 reset: 
 	./mysql.sh <sql/reset.sql
