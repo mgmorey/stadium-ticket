@@ -4,6 +4,9 @@ clean:
 graph:
 	pipenv graph
 
+initialize: 
+	cat schema.sql reset.sql | ./mysql.sh
+
 install: 
 	./install-prerequisites.sh
 
@@ -13,7 +16,7 @@ load:
 remove:
 	pipenv --rm
 
-run:
+run:	initialize
 	pipenv run ./app.py
 
 reset:
@@ -23,7 +26,9 @@ schema:
 	./mysql.sh <schema.sql
 
 test:
-	cat schema.sql reset.sql | ./mysql.sh
+	./test-app.sh
+
+unit:	initialize
 	pipenv run ./test_tickets.py
 
 update:
