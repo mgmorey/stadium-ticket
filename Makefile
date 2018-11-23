@@ -4,7 +4,7 @@ clean:
 	/bin/rm -r __pycache__ -f
 	pipenv clean
 
-initialize:
+database:
 	./scripts/mysql.sh <sql/schema.sql
 
 docker:
