@@ -4,16 +4,16 @@ clean:
 	/bin/rm -r __pycache__ -f
 	pipenv clean
 
-docker: 
+docker:
 	docker build -t mgmorey/stadium-ticket:latest .
 
-initialize: 
+initialize:
 	./scripts/mysql.sh <sql/schema.sql
 
-pipenv: 
+pipenv:
 	pipenv install
 
-reset: 
+reset:
 	./scripts/mysql.sh <sql/reset.sql
 
 run:
