@@ -20,7 +20,7 @@ stress:
 	./load-test.sh
 
 test:
-	./test-app.sh
+	./app-test.sh
 
 unit:	reset
 	pipenv run ./test_tickets.py
