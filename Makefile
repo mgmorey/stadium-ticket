@@ -8,9 +8,6 @@ initialize:
 	cat sql/schema.sql sql/reset.sql | ./mysql.sh
 	pipenv install
 
-install: 
-	./install-prerequisites.sh
-
 load:
 	./load-test.sh
 
@@ -23,4 +20,4 @@ unit:	initialize
 update:
 	pipenv update
 
-.PHONY: all clean initialize install load run unit update
+.PHONY: all clean initialize load run unit update
