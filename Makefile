@@ -7,19 +7,22 @@ graph:
 install:
 	pipenv install
 
+remove:
+	pipenv --rm
+
+run:
+	pipenv run ./app.py
+
 reset:
 	./mysql.sh <reset.sql
 
 schema:
 	./mysql.sh <schema.sql
 
-start:
-	pipenv run ./app.py
-
-unittest:
+test:
 	pipenv run ./test_tickets.py
 
 update:
 	pipenv update
 
-.PHONY: clean graph install reset schema start unittest update
+.PHONY: clean graph install remove reset run schema test update
