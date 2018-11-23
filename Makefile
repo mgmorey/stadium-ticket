@@ -20,7 +20,7 @@ stress:
 test:
 	./test-app.sh
 
-unit:	initialize
+unit:	reset
 	pipenv run ./test_tickets.py
 
 update:
