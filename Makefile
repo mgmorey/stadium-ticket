@@ -5,8 +5,10 @@ clean:
 	pipenv clean
 
 initialize: 
-	pipenv install
 	./mysql.sh <sql/schema.sql
+
+pipenv: 
+	pipenv install
 
 reset: 
 	./mysql.sh <sql/reset.sql
@@ -26,4 +28,4 @@ unit:	reset
 update:
 	pipenv update
 
-.PHONY: all clean initialize reset run stress test unit update
+.PHONY: all clean initialize pipenv reset run stress test unit update
