@@ -17,5 +17,5 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 script_dir=$(dirname $0)
-$script_dir/get-httpd-python-packages.sh
+$script_dir/get-packages.sh
 $script_dir/get-mysql-client-packages.sh

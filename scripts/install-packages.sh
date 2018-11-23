@@ -21,6 +21,6 @@ script_dir=$(dirname $0)
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	install-packages "$@" $($script_dir/get-httpd-python-packages.sh | sort)
+	install-packages "$@" $($script_dir/get-packages.sh | sort)
 	;;
 esac
