@@ -7,6 +7,9 @@ graph:
 install: 
 	./install-prerequisites.sh
 
+load:
+	./load-test.sh
+
 remove:
 	pipenv --rm
 
