@@ -2,7 +2,7 @@ all:	initialize unit
 
 clean:
 	/bin/rm -r __pycache__ -f
-	pipenv --rm
+	pipenv clean
 
 initialize: 
 	cat sql/schema.sql sql/reset.sql | ./mysql.sh
