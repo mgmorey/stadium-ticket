@@ -5,13 +5,13 @@ clean:
 	pipenv clean
 
 initialize: 
-	./mysql.sh <sql/schema.sql
+	./scripts/mysql.sh <sql/schema.sql
 
 pipenv: 
 	pipenv install
 
 reset: 
-	./mysql.sh <sql/reset.sql
+	./scripts/mysql.sh <sql/reset.sql
 
 run:
 	pipenv run ./app.py
