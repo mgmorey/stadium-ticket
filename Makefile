@@ -28,4 +28,4 @@ unit:	initialize
 update:
 	pipenv update
 
-.PHONY: clean graph install remove reset run schema test update
+.PHONY: clean graph initialize install load remove run test unit update
