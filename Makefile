@@ -1,4 +1,4 @@
-all:	database unit
+all:		database unittest
 
 clean:
 	/bin/rm -r __pycache__ -f
@@ -25,7 +25,7 @@ stress:
 test:
 	./app-test.sh
 
-unit:	reset
+unittest:	reset
 	pipenv run ./test_tickets.py
 
-.PHONY: all clean database docker pipenv reset run stress test unit
+.PHONY: all clean database docker pipenv reset run stress test unittest
