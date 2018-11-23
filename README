@@ -6,10 +6,11 @@ Stadium Ticket RESTful API for Linux/Unix
 
 1.  To initialize database schema:
 
-    mysql -p <schema.sql
+    ./scripts/mysql.sh <sql/schema.sql
 
 2.  To run unit tests:
 
+    ./scripts/mysql.sh <sql/reset.sql
     ./test_tickets.py
 
 3.  To start app:
@@ -18,8 +19,12 @@ Stadium Ticket RESTful API for Linux/Unix
 
 4.  To test app:
 
-    ./test-app.sh
+    ./app-test.sh
 
 5.  To load test app:
 
     ./load-test.sh
+
+6. To build a Docker container:
+
+    docker-compose up --build
