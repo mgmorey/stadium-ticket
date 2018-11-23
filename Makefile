@@ -1,15 +1,12 @@
-all:	install unit
+all:	initialize unit
 
 clean:
-	pipenv clean
-
-graph:
-	pipenv graph
+	cat sql/schema.sql sql/reset.sql | ./mysql.sh
+	/bin/rm -r __pycache__ -f
+	pipenv --rm
 
 initialize: 
-	cat schema.sql reset.sql | ./mysql.sh
-
-install: 
+	./mysql.sh <sql/schema.sql
 	./install-prerequisites.sh
 
 load:
@@ -18,13 +15,10 @@ load:
 run:	initialize
 	pipenv run ./app.py
 
-test:
-	./test-app.sh
-
 unit:	initialize
 	pipenv run ./test_tickets.py
 
 update:
 	pipenv update
 
-.PHONY: all clean graph initialize install load run test unit update
+.PHONY: all clean initialize install load run unit update
