@@ -14,8 +14,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN $APT_UPDATE
 RUN $APT_INSTALL build-essential mariadb-client-10.1 python3 \
-python3-dev python3-flask python3-pip \
-uwsgi uwsgi-plugin-python3
+python3-dev python3-pip uwsgi uwsgi-plugin-python3
 
 RUN pip3 install pipenv
 RUN mkdir -p $BIN_DIR $ETC_DIR $VAR_DIR
