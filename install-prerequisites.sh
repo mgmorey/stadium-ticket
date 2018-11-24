@@ -29,4 +29,10 @@ case "$kernel_name" in
 esac
 
 $PYTHON_PIP install --user pipenv
-pipenv update || $PYTHON_PIP install --user -r requirements.txt
+
+if pipenv >/dev/null; then
+    pipenv update
+else
+    $PYTHON_PIP remove pipenv
+    $PYTHON_PIP install --user -r requirements.txt
+fi
