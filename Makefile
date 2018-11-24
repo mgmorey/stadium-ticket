@@ -1,7 +1,7 @@
 all:	database unit
 
 clean:
-	/bin/rm -r __pycache__ -f
+	/bin/rm -rf __pycache__
 	pipenv clean
 
 database:
