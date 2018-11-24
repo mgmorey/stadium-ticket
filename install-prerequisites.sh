@@ -28,8 +28,4 @@ case "$kernel_name" in
 	;;
 esac
 
-if pipenv >/dev/null 2>&1; then
-    pipenv update
-else
-    $PYTHON_PIP install -r requirements.txt --user
-fi
+$PYTHON_PIP install -r requirements.txt --user
