@@ -1,5 +1,8 @@
 all:	database unit
 
+build:
+	docker-compose up --build
+
 clean:
 	/bin/rm -rf __pycache__
 	@if pipenv >/dev/null; then pipenv clean; fi
@@ -7,8 +10,8 @@ clean:
 database:
 	./scripts/mysql.sh <sql/schema.sql
 
-docker:
-	docker-compose up --build
+debug:
+	@if pipenv >/dev/null; then pipenv run ./app.py; else ./app.py; fi
 
 pip:
 	pip install -r requirements.txt --user
@@ -20,7 +23,7 @@ reset:
 	./scripts/mysql.sh <sql/reset.sql
 
 run:
-	@if pipenv >/dev/null; then pipenv run ./app.py; else ./app.py; fi
+	docker-compose up
 
 stress:
 	./load-test.sh
@@ -31,4 +34,4 @@ test:
 unit:	reset
 	@if pipenv >/dev/null; then pipenv run ./test_tickets.py; else ./test_tickets.py; fi
 
-.PHONY: all clean database docker pip pipenv reset run stress test unit
+.PHONY: all build clean database debug pip pipenv reset run stress test unit
