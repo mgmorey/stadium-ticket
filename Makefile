@@ -32,6 +32,7 @@ test:
 	./app-test.sh
 
 unit:	reset
+	@if pipenv >/dev/null; then pipenv sync; fi
 	@if pipenv >/dev/null; then pipenv run ./test_tickets.py; else ./test_tickets.py; fi
 
 .PHONY: all build clean database debug pip pipenv reset run stress test unit
