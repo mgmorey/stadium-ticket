@@ -2,7 +2,7 @@ all:	database unit
 
 clean:
 	/bin/rm -rf __pycache__
-	pipenv clean 2>/dev/null || true
+	if pipenv >/dev/null; then pipenv clean; fi
 
 database:
 	./scripts/mysql.sh <sql/schema.sql
@@ -20,7 +20,7 @@ reset:
 	./scripts/mysql.sh <sql/reset.sql
 
 run:
-	pipenv run ./app.py 2>/dev/null || ./app.py
+	if pipenv >/dev/null; then pipenv run ./app.py; else ./app.py; fi
 
 stress:
 	./load-test.sh
@@ -29,6 +29,6 @@ test:
 	./app-test.sh
 
 unit:	reset
-	pipenv run ./test_tickets.py 2>/dev/null || ./test_tickets.py
+	if pipenv >/dev/null; then pipenv run ./test_tickets.py; else ./test_tickets.py; fi
 
 .PHONY: all clean database docker pip pipenv reset run stress test unit
