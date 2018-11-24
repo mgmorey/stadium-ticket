@@ -18,8 +18,8 @@ python3-dev python3-flask python3-pip \
 uwsgi uwsgi-plugin-python3
 
 RUN pip3 install pipenv
-RUN mkdir -p $BIN_DIR/database $ETC_DIR $VAR_DIR
-RUN chown $APP_UID:$APP_UID $VAR_DIR
+RUN mkdir -p $BIN_DIR $ETC_DIR $VAR_DIR
+RUN chown $APP_UID:$APP_UID $BIN_DIR $VAR_DIR
 
 COPY database/*.py $BIN_DIR/database/
 COPY Pipfile* *.py $BIN_DIR/
