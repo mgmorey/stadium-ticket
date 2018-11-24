@@ -17,10 +17,10 @@ RUN $APT_INSTALL build-essential mariadb-client-10.1 python3\
 	python3-dev python3-flask python3-pip\
 	uwsgi uwsgi-plugin-python3
 RUN pip3 install pipenv
-RUN mkdir -p /app/database
+RUN /bin/mkdir -p /app/database
 
 COPY database/*.py /app/database/
-COPY Makefile Pipfile* app.ini *.py scripts/mysql.sh sql/*.sql /app/
+COPY Pipfile Pipfile.lock app.ini *.py /app/
 
 RUN /bin/chown -R $APP_UID:$APP_UID /app
 
