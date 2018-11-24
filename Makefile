@@ -10,6 +10,9 @@ database:
 docker:
 	docker-compose up --build
 
+pip:
+	pip install -r requirements.txt --user
+
 pipenv:
 	pipenv install
 
@@ -28,4 +31,4 @@ test:
 unit:	reset
 	pipenv run ./test_tickets.py 2>/dev/null || ./test_tickets.py
 
-.PHONY: all clean database docker pipenv reset run stress test unit
+.PHONY: all clean database docker pip pipenv reset run stress test unit
