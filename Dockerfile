@@ -1,6 +1,7 @@
 FROM debian
 USER root
 
+ENV APP_ENDPOINT=0.0.0.0:5000
 ENV APP_NAME=stadium-ticket
 ENV APP_UID=www-data
 
@@ -23,7 +24,8 @@ COPY Makefile Pipfile* app.ini *.py scripts/mysql.sh sql/*.sql /app/
 
 RUN /bin/chown -R $APP_UID:$APP_UID /app
 
-EXPOSE 5000
 WORKDIR /app
 RUN pipenv sync
+
+EXPOSE $APP_PORT
 CMD ["/usr/bin/uwsgi", "--ini", "app.ini"]
