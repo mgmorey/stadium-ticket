@@ -9,6 +9,7 @@ verify_ssl = true
 Flask = "*"
 PyMySQL = "*"
 SQLAlchemy = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3"
