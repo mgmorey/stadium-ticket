@@ -7,6 +7,9 @@ clean:
 database:
 	./scripts/mysql.sh <sql/schema.sql
 
+docker:
+	docker-compose up --build
+
 pipenv:
 	pipenv install
 
@@ -25,4 +28,4 @@ test:
 unit:	reset
 	pipenv run ./test_tickets.py
 
-.PHONY: all clean database pipenv reset run stress test unit
+.PHONY: all clean database docker pipenv reset run stress test unit
