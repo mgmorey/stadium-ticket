@@ -1,4 +1,4 @@
-all:	database unittest
+all:	database unit
 
 clean:
 	/bin/rm -r __pycache__ -f
