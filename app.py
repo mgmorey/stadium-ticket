@@ -7,6 +7,7 @@ from flask import Flask, abort, jsonify, request
 
 from tickets import Tickets
 
+LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 MAX_COUNT = 10
 MIN_COUNT = 1
 Tickets.MAX_NUMBER = None
@@ -67,6 +68,5 @@ def request_tickets():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',
-                        level=logging.DEBUG)
+    logging.basicConfig(format=LOGGING_FORMAT, level=logging.DEBUG)
     app.run()
