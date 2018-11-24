@@ -10,11 +10,14 @@ clean:
 database:
 	./scripts/mysql.sh <sql/schema.sql
 
-debug:
+debug:	reset pipenv
 	@if pipenv >/dev/null; then pipenv run ./app.py; else ./app.py; fi
 
 pip:
 	pip install -r requirements.txt --user
+
+pipenv:
+	@if pipenv >/dev/null; then pipenv sync; fi
 
 reset:
 	./scripts/mysql.sh <sql/reset.sql
@@ -28,8 +31,7 @@ stress:
 test:
 	./app-test.sh
 
-unit:	reset
-	@if pipenv >/dev/null; then pipenv sync; fi
+unit:	reset pipenv
 	@if pipenv >/dev/null; then pipenv run ./test_tickets.py; else ./test_tickets.py; fi
 
 .PHONY: all build clean database debug pip reset run stress test unit
