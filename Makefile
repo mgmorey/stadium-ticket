@@ -16,9 +16,6 @@ debug:
 pip:
 	pip install -r requirements.txt --user
 
-pipenv:
-	pipenv install
-
 reset:
 	./scripts/mysql.sh <sql/reset.sql
 
@@ -35,4 +32,4 @@ unit:	reset
 	@if pipenv >/dev/null; then pipenv sync; fi
 	@if pipenv >/dev/null; then pipenv run ./test_tickets.py; else ./test_tickets.py; fi
 
-.PHONY: all build clean database debug pip pipenv reset run stress test unit
+.PHONY: all build clean database debug pip reset run stress test unit
