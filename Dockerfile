@@ -25,5 +25,5 @@ RUN /bin/chown -R $APP_UID:$APP_UID /app
 
 EXPOSE 5000
 WORKDIR /app
-RUN pipenv install
+RUN pipenv sync
 CMD ["/usr/bin/uwsgi", "--ini", "app.ini"]
