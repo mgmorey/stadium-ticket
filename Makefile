@@ -1,3 +1,7 @@
+export FLASK_APP := app.py
+export FLASK_ENV := development
+export PYTHONPATH := $(PWD)
+
 all:	database unit
 
 build:
@@ -5,22 +9,18 @@ build:
 
 clean:
 	/bin/rm -rf __pycache__
-	@if pipenv >/dev/null 2>&1; then pipenv clean; fi
 
 database:
-	./scripts/mysql.sh <sql/schema.sql
+	scripts/mysql.sh <sql/schema.sql
 
-debug:	reset pipenv
-	@if pipenv >/dev/null 2>&1; then pipenv run ./app.py; else ./app.py; fi
+debug:	reset
+	scripts/run.sh flask run
 
 pip:
 	pip install -r requirements.txt --user
 
-pipenv:
-	@if pipenv >/dev/null 2>&1; then pipenv sync; fi
-
 reset:
-	./scripts/mysql.sh <sql/reset.sql
+	scripts/mysql.sh <sql/reset.sql
 
 run:
 	docker-compose up
@@ -31,7 +31,7 @@ stress:
 test:
 	./app-test.sh
 
-unit:	reset pipenv
-	@if pipenv >/dev/null 2>&1; then pipenv run ./test_tickets.py; else ./test_tickets.py; fi
+unit:	reset
+	scripts/run.sh ./test_tickets.py
 
 .PHONY: all build clean database debug pip reset run stress test unit
