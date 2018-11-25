@@ -2,7 +2,7 @@ export FLASK_APP := app.py
 export FLASK_ENV := development
 export PYTHONPATH := $(PWD)
 
-all:	database unit
+all:	database sync unit
 
 build:
 	docker-compose up --build
@@ -28,10 +28,13 @@ run:
 stress:
 	./load-test.sh
 
+sync:
+	scripts/sync.sh
+
 test:
 	./app-test.sh
 
 unit:	reset
 	scripts/run.sh ./test_tickets.py
 
-.PHONY: all build clean database debug pip reset run stress test unit
+.PHONY: all build clean database debug pip reset run stress sync test unit
