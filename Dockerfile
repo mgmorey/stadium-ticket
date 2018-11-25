@@ -1,23 +1,20 @@
-FROM debian
+FROM ubuntu:18.04
 
 ENV APP_NAME=stadium-ticket
-
-ENV APP_HOST=0.0.0.0
 ENV APP_PORT=5000
-ENV APP_UID=www-data
+
 ENV APP_GID=www-data
+ENV APP_UID=www-data
 
-ENV APT_INSTALL="apt-get install -qy --no-install-recommends"
 ENV APT_UPDATE="apt-get update -qy"
-ENV DEBIAN_FRONTEND=noninteractive
-ENV LANG=C.UTF-8
-ENV LC_ALL=C.UTF-8
-ENV PIPENV_VENV_IN_PROJECT=true
+ENV APT_INSTALL="apt-get install -qy --no-install-recommends build-essential \
+mariadb-client-10.1 python3 python3-dev python3-pip uwsgi uwsgi-plugin-python3"
+ENV PIP_INSTALL="pip3 install pipenv"
 
-RUN $APT_UPDATE
-RUN $APT_INSTALL build-essential mariadb-client-10.1 python3 \
-python3-dev python3-pip uwsgi uwsgi-plugin-python3
-RUN pip3 install pipenv
+ENV DEBIAN_FRONTEND=noninteractive
+RUN for i in 1 2 3; do $APT_UPDATE && break; done
+RUN for i in 1 2 3; do $APT_INSTALL && break; done
+RUN for i in 1 2 3; do $PIP_INSTALL && break; done
 
 ENV BIN_DIR=/opt/$APP_NAME
 ENV ETC_DIR=/opt/etc/$APP_NAME
@@ -29,6 +26,10 @@ RUN chown $APP_UID:$APP_GID $BIN_DIR $VAR_DIR
 COPY database/*.py $BIN_DIR/database/
 COPY Pipfile* *.py $BIN_DIR/
 COPY app.ini $ETC_DIR/
+
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV PIPENV_VENV_IN_PROJECT=true
 
 WORKDIR $BIN_DIR
 RUN pipenv sync
