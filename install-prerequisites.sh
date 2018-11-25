@@ -19,6 +19,11 @@
 PYTHON=python3
 PYTHON_PIP="$PYTHON -m pip"
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)/scripts
 
