@@ -1,3 +1,4 @@
+PYTHON = python3
 SCRIPT_DIR = scripts
 
 all:	Pipfile.lock requirements.txt
@@ -12,7 +13,7 @@ pipenv:
 	$(SCRIPT_DIR)/pipenv.sh sync
 
 requirements:
-	$(SCRIPT_DIR)/run.sh pip install -r requirements.txt --user
+	$(SCRIPT_DIR)/run.sh $PYTHON -m pip install -r requirements.txt --user
 
 stress:
 	$(SCRIPT_DIR)/load-test.sh
