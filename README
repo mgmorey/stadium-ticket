@@ -2,7 +2,7 @@ Stadium Ticket RESTful API for Linux/Unix
 
 0.  To install prerequisite packages:
 
-    ./install-prerequisites.sh
+    scripts/install-prerequisites.sh
 
 1.  To initialize the database schema:
 
@@ -22,11 +22,11 @@ Stadium Ticket RESTful API for Linux/Unix
 
 5.  To test the app:
 
-    ./app-test.sh
+    scripts/app-test.sh
 
 6.  To stress test the app:
 
-    ./load-test.sh
+    scripts/load-test.sh
 
 7.  To build a Docker container:
 
