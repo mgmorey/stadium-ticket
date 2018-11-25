@@ -1,46 +1,21 @@
-export FLASK_APP := app.py
-export FLASK_ENV := development
-export PYTHONPATH := $(PWD)
+SCRIPT_DIR = scripts
 
-all:	Pipfile.lock requirements.txt database reset sync
+all:	Pipfile.lock requirements.txt sync
 
-build:
+build:	sync
 	docker-compose up --build
 
-clean:
-	/bin/rm -rf __pycache__ .pytest_cache
-
-database:
-	scripts/mysql.sh <sql/schema.sql
-
-debug:	reset
-	scripts/run.sh flask run
-
-pip:
-	pip3 install -r requirements.txt --user
-
-reset:	database
-	scripts/mysql.sh <sql/reset.sql
-
-run:
+run:	sync
 	docker-compose up
 
-stress:
-	scripts/load-test.sh
-
 sync:
-	scripts/sync.sh --dev
+	$(SCRIPT_DIR)/pipenv.sh sync --dev
 
-test:	reset
-	scripts/run.sh python3 -m pytest
+.PHONY: all build run
 
-traffic:
-	scripts/app-test.sh
-
-Pipfile.lock:	Pipfile
-	if [ -e $(HOME)/.local/bin/pipenv ]; then pipenv update; fi
+Pipfile.lock:		Pipfile
+	$(SCRIPT_DIR)/pipenv.sh update --dev
 
 requirements.txt:	Pipfile
-	if [ -e $(HOME)/.local/bin/pipenv ]; then pipenv lock -r >requirements.txt; fi
-
-.PHONY: all build clean database debug pip reset run stress sync test traffic
+	$(SCRIPT_DIR)/pipenv.sh lock -r --dev >requirements.txt
+	$(SCRIPT_DIR)/pipenv.sh lock -r >>requirements.txt

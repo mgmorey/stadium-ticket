@@ -8,9 +8,20 @@ pytest = "*"
 
 [packages]
 Flask = "*"
+Jinja2 = "*"
+MarkupSafe = "*"
 PyMySQL = "*"
 SQLAlchemy = "*"
+Werkzeug = "*"
+asn1crypto = "*"
+cffi = "*"
+click = "*"
+cryptography = "*"
+idna = "*"
+itsdangerous = "*"
+pycparser = "*"
 python-dotenv = "*"
+six = "*"
 
 [requires]
 python_version = "3.6"

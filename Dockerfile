@@ -23,8 +23,7 @@ ENV VAR_DIR=/opt/var/$APP_NAME
 RUN mkdir -p $BIN_DIR $ETC_DIR $VAR_DIR
 RUN chown $APP_UID:$APP_GID $BIN_DIR $VAR_DIR
 
-COPY database/*.py $BIN_DIR/database/
-COPY Pipfile* *.py $BIN_DIR/
+COPY Pipfile* ./app/ $BIN_DIR/
 COPY app.ini $ETC_DIR/
 
 ENV LANG=C.UTF-8

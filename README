@@ -14,11 +14,11 @@ Stadium Ticket RESTful API for Linux/Unix
 
 3.  To run the unit tests:
 
-    ./test_tickets.py
+    app/test_tickets.py
 
 4.  To start the app:
 
-    ./app.py
+    app/app.py
 
 5.  To test the app:
 
