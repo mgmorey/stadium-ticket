@@ -26,13 +26,13 @@ run:
 	docker-compose up
 
 stress:
-	./load-test.sh
+	scripts/load-test.sh
 
 sync:
 	scripts/sync.sh
 
 test:
-	./app-test.sh
+	scripts/app-test.sh
 
 unit:
 	scripts/run.sh ./test_tickets.py
