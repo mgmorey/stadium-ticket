@@ -22,12 +22,13 @@ ENV ETC_DIR=/opt/etc/$APP_NAME
 ENV VAR_DIR=/opt/var/$APP_NAME
 RUN mkdir -p $BIN_DIR $ETC_DIR $VAR_DIR
 
+COPY Pipfile* $BIN_DIR/
+WORKDIR $BIN_DIR
+
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV PIPENV_VENV_IN_PROJECT=true
-COPY Pipfile* $BIN_DIR/
-WORKDIR $BIN_DIR
-RUN pipenv sync
+RUN pipenv sync && /bin/rm Pipfile*
 
 COPY app/ $BIN_DIR/
 COPY app.ini $ETC_DIR/
