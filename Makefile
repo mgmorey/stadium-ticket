@@ -11,10 +11,10 @@ run:
 pipenv:
 	$(SCRIPT_DIR)/pipenv.sh sync
 
-stress: reset
+stress:
 	$(SCRIPT_DIR)/load-test.sh
 
-traffic: reset
+traffic:
 	$(SCRIPT_DIR)/app-test.sh
 
 .PHONY: all build run pipenv stress traffic
