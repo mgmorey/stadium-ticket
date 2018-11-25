@@ -2,16 +2,22 @@ SCRIPT_DIR = scripts
 
 all:	Pipfile.lock requirements.txt sync
 
-build:	sync
+build:
 	docker-compose up --build
 
-run:	sync
+run:
 	docker-compose up
 
-sync:
-	$(SCRIPT_DIR)/pipenv.sh sync --dev
+pipenv:
+	$(SCRIPT_DIR)/pipenv.sh sync
 
-.PHONY: all build run
+stress: reset
+	$(SCRIPT_DIR)/load-test.sh
+
+traffic: reset
+	$(SCRIPT_DIR)/app-test.sh
+
+.PHONY: all build run pipenv stress traffic
 
 Pipfile.lock:		Pipfile
 	$(SCRIPT_DIR)/pipenv.sh update --dev

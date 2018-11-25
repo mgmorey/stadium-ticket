@@ -13,19 +13,13 @@ clean:
 debug:	reset
 	$(SCRIPT_DIR)/run.sh flask run
 
-pytest:	reset
-	$(SCRIPT_DIR)/run.sh python3 -m pytest
-
 reset:	schema
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/reset.sql
 
 schema:
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/schema.sql
 
-stress: reset
-	$(SCRIPT_DIR)/load-test.sh
+test:	reset
+	$(SCRIPT_DIR)/run.sh python3 -m pytest
 
-traffic: reset
-	$(SCRIPT_DIR)/app-test.sh
-
-.PHONY: all clean debug pytest reset schema stress traffic
+.PHONY: all clean debug reset schema test
