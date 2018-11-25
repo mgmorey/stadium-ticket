@@ -10,8 +10,11 @@ all:	schema reset
 clean:
 	/bin/rm -rf __pycache__ .pytest_cache
 
-debug:	reset
+debug:	pipenv reset
 	$(SCRIPT_DIR)/run.sh flask run
+
+pipenv:
+	$(SCRIPT_DIR)/pipenv.sh sync --dev
 
 reset:	schema
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/reset.sql
@@ -19,7 +22,7 @@ reset:	schema
 schema:
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/schema.sql
 
-test:	reset
+test:	pipenv reset
 	$(SCRIPT_DIR)/run.sh python3 -m pytest
 
 .PHONY: all clean debug reset schema test
