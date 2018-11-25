@@ -8,7 +8,7 @@ build:
 	docker-compose up --build
 
 clean:
-	/bin/rm -rf __pycache__
+	/bin/rm -rf __pycache__ .pytest_cache
 
 database:
 	scripts/mysql.sh <sql/schema.sql
