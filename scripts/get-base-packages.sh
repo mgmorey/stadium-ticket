@@ -28,7 +28,7 @@ FREEBSD_PKGS="apache24 curl python3 \
 py36-Flask py36-pip"
 
 OPENSUSE_PKGS="apache2-utils curl python3 \
-python3-flask python3-pip"
+python3-flask python3-pip python3-pytest"
 
 SUNOS_PKGS="apache-24 curl python-34 \
 pip-34"
