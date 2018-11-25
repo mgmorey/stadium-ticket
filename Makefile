@@ -1,6 +1,6 @@
 SCRIPT_DIR = scripts
 
-all:	Pipfile.lock requirements.txt sync
+all:	Pipfile.lock requirements.txt
 
 build:
 	docker-compose up --build
