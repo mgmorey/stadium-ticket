@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -eu
 
 HEADER="Content-Type: application/json"
 HOST=localhost
