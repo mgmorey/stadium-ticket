@@ -2,7 +2,7 @@ export FLASK_APP := app.py
 export FLASK_ENV := development
 export PYTHONPATH := $(PWD)
 
-all:	database sync unit
+all:	database reset unit
 
 build:
 	docker-compose up --build
@@ -13,7 +13,7 @@ clean:
 database:
 	scripts/mysql.sh <sql/schema.sql
 
-debug:	reset
+debug:
 	scripts/run.sh flask run
 
 pip:
@@ -34,7 +34,7 @@ sync:
 test:
 	./app-test.sh
 
-unit:	reset
+unit:
 	scripts/run.sh ./test_tickets.py
 
 .PHONY: all build clean database debug pip reset run stress sync test unit
