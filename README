@@ -28,7 +28,6 @@ Stadium Ticket RESTful API for Linux/Unix
 
     scripts/load-test.sh
 
-7.  To build a Docker container:
+7.  To build and run a Docker container:
 
     docker-compose up --build
-
