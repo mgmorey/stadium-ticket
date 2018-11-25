@@ -35,7 +35,7 @@ test:
 	scripts/app-test.sh
 
 unit:
-	scripts/run.sh ./test_tickets.py
+	scripts/run.sh python3 -m unittest discover
 
 Pipfile.lock:	Pipfile
 	if [ -e $(HOME)/.local/bin/pipenv ]; then pipenv update; fi
