@@ -8,7 +8,7 @@ SQL_DIR = ../sql
 all:	schema reset
 
 clean:
-	/bin/rm -rf __pycache__ .pytest_cache
+	find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
 
 debug:	pipenv reset
 	$(SCRIPT_DIR)/run.sh flask run
