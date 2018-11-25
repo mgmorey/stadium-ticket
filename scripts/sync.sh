@@ -1,5 +1,5 @@
-#!/bin/sh -eu
+f#!/bin/sh -eu
 
-if which pipenv >/dev/null; then
+if which pipenv >/dev/null 2>&1; then
     pipenv sync
 fi
