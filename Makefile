@@ -34,10 +34,13 @@ sync:
 test:	reset
 	scripts/run.sh python3 -m pytest
 
+traffic:
+	scripts/app-test.sh
+
 Pipfile.lock:	Pipfile
 	if [ -e $(HOME)/.local/bin/pipenv ]; then pipenv update; fi
 
 requirements.txt:	Pipfile
 	if [ -e $(HOME)/.local/bin/pipenv ]; then pipenv lock -r >requirements.txt; fi
 
-.PHONY: all build clean database debug pip reset run stress sync test
+.PHONY: all build clean database debug pip reset run stress sync test traffic
