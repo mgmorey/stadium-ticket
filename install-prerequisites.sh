@@ -26,6 +26,9 @@ case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
 	install-packages "$@" $($script_dir/get-prerequisite-packages.sh | sort)
 	;;
+    (*)
+	abort "%s: Operating system not supported\n" "$kernel_name"
+	;;
 esac
 
 if ! which pipenv >/dev/null; then
