@@ -18,17 +18,23 @@
 
 CENTOS_PKGS="curl httpd-tools"
 
-DEBIAN_PKGS="curl apache2-utils python3 python3-pip python3-flask"
+DEBIAN_PKGS="curl apache2-utils python3 \
+python3-flask python3-pip python3-pytest"
 
-FEDORA_PKGS="curl httpd-tools python3 python3-pip python3-flask"
+FEDORA_PKGS="curl httpd-tools python3 \
+python3-flask python3-pip"
 
-FREEBSD_PKGS="apache24 curl python3 py36-pip py36-Flask"
+FREEBSD_PKGS="apache24 curl python3 \
+py36-Flask py36-pip"
 
-OPENSUSE_PKGS="apache2-utils curl python3 python3-pip python3-Flask"
+OPENSUSE_PKGS="apache2-utils curl python3 \
+python3-flask python3-pip"
 
-SUNOS_PKGS="apache-24 curl python-34 pip-34"
+SUNOS_PKGS="apache-24 curl python-34 \
+pip-34"
 
-UBUNTU_PKGS="curl apache2-utils python3 python3-pip python3-flask"
+UBUNTU_PKGS="curl apache2-utils python3 \
+python3-flask python3-pip python3-pytest"
 
 abort() {
     printf "$@" >&2
