@@ -40,5 +40,5 @@ RUN chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR
 
 # Expose port and start application
 EXPOSE $APP_PORT
-WORKDIR $APP_DIR
+WORKDIR $VAR_DIR
 CMD /usr/bin/uwsgi --ini $ETC_DIR/app.ini
