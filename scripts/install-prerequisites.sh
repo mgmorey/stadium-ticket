@@ -35,7 +35,3 @@ case "$kernel_name" in
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
 esac
-
-if ! which pipenv >/dev/null; then
-    $PYTHON_PIP install -r requirements.txt --user
-fi
