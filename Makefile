@@ -29,13 +29,10 @@ stress:
 	scripts/load-test.sh
 
 sync:
-	scripts/sync.sh
+	scripts/sync.sh --dev
 
 test:
-	scripts/app-test.sh
-
-unit:
-	scripts/run.sh python3 -m unittest discover
+	scripts/run.sh python3 -m pytest
 
 Pipfile.lock:	Pipfile
 	if [ -e $(HOME)/.local/bin/pipenv ]; then pipenv update; fi
@@ -43,4 +40,4 @@ Pipfile.lock:	Pipfile
 requirements.txt:	Pipfile
 	if [ -e $(HOME)/.local/bin/pipenv ]; then pipenv lock -r >requirements.txt; fi
 
-.PHONY: all build clean database debug pip reset run stress sync test unit
+.PHONY: all build clean database debug pip reset run stress sync test
