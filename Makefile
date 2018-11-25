@@ -2,7 +2,7 @@ export FLASK_APP := app.py
 export FLASK_ENV := development
 export PYTHONPATH := $(PWD)
 
-all:	Pipfile.lock requirements.txt database reset unit
+all:	Pipfile.lock requirements.txt database reset
 
 build:
 	docker-compose up --build
@@ -13,7 +13,7 @@ clean:
 database:
 	scripts/mysql.sh <sql/schema.sql
 
-debug:
+debug:	reset
 	scripts/run.sh flask run
 
 pip:
@@ -31,7 +31,7 @@ stress:
 sync:
 	scripts/sync.sh --dev
 
-test:
+test:	reset
 	scripts/run.sh python3 -m pytest
 
 Pipfile.lock:	Pipfile
