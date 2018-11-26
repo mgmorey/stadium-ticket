@@ -78,10 +78,10 @@ esac
 
 python_info=$($script_dir/get-python-package-info.sh)
 package_name=$(printf "%s" "$python_info" | awk '{print $1}')
-package_root=$(printf "%s" "$python_info" | awk '{print $2}')
+package_modifier=$(printf "%s" "$python_info" | awk '{print $2}')
 
 printf "%s\n" $base_packages $package_name
 
 for package in $python_packages; do
-    printf "$package\n" $package_root
+    printf "$package\n" $package_modifier
 done
