@@ -18,7 +18,7 @@
 
 DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask %s-pip %s-pytest"
 
-FEDORA_PKGS="%s-flask %s-pip"
+FEDORA_PKGS="gcc libffi-devel make openssl-devel %s-devel %s-flask %s-pip %s-pytest"
 
 FREEBSD_PKGS="python3 %s-Flask %s-pip"
 
