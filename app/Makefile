@@ -23,6 +23,6 @@ schema:
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/schema.sql
 
 test:	pipenv reset
-	$(SCRIPT_DIR)/run.sh python3 -m pytest
+	$(SCRIPT_DIR)/run.sh py.test
 
 .PHONY: all clean debug reset schema test
