@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="mariadb"
+CENTOS_PKGS="mariadb %s-sqlalchemy"
 
-DEBIAN_PKGS="mariadb-client-10.1 python3-pymysql python3-sqlalchemy"
+DEBIAN_PKGS="mariadb-client-10.1 python3-pymysql"
 
 FEDORA_PKGS="mariadb python3-PyMySQL python3-sqlalchemy"
 
@@ -30,44 +30,44 @@ SUNOS_PKGS="mariadb-101/client sqlalchemy-34"
 
 UBUNTU_PKGS="mariadb-client-10.1 python3-pymysql python3-sqlalchemy"
 
-abort() {
-    printf "$@" >&2
-    exit 1
-}
-
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
+script_dir=$(dirname $0)
 
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (centos)
-		printf "%s\n" $CENTOS_PKGS
+		packages=$CENTOS_PKGS
 		;;
 	    (debian)
-		printf "%s\n" $DEBIAN_PKGS
+		packages=$DEBIAN_PKGS
 		;;
 	    (fedora)
-		printf "%s\n" $FEDORA_PKGS
+		packages=$FEDORA_PKGS
 		;;
 	    (opensuse-*)
-		printf "%s\n" $OPENSUSE_PKGS
+		packages=$OPENSUSE_PKGS
 		;;
 	    (ubuntu)
-		printf "%s\n" $UBUNTU_PKGS
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
+		packages=$UBUNTU_PKGS
 		;;
 	esac
 	;;
     (FreeBSD)
-	printf "%s\n" $FREEBSD_PKGS
+	packages=$FREEBSD_PKGS
 	;;
     (SunOS)
-	printf "%s\n" $SUNOS_PKGS
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
+	packages=$SUNOS_PKGS
 	;;
 esac
+
+python_info=$($script_dir/get-python-package-info.sh)
+package_name=$(printf "%s" "$python_info" | awk '{print $1}')
+package_modifier=$(printf "%s" "$python_info" | awk '{print $2}')
+
+printf "%s\n" $package_name
+
+for package in $packages; do
+    printf "$package\n" $package_modifier 2>/dev/null
+done

@@ -27,8 +27,8 @@ script_dir=$(dirname $0)
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
 	base_packages=$($script_dir/get-middleware-packages.sh)
-	mysql_packages=$($script_dir/get-mysql-client-packages.sh)
-	install-packages "$@" $base_packages $mysql_packages
+	database_packages=$($script_dir/get-database-client-packages.sh)
+	install-packages "$@" $base_packages $database_packages
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
