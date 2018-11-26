@@ -16,7 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="curl httpd-tools"
+CENTOS_PKGS="curl httpd-tools \
+python34 python34-devel python34-pip python34-pytest sclo-python34-python-flask"
 
 DEBIAN_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev \
 python3 python3-dev python3-flask python3-pip python3-pytest"
