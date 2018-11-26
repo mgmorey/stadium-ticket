@@ -1,6 +1,6 @@
 #!/bin/sh -u
 
-# install-prerequisites: install prerequisite packages for building app
+# install-dependencies: install prerequisites for developing app
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
