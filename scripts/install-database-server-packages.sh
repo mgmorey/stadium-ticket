@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
 
@@ -23,5 +28,8 @@ case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
 	packages="$($script_dir/get-database-server-packages.sh | sort)"
 	install-packages "$@" $packages
+	;;
+    (*)
+	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
 esac
