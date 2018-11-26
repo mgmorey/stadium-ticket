@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-middleware-packages: get middleware package names
+# get-http-client-packages: get HTTP client package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,19 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="%s-devel %s-pip %s-pytest sclo-%s-python-flask"
+CENTOS_PKGS="curl httpd-tools"
 
-DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask %s-pip %s-pytest"
+DEBIAN_PKGS="apache2-utils curl"
 
-FEDORA_PKGS="%s-flask %s-pip"
+FEDORA_PKGS="curl httpd-tools"
 
-FREEBSD_PKGS="python3 %s-Flask %s-pip"
+FREEBSD_PKGS="apache24 curl"
 
-OPENSUSE_PKGS="%s-flask %s-pip %s-pytest"
+OPENSUSE_PKGS="apache2-utils curl"
 
-SUNOS_PKGS="pip-%s"
+SUNOS_PKGS="apache-24 curl"
 
-UBUNTU_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask %s-pip %s-pytest"
+UBUNTU_PKGS="apache2-utils curl"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
@@ -63,19 +63,4 @@ case "$kernel_name" in
 esac
 
 
-python_info=$($script_dir/get-python-package-info.sh)
-package_name=$(printf "%s" "$python_info" | awk '{print $1}')
-package_modifier=$(printf "%s" "$python_info" | awk '{print $2}')
-
-printf "%s\n" $package_name
-
-for package in $packages; do
-    case $package in
-	(*%s*)
-	    printf "$package\n" $package_modifier
-	    ;;
-	(*)
-	    printf "%s\n" $package
-	    ;;
-    esac
-done
+printf "%s\n" $packages

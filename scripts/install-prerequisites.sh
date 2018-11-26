@@ -26,9 +26,10 @@ script_dir=$(dirname $0)
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	base_packages=$($script_dir/get-middleware-packages.sh)
 	database_packages=$($script_dir/get-database-client-packages.sh)
-	install-packages "$@" $base_packages $database_packages
+	http_packages=$($script_dir/get-http-client-packages.sh)
+	packages=$($script_dir/get-middleware-packages.sh)
+	install-packages "$@" $database_packages $http_packages $packages
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
