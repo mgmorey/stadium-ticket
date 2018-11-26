@@ -21,6 +21,7 @@ script_dir=$(dirname $0)/scripts
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	install-packages "$@" $($script_dir/get-mysql-client-packages.sh | sort)
+	packages="$($script_dir/get-mysql-client-packages.sh | sort)"
+	install-packages "$@" $packages
 	;;
 esac
