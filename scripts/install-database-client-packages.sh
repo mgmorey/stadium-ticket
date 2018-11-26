@@ -22,15 +22,26 @@ abort() {
 }
 
 install() {
-    packages="$($script_dir/get-database-client-packages.sh | sort)"
+    packages="$($script_dir/get-database-client-packages.sh)"
     install-packages "$@" $packages
 }
 
+distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
 
 case "$kernel_name" in
-    (Linux|FreeBSD|SunOS)
+    (Linux)
+	case "$distro_name" in
+	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
+		install "$@"
+		;;
+	    (*)
+		abort "%s: Distro not supported\n" "$distro_name"
+		;;
+	esac
+	;;
+    (FreeBSD|SunOS)
 	install "$@"
 	;;
     (*)
