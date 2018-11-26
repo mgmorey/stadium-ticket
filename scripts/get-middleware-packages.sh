@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="%s-devel %s-pip %s-pytest sclo-%s-python-flask"
-
 DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask %s-pip %s-pytest"
 
 FEDORA_PKGS="%s-flask %s-pip"
@@ -25,6 +23,8 @@ FEDORA_PKGS="%s-flask %s-pip"
 FREEBSD_PKGS="python3 %s-Flask %s-pip"
 
 OPENSUSE_PKGS="%s-flask %s-pip %s-pytest"
+
+REDHAT_PKGS="%s-devel %s-pip %s-pytest sclo-%s-python-flask"
 
 SUNOS_PKGS="pip-%s"
 
@@ -38,7 +38,7 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (centos|redhat)
-		packages=$CENTOS_PKGS
+		packages=$REDHAT_PKGS
 		;;
 	    (debian)
 		packages=$DEBIAN_PKGS

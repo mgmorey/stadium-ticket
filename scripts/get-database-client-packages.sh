@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="mariadb %s-PyMySQL %s-sqlalchemy"
-
 DEBIAN_PKGS="mariadb-client-10.1 %s-pymysql %s-sqlalchemy"
 
 FEDORA_PKGS="mariadb %s-PyMySQL %s-sqlalchemy"
@@ -25,6 +23,8 @@ FEDORA_PKGS="mariadb %s-PyMySQL %s-sqlalchemy"
 FREEBSD_PKGS="mariadb101-client %s-pymysql %s-sqlalchemy12"
 
 OPENSUSE_PKGS="mariadb-client %s-PyMySQL %s-SQLAlchemy"
+
+REDHAT_PKGS="mariadb %s-PyMySQL %s-sqlalchemy"
 
 SUNOS_PKGS="mariadb-101/client sqlalchemy-%s"
 
@@ -38,7 +38,7 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (centos|redhat)
-		packages=$CENTOS_PKGS
+		packages=$REDHAT_PKGS
 		;;
 	    (debian)
 		packages=$DEBIAN_PKGS

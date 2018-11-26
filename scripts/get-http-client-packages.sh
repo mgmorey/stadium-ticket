@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="curl httpd-tools"
-
 DEBIAN_PKGS="apache2-utils curl"
 
 FEDORA_PKGS="curl httpd-tools"
@@ -25,6 +23,8 @@ FEDORA_PKGS="curl httpd-tools"
 FREEBSD_PKGS="apache24 curl"
 
 OPENSUSE_PKGS="apache2-utils curl"
+
+REDHAT_PKGS="curl httpd-tools"
 
 SUNOS_PKGS="apache-24 curl"
 
@@ -38,7 +38,7 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (centos|redhat)
-		packages=$CENTOS_PKGS
+		packages=$REDHAT_PKGS
 		;;
 	    (debian)
 		packages=$DEBIAN_PKGS

@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="mariadb-server"
-
 DEBIAN_PKGS="mariadb-server-10.1"
 
 FEDORA_PKGS="mariadb-server"
@@ -25,6 +23,8 @@ FEDORA_PKGS="mariadb-server"
 FREEBSD_PKGS="mariadb101-server"
 
 OPENSUSE_PKGS="mariadb"
+
+REDHAT_PKGS="mariadb-server"
 
 SUNOS_PKGS="mariadb-101"
 
@@ -42,7 +42,7 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (centos|redhat)
-		printf "%s\n" $CENTOS_PKGS
+		printf "%s\n" $REDHAT_PKGS
 		;;
 	    (debian)
 		printf "%s\n" $DEBIAN_PKGS
