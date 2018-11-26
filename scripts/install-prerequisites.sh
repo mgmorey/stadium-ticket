@@ -24,11 +24,10 @@ abort() {
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
 
-base_packages=$($script_dir/get-base-packages.sh)
-mysql_packages=$($script_dir/get-mysql-client-packages.sh)
-
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
+	base_packages=$($script_dir/get-base-packages.sh)
+	mysql_packages=$($script_dir/get-mysql-client-packages.sh)
 	install-packages "$@" $base_packages $mysql_packages
 	;;
     (*)
