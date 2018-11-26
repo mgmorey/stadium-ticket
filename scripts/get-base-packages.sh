@@ -18,8 +18,8 @@
 
 CENTOS_PKGS="curl httpd-tools"
 
-DEBIAN_PKGS="apache2-utils build-essential curl libffi-dev python3 \
-python3-dev python3-flask python3-pip python3-pytest"
+DEBIAN_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev \
+python3 python3-dev python3-flask python3-pip python3-pytest"
 
 FEDORA_PKGS="curl httpd-tools python3 \
 python3-flask python3-pip"
@@ -33,8 +33,8 @@ python3-flask python3-pip python3-pytest"
 SUNOS_PKGS="apache-24 curl python-34 \
 pip-34"
 
-UBUNTU_PKGS="apache2-utils build-essential curl libffi-dev python3 \
-python3-dev python3-flask python3-pip python3-pytest"
+UBUNTU_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev \
+python3 python3-dev python3-flask python3-pip python3-pytest"
 
 abort() {
     printf "$@" >&2
