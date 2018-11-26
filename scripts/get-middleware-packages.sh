@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-base-packages: get base package names
+# get-middleware-packages: get middleware package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
