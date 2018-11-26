@@ -30,8 +30,8 @@ py36-Flask py36-pip"
 OPENSUSE_PKGS="apache2-utils curl python3 \
 python3-flask python3-pip python3-pytest"
 
-SUNOS_PKGS="apache-24 curl python-34 \
-pip-34"
+SUNOS_PKGS="apache-24 curl \
+python-34 pip-34"
 
 UBUNTU_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev \
 python3 python3-dev python3-flask python3-pip python3-pytest"
