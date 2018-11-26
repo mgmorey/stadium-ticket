@@ -26,7 +26,7 @@ FREEBSD_PKGS="mariadb101-client py36-pymysql py36-sqlalchemy12"
 
 OPENSUSE_PKGS="mariadb-client %s-PyMySQL %s-SQLAlchemy"
 
-SUNOS_PKGS="mariadb-101/client sqlalchemy-34"
+SUNOS_PKGS="mariadb-101/client sqlalchemy-%s"
 
 UBUNTU_PKGS="mariadb-client-10.1 %s-pymysql %s-sqlalchemy"
 
