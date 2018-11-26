@@ -18,7 +18,7 @@
 
 CENTOS_PKGS="python34 python34"
 
-DEBIAN_PKGS="python3 python34"
+DEBIAN_PKGS="python3 python3"
 
 FEDORA_PKGS="python3 python3"
 
