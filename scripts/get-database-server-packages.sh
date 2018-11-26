@@ -41,14 +41,14 @@ kernel_name=$(get-os-kernel-name)
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (centos|redhat)
-		printf "%s\n" $REDHAT_PKGS
-		;;
 	    (debian)
 		printf "%s\n" $DEBIAN_PKGS
 		;;
 	    (fedora)
 		printf "%s\n" $FEDORA_PKGS
+		;;
+	    (redhat|centos)
+		printf "%s\n" $REDHAT_PKGS
 		;;
 	    (opensuse-*)
 		printf "%s\n" $OPENSUSE_PKGS

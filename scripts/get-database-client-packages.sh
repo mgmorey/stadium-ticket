@@ -37,14 +37,14 @@ script_dir=$(dirname $0)
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (centos|redhat)
-		packages=$REDHAT_PKGS
-		;;
 	    (debian)
 		packages=$DEBIAN_PKGS
 		;;
 	    (fedora)
 		packages=$FEDORA_PKGS
+		;;
+	    (redhat|centos)
+		packages=$REDHAT_PKGS
 		;;
 	    (opensuse-*)
 		packages=$OPENSUSE_PKGS
