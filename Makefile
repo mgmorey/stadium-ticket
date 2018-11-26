@@ -9,11 +9,11 @@ build:
 run:
 	docker-compose up
 
+pip:
+	pip3 install -r requirements.txt --user
+
 pipenv:
 	$(SCRIPT_DIR)/pipenv.sh sync
-
-requirements:
-	pip3 install -r requirements.txt --user
 
 stress:
 	$(SCRIPT_DIR)/load-test.sh
@@ -21,7 +21,7 @@ stress:
 traffic:
 	$(SCRIPT_DIR)/app-test.sh
 
-.PHONY: all build run pipenv requirements stress traffic
+.PHONY: all build run pip pipenv stress traffic
 
 Pipfile.lock:		Pipfile
 	$(SCRIPT_DIR)/pipenv.sh update --dev
