@@ -31,7 +31,7 @@ FREEBSD_PY_PKGS="%s-Flask %s-pip"
 OPENSUSE_BASE_PKGS="apache2-utils curl %s"
 OPENSUSE_PY_PKGS="%s-flask %s-pip %s-pytest"
 
-SUNOS_PKGS="apache-24 curl python-34"
+SUNOS_BASE_PKGS="apache-24 curl python-34"
 SUNOS_PY_PKGS="pip-34"
 
 UBUNTU_BASE_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev %s"
@@ -67,10 +67,12 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD)
-	printf "%s\n" $FREEBSD_PKGS
+	base_packages=$FREEBSD_BASE_PKGS
+	python_packages=$FREEBSD_PY_PKGS
 	;;
     (SunOS)
-	printf "%s\n" $SUNOS_PKGS
+	base_packages=$SUNOS_BASE_PKGS
+	python_packages=$SUNOS_PY_PKGS
 	;;
 esac
 
