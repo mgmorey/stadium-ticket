@@ -49,20 +49,20 @@ case "$kernel_name" in
 		python_packages=$CENTOS_PY_PKGS
 		;;
 	    (debian)
-		base_packages=$CENTOS_BASE_PKGS
-		python_packages=$CENTOS_PY_PKGS
+		base_packages=$DEBIAN_BASE_PKGS
+		python_packages=$DEBIAN_PY_PKGS
 		;;
 	    (fedora)
-		base_packages=$CENTOS_BASE_PKGS
-		python_packages=$CENTOS_PY_PKGS
+		base_packages=$FEDORA_BASE_PKGS
+		python_packages=$FEDORA_PY_PKGS
 		;;
 	    (opensuse-*)
-		base_packages=$CENTOS_BASE_PKGS
-		python_packages=$CENTOS_PY_PKGS
+		base_packages=$OPENSUSE_BASE_PKGS
+		python_packages=$OPENSUSE_PY_PKGS
 		;;
 	    (ubuntu)
-		base_packages=$CENTOS_BASE_PKGS
-		python_packages=$CENTOS_PY_PKGS
+		base_packages=$UBUNTU_BASE_PKGS
+		python_packages=$UBUNTU_PY_PKGS
 		;;
 	esac
 	;;
