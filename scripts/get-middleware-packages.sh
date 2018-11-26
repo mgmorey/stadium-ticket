@@ -26,7 +26,7 @@ OPENSUSE_PKGS="%s-flask %s-pip %s-pytest"
 
 REDHAT_PKGS="%s-devel %s-pip %s-pytest sclo-%s-python-flask"
 
-SUNOS_PKGS="pip-%s"
+SUNOS_PKGS="build-essential pip-%s pytest-%s"
 
 UBUNTU_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask %s-pip %s-pytest"
 
