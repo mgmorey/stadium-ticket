@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-httpd-python-packages: get HTTPD/Python packages
+# get-base-packages: get base package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,55 +16,53 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="curl httpd-tools \
-python34 python34-devel python34-pip python34-pytest sclo-python34-python-flask"
+CENTOS_BASE_PKGS="curl httpd-tools %s"
+CENTOS_PY_PKGS="%s-devel %s-pip %s-pytest sclo-%s-python-flask"
 
-DEBIAN_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev \
-python3 python3-dev python3-flask python3-pip python3-pytest"
+DEBIAN_BASE_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev %s"
+DEBIAN_PY_PKGS="%s-dev %s-flask %s-pip %s-pytest"
 
-FEDORA_PKGS="curl httpd-tools python3 \
-python3-flask python3-pip"
+FEDORA_BASE_PKGS="curl httpd-tools %s"
+FEDORA_PY_PKGS="%s-flask %s-pip"
 
-FREEBSD_PKGS="apache24 curl python3 \
-py36-Flask py36-pip"
+FREEBSD_BASE_PKGS="apache24 curl python3"
+FREEBSD_PY_PKGS="%s-Flask %s-pip"
 
-OPENSUSE_PKGS="apache2-utils curl python3 \
-python3-flask python3-pip python3-pytest"
+OPENSUSE_BASE_PKGS="apache2-utils curl %s"
+OPENSUSE_PY_PKGS="%s-flask %s-pip %s-pytest"
 
-SUNOS_PKGS="apache-24 curl \
-python-34 pip-34"
+SUNOS_PKGS="apache-24 curl python-34"
+SUNOS_PY_PKGS="pip-34"
 
-UBUNTU_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev \
-python3 python3-dev python3-flask python3-pip python3-pytest"
-
-abort() {
-    printf "$@" >&2
-    exit 1
-}
+UBUNTU_BASE_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev %s"
+UBUNTU_PY_PKGS="%s-dev %s-flask %s-pip %s-pytest"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
+script_dir=$(dirname $0)
 
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (centos)
-		printf "%s\n" $CENTOS_PKGS
+		base_packages=$CENTOS_BASE_PKGS
+		python_packages=$CENTOS_PY_PKGS
 		;;
 	    (debian)
-		printf "%s\n" $DEBIAN_PKGS
+		base_packages=$CENTOS_BASE_PKGS
+		python_packages=$CENTOS_PY_PKGS
 		;;
 	    (fedora)
-		printf "%s\n" $FEDORA_PKGS
+		base_packages=$CENTOS_BASE_PKGS
+		python_packages=$CENTOS_PY_PKGS
 		;;
 	    (opensuse-*)
-		printf "%s\n" $OPENSUSE_PKGS
+		base_packages=$CENTOS_BASE_PKGS
+		python_packages=$CENTOS_PY_PKGS
 		;;
 	    (ubuntu)
-		printf "%s\n" $UBUNTU_PKGS
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
+		base_packages=$CENTOS_BASE_PKGS
+		python_packages=$CENTOS_PY_PKGS
 		;;
 	esac
 	;;
@@ -74,7 +72,15 @@ case "$kernel_name" in
     (SunOS)
 	printf "%s\n" $SUNOS_PKGS
 	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
-	;;
 esac
+
+python_info=$($script_dir/get-python-package-info.sh)
+package_name=$(printf "%s" "$python_info" | awk '{print $1}')
+package_prefix=$(printf "%s" "$python_info" | awk '{print $2}')
+
+for package in $base_packages; do
+    printf "$package\n" $package_name
+done
+for package in $python_packages; do
+    printf "$package\n" $package_prefix
+done
