@@ -8,6 +8,9 @@ build:
 check:
 	$(SCRIPT_DIR)/pipenv.sh check
 
+clean:
+	find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
+
 pip:
 	pip3 install pip --upgrade --user
 	pip3 install -r requirements.txt --user
@@ -24,7 +27,7 @@ stress:
 traffic:
 	$(SCRIPT_DIR)/app-test.sh
 
-.PHONY: all build check pip pipenv run stress traffic
+.PHONY: all build check clean pip pipenv run stress traffic
 
 Pipfile.lock:		Pipfile
 	$(SCRIPT_DIR)/pipenv.sh update --dev
