@@ -1,4 +1,3 @@
-PYTHON = python3
 SCRIPT_DIR = scripts
 
 all:	Pipfile.lock requirements.txt
