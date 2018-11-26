@@ -1,6 +1,6 @@
 #!/bin/sh -u
 
-# install-prerequisites: install prerequisites
+# install-prerequisites: install prerequisite packages for building app
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,12 @@ abort() {
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
 
+base_packages=$($script_dir/get-base-packages.sh)
+mysql_packages=$($script_dir/get-mysql-client-packages.sh)
+
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	install-packages "$@" $($script_dir/get-prerequisites.sh | sort)
+	install-packages "$@" $base_packages $mysql_packages
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
