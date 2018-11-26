@@ -5,8 +5,8 @@ all:	Pipfile.lock requirements.txt
 build:
 	docker-compose up --build
 
-run:
-	docker-compose up
+check:
+	$(SCRIPT_DIR)/pipenv.sh check
 
 pip:
 	pip3 install pip --upgrade --user
@@ -15,13 +15,16 @@ pip:
 pipenv:
 	$(SCRIPT_DIR)/pipenv.sh sync
 
+run:
+	docker-compose up
+
 stress:
 	$(SCRIPT_DIR)/load-test.sh
 
 traffic:
 	$(SCRIPT_DIR)/app-test.sh
 
-.PHONY: all build run pip pipenv stress traffic
+.PHONY: all build check pip pipenv run stress traffic
 
 Pipfile.lock:		Pipfile
 	$(SCRIPT_DIR)/pipenv.sh update --dev
