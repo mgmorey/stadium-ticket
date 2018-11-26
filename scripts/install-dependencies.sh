@@ -1,4 +1,4 @@
-#!/bin/sh -u
+#!/bin/sh -eu
 
 # install-dependencies: install prerequisites for developing app
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -24,8 +24,9 @@ abort() {
 install() {
     database_packages=$($script_dir/get-database-client-packages.sh)
     http_packages=$($script_dir/get-http-client-packages.sh)
-    packages=$($script_dir/get-middleware-packages.sh)
-    install-packages "$@" $database_packages $http_packages $packages
+    mw_packages=$($script_dir/get-middleware-packages.sh)
+    packages="$database_packages $http_packages $mw_packages"
+    install-packages "$@" $packages
 }
 
 kernel_name=$(get-os-kernel-name)
