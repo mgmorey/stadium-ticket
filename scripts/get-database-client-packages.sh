@@ -28,7 +28,7 @@ OPENSUSE_PKGS="mariadb-client %s-PyMySQL %s-SQLAlchemy"
 
 SUNOS_PKGS="mariadb-101/client sqlalchemy-34"
 
-UBUNTU_PKGS="mariadb-client-10.1 python3-pymysql python3-sqlalchemy"
+UBUNTU_PKGS="mariadb-client-10.1 %s-pymysql %s-sqlalchemy"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
