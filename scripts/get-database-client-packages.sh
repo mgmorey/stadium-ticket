@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="mariadb %s-sqlalchemy"
+CENTOS_PKGS="mariadb %s-PyMySQL %s-sqlalchemy"
 
 DEBIAN_PKGS="mariadb-client-10.1 %s-pymysql %s-sqlalchemy"
 
