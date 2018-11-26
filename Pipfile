@@ -4,11 +4,24 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
 
 [packages]
 Flask = "*"
+Jinja2 = "*"
+MarkupSafe = "*"
 PyMySQL = "*"
 SQLAlchemy = "*"
+Werkzeug = "*"
+asn1crypto = "*"
+cffi = "*"
+click = "*"
+cryptography = "*"
+idna = "*"
+itsdangerous = "*"
+pycparser = "*"
+python-dotenv = "*"
+six = "*"
 
 [requires]
-python_version = "3"
+python_version = "3.6"

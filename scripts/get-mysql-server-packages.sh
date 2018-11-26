@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-httpd-python-packages: get HTTPD/Python packages
+# get-mysql-server-packages: get MySQL server packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,19 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="curl httpd-tools"
+CENTOS_PKGS="mariadb-server"
 
-DEBIAN_PKGS="curl apache2-utils python3 python3-pip python3-flask"
+DEBIAN_PKGS="mariadb-server-10.1"
 
-FEDORA_PKGS="curl httpd-tools python3 python3-pip python3-flask"
+FEDORA_PKGS="mariadb-server"
 
-FREEBSD_PKGS="apache24 curl python3 py36-pip py36-Flask"
+FREEBSD_PKGS="mariadb101-server"
 
-OPENSUSE_PKGS="apache2-utils curl python3 python3-pip python3-Flask"
+OPENSUSE_PKGS="mariadb"
 
-SUNOS_PKGS="apache-24 curl python-34 pip-34"
+SUNOS_PKGS="mariadb-101"
 
-UBUNTU_PKGS="curl apache2-utils python3 python3-pip python3-flask"
+UBUNTU_PKGS="mariadb-server-10.1"
 
 abort() {
     printf "$@" >&2

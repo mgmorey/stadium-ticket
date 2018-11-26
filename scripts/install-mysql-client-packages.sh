@@ -1,6 +1,6 @@
 #!/bin/sh -u
 
-# install-httpd-python-packages: install HTTPD/Python packages
+# install-mysql-client-packages: install MySQL client packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 kernel_name=$(get-os-kernel-name)
+script_dir=$(dirname $0)/scripts
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	install-packages "$@" $(./get-httpd-python-packages.sh | sort)
+	packages="$($script_dir/get-mysql-client-packages.sh | sort)"
+	install-packages "$@" $packages
 	;;
 esac

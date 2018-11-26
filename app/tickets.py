@@ -2,7 +2,7 @@
 
 import datetime
 
-from sql import *
+from database import *
 
 
 class Tickets(object):

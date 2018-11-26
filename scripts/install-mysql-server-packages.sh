@@ -1,6 +1,6 @@
 #!/bin/sh -u
 
-# get-prerequisites: get prerequisites
+# install-mysql-server-packages: install MySQL server packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,5 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-./get-httpd-python-packages.sh
-./get-mysql-client-packages.sh
+kernel_name=$(get-os-kernel-name)
+script_dir=$(dirname $0)/scripts
+
+case "$kernel_name" in
+    (Linux|FreeBSD|SunOS)
+	packages="$($script_dir/get-mysql-server-packages.sh | sort)"
+	install-packages "$@" $packages
+	;;
+esac

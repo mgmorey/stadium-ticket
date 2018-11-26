@@ -1,0 +1,8 @@
+**/.pytest_cache
+**/Makefile
+**/__pycache__
+**/test_*.py
+*/.env
+*/.env-template
+*/.git
+*/.venv

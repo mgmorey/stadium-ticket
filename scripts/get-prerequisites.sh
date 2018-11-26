@@ -1,6 +1,6 @@
-#!/bin/sh -u
+#!/bin/sh -eu
 
-# install-mysql-client-packages: install MySQL client packages
+# get-prerequisites: get prerequisites
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-kernel_name=$(get-os-kernel-name)
-
-case "$kernel_name" in
-    (Linux|FreeBSD|SunOS)
-	install-packages "$@" $(./get-mysql-client-packages.sh | sort)
-	;;
-esac
+script_dir=$(dirname $0)
+$script_dir/get-base-packages.sh
+$script_dir/get-mysql-client-packages.sh

@@ -16,16 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PYTHON=python3
-PYTHON_PIP="$PYTHON -m pip"
+abort() {
+    printf "$@" >&2
+    exit 1
+}
 
 kernel_name=$(get-os-kernel-name)
+script_dir=$(dirname $0)
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	install-packages "$@" $(./get-prerequisites.sh | sort)
+	install-packages "$@" $($script_dir/get-prerequisites.sh | sort)
+	;;
+    (*)
+	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
 esac
-
-$PYTHON_PIP install --user pipenv
-pipenv update || $PYTHON_PIP install --user -r requirements.txt

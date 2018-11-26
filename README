@@ -1,25 +1,33 @@
 Stadium Ticket RESTful API for Linux/Unix
 
-0.  To install prerequisites:
+0.  To install prerequisite packages:
 
-    ./install-prerequisites.sh
+    scripts/install-prerequisites.sh
 
-1.  To initialize database:
+1.  To initialize the database schema:
 
-    mysql -p <schema.sql
+    scripts/mysql.sh <sql/schema.sql
 
-2.  To run unit tests:
+2.  To reset the database to a known state:
 
-    ./test_tickets.py
+    scripts/mysql.sh <sql/reset.sql
 
-3.  To start API:
+3.  To run the unit tests:
 
-    ./app.py
+    app/test_tickets.py
 
-4.  To test API:
+4.  To start the app:
 
-    ./test-app.sh
+    app/app.py
 
-5.  To load test API:
+5.  To test the app:
 
-    ./load-test.sh
+    scripts/app-test.sh
+
+6.  To stress test the app:
+
+    scripts/load-test.sh
+
+7.  To build and run a Docker container:
+
+    docker-compose up --build
