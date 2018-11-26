@@ -13,7 +13,7 @@ pipenv:
 	$(SCRIPT_DIR)/pipenv.sh sync
 
 requirements:
-	$(SCRIPT_DIR)/run.sh $(PYTHON) -m pip install -r requirements.txt --user
+	pip3 install -r requirements.txt --user
 
 stress:
 	$(SCRIPT_DIR)/load-test.sh
