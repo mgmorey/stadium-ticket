@@ -22,7 +22,7 @@ FEDORA_PKGS="gcc libffi-devel make openssl-devel %s-devel %s-flask %s-pip %s-pyt
 
 FREEBSD_PKGS="gcc make openssl-devel %s-Flask %s-pip %s-pytest"
 
-OPENSUSE_PKGS="%s-flask %s-pip %s-pytest"
+OPENSUSE_PKGS="gcc libffi-devel libressl-devel make %s-devel %s-flask %s-pip %s-pytest"
 
 REDHAT_PKGS="%s-devel %s-pip %s-pytest sclo-%s-python-flask"
 
