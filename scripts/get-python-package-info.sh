@@ -26,7 +26,7 @@ FREEBSD_INFO="python3 py36"
 
 OPENSUSE_INFO="python3 python3"
 
-SUNOS_INFO="python-34 python-34"
+SUNOS_INFO="python-34 34"
 
 UBUNTU_INFO="python3 python3"
 
