@@ -9,6 +9,7 @@ run:
 	docker-compose up
 
 pip:
+	pip3 install pip --upgrade --user
 	pip3 install -r requirements.txt --user
 
 pipenv:
