@@ -1,6 +1,6 @@
 #!/bin/sh -u
 
-# install-mysql-client-packages: install MySQL client packages
+# install-database-client-packages: install database client packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ script_dir=$(dirname $0)/scripts
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	packages="$($script_dir/get-mysql-client-packages.sh | sort)"
+	packages="$($script_dir/get-database-client-packages.sh | sort)"
 	install-packages "$@" $packages
 	;;
 esac
