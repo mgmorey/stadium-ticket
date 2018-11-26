@@ -21,15 +21,19 @@ abort() {
     exit 1
 }
 
+install() {
+    database_packages=$($script_dir/get-database-client-packages.sh)
+    http_packages=$($script_dir/get-http-client-packages.sh)
+    packages=$($script_dir/get-middleware-packages.sh)
+    install-packages "$@" $database_packages $http_packages $packages
+}
+
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	database_packages=$($script_dir/get-database-client-packages.sh)
-	http_packages=$($script_dir/get-http-client-packages.sh)
-	packages=$($script_dir/get-middleware-packages.sh)
-	install-packages "$@" $database_packages $http_packages $packages
+	install "$@"
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
