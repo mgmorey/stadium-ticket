@@ -22,7 +22,7 @@ DEBIAN_PKGS="mariadb-client-10.1 python3-pymysql"
 
 FEDORA_PKGS="mariadb python3-PyMySQL python3-sqlalchemy"
 
-FREEBSD_PKGS="mariadb101-client py36-pymysql py36-sqlalchemy12"
+FREEBSD_PKGS="mariadb101-client %s-pymysql %s-sqlalchemy12"
 
 OPENSUSE_PKGS="mariadb-client %s-PyMySQL %s-SQLAlchemy"
 
@@ -69,5 +69,12 @@ package_modifier=$(printf "%s" "$python_info" | awk '{print $2}')
 printf "%s\n" $package_name
 
 for package in $packages; do
-    printf "$package\n" $package_modifier 2>/dev/null
+    case $package in
+	(*%s*)
+	    printf "$package\n" $package_modifier
+	    ;;
+	(*)
+	    printf "%s\n" $package
+	    ;;
+    esac
 done

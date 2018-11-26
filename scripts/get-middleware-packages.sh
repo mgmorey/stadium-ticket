@@ -62,6 +62,7 @@ case "$kernel_name" in
 	;;
 esac
 
+
 python_info=$($script_dir/get-python-package-info.sh)
 package_name=$(printf "%s" "$python_info" | awk '{print $1}')
 package_modifier=$(printf "%s" "$python_info" | awk '{print $2}')
@@ -69,5 +70,12 @@ package_modifier=$(printf "%s" "$python_info" | awk '{print $2}')
 printf "%s\n" $package_name
 
 for package in $packages; do
-    printf "$package\n" $package_modifier 2>/dev/null
+    case $package in
+	(*%s*)
+	    printf "$package\n" $package_modifier
+	    ;;
+	(*)
+	    printf "%s\n" $package
+	    ;;
+    esac
 done
