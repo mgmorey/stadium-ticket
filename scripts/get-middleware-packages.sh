@@ -37,7 +37,7 @@ script_dir=$(dirname $0)
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (centos)
+	    (centos|redhat)
 		packages=$CENTOS_PKGS
 		;;
 	    (debian)

@@ -41,7 +41,7 @@ kernel_name=$(get-os-kernel-name)
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (centos)
+	    (centos|redhat)
 		printf "%s\n" $CENTOS_PKGS
 		;;
 	    (debian)
