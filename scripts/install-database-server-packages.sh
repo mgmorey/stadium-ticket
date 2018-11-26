@@ -1,6 +1,6 @@
 #!/bin/sh -u
 
-# install-mysql-server-packages: install MySQL server packages
+# install-database-server-packages: install database server packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -17,11 +17,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 kernel_name=$(get-os-kernel-name)
-script_dir=$(dirname $0)/scripts
+script_dir=$(dirname $0)
 
 case "$kernel_name" in
     (Linux|FreeBSD|SunOS)
-	packages="$($script_dir/get-mysql-server-packages.sh | sort)"
+	packages="$($script_dir/get-database-server-packages.sh | sort)"
 	install-packages "$@" $packages
 	;;
 esac
