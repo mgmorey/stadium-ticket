@@ -16,25 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_BASE_PKGS="curl httpd-tools %s"
+CENTOS_BASE_PKGS="curl httpd-tools"
 CENTOS_PY_PKGS="%s-devel %s-pip %s-pytest sclo-%s-python-flask"
 
-DEBIAN_BASE_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev %s"
+DEBIAN_BASE_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev"
 DEBIAN_PY_PKGS="%s-dev %s-flask %s-pip %s-pytest"
 
-FEDORA_BASE_PKGS="curl httpd-tools %s"
+FEDORA_BASE_PKGS="curl httpd-tools"
 FEDORA_PY_PKGS="%s-flask %s-pip"
 
 FREEBSD_BASE_PKGS="apache24 curl python3"
 FREEBSD_PY_PKGS="%s-Flask %s-pip"
 
-OPENSUSE_BASE_PKGS="apache2-utils curl %s"
+OPENSUSE_BASE_PKGS="apache2-utils curl"
 OPENSUSE_PY_PKGS="%s-flask %s-pip %s-pytest"
 
-SUNOS_BASE_PKGS="apache-24 curl python-34"
+SUNOS_BASE_PKGS="apache-24 curl"
 SUNOS_PY_PKGS="pip-34"
 
-UBUNTU_BASE_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev %s"
+UBUNTU_BASE_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev"
 UBUNTU_PY_PKGS="%s-dev %s-flask %s-pip %s-pytest"
 
 distro_name=$(get-os-distro-name)
@@ -80,9 +80,8 @@ python_info=$($script_dir/get-python-package-info.sh)
 package_name=$(printf "%s" "$python_info" | awk '{print $1}')
 package_prefix=$(printf "%s" "$python_info" | awk '{print $2}')
 
-for package in $base_packages; do
-    printf "$package\n" $package_name
-done
+printf "%s\n" $base_packages $package_name
+
 for package in $python_packages; do
     printf "$package\n" $package_prefix
 done
