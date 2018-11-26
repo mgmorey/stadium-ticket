@@ -32,7 +32,7 @@ OPENSUSE_BASE_PKGS="apache2-utils curl"
 OPENSUSE_PY_PKGS="%s-flask %s-pip %s-pytest"
 
 SUNOS_BASE_PKGS="apache-24 curl"
-SUNOS_PY_PKGS="pip-34"
+SUNOS_PY_PKGS="pip-%s"
 
 UBUNTU_BASE_PKGS="apache2-utils build-essential curl libffi-dev libssl-dev"
 UBUNTU_PY_PKGS="%s-dev %s-flask %s-pip %s-pytest"
@@ -78,10 +78,10 @@ esac
 
 python_info=$($script_dir/get-python-package-info.sh)
 package_name=$(printf "%s" "$python_info" | awk '{print $1}')
-package_prefix=$(printf "%s" "$python_info" | awk '{print $2}')
+package_root=$(printf "%s" "$python_info" | awk '{print $2}')
 
 printf "%s\n" $base_packages $package_name
 
 for package in $python_packages; do
-    printf "$package\n" $package_prefix
+    printf "$package\n" $package_root
 done
