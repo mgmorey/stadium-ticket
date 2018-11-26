@@ -16,19 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_PKGS="python34 python34"
+CENTOS_INFO="python34 python34"
 
-DEBIAN_PKGS="python3 python3"
+DEBIAN_INFO="python3 python3"
 
-FEDORA_PKGS="python3 python3"
+FEDORA_INFO="python3 python3"
 
-FREEBSD_PKGS="python3 py36"
+FREEBSD_INFO="python3 py36"
 
-OPENSUSE_PKGS="python3 python3"
+OPENSUSE_INFO="python3 python3"
 
-SUNOS_PKGS="python-34 python-34"
+SUNOS_INFO="python-34 python-34"
 
-UBUNTU_PKGS="python3 python3"
+UBUNTU_INFO="python3 python3"
 
 abort() {
     printf "$@" >&2
@@ -42,19 +42,19 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (centos)
-		printf "%s %s\n" $CENTOS_PKGS
+		printf "%s %s\n" $CENTOS_INFO
 		;;
 	    (debian)
-		printf "%s %s\n" $DEBIAN_PKGS
+		printf "%s %s\n" $DEBIAN_INFO
 		;;
 	    (fedora)
-		printf "%s %s\n" $FEDORA_PKGS
+		printf "%s %s\n" $FEDORA_INFO
 		;;
 	    (opensuse-*)
-		printf "%s %s\n" $OPENSUSE_PKGS
+		printf "%s %s\n" $OPENSUSE_INFO
 		;;
 	    (ubuntu)
-		printf "%s %s\n" $UBUNTU_PKGS
+		printf "%s %s\n" $UBUNTU_INFO
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
@@ -62,10 +62,10 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD)
-	printf "%s\n" $FREEBSD_PKGS
+	printf "%s %s\n" $FREEBSD_INFO
 	;;
     (SunOS)
-	printf "%s\n" $SUNOS_PKGS
+	printf "%s %s\n" $SUNOS_INFO
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
