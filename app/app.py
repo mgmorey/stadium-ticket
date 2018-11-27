@@ -13,6 +13,7 @@ MAX_COUNT = 10
 MIN_COUNT = 1
 
 app = Flask(__name__)
+session = get_session()
 Tickets.MAX_NUMBER = None
 
 
@@ -28,7 +29,6 @@ def request_ticket():
         abort(400)
 
     try:
-        session = get_session()
         t = Tickets(session, request.json['event'])
     except Exception as e:
         logging.exception("Error requesting ticket: %s", str(e))
@@ -60,7 +60,6 @@ def request_tickets():
     count = min(count, MAX_COUNT)
 
     try:
-        session = get_session()
         t = Tickets(session, request.json['event'], count)
     except Exception as e:
         logging.exception("Error requesting tickets: %s", str(e))
