@@ -3,6 +3,7 @@
 
 import unittest
 
+from database import get_session
 from tickets import Tickets
 
 EVENT_1 = 'The Beatles'
@@ -24,16 +25,18 @@ class TestTicketsMethods(unittest.TestCase):
             self.events[event].add(i)
 
     def sell_tickets(self, event: str, count: int = 1):
-        last_serial = Tickets.last_serial(event)
-        t = Tickets(event, count)
+        session = get_session()
+        last_serial = Tickets.last_serial(session, event)
+        t = Tickets(session, event, count)
         self.assertEqual(t.event, event)
         self.assertEqual(t.serial, last_serial)
         self.add_serial(event, t.serial, count)
 
     def sell_out_tickets(self, event: str, count: int = 1):
         Tickets.MAX_NUMBER = 0
+        session = get_session()
         with self.assertRaises(Tickets.SoldOut):
-            t = Tickets(event, count)
+            t = Tickets(session, event, count)
 
     def test_sell_event_1_ticket(self):
         self.sell_tickets(EVENT_1)

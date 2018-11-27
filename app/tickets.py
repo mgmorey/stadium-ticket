@@ -7,7 +7,6 @@ from database import *
 
 class Tickets(object):
     MAX_NUMBER = 1000
-    session = get_session()
 
     class Events(Base):
         __tablename__ = 'events'
@@ -19,8 +18,8 @@ class Tickets(object):
         pass
 
     @staticmethod
-    def generate_serial(event_name: str, count: int = 1):
-        query = Tickets.session.query(Tickets.Events)
+    def generate_serial(session, event_name: str, count: int = 1):
+        query = session.query(Tickets.Events)
         event = query.filter(Tickets.Events.name == event_name).first()
         last_serial = event.sold
 
@@ -31,17 +30,17 @@ class Tickets(object):
 
         sold = event.sold
         event.sold = sold + count
-        Tickets.session.commit()
+        session.commit()
         return sold, count
 
     @staticmethod
-    def last_serial(event_name: str) -> int:
-        query = Tickets.session.query(Tickets.Events)
+    def last_serial(session, event_name: str) -> int:
+        query = session.query(Tickets.Events)
         event = query.filter(Tickets.Events.name == event_name).first()
         return event.sold
 
-    def __init__(self, event: str, count: int = 1):
-        last_serial, count = Tickets.generate_serial(event, count)
+    def __init__(self, session, event: str, count: int = 1):
+        last_serial, count = Tickets.generate_serial(session, event, count)
         self._count = count
         self._event = event
         self._issue = datetime.datetime.utcnow()

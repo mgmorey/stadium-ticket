@@ -5,14 +5,15 @@ import logging
 
 from flask import Flask, abort, jsonify, request
 
+from database import get_session
 from tickets import Tickets
 
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 MAX_COUNT = 10
 MIN_COUNT = 1
-Tickets.MAX_NUMBER = None
 
 app = Flask(__name__)
+Tickets.MAX_NUMBER = None
 
 
 @app.route('/stadium/ticket', methods=['PUT'])
@@ -27,7 +28,8 @@ def request_ticket():
         abort(400)
 
     try:
-        t = Tickets(request.json['event'])
+        session = get_session()
+        t = Tickets(session, request.json['event'])
     except Exception as e:
         logging.exception("Error requesting ticket: %s", str(e))
         abort(500)
@@ -58,7 +60,8 @@ def request_tickets():
     count = min(count, MAX_COUNT)
 
     try:
-        t = Tickets(request.json['event'], count)
+        session = get_session()
+        t = Tickets(session, request.json['event'], count)
     except Exception as e:
         logging.exception("Error requesting tickets: %s", str(e))
         abort(500)
