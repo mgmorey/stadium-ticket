@@ -20,17 +20,6 @@ APP_PORT=5000
 # Distro-specific parameters
 APP_GID=www-data
 APP_UID=www-data
-DEBIAN_FRONTEND=noninteractive
-RETRY_LOOP="for i in 1 2 3; do %s && break; done\n"
-
-# Update Debian package repository index
-APT_UPDATE="apt-get update -qqy"
-printf "$RETRY_LOOP" "$APT_UPDATE" | sudo sh
-
-# Install dependencies from Debian package repository
-APT_INSTALL="apt-get install -qy --no-install-recommends build-essential \
-mariadb-client-10.1 python3 python3-dev python3-pip uwsgi uwsgi-plugin-python3"
-printf "$RETRY_LOOP" "$APT_INSTALL" | sudo sh
 
 # Set application directory names using name variable
 APP_DIR=/opt/$APP_NAME
@@ -39,7 +28,7 @@ RUN_DIR=/var/run/uwsgi/app/$APP_NAME
 VAR_DIR=/opt/var/$APP_NAME
 
 if [ "$CWD" = $APP_DIR ]; then
-    printf "Change directories before running this script\n"
+    printf "Change to source directory before running this script\n"
     exit 1
 fi
 
