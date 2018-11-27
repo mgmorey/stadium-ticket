@@ -2,7 +2,7 @@
 
 print_sed_command() {
     printf "%s" "sed"
-	  
+
     for var in APP_NAME APP_PORT APP_GID APP_UID APP_DIR; do
 	eval value="\$$var"
 	printf -- " -e 's|\$(%s)|%s|g'" "$var" "$value"
