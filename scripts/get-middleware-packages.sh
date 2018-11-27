@@ -18,13 +18,13 @@
 
 DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask %s-pip %s-pytest"
 
-FEDORA_PKGS="gcc libffi-devel make openssl-devel %s-devel %s-flask %s-pip %s-pytest"
+FEDORA_PKGS="gcc libffi-devel openssl-devel %s-devel %s-flask %s-pip %s-pytest"
 
 FREEBSD_PKGS="openssl-devel %s-Flask %s-pip %s-pytest"
 
-OPENSUSE_PKGS="gcc libffi-devel libressl-devel make %s-devel %s-flask %s-pip %s-pytest"
+OPENSUSE_PKGS="gcc libffi-devel libressl-devel %s-devel %s-flask %s-pip %s-pytest"
 
-REDHAT_PKGS="gcc libffi-devel make openssl-devel %s-devel %s-pip %s-PyMySQL %s-pytest sclo-%s-python-flask"
+REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip %s-PyMySQL %s-pytest sclo-%s-python-flask"
 
 SUNOS_PKGS="build-essential pip-%s pytest-%s"
 
