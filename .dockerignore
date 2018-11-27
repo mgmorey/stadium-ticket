@@ -1,4 +1,5 @@
 **/.pytest_cache
+**/GNUmakefile
 **/Makefile
 **/__pycache__
 **/test_*.py
