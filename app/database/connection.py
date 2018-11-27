@@ -2,16 +2,26 @@
 
 import os
 
-CONNECTION = "{0}+{1}://{2}:{3}@{4}/{5}"
+CONNECTION = "{0}+{1}://{2}/{3}"
 DIALECT = 'mysql'
 DRIVER = 'pymysql'
-HOST = 'localhost'
 SCHEMA = 'stadium-tickets'
+
+HOST = 'localhost'
+USER = 'root'
 
 
 def get_connection():
-    return CONNECTION.format(DIALECT, DRIVER,
-                             os.getenv('MYSQL_USER', os.getenv('USER')),
-                             os.getenv('MYSQL_PASSWORD'),
-                             os.getenv('MYSQL_HOST', HOST),
-                             SCHEMA)
+    host = os.getenv('MYSQL_HOST', HOST)
+    user = os.getenv('MYSQL_USER', USER)
+    password = os.getenv('MYSQL_PASSWORD')
+
+    if password:
+        credentials = ':'.join([user, password])
+    else:
+        credentials = user
+
+    if host:
+        credentials = '@'.join([credentials, host])
+
+    return CONNECTION.format(DIALECT, DRIVER, credentials, SCHEMA)

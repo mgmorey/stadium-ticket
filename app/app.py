@@ -5,7 +5,7 @@ import logging
 
 from flask import Flask, abort, jsonify, request
 
-from database import get_session
+from database import get_connection, get_session
 from tickets import Tickets
 
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
@@ -71,4 +71,6 @@ def request_tickets():
 
 if __name__ == '__main__':
     logging.basicConfig(format=LOGGING_FORMAT, level=logging.DEBUG)
+    conn = get_connection()
+    logging.getLogger(__name__).info("Connecting to %s", conn)
     app.run()
