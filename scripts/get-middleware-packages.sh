@@ -20,7 +20,7 @@ DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask %s-pip %s-pyt
 
 FEDORA_PKGS="gcc libffi-devel make openssl-devel %s-devel %s-flask %s-pip %s-pytest"
 
-FREEBSD_PKGS="gcc make openssl-devel %s-Flask %s-pip %s-pytest"
+FREEBSD_PKGS="openssl-devel %s-Flask %s-pip %s-pytest"
 
 OPENSUSE_PKGS="gcc libffi-devel libressl-devel make %s-devel %s-flask %s-pip %s-pytest"
 
