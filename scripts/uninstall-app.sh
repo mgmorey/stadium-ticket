@@ -14,7 +14,7 @@ APP_AVAILABLE=$ETC_DIR/apps-available/$APP_NAME.ini
 APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
 APP_PIDFILE=$RUN_DIR/pid
 
-# Send reload/restart signal to uWSGI
+# Send restart signal to app
 if [ -r $APP_PIDFILE ]; then
     PID=$(cat $APP_PIDFILE)
 
@@ -23,5 +23,5 @@ if [ -r $APP_PIDFILE ]; then
     fi
 fi
 
-# Remove application and uWSGI configuration
+# Remove application and configuration
 sudo /bin/rm -rf $APP_ENABLED $APP_AVAILABLE $APP_DIR
