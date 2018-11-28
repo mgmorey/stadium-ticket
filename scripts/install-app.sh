@@ -8,20 +8,8 @@ APP_PORT=5000
 APP_GID=www-data
 APP_UID=www-data
 
-abort() {
-    printf "$@" >&2
-    exit 1
-}
-
-check_workdir() {
-    if [ -n "$APP_DIR" -a "$SOURCE_DIR" = "$APP_DIR" ]; then
-	abort "%s\n" "Change to source directory before running this script"
-    fi
-}
-
 configure_app() {
     (cd "$SOURCE_DIR"
-     check_workdir
 
      # Install application uWSGI configuration
      if [ -d $ETC_DIR/apps-available ]; then
@@ -45,7 +33,6 @@ generate_configuration() {
 
 install_app() {
     (cd "$SOURCE_DIR"
-     check_workdir
 
      for file in .env app/*; do
 	 if [ -r "$file" ]; then
@@ -107,14 +94,12 @@ APP_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
 APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
 APP_PIDFILE=$RUN_DIR/pid
 
+# Set script and source directories
 SCRIPT_DIR="$(dirname $0)"
 SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
 
 # Remove application and uWSGI configuration
 sudo /bin/rm -rf $APP_ENABLED $APP_AVAIL $APP_DIR
-
-cd "$SOURCE_DIR"
-check_workdir
 
 # Create application directories
 sudo mkdir -p $APP_DIR $VAR_DIR
