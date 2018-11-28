@@ -1,6 +1,17 @@
 #!/bin/sh -eu
 
-print_sed_command() {
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
+check_workdir() {
+    if [ -n "$APP_DIR" -a "$CWD" = "$APP_DIR" ]; then
+	abort "%s\n" "Change to source directory before running this script"
+    fi
+}    
+
+generate_sed_command() {
     printf "%s" "sed"
 
     for var in APP_NAME APP_PORT APP_GID APP_UID APP_DIR; do
@@ -27,18 +38,15 @@ ETC_DIR=/etc/uwsgi
 RUN_DIR=/var/run/uwsgi/app/$APP_NAME
 VAR_DIR=/opt/var/$APP_NAME
 
-if [ "$CWD" = $APP_DIR ]; then
-    printf "Change to source directory before running this script\n"
-    exit 1
-fi
+check_workdir
 
 # Set application filenames using directory variables
-APP_AVAILABLE=$ETC_DIR/apps-available/$APP_NAME.ini
+APP_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
 APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
 APP_PIDFILE=$RUN_DIR/pid
 
 # Remove application and uWSGI configuration
-sudo /bin/rm -rf $APP_ENABLED $APP_AVAILABLE $APP_DIR
+sudo /bin/rm -rf $APP_ENABLED $APP_AVAIL $APP_DIR
 
 # Create application directories
 sudo mkdir -p $APP_DIR $VAR_DIR
@@ -66,11 +74,7 @@ fi
 
 # Change working directory
 cd "$CWD"
-
-if [ "$CWD" = $APP_DIR ]; then
-    printf "Change directories before running this script\n"
-    exit 1
-fi
+check_workdir
 
 # Copy application files to application directory
 for file in .env app/*; do
@@ -92,9 +96,9 @@ sudo chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR
 
 # Install application uWSGI configuration
 if [ -d $ETC_DIR/apps-available ]; then
-    print_sed_command "$CWD/app.ini" | sh | sudo sh -c "cat >$APP_AVAILABLE"
+    generate_sed_command "$CWD/app.ini" | sh | sudo sh -c "cat >$APP_AVAIL"
     if [ -d $ETC_DIR/apps-enabled ]; then
-	sudo ln -sf $APP_AVAILABLE $APP_ENABLED
+	sudo ln -sf $APP_AVAIL $APP_ENABLED
     fi
 fi
 
