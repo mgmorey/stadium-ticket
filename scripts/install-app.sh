@@ -53,23 +53,25 @@ install_app() {
 }
 
 install_venv() {
-    # Create virtual environment from Pipfiles and requirements.txt
-     FILES="Pipfile Pipfile.lock requirements.txt"
-    (cd $SOURCE_DIR && sudo /bin/cp $FILES $APP_DIR)
-    (cd $APP_DIR
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    export PIPENV_VENV_IN_PROJECT=true
 
-     if sudo -H pipenv >/dev/null 2>&1; then
-	 export LANG=C.UTF-8
-	 export LC_ALL=C.UTF-8
-	 export PIPENV_VENV_IN_PROJECT=true
-	 sudo -H pipenv install
-	 venv="$(sudo -H pipenv --venv)"
+    if pipenv >/dev/null; then
+	(cd $SOURCE_DIR && sudo /bin/cp $APP_PIPFILES $APP_DIR)
+	(cd $APP_DIR
 
-	 if [ -n "$venv" ]; then
-	     sudo mkdir -p $APP_DIR/.venv
-	     sudo sh -c "cp -R $venv/* $APP_DIR/.venv/"
-	 fi
-     fi)
+	 if sudo -H pipenv install; then
+	     venv="$(sudo -H pipenv --venv)"
+
+	     if [ -n "$venv" ]; then
+		 sudo mkdir -p $APP_DIR/.venv
+		 sudo sh -c "cp -R $venv/* $APP_DIR/.venv/"
+	     fi
+	 else
+	     exit $?
+	 fi)
+    fi
 }
 
 restart_app() {
@@ -93,6 +95,8 @@ VAR_DIR=/opt/var/$APP_NAME
 APP_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
 APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
 APP_PIDFILE=$RUN_DIR/pid
+APP_PIPFILES="Pipfile Pipfile.lock requirements.txt"
+
 
 # Set script and source directories
 SCRIPT_DIR="$(dirname $0)"
@@ -105,13 +109,15 @@ sudo /bin/rm -rf $APP_ENABLED $APP_AVAIL $APP_DIR
 sudo mkdir -p $APP_DIR $VAR_DIR
 
 # Install virtual environment
-install_venv
+if install_venv; then
 
-# Install application
-install_app
+    # Install application
+    install_app
 
-# Configure application
-configure_app
+    # Configure application
+    configure_app
 
-# Restart application
-restart_app
+    # Restart application
+    restart_app
+
+fi
