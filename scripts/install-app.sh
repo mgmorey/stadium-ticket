@@ -20,45 +20,50 @@ check_workdir() {
 }
 
 create_virtual_env() {
-    if sudo -H pipenv >/dev/null 2>&1; then
-	export LANG=C.UTF-8
-	export LC_ALL=C.UTF-8
-	export PIPENV_VENV_IN_PROJECT=true
-	sudo -H pipenv install
-	venv="$(sudo -H pipenv --venv)"
+    (cd $APP_DIR
 
-	if [ -n "$venv" ]; then
-	    sudo mkdir -p $APP_DIR/.venv
-	    sudo sh -c "cp -R $venv/* $APP_DIR/.venv/"
-	fi
-    fi
+     if sudo -H pipenv >/dev/null 2>&1; then
+	 export LANG=C.UTF-8
+	 export LC_ALL=C.UTF-8
+	 export PIPENV_VENV_IN_PROJECT=true
+	 sudo -H pipenv install
+	 venv="$(sudo -H pipenv --venv)"
+
+	 if [ -n "$venv" ]; then
+	     sudo mkdir -p $APP_DIR/.venv
+	     sudo sh -c "cp -R $venv/* $APP_DIR/.venv/"
+	 fi
+     fi)
 }
 
 install_app() {
-    for file in .env app/*; do
-	if [ -r "$file" ]; then
-	    case "$file" in
-		(*/GNUmakefile|*/Makefile|*/test_*)
-		    printf "Skipping %s\n" "$file"
-		    ;;
-		(*)
-		    printf "Copying %s to %s\n" "$file" $APP_DIR/
-		    sudo /bin/cp -R "$file" $APP_DIR/
-		    ;;
-	    esac
-	fi
-    done
+    (cd "$SOURCE_DIR"
+     check_workdir
 
-    # Make application owner of its own directories
-    sudo chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR
+     for file in .env app/*; do
+	 if [ -r "$file" ]; then
+	     case "$file" in
+		 (*/GNUmakefile|*/Makefile|*/test_*)
+		     printf "Skipping %s\n" "$file"
+		     ;;
+		 (*)
+		     printf "Copying %s to %s\n" "$file" $APP_DIR/
+		     sudo /bin/cp -R "$file" $APP_DIR/
+		     ;;
+	     esac
+	 fi
+     done
 
-    # Install application uWSGI configuration
-    if [ -d $ETC_DIR/apps-available ]; then
-	print_filter "$SOURCE_DIR/app.ini" | sh | sudo sh -c "cat >$APP_AVAIL"
-	if [ -d $ETC_DIR/apps-enabled ]; then
-	    sudo ln -sf $APP_AVAIL $APP_ENABLED
-	fi
-    fi
+     # Make application owner of its own directories
+     sudo chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR
+
+     # Install application uWSGI configuration
+     if [ -d $ETC_DIR/apps-available ]; then
+	 print_filter "$SOURCE_DIR/app.ini" | sh | sudo sh -c "cat >$APP_AVAIL"
+	 if [ -d $ETC_DIR/apps-enabled ]; then
+	     sudo ln -sf $APP_AVAIL $APP_ENABLED
+	 fi
+     fi)
 }
 
 print_filter() {
@@ -109,15 +114,8 @@ sudo mkdir -p $APP_DIR $VAR_DIR
 # Install application Pipfiles and requirements.txt
 sudo /bin/cp Pipfile Pipfile.lock requirements.txt $APP_DIR/
 
-# Change working directory
-cd $APP_DIR
-
 # Install dependencies in Pipfiles
 create_virtual_env
-
-# Change working directory
-cd "$SOURCE_DIR"
-check_workdir
 
 # Install application
 install_app
