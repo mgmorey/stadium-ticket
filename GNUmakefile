@@ -11,7 +11,7 @@ check:
 clean:
 	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
 
-install:	clean pipenv
+install:	clean pipenv uwsgi
 	$(SCRIPT_DIR)/install-app.sh
 
 pip:
@@ -33,7 +33,10 @@ traffic:
 uninstall:
 	$(SCRIPT_DIR)/uninstall-app.sh
 
-.PHONY: all build check clean install pip pipenv run stress traffic uninstall
+uwsgi:
+	install-packages uwsgi
+
+.PHONY: all build check clean install pip pipenv run stress traffic uninstall uwgi
 
 Pipfile.lock:	Pipfile
 	$(SCRIPT_DIR)/pipenv.sh update --dev
