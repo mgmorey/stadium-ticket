@@ -24,4 +24,4 @@ if [ -r $APP_PIDFILE ]; then
 fi
 
 # Remove application and configuration
-sudo /bin/rm -rf $APP_ENABLED $APP_AVAILABLE $APP_DIR
+sudo /bin/rm -rf $APP_AVAIL $APP_ENABLED $APP_DIR
