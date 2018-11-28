@@ -1,5 +1,13 @@
 #!/bin/sh -eu
 
+# Application-specific parameters
+APP_NAME=stadium-ticket
+APP_PORT=5000
+
+# Distro-specific parameters
+APP_GID=www-data
+APP_UID=www-data
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -26,17 +34,6 @@ create_virtual_env() {
     fi
 }
 
-generate_sed_command() {
-    printf "%s" "sed"
-
-    for var in APP_NAME APP_PORT APP_GID APP_UID APP_DIR; do
-	eval value="\$$var"
-	printf -- " -e 's|\$(%s)|%s|g'" "$var" "$value"
-    done
-
-    printf " %s\n" "$@"
-}
-
 install_app() {
     for file in .env app/*; do
 	if [ -r "$file" ]; then
@@ -57,11 +54,22 @@ install_app() {
 
     # Install application uWSGI configuration
     if [ -d $ETC_DIR/apps-available ]; then
-	generate_sed_command "$CWD/app.ini" | sh | sudo sh -c "cat >$APP_AVAIL"
+	print_filter "$CWD/app.ini" | sh | sudo sh -c "cat >$APP_AVAIL"
 	if [ -d $ETC_DIR/apps-enabled ]; then
 	    sudo ln -sf $APP_AVAIL $APP_ENABLED
 	fi
     fi
+}
+
+print_filter() {
+    printf "%s" "sed"
+
+    for var in APP_NAME APP_PORT APP_GID APP_UID APP_DIR; do
+	eval value="\$$var"
+	printf -- " -e 's|\$(%s)|%s|g'" "$var" "$value"
+    done
+
+    printf " %s\n" "$@"
 }
 
 restart_app() {
@@ -75,28 +83,19 @@ restart_app() {
     fi
 }
 
-CWD="$(pwd)"
-
-# Application-specific parameters
-APP_NAME=stadium-ticket
-APP_PORT=5000
-
-# Distro-specific parameters
-APP_GID=www-data
-APP_UID=www-data
-
 # Set application directory names using name variable
 APP_DIR=/opt/$APP_NAME
 ETC_DIR=/etc/uwsgi
 RUN_DIR=/var/run/uwsgi/app/$APP_NAME
 VAR_DIR=/opt/var/$APP_NAME
 
-check_workdir
-
 # Set application filenames using directory variables
 APP_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
 APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
 APP_PIDFILE=$RUN_DIR/pid
+
+CWD="$(pwd)"
+check_workdir
 
 # Remove application and uWSGI configuration
 sudo /bin/rm -rf $APP_ENABLED $APP_AVAIL $APP_DIR
