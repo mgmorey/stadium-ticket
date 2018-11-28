@@ -59,7 +59,7 @@ install_app() {
 
      # Install application uWSGI configuration
      if [ -d $ETC_DIR/apps-available ]; then
-	 print_filter "$SOURCE_DIR/app.ini" | sh | sudo sh -c "cat >$APP_AVAIL"
+	 print_filter app.ini | sh | sudo sh -c "cat >$APP_AVAIL"
 	 if [ -d $ETC_DIR/apps-enabled ]; then
 	     sudo ln -sf $APP_AVAIL $APP_ENABLED
 	 fi
