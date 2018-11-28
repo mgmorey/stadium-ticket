@@ -66,8 +66,8 @@ install_app() {
 }
 
 install_venv() {
-    # Install application Pipfiles and requirements.txt
-    FILES=Pipfile Pipfile.lock requirements.txt
+    # Create virtual environment from Pipfiles and requirements.txt
+     FILES="Pipfile Pipfile.lock requirements.txt"
     (cd $SOURCE_DIR && sudo /bin/cp $FILES $APP_DIR)
     (cd $APP_DIR
 
@@ -119,7 +119,7 @@ check_workdir
 # Create application directories
 sudo mkdir -p $APP_DIR $VAR_DIR
 
-# Install dependencies in Pipfiles
+# Install virtual environment
 install_venv
 
 # Install application
