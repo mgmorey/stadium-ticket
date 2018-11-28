@@ -14,12 +14,12 @@ APP_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
 APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
 APP_PIDFILE=$RUN_DIR/pid
 
-# Send restart signal to app
+# Send kill signal to app
 if [ -r $APP_PIDFILE ]; then
     PID=$(cat $APP_PIDFILE)
 
     if [ -n "$PID" ]; then
-	sudo kill -s TERM $PID
+	sudo kill $PID
     fi
 fi
 
