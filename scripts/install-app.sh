@@ -20,7 +20,7 @@ check_workdir() {
 }
 
 generate_configuration() {
-    printf "%s" "sed"
+    printf "%s" sed
 
     for var in APP_NAME APP_PORT APP_GID APP_UID APP_DIR; do
 	eval value="\$$var"
