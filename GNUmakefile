@@ -34,7 +34,7 @@ uninstall:
 	$(SCRIPT_DIR)/uninstall-app.sh
 
 uwsgi:
-	install-packages uwsgi
+	install-packages uwsgi uwsgi-plugin-python3
 
 .PHONY: all build check clean install pip pipenv run stress traffic uninstall uwgi
 
