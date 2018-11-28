@@ -14,7 +14,7 @@ abort() {
 }
 
 check_workdir() {
-    if [ -n "$APP_DIR" -a "$CWD" = "$APP_DIR" ]; then
+    if [ -n "$APP_DIR" -a "$SOURCE_DIR" = "$APP_DIR" ]; then
 	abort "%s\n" "Change to source directory before running this script"
     fi
 }
@@ -54,7 +54,7 @@ install_app() {
 
     # Install application uWSGI configuration
     if [ -d $ETC_DIR/apps-available ]; then
-	print_filter "$CWD/app.ini" | sh | sudo sh -c "cat >$APP_AVAIL"
+	print_filter "$SOURCE_DIR/app.ini" | sh | sudo sh -c "cat >$APP_AVAIL"
 	if [ -d $ETC_DIR/apps-enabled ]; then
 	    sudo ln -sf $APP_AVAIL $APP_ENABLED
 	fi
@@ -94,17 +94,20 @@ APP_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
 APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
 APP_PIDFILE=$RUN_DIR/pid
 
-CWD="$(pwd)"
-check_workdir
+SCRIPT_DIR="$(dirname $0)"
+SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
 
 # Remove application and uWSGI configuration
 sudo /bin/rm -rf $APP_ENABLED $APP_AVAIL $APP_DIR
+
+cd "$SOURCE_DIR"
+check_workdir
 
 # Create application directories
 sudo mkdir -p $APP_DIR $VAR_DIR
 
 # Install application Pipfiles and requirements.txt
-sudo /bin/cp Pipfile* requirements.txt $APP_DIR/
+sudo /bin/cp Pipfile Pipfile.lock requirements.txt $APP_DIR/
 
 # Change working directory
 cd $APP_DIR
@@ -113,7 +116,7 @@ cd $APP_DIR
 create_virtual_env
 
 # Change working directory
-cd "$CWD"
+cd "$SOURCE_DIR"
 check_workdir
 
 # Install application
