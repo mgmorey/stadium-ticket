@@ -19,21 +19,15 @@ check_workdir() {
     fi
 }
 
-create_virtual_env() {
-    (cd $APP_DIR
+generate_configuration() {
+    printf "%s" "sed"
 
-     if sudo -H pipenv >/dev/null 2>&1; then
-	 export LANG=C.UTF-8
-	 export LC_ALL=C.UTF-8
-	 export PIPENV_VENV_IN_PROJECT=true
-	 sudo -H pipenv install
-	 venv="$(sudo -H pipenv --venv)"
+    for var in APP_NAME APP_PORT APP_GID APP_UID APP_DIR; do
+	eval value="\$$var"
+	printf -- " -e 's|\$(%s)|%s|g'" "$var" "$value"
+    done
 
-	 if [ -n "$venv" ]; then
-	     sudo mkdir -p $APP_DIR/.venv
-	     sudo sh -c "cp -R $venv/* $APP_DIR/.venv/"
-	 fi
-     fi)
+    printf " %s\n" "$@"
 }
 
 install_app() {
@@ -59,22 +53,28 @@ install_app() {
 
      # Install application uWSGI configuration
      if [ -d $ETC_DIR/apps-available ]; then
-	 print_filter app.ini | sh | sudo sh -c "cat >$APP_AVAIL"
+	 generate_configuration app.ini | sh | sudo sh -c "cat >$APP_AVAIL"
 	 if [ -d $ETC_DIR/apps-enabled ]; then
 	     sudo ln -sf $APP_AVAIL $APP_ENABLED
 	 fi
      fi)
 }
 
-print_filter() {
-    printf "%s" "sed"
+install_venv() {
+    (cd $APP_DIR
 
-    for var in APP_NAME APP_PORT APP_GID APP_UID APP_DIR; do
-	eval value="\$$var"
-	printf -- " -e 's|\$(%s)|%s|g'" "$var" "$value"
-    done
+     if sudo -H pipenv >/dev/null 2>&1; then
+	 export LANG=C.UTF-8
+	 export LC_ALL=C.UTF-8
+	 export PIPENV_VENV_IN_PROJECT=true
+	 sudo -H pipenv install
+	 venv="$(sudo -H pipenv --venv)"
 
-    printf " %s\n" "$@"
+	 if [ -n "$venv" ]; then
+	     sudo mkdir -p $APP_DIR/.venv
+	     sudo sh -c "cp -R $venv/* $APP_DIR/.venv/"
+	 fi
+     fi)
 }
 
 restart_app() {
@@ -115,7 +115,7 @@ sudo mkdir -p $APP_DIR $VAR_DIR
 sudo /bin/cp Pipfile Pipfile.lock requirements.txt $APP_DIR/
 
 # Install dependencies in Pipfiles
-create_virtual_env
+install_venv
 
 # Install application
 install_app
