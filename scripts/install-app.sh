@@ -66,6 +66,9 @@ install_app() {
 }
 
 install_venv() {
+    # Install application Pipfiles and requirements.txt
+    FILES=Pipfile Pipfile.lock requirements.txt
+    (cd $SOURCE_DIR && sudo /bin/cp $FILES $APP_DIR)
     (cd $APP_DIR
 
      if sudo -H pipenv >/dev/null 2>&1; then
@@ -115,9 +118,6 @@ check_workdir
 
 # Create application directories
 sudo mkdir -p $APP_DIR $VAR_DIR
-
-# Install application Pipfiles and requirements.txt
-sudo /bin/cp Pipfile Pipfile.lock requirements.txt $APP_DIR/
 
 # Install dependencies in Pipfiles
 install_venv
