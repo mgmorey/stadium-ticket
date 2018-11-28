@@ -6,7 +6,7 @@ APP_NAME=stadium-ticket
 # Set application directory names using name variable
 APP_DIR=/opt/$APP_NAME
 ETC_DIR=/etc/uwsgi
-LOG_DIR=/var/log/uwsgi
+LOG_DIR=/var/log/uwsgi/app
 RUN_DIR=/var/run/uwsgi/app/$APP_NAME
 VAR_DIR=/opt/var/$APP_NAME
 
