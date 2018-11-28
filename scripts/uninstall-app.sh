@@ -10,7 +10,7 @@ RUN_DIR=/var/run/uwsgi/app/$APP_NAME
 VAR_DIR=/opt/var/$APP_NAME
 
 # Set application filenames using directory variables
-APP_AVAILABLE=$ETC_DIR/apps-available/$APP_NAME.ini
+APP_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
 APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
 APP_PIDFILE=$RUN_DIR/pid
 
