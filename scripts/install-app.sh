@@ -58,17 +58,16 @@ sudo /bin/cp Pipfile* requirements.txt $APP_DIR/
 cd $APP_DIR
 
 # Install dependencies in Pipfiles
-
 if sudo -H pipenv >/dev/null 2>&1; then
     export LANG=C.UTF-8
     export LC_ALL=C.UTF-8
     export PIPENV_VENV_IN_PROJECT=true
     sudo -H pipenv install
-    virtualenv="$(sudo -H pipenv --venv)"
+    venv="$(sudo -H pipenv --venv)"
 
-    if [ -n "$virtualenv" ]; then
+    if [ -n "$venv" ]; then
 	sudo mkdir -p $APP_DIR/.venv
-	sudo sh -c "cp -R $virtualenv/* $APP_DIR/.venv/"
+	sudo sh -c "cp -R $venv/* $APP_DIR/.venv/"
     fi
 fi
 
