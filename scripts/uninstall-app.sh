@@ -36,4 +36,4 @@ for i in 1 2 3 4 5 6; do
 done
 
 # Remove application and configuration
-sudo /bin/rm -rf $APP_AVAIL $APP_ENABLED $APP_DIR $APP_LOGFILE $VAR_DIR
+sudo /bin/rm -rf $APP_ENABLED $APP_DIR $APP_LOGFILE $RUN_DIR $VAR_DIR
