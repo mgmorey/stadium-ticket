@@ -9,7 +9,7 @@ check_workdir() {
     if [ -n "$APP_DIR" -a "$CWD" = "$APP_DIR" ]; then
 	abort "%s\n" "Change to source directory before running this script"
     fi
-}    
+}
 
 generate_sed_command() {
     printf "%s" "sed"
