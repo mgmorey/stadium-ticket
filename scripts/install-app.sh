@@ -19,6 +19,19 @@ check_workdir() {
     fi
 }
 
+configure_app() {
+    (cd "$SOURCE_DIR"
+     check_workdir
+
+     # Install application uWSGI configuration
+     if [ -d $ETC_DIR/apps-available ]; then
+	 generate_configuration app.ini | sh | sudo sh -c "cat >$APP_AVAIL"
+	 if [ -d $ETC_DIR/apps-enabled ]; then
+	     sudo ln -sf $APP_AVAIL $APP_ENABLED
+	 fi
+     fi)
+}
+
 generate_configuration() {
     printf "%s" sed
 
@@ -49,15 +62,7 @@ install_app() {
      done
 
      # Make application owner of its own directories
-     sudo chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR
-
-     # Install application uWSGI configuration
-     if [ -d $ETC_DIR/apps-available ]; then
-	 generate_configuration app.ini | sh | sudo sh -c "cat >$APP_AVAIL"
-	 if [ -d $ETC_DIR/apps-enabled ]; then
-	     sudo ln -sf $APP_AVAIL $APP_ENABLED
-	 fi
-     fi)
+     sudo chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR)
 }
 
 install_venv() {
@@ -119,6 +124,9 @@ install_venv
 
 # Install application
 install_app
+
+# Configure application
+configure_app
 
 # Restart application
 restart_app
