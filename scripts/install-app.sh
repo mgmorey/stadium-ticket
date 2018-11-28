@@ -11,6 +11,21 @@ check_workdir() {
     fi
 }
 
+create_virtual_env() {
+    if sudo -H pipenv >/dev/null 2>&1; then
+	export LANG=C.UTF-8
+	export LC_ALL=C.UTF-8
+	export PIPENV_VENV_IN_PROJECT=true
+	sudo -H pipenv install
+	venv="$(sudo -H pipenv --venv)"
+
+	if [ -n "$venv" ]; then
+	    sudo mkdir -p $APP_DIR/.venv
+	    sudo sh -c "cp -R $venv/* $APP_DIR/.venv/"
+	fi
+    fi
+}
+
 generate_sed_command() {
     printf "%s" "sed"
 
@@ -20,6 +35,44 @@ generate_sed_command() {
     done
 
     printf " %s\n" "$@"
+}
+
+install_app() {
+    for file in .env app/*; do
+	if [ -r "$file" ]; then
+	    case "$file" in
+		(*/GNUmakefile|*/Makefile|*/test_*)
+		    printf "Skipping %s\n" "$file"
+		    ;;
+		(*)
+		    printf "Copying %s to %s\n" "$file" $APP_DIR/
+		    sudo /bin/cp -R "$file" $APP_DIR/
+		    ;;
+	    esac
+	fi
+    done
+
+    # Make application owner of its own directories
+    sudo chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR
+
+    # Install application uWSGI configuration
+    if [ -d $ETC_DIR/apps-available ]; then
+	generate_sed_command "$CWD/app.ini" | sh | sudo sh -c "cat >$APP_AVAIL"
+	if [ -d $ETC_DIR/apps-enabled ]; then
+	    sudo ln -sf $APP_AVAIL $APP_ENABLED
+	fi
+    fi
+}
+
+restart_app() {
+    # Send restart signal to app
+    if [ -r $APP_PIDFILE ]; then
+	PID=$(cat $APP_PIDFILE)
+
+	if [ -n "$PID" ]; then
+	    sudo kill -s HUP $PID
+	fi
+    fi
 }
 
 CWD="$(pwd)"
@@ -58,54 +111,14 @@ sudo /bin/cp Pipfile* requirements.txt $APP_DIR/
 cd $APP_DIR
 
 # Install dependencies in Pipfiles
-if sudo -H pipenv >/dev/null 2>&1; then
-    export LANG=C.UTF-8
-    export LC_ALL=C.UTF-8
-    export PIPENV_VENV_IN_PROJECT=true
-    sudo -H pipenv install
-    venv="$(sudo -H pipenv --venv)"
-
-    if [ -n "$venv" ]; then
-	sudo mkdir -p $APP_DIR/.venv
-	sudo sh -c "cp -R $venv/* $APP_DIR/.venv/"
-    fi
-fi
+create_virtual_env
 
 # Change working directory
 cd "$CWD"
 check_workdir
 
-# Copy application files to application directory
-for file in .env app/*; do
-    if [ -r "$file" ]; then
-	case "$file" in
-	    (*/GNUmakefile|*/Makefile|*/test_*)
-		printf "Skipping %s\n" "$file"
-		;;
-	    (*)
-		printf "Copying %s to %s\n" "$file" $APP_DIR/
-		sudo /bin/cp -R "$file" $APP_DIR/
-		;;
-	esac
-    fi
-done
+# Install application
+install_app
 
-# Make application owner of its own directories
-sudo chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR
-
-# Install application uWSGI configuration
-if [ -d $ETC_DIR/apps-available ]; then
-    generate_sed_command "$CWD/app.ini" | sh | sudo sh -c "cat >$APP_AVAIL"
-    if [ -d $ETC_DIR/apps-enabled ]; then
-	sudo ln -sf $APP_AVAIL $APP_ENABLED
-    fi
-fi
-
-# Send reload/restart signal to uWSGI
-if [ -r $APP_PIDFILE ]; then
-    PID=$(cat $APP_PIDFILE)
-
-    if [ -n "$PID" ]; then
-	sudo kill -s HUP $PID
-    fi
-fi
+# Restart application
+restart_app
