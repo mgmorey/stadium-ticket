@@ -11,7 +11,7 @@ check:
 clean:
 	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
 
-install:	clean
+install:	clean pipenv
 	$(SCRIPT_DIR)/install-app.sh
 
 pip:
@@ -19,7 +19,7 @@ pip:
 	pip3 install -r requirements.txt --user
 
 pipenv:
-	$(SCRIPT_DIR)/pipenv.sh sync
+	$(SCRIPT_DIR)/install-pipenv.sh
 
 run:
 	docker-compose up
