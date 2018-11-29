@@ -39,8 +39,8 @@ install_app() {
 		     printf "Skipping %s\n" "$file"
 		     ;;
 		 (*)
-		     printf "Copying %s to %s\n" "$file" $APP_DIR/
-		     sudo /bin/cp -R "$file" $APP_DIR/
+		     printf "Copying %s to %s\n" "$file" $APP_DIR
+		     sudo /bin/cp -R "$file" $APP_DIR
 		     ;;
 	     esac
 	 fi
@@ -62,8 +62,9 @@ install_venv() {
 	 if sudo -H pipenv install; then
 	     venv="$(sudo -H pipenv --venv)"
 
-	     if [ -n "$venv" -a "$venv" != "$APP_DIR/.venv" ]; then
-		 sudo /bin/mv -f $venv $APP_DIR/.venv
+	     if [ -n "$venv" -a $venv != $APP_DIR/.venv ]; then
+		 sudo mkdir $APP_DIR/.venv
+		 sudo /bin/cp -rf $venv/* $APP_DIR/.venv
 	     fi
 	 else
 	     exit $?
