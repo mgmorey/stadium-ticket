@@ -53,6 +53,7 @@ install_app() {
 install_venv() {
     export LANG=C.UTF-8
     export LC_ALL=C.UTF-8
+    export PIPENV_VENV_IN_PROJECT=true
 
     if pipenv >/dev/null; then
 	(cd $SOURCE_DIR && sudo /bin/cp $APP_PIPFILES $APP_DIR)
@@ -62,7 +63,7 @@ install_venv() {
 	     venv="$(sudo -H pipenv --venv)"
 
 	     if [ -n "$venv" -a "$venv" != "$APP_DIR/.venv" ]; then
-		 sudo mv $venv $APP_DIR/.venv
+		 sudo /bin/mv -f $venv $APP_DIR/.venv
 	     fi
 	 else
 	     exit $?
