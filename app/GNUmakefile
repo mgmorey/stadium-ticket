@@ -14,7 +14,7 @@ debug:	pipenv reset
 	$(SCRIPT_DIR)/run.sh flask run
 
 pipenv:
-	$(SCRIPT_DIR)/pipenv.sh sync --dev
+	pipenv >/dev/null 2>&1 && pipenv sync --dev || true
 
 reset:	schema
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/reset.sql
