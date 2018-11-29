@@ -21,7 +21,7 @@ abort() {
     exit 1
 }
 
-install() {
+install_pkgs() {
     packages="$($script_dir/get-database-server-packages.sh)"
     install-packages "$@" $packages
 }
@@ -34,7 +34,7 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
-		install "$@"
+		install_pkgs "$@"
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
@@ -42,7 +42,7 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD|SunOS)
-	install "$@"
+	install_pkgs "$@"
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
