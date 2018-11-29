@@ -95,7 +95,7 @@ kernel_name=$(get-os-kernel-name)
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (debian|ubuntu)
+	    (ubuntu)
 		APP_GID=www-data
 		APP_UID=www-data
 		APP_CONFIG_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
