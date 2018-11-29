@@ -33,8 +33,6 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
-		install-packages $package_name $package_modifier-pip
-		sudo -H pip3 install pipenv
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
@@ -42,10 +40,11 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD)
-	install-packages $package_name $package_modifier-pip
-	sudo -H python3 -m pip install pipenv
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
 esac
+
+install-packages $package_name $package_modifier-pip
+sudo -H python3 -m pip install pipenv
