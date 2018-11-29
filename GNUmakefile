@@ -6,7 +6,7 @@ build:
 	docker-compose up --build
 
 check:
-	$(SCRIPT_DIR)/pipenv.sh check
+	pipenv >/dev/null 2>&1 && pipenv check || true
 
 clean:
 	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
@@ -36,8 +36,8 @@ uninstall:
 .PHONY: all build check clean install pip pipenv run stress traffic uninstall
 
 Pipfile.lock:	Pipfile
-	$(SCRIPT_DIR)/pipenv.sh update --dev
+	pipenv >/dev/null 2>&1 && pipenv update --dev || true
 
 requirements.txt:	Pipfile
-	$(SCRIPT_DIR)/pipenv.sh lock -r --dev >requirements.txt
-	$(SCRIPT_DIR)/pipenv.sh lock -r >>requirements.txt
+	pipenv >/dev/null 2>&1 && pipenv lock -r --dev >requirements.txt || true
+	pipenv >/dev/null 2>&1 && pipenv lock -r >>requirements.txt || true
