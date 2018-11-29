@@ -22,7 +22,7 @@ FEDORA_PKGS=""
 
 FREEBSD_PKGS=""
 
-OPENSUSE_PKGS=""
+OPENSUSE_PKGS="uwsgi uwsgi-python3"
 
 REDHAT_PKGS=""
 
