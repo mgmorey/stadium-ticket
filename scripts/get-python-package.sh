@@ -16,15 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CENTOS_INFO="python34 python34"
-
 DEBIAN_INFO="python3 python3"
 
-FEDORA_INFO="python3 python3"
+FEDORA_INFO="python36 python3"
 
 FREEBSD_INFO="python3 py36"
 
 OPENSUSE_INFO="python3 python3"
+
+REDHAT_INFO="python34 python34"
 
 SUNOS_INFO="python-34 34"
 
@@ -41,9 +41,6 @@ kernel_name=$(get-os-kernel-name)
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (centos)
-		printf "%s %s\n" $CENTOS_INFO
-		;;
 	    (debian)
 		printf "%s %s\n" $DEBIAN_INFO
 		;;
@@ -52,6 +49,9 @@ case "$kernel_name" in
 		;;
 	    (opensuse-*)
 		printf "%s %s\n" $OPENSUSE_INFO
+		;;
+	    (redhat|centos)
+		printf "%s %s\n" $REDHAT_INFO
 		;;
 	    (ubuntu)
 		printf "%s %s\n" $UBUNTU_INFO
