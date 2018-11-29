@@ -11,7 +11,7 @@ clean:
 	find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
 
 debug:	reset
-	$(SCRIPT_DIR)/run.sh flask run
+	$(SCRIPT_DIR)/run.sh --sync flask run
 
 reset:	schema
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/reset.sql
@@ -20,6 +20,6 @@ schema:
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/schema.sql
 
 test:	reset
-	$(SCRIPT_DIR)/run.sh py.test
+	$(SCRIPT_DIR)/run.sh --sync py.test
 
 .PHONY: all clean debug reset schema test
