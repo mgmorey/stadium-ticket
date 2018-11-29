@@ -16,13 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-if which pipenv >/dev/null 2>&1; then
-    if [ "$1" = -s -o "$1" = --sync ]; then
-	pipenv sync
-	shift
-    fi
+if [ "$1" = -s -o "$1" = --sync ]; then
+    options=--sync
+    shift
+else
+    options=""
+fi
 
-    pipenv run "$@"
+if which pipenv >/dev/null 2>&1; then
+    pipenv run $options "$@"
 else
     "$@"
 fi
