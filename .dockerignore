@@ -1,3 +1,4 @@
+**/*.log
 **/.pytest_cache
 **/GNUmakefile
 **/Makefile
