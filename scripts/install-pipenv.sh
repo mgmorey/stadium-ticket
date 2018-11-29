@@ -36,6 +36,10 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
+    (FreeBSD)
+	sudo -H pip3 install pip --upgrade
+	sudo -H pip3 install pipenv
+	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
