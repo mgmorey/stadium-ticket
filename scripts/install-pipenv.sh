@@ -23,11 +23,17 @@ abort() {
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
+script_dir=$(dirname $0)
+
+data=$($script_dir/get-python-package.sh)
+package_name=$(printf "%s" "$data" | awk '{print $1}')
+package_modifier=$(printf "%s" "$data" | awk '{print $2}')
 
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
+		install-packages $package_name $package_modifier-pip
 		sudo -H pip3 install pip --upgrade
 		sudo -H pip3 install pipenv
 		;;
@@ -37,6 +43,7 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD)
+	install-packages $package_name $package_modifier-pip
 	sudo -H pip3 install pip --upgrade
 	sudo -H pip3 install pipenv
 	;;
