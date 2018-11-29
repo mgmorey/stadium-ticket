@@ -1,45 +1,43 @@
 #!/bin/sh -eu
 
-# Application-specific parameters
 APP_NAME=stadium-ticket
 APP_PORT=5000
 
-# Distro-specific parameters
-distro_name=$(get-os-distro-name)
-kernel_name=$(get-os-kernel-name)
-
-case "$kernel_name" in
-    (Linux)
-	case "$distro_name" in
-	    (debian|ubuntu)
-		APP_GID=www-data
-		APP_UID=www-data
-		;;
-	    (*)
-		APP_GID=nogroup
-		APP_UID=nobody
-		;;
-	esac
-	;;
-    (FreeBSD)
-	APP_GID=nogroup
-	APP_UID=nobody
-	;;
-esac
+abort() {
+    printf "$@" >&2
+    exit 1
+}
 
 configure_app() {
     (cd "$SOURCE_DIR"
 
-     # Install application uWSGI configuration
-     if [ -d $ETC_DIR/apps-available ]; then
-	 generate_configuration app.ini | sh | sudo sh -c "cat >$APP_AVAIL"
-	 if [ -d $ETC_DIR/apps-enabled ]; then
-	     sudo ln -sf $APP_AVAIL $APP_ENABLED
-	 fi
-     fi)
+     case "$kernel_name" in
+	 (Linux)
+	     case "$distro_name" in
+		 (debian|ubuntu)
+		     APP_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
+		     APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
+
+		     if [ -d $ETC_DIR/apps-available ]; then
+			 generate app.ini | sh | sudo sh -c "cat >$APP_AVAIL"
+			 if [ -d $ETC_DIR/apps-enabled ]; then
+			     sudo ln -sf $APP_AVAIL $APP_ENABLED
+			 fi
+		     fi
+		     ;;
+		 (opensuse-*)
+		     APP_VASSAL=$ETC_DIR/vassals/$APP_NAME.ini
+
+		     if [ -d $ETC_DIR/vassals ]; then
+			 generate app.ini | sh | sudo sh -c "cat >$APP_VASSAL"
+		     fi
+		     ;;
+	     esac
+	     ;;
+     esac)
 }
 
-generate_configuration() {
+generate() {
     printf "%s" sed
 
     for var in APP_NAME APP_PORT APP_GID APP_UID APP_DIR; do
@@ -104,6 +102,31 @@ restart_app() {
     fi
 }
 
+distro_name=$(get-os-distro-name)
+kernel_name=$(get-os-kernel-name)
+
+# Set distro-specific parameters
+case "$kernel_name" in
+    (Linux)
+	case "$distro_name" in
+	    (debian|ubuntu)
+		APP_GID=www-data
+		APP_UID=www-data
+		;;
+	    (opensuse-*)
+		APP_GID=nogroup
+		APP_UID=nobody
+		;;
+	    (*)
+		abort "%s: Distro not supported\n" "$distro_name"
+		;;
+	esac
+	;;
+    (*)
+	abort "%s: Operating system not supported\n" "$kernel_name"
+	;;
+esac
+
 # Set application directory names using name variable
 APP_DIR=/opt/$APP_NAME
 ETC_DIR=/etc/uwsgi
@@ -111,8 +134,6 @@ RUN_DIR=/var/run/uwsgi/app/$APP_NAME
 VAR_DIR=/opt/var/$APP_NAME
 
 # Set application filenames using directory variables
-APP_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
-APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
 APP_PIDFILE=$RUN_DIR/pid
 APP_PIPFILES="Pipfile Pipfile.lock requirements.txt"
 
@@ -126,9 +147,6 @@ packages=$($SCRIPT_DIR/get-uwsgi-packages.sh)
 if [ -n "$packages" ]; then
     install-packages $packages
 fi
-
-# Remove application and uWSGI configuration
-sudo /bin/rm -rf $APP_ENABLED $APP_AVAIL $APP_DIR
 
 # Create application directories
 sudo mkdir -p $APP_DIR $VAR_DIR
