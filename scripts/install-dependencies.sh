@@ -22,9 +22,8 @@ abort() {
 }
 
 install() {
-    for category in database-client http-client middleware; do
-	printf "%s\n" "$script_dir/get-$category-packages.sh"
-    done | sh | xargs install-packages "$@"
+    packages=$($script_dir/get-dependencies.sh)
+    install-packages "$@" $packages
 }
 
 distro_name=$(get-os-distro-name)
