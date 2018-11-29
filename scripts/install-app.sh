@@ -40,7 +40,7 @@ install_app() {
 		     ;;
 		 (*)
 		     printf "Copying %s to %s\n" "$file" $APP_DIR
-		     sudo /bin/cp -R "$file" $APP_DIR
+		     sudo /bin/cp -rf "$file" $APP_DIR
 		     ;;
 	     esac
 	 fi
@@ -63,8 +63,7 @@ install_venv() {
 	     venv="$(sudo -H pipenv --venv)"
 
 	     if [ -n "$venv" -a $venv != $APP_DIR/.venv ]; then
-		 sudo mkdir $APP_DIR/.venv
-		 sudo /bin/cp -rf $venv/* $APP_DIR/.venv
+		 sudo ln -sf $venv $APP_DIR/.venv
 	     fi
 	 else
 	     exit $?
