@@ -5,8 +5,27 @@ APP_NAME=stadium-ticket
 APP_PORT=5000
 
 # Distro-specific parameters
-APP_GID=www-data
-APP_UID=www-data
+distro_name=$(get-os-distro-name)
+kernel_name=$(get-os-kernel-name)
+
+case "$kernel_name" in
+    (Linux)
+	case "$distro_name" in
+	    (debian|ubuntu)
+		APP_GID=www-data
+		APP_UID=www-data
+		;;
+	    (*)
+		APP_GID=nogroup
+		APP_UID=nobody
+		;;
+	esac
+	;;
+    (FreeBSD)
+	APP_GID=nogroup
+	APP_UID=nobody
+	;;
+esac
 
 configure_app() {
     (cd "$SOURCE_DIR"
