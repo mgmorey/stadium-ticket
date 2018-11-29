@@ -42,32 +42,28 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian)
-		printf "%s\n" $DEBIAN_PKGS
+		packages=$DEBIAN_PKGS
 		;;
 	    (fedora)
-		printf "%s\n" $FEDORA_PKGS
+		packages=$FEDORA_PKGS
 		;;
 	    (redhat|centos)
-		printf "%s\n" $REDHAT_PKGS
+		packages=$REDHAT_PKGS
 		;;
 	    (opensuse-*)
-		printf "%s\n" $OPENSUSE_PKGS
+		packages=$OPENSUSE_PKGS
 		;;
 	    (ubuntu)
-		printf "%s\n" $UBUNTU_PKGS
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
+		packages=$UBUNTU_PKGS
 		;;
 	esac
 	;;
     (FreeBSD)
-	printf "%s\n" $FREEBSD_PKGS
+	packages=$FREEBSD_PKGS
 	;;
     (SunOS)
-	printf "%s\n" $SUNOS_PKGS
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
+	packages=$SUNOS_PKGS
 	;;
 esac
+
+printf "%s\n" $packages
