@@ -10,7 +10,7 @@ abort() {
 
 configure_app() {
     if [ $# -gt 0 ]; then
-	generate $SOURCE_DIR/app.ini | sh | sudo sh -c "cat >$1"
+	generate_ini $SOURCE_DIR/app.ini | sh | sudo sh -c "cat >$1"
 
 	if [ $# -gt 1 ]; then
 	    sudo ln -sf $1 $2
@@ -18,7 +18,7 @@ configure_app() {
     fi
 }
 
-generate() {
+generate_ini() {
     printf "%s" sed
 
     for var in APP_NAME APP_PORT APP_GID APP_UID APP_DIR; do
