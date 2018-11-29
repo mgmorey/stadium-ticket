@@ -32,7 +32,6 @@ UBUNTU_PKGS="apache2-utils curl"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
-script_dir=$(dirname $0)
 
 case "$kernel_name" in
     (Linux)
