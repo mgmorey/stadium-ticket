@@ -34,7 +34,6 @@ case "$kernel_name" in
 	case "$distro_name" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
 		install-packages $package_name $package_modifier-pip
-		sudo -H pip3 install pip --upgrade
 		sudo -H pip3 install pipenv
 		;;
 	    (*)
@@ -44,7 +43,6 @@ case "$kernel_name" in
 	;;
     (FreeBSD)
 	install-packages $package_name $package_modifier-pip
-	sudo -H pip3 install pip --upgrade
 	sudo -H pip3 install pipenv
 	;;
     (*)
