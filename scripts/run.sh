@@ -17,14 +17,18 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 if [ "$1" = -s -o "$1" = --sync ]; then
-    options=--sync
+    sync=true
     shift
 else
-    options=""
+    sync=false
 fi
 
 if which pipenv >/dev/null 2>&1; then
-    pipenv run $options "$@"
+    if [ "$sync" = true ]; then
+	pipenv sync
+    fi
+
+    pipenv run "$@"
 else
     "$@"
 fi
