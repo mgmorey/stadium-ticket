@@ -9,32 +9,13 @@ abort() {
 }
 
 configure_app() {
-    (cd "$SOURCE_DIR"
+    if [ $# -gt 0 ]; then
+	generate $SOURCE_DIR/app.ini | sh | sudo sh -c "cat >$1"
 
-     case "$kernel_name" in
-	 (Linux)
-	     case "$distro_name" in
-		 (debian|ubuntu)
-		     APP_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
-		     APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
-
-		     if [ -d $ETC_DIR/apps-available ]; then
-			 generate app.ini | sh | sudo sh -c "cat >$APP_AVAIL"
-			 if [ -d $ETC_DIR/apps-enabled ]; then
-			     sudo ln -sf $APP_AVAIL $APP_ENABLED
-			 fi
-		     fi
-		     ;;
-		 (opensuse-*)
-		     APP_VASSAL=$ETC_DIR/vassals/$APP_NAME.ini
-
-		     if [ -d $ETC_DIR/vassals ]; then
-			 generate app.ini | sh | sudo sh -c "cat >$APP_VASSAL"
-		     fi
-		     ;;
-	     esac
-	     ;;
-     esac)
+	if [ $# -gt 1 ]; then
+	    sudo ln -sf $1 $2
+	fi
+    fi
 }
 
 generate() {
@@ -72,7 +53,6 @@ install_app() {
 install_venv() {
     export LANG=C.UTF-8
     export LC_ALL=C.UTF-8
-    export PIPENV_VENV_IN_PROJECT=true
 
     if pipenv >/dev/null; then
 	(cd $SOURCE_DIR && sudo /bin/cp $APP_PIPFILES $APP_DIR)
@@ -81,9 +61,8 @@ install_venv() {
 	 if sudo -H pipenv install; then
 	     venv="$(sudo -H pipenv --venv)"
 
-	     if [ -n "$venv" ]; then
-		 sudo mkdir -p $APP_DIR/.venv
-		 sudo sh -c "cp -R $venv/* $APP_DIR/.venv/"
+	     if [ -n "$venv" -a "$venv" != "$APP_DIR/.venv" ]; then
+		 sudo mv $venv $APP_DIR/.venv
 	     fi
 	 else
 	     exit $?
@@ -102,20 +81,31 @@ restart_app() {
     fi
 }
 
+# Set application directory names using name variable
+APP_DIR=/opt/$APP_NAME
+ETC_DIR=/etc/uwsgi
+RUN_DIR=/var/run/uwsgi/app/$APP_NAME
+VAR_DIR=/opt/var/$APP_NAME
+
+# Set distro-specific parameters
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
 
-# Set distro-specific parameters
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian|ubuntu)
 		APP_GID=www-data
 		APP_UID=www-data
+		APP_CONFIG_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
+		APP_CONFIG_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
+		APP_CONFIG_FILES="$APP_CONFIG_AVAIL $APP_CONFIG_ENABLED"
 		;;
 	    (opensuse-*)
 		APP_GID=nogroup
 		APP_UID=nobody
+		APP_CONFIG=$ETC_DIR/vassals/$APP_NAME.ini
+		APP_CONFIG_FILES="$APP_CONFIG"
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
@@ -126,12 +116,6 @@ case "$kernel_name" in
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
 esac
-
-# Set application directory names using name variable
-APP_DIR=/opt/$APP_NAME
-ETC_DIR=/etc/uwsgi
-RUN_DIR=/var/run/uwsgi/app/$APP_NAME
-VAR_DIR=/opt/var/$APP_NAME
 
 # Set application filenames using directory variables
 APP_PIDFILE=$RUN_DIR/pid
@@ -158,7 +142,7 @@ if install_venv; then
     install_app
 
     # Configure application
-    configure_app
+    configure_app $APP_CONFIG_FILES
 
     # Restart application
     restart_app
