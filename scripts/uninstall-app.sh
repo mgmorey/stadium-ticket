@@ -18,10 +18,10 @@ APP_PIDFILE=$RUN_DIR/pid
 # Send interrupt signal to app
 for i in 1 2 3 4 5 6; do
     if [ -r $APP_PIDFILE ]; then
-	APP_PID=$(cat $APP_PIDFILE)
+	pid=$(cat $APP_PIDFILE)
 
 	if [ -n "$APP_PID" ]; then
-	    if sudo kill -s INT $APP_PID; then
+	    if sudo kill -s INT $pid; then
 		sleep 5
 	    else
 		break

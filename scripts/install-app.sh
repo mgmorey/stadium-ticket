@@ -77,10 +77,10 @@ install_venv() {
 restart_app() {
     # Send restart signal to app
     if [ -r $APP_PIDFILE ]; then
-	PID=$(cat $APP_PIDFILE)
+	pid=$(cat $APP_PIDFILE)
 
-	if [ -n "$PID" ]; then
-	    sudo kill -s HUP $PID
+	if [ -n "$pid" ]; then
+	    sudo kill -s HUP $pid
 	fi
     fi
 }
@@ -97,10 +97,16 @@ APP_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
 APP_PIDFILE=$RUN_DIR/pid
 APP_PIPFILES="Pipfile Pipfile.lock requirements.txt"
 
-
 # Set script and source directories
 SCRIPT_DIR="$(dirname $0)"
 SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
+
+# Install uWSGI with Python 3 plugin
+packages=$($SCRIPT_DIR/get-uwsgi-packages.sh)
+
+if [ -n "$packages" ]; then
+    install-packages $packages
+fi
 
 # Remove application and uWSGI configuration
 sudo /bin/rm -rf $APP_ENABLED $APP_AVAIL $APP_DIR
