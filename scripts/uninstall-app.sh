@@ -11,7 +11,7 @@ RUN_DIR=/var/run/uwsgi/app/$APP_NAME
 VAR_DIR=/opt/var/$APP_NAME
 
 # Set application filenames using directory variables
-APP_CONFIGS="$ETC_DIR/*/$APP_NAME.ini"
+APP_CONFIG_FILES="$ETC_DIR/*/$APP_NAME.ini"
 APP_LOGFILE=$LOG_DIR/$APP_NAME.log
 APP_PIDFILE=$RUN_DIR/pid
 
@@ -35,4 +35,4 @@ for i in 1 2 3 4 5 6; do
 done
 
 # Remove application and configuration
-sudo /bin/rm -rf $APP_CONFIGS $APP_DIR $APP_LOGFILE $RUN_DIR $VAR_DIR
+sudo /bin/rm -rf $APP_CONFIG_FILES $APP_DIR $APP_LOGFILE $RUN_DIR $VAR_DIR
