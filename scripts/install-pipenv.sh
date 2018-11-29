@@ -44,8 +44,8 @@ case "$kernel_name" in
 	;;
     (FreeBSD)
 	install-packages $package_name $package_modifier-pip
-	sudo -H pip-3.6 install pip --upgrade
-	sudo -H pip-3.6 install pipenv
+	sudo -H python3 -m pip install pip --upgrade
+	sudo -H python3 -m pip install pipenv
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
