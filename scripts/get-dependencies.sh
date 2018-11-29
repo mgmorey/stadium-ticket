@@ -24,7 +24,7 @@ abort() {
 get_deps() {
     for category in database-client http-client middleware; do
 	printf "%s\n" "$script_dir/get-$category-packages.sh"
-    done | sh | sort | uniq
+    done | sh | sort -u
 }
 
 distro_name=$(get-os-distro-name)
