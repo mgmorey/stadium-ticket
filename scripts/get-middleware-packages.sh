@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask \
-%s-flask-restful %s-python3-flask-sqlalchemy %s-pip %s-pytest"
+%s-flask-restful %s-flask-sqlalchemy %s-pip %s-pytest"
 
 FEDORA_PKGS="gcc libffi-devel openssl-devel %s-devel %s-flask %s-pip \
 %s-pytest"
@@ -32,8 +32,8 @@ REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip %s-PyMySQL \
 
 SUNOS_PKGS="build-essential pip-%s pytest-%s"
 
-DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask \
-%s-flask-restful %s-python3-flask-sqlalchemy %s-pip %s-pytest"
+UBUNTU_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask \
+%s-flask-restful %s-flask-sqlalchemy %s-pip %s-pytest"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
