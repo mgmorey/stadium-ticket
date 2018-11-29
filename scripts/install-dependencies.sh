@@ -22,11 +22,9 @@ abort() {
 }
 
 install() {
-    database_packages=$($script_dir/get-database-client-packages.sh)
-    http_packages=$($script_dir/get-http-client-packages.sh)
-    mw_packages=$($script_dir/get-middleware-packages.sh)
-    packages="$database_packages $http_packages $mw_packages"
-    install-packages "$@" $packages
+    for category in database-client http-client middleware; do
+	printf "%s\n" "$script_dir/get-$category-packages.sh"
+    done | sh | xargs install-packages "$@"
 }
 
 distro_name=$(get-os-distro-name)
