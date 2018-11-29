@@ -20,7 +20,7 @@ for i in 1 2 3 4 5 6; do
     if [ -r $APP_PIDFILE ]; then
 	pid=$(cat $APP_PIDFILE)
 
-	if [ -n "$APP_PID" ]; then
+	if [ -n "$pid" ]; then
 	    if sudo kill -s INT $pid; then
 		sleep 5
 	    else
