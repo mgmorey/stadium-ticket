@@ -15,11 +15,12 @@ install:	clean pipenv
 	$(SCRIPT_DIR)/install-app.sh
 
 pip:
-	pip3 install pip --upgrade --user
+	pip3 install pip --user
 	pip3 install -r requirements.txt --user
 
 pipenv:
 	$(SCRIPT_DIR)/install-pipenv.sh
+	pipenv install
 
 run:
 	docker-compose up
