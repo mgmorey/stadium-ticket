@@ -16,4 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-exec mysql -h ${MYSQL_HOST:=localhost} -u ${MYSQL_USER:-$USER} -p"$MYSQL_PASSWORD" "$@"
+script_dir=$(dirname $0)
+source_dir=$script_dir/..
+
+if . $source_dir/.env; then
+    exec mysql -h ${MYSQL_HOST:=localhost} -u ${MYSQL_USER:-$USER} -p"$MYSQL_PASSWORD" "$@"
+fi
