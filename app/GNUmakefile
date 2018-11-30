@@ -20,6 +20,6 @@ schema:
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/schema.sql
 
 test:	reset
-	$(SCRIPT_DIR)/run.sh --sync py.test
+	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
 
 .PHONY: all clean debug reset schema test
