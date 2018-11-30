@@ -37,7 +37,7 @@ uninstall:
 .PHONY: all build check clean install pip pipenv run stress traffic uninstall
 
 Pipfile.lock:	Pipfile
-	pipenv >/dev/null 2>&1 && pipenv update --dev || true
+	pipenv >/dev/null 2>&1 && pipenv install || true
 
 requirements.txt:	Pipfile
 	pipenv >/dev/null 2>&1 && pipenv lock -r --dev >requirements.txt || true
