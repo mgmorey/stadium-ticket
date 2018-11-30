@@ -5,7 +5,7 @@ import logging
 
 from flask import Flask, abort, jsonify, request
 
-from database import get_connection, get_session
+from database import get_session, get_uri
 from tickets import Tickets
 
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"

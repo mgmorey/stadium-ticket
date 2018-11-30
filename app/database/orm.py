@@ -4,9 +4,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-from .connection import get_connection
+from .uri import get_uri
 
-engine = create_engine(get_connection())
+engine = create_engine(get_uri())
 
 Base = declarative_base()
 Base.metadata.bind = engine
