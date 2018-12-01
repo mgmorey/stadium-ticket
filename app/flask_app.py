@@ -9,12 +9,12 @@ from database import Events, db, get_uri, session
 from tickets import SoldOut, Tickets
 
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
-MAX_COUNT = 10
-MIN_COUNT = 1
+
+SQLALCHEMY_DATABASE_URI = get_uri()
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = get_uri()
+app.config.from_object(__name__)
 db.init_app(app)
 
 
@@ -40,6 +40,9 @@ def request_ticket():
 
 @app.route('/stadium/tickets', methods=['PUT'])
 def request_tickets():
+    MAX_COUNT = 10
+    MIN_COUNT = 1
+
     if not request.json:
         abort(400)
 
