@@ -57,9 +57,11 @@ install_venv() {
     export LC_ALL=C.UTF-8
     export PIPENV_VENV_IN_PROJECT=true
 
-    sudo mkdir -p $APP_DIR/.venv
-
+    sudo -H pip3 install pipenv
+    
     if pipenv >/dev/null; then
+	sudo mkdir -p $APP_DIR/.venv
+
 	(cd $SOURCE_DIR && sudo /bin/cp $APP_PIPFILES $APP_DIR)
 	(cd $APP_DIR
 
