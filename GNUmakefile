@@ -4,6 +4,8 @@ export PYTHONPATH := $(PWD)
 SCRIPT_DIR = scripts
 SQL_DIR = sql
 
+scripts = $(shell find . -type f -name '*.py')
+
 all:	Pipfile.lock requirements.txt style sync test
 
 build:	.env Pipfile.lock
@@ -39,7 +41,7 @@ stress:
 	$(SCRIPT_DIR)/load-test.sh
 
 style:
-	pycodestyle *.py 2>/dev/null || true
+	@pycodestyle $(scripts) 2>/dev/null || true
 
 sync:
 	pipenv sync
