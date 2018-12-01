@@ -2,16 +2,16 @@ SCRIPT_DIR = scripts
 
 all:	Pipfile.lock requirements.txt
 
-build:
+build:	Pipfile.lock
 	docker-compose up --build
 
 clean:
 	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
 
-install:
+install:	Pipfile.lock
 	$(SCRIPT_DIR)/install-app.sh
 
-pip:
+pip:	requirements.txt
 	pip3 install pip --user
 	pip3 install -r requirements.txt --user
 
