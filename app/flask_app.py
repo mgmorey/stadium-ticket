@@ -4,6 +4,7 @@
 import logging
 
 from flask import Flask, abort, jsonify, request
+from flask_script import Manager
 
 from .database import Events, db, get_uri, session
 from .tickets import SoldOut, Tickets
@@ -16,6 +17,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 app = Flask(__name__)
 app.config.from_object(__name__)
 db.init_app(app)
+manager = Manager(app)
 
 
 @app.route('/stadium/ticket', methods=['PUT'])
@@ -75,4 +77,4 @@ def request_tickets():
 
 if __name__ == '__main__':
     logging.basicConfig(format=LOGGING_FORMAT, level=logging.DEBUG)
-    app.run()
+    manager.run()
