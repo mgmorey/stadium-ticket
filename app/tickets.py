@@ -20,8 +20,7 @@ class Tickets(object):
 
         if Tickets.MAX_NUMBER is not None:
             if last_serial + count > Tickets.MAX_NUMBER:
-                raise SoldOut("maximum serial number: "
-                              "{0}".format(Tickets.MAX_NUMBER))
+                raise SoldOut("maximum serial number: {Tickets.MAX_NUMBER}")
 
         sold = event.sold
         event.sold = sold + count
