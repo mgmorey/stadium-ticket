@@ -6,7 +6,7 @@ build:
 clean:
 	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
 
-install:	clean pipenv
+install:
 	$(SCRIPT_DIR)/install-app.sh
 
 pip:
