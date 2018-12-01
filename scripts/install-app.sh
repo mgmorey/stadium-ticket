@@ -61,7 +61,7 @@ install_venv() {
 	(cd $SOURCE_DIR && sudo /bin/cp $APP_PIPFILES $APP_DIR)
 	(cd $APP_DIR
 
-	 if sudo -H pipenv install; then
+	 if sudo -H pipenv sync; then
 	     venv="$(sudo -H pipenv --venv)"
 
 	     if [ -n "$venv" -a $venv != $APP_DIR/.venv ]; then
