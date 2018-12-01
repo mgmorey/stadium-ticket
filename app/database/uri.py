@@ -13,21 +13,17 @@ SCHEMA = 'stadium-tickets'
 
 
 def get_uri():
+    default_user = config('MYSQL_USER', default=USER)
+    default_host = config('MYSQL_HOST', default=HOST)
+    default_password = config('MYSQL_PASSWORD', default=PASSWORD)
     dialect = config('DATABASE_DIALECT', default=DIALECT)
     driver = config('DATABASE_DRIVER', default=DRIVER)
+    host = config('DATABASE_HOST', default=default_host)
+    user = config('DATABASE_USER', default=default_user)
+    password = config('DATABASE_PASSWORD', default_password)
 
     if driver:
         dialect = f"{dialect}+{driver}"
-
-    user = config('DATABASE_USER',
-                  default=config('MYSQL_USER',
-                                 default=USER))
-    host = config('DATABASE_HOST',
-                  default=config('MYSQL_HOST',
-                                 default=HOST))
-    password = config('DATABASE_PASSWORD',
-                      default=config('MYSQL_PASSWORD',
-                                     default=PASSWORD))
 
     if password:
         user = f"{user}:{password}"
