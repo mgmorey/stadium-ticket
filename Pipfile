@@ -10,6 +10,7 @@ pytest = "*"
 [packages]
 Flask = "*"
 Flask-RESTful = "*"
+Flask-Script = "*"
 Flask-SQLAlchemy = "*"
 PyMySQL = "*"
 SQLAlchemy = "*"
