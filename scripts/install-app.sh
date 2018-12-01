@@ -58,7 +58,7 @@ install_venv() {
     export PIPENV_VENV_IN_PROJECT=true
 
     sudo -H pip3 install pipenv
-    
+
     if pipenv >/dev/null; then
 	sudo mkdir -p $APP_DIR/.venv
 
