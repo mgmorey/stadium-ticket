@@ -47,4 +47,4 @@ case "$kernel_name" in
 esac
 
 install-packages $package_name $package_modifier-pip
-python3 -m pip install pipenv
+pip3 install pipenv
