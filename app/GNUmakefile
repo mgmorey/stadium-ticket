@@ -20,7 +20,7 @@ schema:
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/schema.sql
 
 style:
-	pycodestyle *.py
+	pycodestyle *.py || true
 
 test:	reset
 	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
