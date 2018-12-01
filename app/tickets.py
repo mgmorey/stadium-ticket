@@ -2,7 +2,7 @@
 
 import datetime
 
-from database import Events, session
+from .database import Events, session
 
 
 class SoldOut(Exception):

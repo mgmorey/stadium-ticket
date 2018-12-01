@@ -32,21 +32,23 @@ generate_ini() {
 install_app() {
     (cd "$SOURCE_DIR"
 
-     for file in .env app/*; do
-	 if [ -r "$file" ]; then
-	     case "$file" in
-		 (*/GNUmakefile|*/Makefile|*/test_*)
-		     printf "Skipping %s\n" "$file"
-		     ;;
-		 (*)
-		     printf "Copying %s to %s\n" "$file" $APP_DIR
-		     sudo /bin/cp -rf "$file" $APP_DIR
-		     ;;
-	     esac
-	 fi
+     # Install application environment file
+     sudo install -D .env "$APP_DIR"
+
+     # Install application code files
+     for source in $(find app -type f -name '*.py' -print | sort); do
+	 case "$source" in
+	     (*/test_*.py)
+		 ;;
+	     (*)
+		 dest="$APP_DIR/$source"
+		 printf "Copying %s to %s\n" "$source" "$dest"
+		 sudo install -D -m 644 "$source" "$dest"
+		 ;;
+	 esac
      done
 
-     # Make application owner of its own directories
+     # Make application the owner of the app and data directories
      sudo chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR)
 }
 

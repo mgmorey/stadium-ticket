@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from .orm import *
+from .orm import Events, db, session
 from .uri import get_uri

@@ -1,4 +1,4 @@
-export FLASK_APP := $(PWD)/app.py
+# export FLASK_APP := app
 export FLASK_ENV := development
 export PYTHONPATH := $(PWD)
 
