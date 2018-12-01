@@ -5,6 +5,7 @@ cffi==1.11.5
 click==7.0
 cryptography==2.4.2
 flask-restful==0.3.6
+flask-script==2.0.6
 flask-sqlalchemy==2.3.2
 flask==1.0.2
 idna==2.7
