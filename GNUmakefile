@@ -1,5 +1,7 @@
 SCRIPT_DIR = scripts
 
+all:
+
 build:
 	docker-compose up --build
 
@@ -29,4 +31,4 @@ traffic:
 uninstall:
 	$(SCRIPT_DIR)/uninstall-app.sh
 
-.PHONY: build clean install pip pipenv run stress traffic uninstall
+.PHONY: all build clean install pip pipenv run stress traffic uninstall
