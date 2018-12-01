@@ -41,7 +41,8 @@ ENV PIPENV_VENV_IN_PROJECT=true
 RUN pipenv sync
 
 # Copy application files
-COPY app/ $APP_DIR/
+COPY app/ $APP_DIR/app/
+COPY .env $APP_DIR/
 COPY app.ini $ETC_DIR/
 
 # Make application owner of its own directories
