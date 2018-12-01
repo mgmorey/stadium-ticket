@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 # mysql.sh: wrapper for invoking MySQL client
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -20,5 +20,9 @@ script_dir=$(dirname $0)
 source_dir=$script_dir/..
 
 if . $source_dir/.env; then
-    exec mysql -h ${MYSQL_HOST:=localhost} -u ${MYSQL_USER:-$USER} -p"$MYSQL_PASSWORD" "$@"
+    exec mysql \
+	 -h ${DATABASE_HOST:-$MYSQL_HOST} \
+	 -u ${DATABASE_USER:-$MYSQL_USER} \
+	 -p"${DATABASE_PASSWORD:-$MYSQL_PASSWORD}" \
+	 "$@"
 fi

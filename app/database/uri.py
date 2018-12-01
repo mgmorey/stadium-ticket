@@ -8,6 +8,7 @@ DIALECT = 'mysql'
 DRIVER = 'pymysql'
 HOST = 'mysql'
 USER = os.getenv('USER')
+PASSWORD = ''
 SCHEMA = 'stadium-tickets'
 
 
@@ -18,9 +19,15 @@ def get_uri():
     if driver:
         dialect = f"{dialect}+{driver}"
 
-    user = config('DATABASE_USER', default=config('MYSQL_USER', default=USER))
-    host = config('DATABASE_HOST', default=config('MYSQL_HOST', default=HOST))
-    password = config('DATABASE_PASSWORD', default=config('MYSQL_PASSWORD'))
+    user = config('DATABASE_USER',
+                  default=config('MYSQL_USER',
+                                 default=USER))
+    host = config('DATABASE_HOST',
+                  default=config('MYSQL_HOST',
+                                 default=HOST))
+    password = config('DATABASE_PASSWORD',
+                      default=config('MYSQL_PASSWORD',
+                                     default=PASSWORD))
 
     if password:
         user = f"{user}:{password}"
