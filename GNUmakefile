@@ -4,7 +4,7 @@ export PYTHONPATH := $(PWD)
 SCRIPT_DIR = scripts
 SQL_DIR = sql
 
-all:	Pipfile.lock requirements.txt style test
+all:	Pipfile.lock requirements.txt style update test
 
 build:	.env Pipfile.lock
 	docker-compose up --build
@@ -50,7 +50,10 @@ traffic:
 uninstall:
 	$(SCRIPT_DIR)/uninstall-app.sh
 
-.PHONY: all build clean debug install pip pipenv reset run schema stress style test traffic uninstall
+update:
+	pipenv update
+
+.PHONY: all build clean debug install pip pipenv reset run schema stress style test traffic uninstall update
 
 
 .env:	.env-template
