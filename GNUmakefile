@@ -13,7 +13,7 @@ clean:
 	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
 
 debug:	reset
-	$(SCRIPT_DIR)/run.sh flask run
+	$(SCRIPT_DIR)/run.sh flask run --port 5001
 
 install:	.env Pipfile.lock
 	$(SCRIPT_DIR)/install-app.sh
