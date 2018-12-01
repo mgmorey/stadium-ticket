@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-from .uri import get_uri
+from database.uri import get_uri
 
-engine = create_engine(get_uri())
+app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = get_uri()
+db = SQLAlchemy(app)
+session = db.session
 
-Base = declarative_base()
-Base.metadata.bind = engine
-
-
-def get_session():
-    return scoped_session(sessionmaker(bind=engine))
+class Events(db.Model):
+    __tablename__ = 'events'
+    name = db.Column(db.String(32), primary_key=True)
+    sold = db.Column(db.Integer, nullable=False)
+    total = db.Column(db.Integer, nullable=False)

@@ -3,19 +3,14 @@
 
 import logging
 
-from flask import Flask, abort, jsonify, request
+from flask import abort, jsonify, request
 
-from database import get_session, get_uri
-from tickets import Tickets
+from database import Events, app, session
+from tickets import SoldOut, Tickets
 
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 MAX_COUNT = 10
 MIN_COUNT = 1
-
-app = Flask(__name__)
-session = get_session()
-Tickets.MAX_NUMBER = None
-
 
 @app.route('/stadium/ticket', methods=['PUT'])
 def request_ticket():

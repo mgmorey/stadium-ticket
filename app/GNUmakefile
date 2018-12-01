@@ -11,7 +11,7 @@ clean:
 	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
 
 debug:	reset
-	$(SCRIPT_DIR)/run.sh --sync flask run
+	$(SCRIPT_DIR)/run.sh flask run
 
 reset:	schema
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/reset.sql

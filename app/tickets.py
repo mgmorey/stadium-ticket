@@ -2,31 +2,24 @@
 
 import datetime
 
-from database import *
+from database import Events, session
 
+class SoldOut(Exception):
+    pass
 
 class Tickets(object):
-    MAX_NUMBER = 1000
-
-    class Events(Base):
-        __tablename__ = 'events'
-        name = Column(String(32), primary_key=True)
-        sold = Column(Integer, nullable=False)
-        total = Column(Integer, nullable=False)
-
-    class SoldOut(Exception):
-        pass
+    MAX_NUMBER = None
 
     @staticmethod
     def generate_serial(session, event_name: str, count: int = 1):
-        query = session.query(Tickets.Events)
-        event = query.filter(Tickets.Events.name == event_name).first()
+        query = session.query(Events)
+        event = query.filter(Events.name == event_name).first()
         last_serial = event.sold
 
         if Tickets.MAX_NUMBER is not None:
             if last_serial + count > Tickets.MAX_NUMBER:
-                raise Tickets.SoldOut("maximum serial number: "
-                                      "{0}".format(Tickets.MAX_NUMBER))
+                raise SoldOut("maximum serial number: "
+                              "{0}".format(Tickets.MAX_NUMBER))
 
         sold = event.sold
         event.sold = sold + count
@@ -35,8 +28,8 @@ class Tickets(object):
 
     @staticmethod
     def last_serial(session, event_name: str) -> int:
-        query = session.query(Tickets.Events)
-        event = query.filter(Tickets.Events.name == event_name).first()
+        query = session.query(Events)
+        event = query.filter(Events.name == event_name).first()
         return event.sold
 
     def __init__(self, session, event: str, count: int = 1):
