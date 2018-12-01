@@ -1,6 +1,6 @@
 SCRIPT_DIR = scripts
 
-all:
+all:	Pipfile.lock
 
 build:
 	docker-compose up --build
@@ -32,3 +32,9 @@ uninstall:
 	$(SCRIPT_DIR)/uninstall-app.sh
 
 .PHONY: all build clean install pip pipenv run stress traffic uninstall
+
+Pipfile.lock:	Pipfile
+	pipenv install || true
+
+requirements.txt:	Pipfile
+	pipenv lock -r >/tmp/tmp$$$$ && mv -f /tmp/tmp$$$$ requirements.txt || true
