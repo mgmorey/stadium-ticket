@@ -5,7 +5,7 @@ export PYTHONPATH := $(PWD)
 SCRIPT_DIR = ../scripts
 SQL_DIR = ../sql
 
-all:	schema reset
+all:	style test
 
 clean:
 	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
@@ -19,7 +19,10 @@ reset:	schema
 schema:
 	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/schema.sql
 
+style:
+	pycodestyle *.py
+
 test:	reset
 	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
 
-.PHONY: all clean debug reset schema test
+.PHONY: all clean debug reset schema style test
