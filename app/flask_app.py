@@ -75,6 +75,4 @@ def request_tickets():
 
 if __name__ == '__main__':
     logging.basicConfig(format=LOGGING_FORMAT, level=logging.DEBUG)
-    uri = get_uri()
-    logging.getLogger(__name__).info("Connecting to %s", uri)
     app.run()
