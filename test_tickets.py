@@ -3,7 +3,8 @@
 
 import unittest
 
-import flask_app
+from app import app
+from app.tickets import SoldOut, Tickets, session
 
 EVENT_1 = 'The Beatles'
 EVENT_2 = 'The Cure'
@@ -24,18 +25,18 @@ class TestTicketsMethods(unittest.TestCase):
             self.events[event].add(i)
 
     def sell_tickets(self, event: str, count: int = 1):
-        with flask_app.app.app_context():
-            last = flask_app.Tickets.last_serial(flask_app.session, event)
-            t = flask_app.Tickets(flask_app.session, event, count)
+        with app.app_context():
+            last = Tickets.last_serial(session, event)
+            t = Tickets(session, event, count)
             self.assertEqual(t.event, event)
             self.assertEqual(t.serial, last)
             self.add_serial(event, t.serial, count)
 
     def sell_out_tickets(self, event: str, count: int = 1):
-        with flask_app.app.app_context():
-            flask_app.Tickets.MAX_NUMBER = 0
-            with self.assertRaises(flask_app.SoldOut):
-                t = flask_app.Tickets(flask_app.session, event, count)
+        with app.app_context():
+            Tickets.MAX_NUMBER = 0
+            with self.assertRaises(SoldOut):
+                t = Tickets(session, event, count)
 
     def test_sell_event_1_ticket(self):
         self.sell_tickets(EVENT_1)

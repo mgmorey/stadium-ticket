@@ -1,12 +1,19 @@
-SCRIPT_DIR = scripts
+export FLASK_ENV := development
+export PYTHONPATH := $(PWD)
 
-all:	Pipfile.lock requirements.txt
+SCRIPT_DIR = scripts
+SQL_DIR = sql
+
+all:	Pipfile.lock requirements.txt style test
 
 build:	.env Pipfile.lock
 	docker-compose up --build
 
 clean:
 	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
+
+debug:	reset
+	$(SCRIPT_DIR)/run.sh flask run
 
 install:	.env Pipfile.lock
 	$(SCRIPT_DIR)/install-app.sh
@@ -22,8 +29,20 @@ pipenv:
 run:
 	docker-compose up
 
+reset:	schema
+	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/reset.sql
+
+schema:
+	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/schema.sql
+
 stress:
 	$(SCRIPT_DIR)/load-test.sh
+
+style:
+	pycodestyle *.py 2>/dev/null || true
+
+test:	reset
+	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
 
 traffic:
 	$(SCRIPT_DIR)/app-test.sh
@@ -31,7 +50,8 @@ traffic:
 uninstall:
 	$(SCRIPT_DIR)/uninstall-app.sh
 
-.PHONY: all build clean install pip pipenv run stress traffic uninstall
+.PHONY: all build clean debug install pip pipenv reset run schema stress style test traffic uninstall
+
 
 .env:	.env-template
 	cp .env-template tmp$$$$ && $(EDITOR) tmp$$$$ && mv tmp$$$$ .env
