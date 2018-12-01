@@ -6,7 +6,7 @@ SQL_DIR = sql
 
 scripts = $(shell find . -type f -name '*.py')
 
-all:	Pipfile.lock requirements.txt style sync test
+all:	Pipfile.lock requirements.txt .env style sync test
 
 build:	.env Pipfile.lock
 	docker-compose up --build
