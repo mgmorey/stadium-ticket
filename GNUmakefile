@@ -2,13 +2,13 @@ SCRIPT_DIR = scripts
 
 all:	Pipfile.lock requirements.txt
 
-build:	Pipfile.lock
+build:	.env Pipfile.lock
 	docker-compose up --build
 
 clean:
 	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
 
-install:	Pipfile.lock
+install:	.env Pipfile.lock
 	$(SCRIPT_DIR)/install-app.sh
 
 pip:	requirements.txt
@@ -33,8 +33,11 @@ uninstall:
 
 .PHONY: all build clean install pip pipenv run stress traffic uninstall
 
+.env:	.env-template
+	cp .env-template tmp$$$$ && $(EDITOR) tmp$$$$ && mv tmp$$$$ .env
+
 Pipfile.lock:	Pipfile
 	pipenv install || true
 
 requirements.txt:	Pipfile
-	pipenv lock -r >/tmp/tmp$$$$ && mv -f /tmp/tmp$$$$ requirements.txt || true
+	pipenv lock -r >tmp$$$$ && mv -f tmp$$$$ requirements.txt || true
