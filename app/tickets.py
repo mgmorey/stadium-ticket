@@ -4,8 +4,10 @@ import datetime
 
 from database import Events, session
 
+
 class SoldOut(Exception):
     pass
+
 
 class Tickets(object):
     MAX_NUMBER = None

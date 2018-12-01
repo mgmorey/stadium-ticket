@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from database.uri import get_uri
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = get_uri()
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 session = db.session
 
 class Events(db.Model):

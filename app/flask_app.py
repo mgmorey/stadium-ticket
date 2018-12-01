@@ -3,14 +3,20 @@
 
 import logging
 
-from flask import abort, jsonify, request
+from flask import Flask, abort, jsonify, request
 
-from database import Events, app, session
+from database import Events, db, get_uri, session
 from tickets import SoldOut, Tickets
 
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 MAX_COUNT = 10
 MIN_COUNT = 1
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = get_uri()
+db.init_app(app)
+
 
 @app.route('/stadium/ticket', methods=['PUT'])
 def request_ticket():
