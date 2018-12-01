@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+FLASK_ENV=development
+
+script_dir=$(dirname $0)
+source_dir=$script_dir/..
+
 if [ "$1" = -s -o "$1" = --sync ]; then
     sync=true
     shift
@@ -28,7 +33,10 @@ if which pipenv >/dev/null 2>&1; then
 	pipenv sync
     fi
 
+    set -x
     pipenv run "$@"
-else
+elif . $source_dir/.env; then
+    export FLASK_APP FLASK_ENV MYSQL_HOST MYSQL_USER MYSQL_PASSWORD
+    set -x
     "$@"
 fi
