@@ -1,22 +1,26 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from decouple import config
 
 DIALECT = 'mysql'
 DRIVER = 'pymysql'
+HOST = 'mysql'
+USER = os.getenv('USER')
 SCHEMA = 'stadium-tickets'
 
 
 def get_uri():
-    dialect = DIALECT
-    driver = DRIVER
+    dialect = config('DATABASE_DIALECT', default=DIALECT)
+    driver = config('DATABASE_DRIVER', default=DRIVER)
 
     if driver:
         dialect = f"{dialect}+{driver}"
 
-    user = config('MYSQL_USER')
-    host = config('MYSQL_HOST')
-    password = config('MYSQL_PASSWORD')
+    user = config('DATABASE_USER', default=config('MYSQL_USER', default=USER))
+    host = config('DATABASE_HOST', default=config('MYSQL_HOST', default=HOST))
+    password = config('DATABASE_PASSWORD', default=config('MYSQL_PASSWORD'))
 
     if password:
         user = f"{user}:{password}"
@@ -24,4 +28,5 @@ def get_uri():
     if host:
         user = f"{user}@{host}"
 
-    return f"{dialect}://{user}/{SCHEMA}"
+    schema = config('DATABASE_SCHEMA', default=SCHEMA)
+    return f"{dialect}://{user}/{schema}"
