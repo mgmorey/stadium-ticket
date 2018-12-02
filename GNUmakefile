@@ -7,7 +7,7 @@ SQL_DIR = sql
 caches = $(shell find . -type d '(' -name __pycache__ -o -name .pytest_cache ')' -print)
 modules = $(shell find . -type f -name '*.py')
 
-all:	Pipfile.lock requirements.txt .env style test
+all:	Pipfile.lock requirements.txt .env style sync test
 
 build:	.env Pipfile.lock
 	docker-compose up --build
