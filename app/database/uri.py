@@ -24,8 +24,8 @@ def _default_uri(dialect: str):
 
 def _get_credentials():
     password = config('DATABASE_PASSWORD', default=PASSWORD)
-    username = config('DATABASE_USER', default=os.getenv('USER', 'root'))
-    return f"{username}:{password}" if password else username
+    user = config('DATABASE_USER', default=os.getenv('USER', 'root'))
+    return f"{user}:{password}" if password else user
 
 def _get_scheme(dialect: str):
     driver = config('DATABASE_DRIVER', default=_default_driver(dialect))
@@ -38,6 +38,6 @@ def _get_uri(dialect: str, credentials: str, host: str, schema: str):
 def get_uri():
     credentials = _get_credentials()
     dialect = config('DATABASE_DIALECT', default=DIALECT)
-    hostname = config('DATABASE_HOST', default=HOST)
+    host = config('DATABASE_HOST', default=HOST)
     schema = config('DATABASE_SCHEMA', default=SCHEMA)
-    return _get_uri(dialect, credentials, hostname, schema)
+    return _get_uri(dialect, credentials, host, schema)
