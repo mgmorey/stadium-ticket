@@ -25,7 +25,7 @@ FEDORA_PKGS="gcc libffi-devel openssl-devel %s-devel %s-flask \
 FREEBSD_PKGS="openssl-devel %s-Flask %s-Flask-RESTful \
 %s-Flask-SQLAlchemy %s-pip %s-pytest"
 
-OPENSUSE_PKGS="gcc libffi-devel libressl-devel %s-devel %s-Flask \
+OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel %s-devel %s-Flask \
 %s-Flask-RESTful %s-Flask-SQLAlchemy %s-pip %s-pytest"
 
 REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip %s-PyMySQL \
