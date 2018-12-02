@@ -4,15 +4,16 @@ export PYTHONPATH := $(PWD)
 SCRIPT_DIR = scripts
 SQL_DIR = sql
 
+caches = $(shell find . -type d '(' -name __pycache__ -o -name .pytest_cache ')' -print)
 modules = $(shell find . -type f -name '*.py')
 
-all:	Pipfile.lock requirements.txt .env style sync test
+all:	Pipfile.lock requirements.txt .env style test
 
 build:	.env Pipfile.lock
 	docker-compose up --build
 
 clean:
-	@find . '(' -name __pycache__ -o -name .pytest_cache ')' -print | xargs /bin/rm -rf
+	@/bin/rm -rf $(caches)
 
 debug:	reset
 	$(SCRIPT_DIR)/run.sh flask run --port 5001
@@ -44,7 +45,7 @@ style:
 	@which pycodestyle >/dev/null 2>&1 && pycodestyle $(modules) || true
 
 sync:
-	@which pipenv >/dev/null 2>&1 && pipenv sync || true
+	@which pipenv >/dev/null 2>&1 && pipenv sync --dev || true
 
 test:	reset
 	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
