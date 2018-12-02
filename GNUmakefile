@@ -44,7 +44,7 @@ style:
 	@pycodestyle $(scripts) 2>/dev/null || true
 
 sync:
-	pipenv sync
+	pipenv sync || true
 
 test:	reset
 	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
