@@ -10,26 +10,26 @@ HOST = 'mysql'
 USER = os.getenv('USER')
 PASSWORD = ''
 SCHEMA = 'stadium-tickets'
-
+URI = "{0}://{1}/{2}"
+URIS = {
+}
 
 def get_uri():
-    default_user = config('MYSQL_USER', default=USER)
-    default_host = config('MYSQL_HOST', default=HOST)
-    default_password = config('MYSQL_PASSWORD', default=PASSWORD)
     dialect = config('DATABASE_DIALECT', default=DIALECT)
     driver = config('DATABASE_DRIVER', default=DRIVER)
-    host = config('DATABASE_HOST', default=default_host)
-    user = config('DATABASE_USER', default=default_user)
-    password = config('DATABASE_PASSWORD', default_password)
+    hostname = config('DATABASE_HOST', default=HOST)
+    username = config('DATABASE_USER', default=USER)
+    password = config('DATABASE_PASSWORD', default=PASSWORD)
 
     if driver:
         dialect = f"{dialect}+{driver}"
 
     if password:
-        user = f"{user}:{password}"
+        username = f"{username}:{password}"
 
-    if host:
-        user = f"{user}@{host}"
+    if hostname:
+        username = f"{username}@{hostname}"
 
     schema = config('DATABASE_SCHEMA', default=SCHEMA)
-    return f"{dialect}://{user}/{schema}"
+    uri = config('DATABASE_URI', default=URIS.get(schema, URI))
+    return uri.format(dialect, username, schema)
