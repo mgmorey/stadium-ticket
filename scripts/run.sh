@@ -36,7 +36,7 @@ if which pipenv >/dev/null 2>&1; then
     set -x
     pipenv run "$@"
 elif . $source_dir/.env; then
-    export FLASK_APP FLASK_ENV MYSQL_HOST MYSQL_USER MYSQL_PASSWORD
+    export FLASK_APP FLASK_ENV DATABASE_HOST DATABASE_USER DATABASE_PASSWORD
     set -x
     "$@"
 fi
