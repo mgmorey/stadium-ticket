@@ -4,7 +4,7 @@ export PYTHONPATH := $(PWD)
 SCRIPT_DIR = scripts
 SQL_DIR = sql
 
-scripts = $(shell find . -type f -name '*.py')
+modules = $(shell find . -type f -name '*.py')
 
 all:	Pipfile.lock requirements.txt .env style sync test
 
@@ -21,12 +21,12 @@ install:	.env Pipfile.lock
 	$(SCRIPT_DIR)/install-app.sh
 
 pip:	requirements.txt
-	pip3 install pip --user
+	pip3 install pip --upgrade --user
 	pip3 install -r requirements.txt --user
 
 pipenv:
 	$(SCRIPT_DIR)/install-pipenv.sh
-	pipenv install
+	pipenv install --dev
 
 run:
 	docker-compose up
@@ -41,10 +41,10 @@ stress:
 	$(SCRIPT_DIR)/load-test.sh
 
 style:
-	@pycodestyle $(scripts) 2>/dev/null || true
+	@which pycodestyle >/dev/null 2>&1 && pycodestyle $(modules) || true
 
 sync:
-	which pipenv 2>/dev/null && pipenv sync || true
+	@which pipenv >/dev/null 2>&1 && pipenv sync || true
 
 test:	reset
 	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
