@@ -15,7 +15,7 @@ URI = {
 }
 
 
-def _default_driver(dialect: str):
+def _get_driver(dialect: str):
     driver = DRIVER.get(dialect)
     return driver.format(dialect) if driver else None
 
@@ -27,7 +27,7 @@ def _get_login():
 
 
 def _get_scheme(dialect: str):
-    driver = config('DATABASE_DRIVER', default=_default_driver(dialect))
+    driver = config('DATABASE_DRIVER', default=_get_driver(dialect))
     return f"{dialect}+{driver}" if driver else dialect
 
 
