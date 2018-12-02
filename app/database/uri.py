@@ -10,7 +10,7 @@ HOST = 'mysql'
 USER = os.getenv('USER')
 PASSWORD = ''
 SCHEMA = 'stadium-tickets'
-URI = "{0}://{1}/{2}"
+URI_DEFAULT = "{0}://{1}/{2}"
 URIS = {
 }
 
@@ -31,5 +31,5 @@ def get_uri():
         username = f"{username}@{hostname}"
 
     schema = config('DATABASE_SCHEMA', default=SCHEMA)
-    uri = config('DATABASE_URI', default=URIS.get(schema, URI))
+    uri = config('DATABASE_URI', default=URIS.get(schema, URI_DEFAULT))
     return uri.format(dialect, username, schema)
