@@ -5,24 +5,20 @@ import os
 from decouple import config
 
 DIALECT = 'mysql'
-DRIVERS = {
+DRIVER = {
     'mysql': 'py{0}'
 }
 HOST = 'localhost'
 USER = 'root'
 PASSWORD = None
 SCHEMA = 'stadium-tickets'
-URIS = {
+URI = {
 }
 
 
 def _default_driver(dialect: str):
-    driver = DRIVERS.get(dialect)
+    driver = DRIVER.get(dialect)
     return driver.format(dialect) if driver else None
-
-
-def _default_uri(dialect: str):
-    return URIS.get(dialect, "{0}://{1}@{2}/{3}")
 
 
 def _get_credentials():
@@ -37,8 +33,8 @@ def _get_scheme(dialect: str):
 
 
 def _get_uri(dialect: str, credentials: str, host: str, schema: str):
-    uri = config('DATABASE_URI', default=_default_uri(dialect))
-    return uri.format(_get_scheme(dialect), credentials, host, schema)
+    s = config('DATABASE_URI', default=URI.get(dialect, "{0}://{1}@{2}/{3}"))
+    return s.format(_get_scheme(dialect), credentials, host, schema)
 
 
 def get_uri():
@@ -50,4 +46,4 @@ def get_uri():
 
 
 if __name__ == '__main__':
-    print("URI: {}".format(get_uri()))
+    print(get_uri())
