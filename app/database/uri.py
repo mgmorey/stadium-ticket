@@ -16,8 +16,8 @@ URIS = {
 }
 
 def _default_driver(dialect: str):
-    format = DRIVERS.get(dialect)
-    return format.format(dialect) if format else None
+    driver = DRIVERS.get(dialect)
+    return driver.format(dialect) if driver else None
 
 def _default_format(dialect: str):
     return URIS.get(dialect, "{0}://{1}/{2}")
@@ -28,11 +28,11 @@ def _default_user():
 def get_uri():
     dialect = config('DATABASE_DIALECT', default=DIALECT)
     driver = config('DATABASE_DRIVER', default=_default_driver(dialect))
-    format = config('DATABASE_URI', default=_default_format(dialect))
     hostname = config('DATABASE_HOST', default=HOST)
     username = config('DATABASE_USER', default=_default_user())
     password = config('DATABASE_PASSWORD', default=PASSWORD)
     schema = config('DATABASE_SCHEMA', default=SCHEMA)
+    uri = config('DATABASE_URI', default=_default_format(dialect))
 
     if driver:
         dialect = f"{dialect}+{driver}"
@@ -43,4 +43,4 @@ def get_uri():
     if hostname:
         username = f"{username}@{hostname}"
 
-    return format.format(dialect, username, schema)
+    return uri.format(dialect, username, schema)
