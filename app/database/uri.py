@@ -31,17 +31,12 @@ def _get_scheme(dialect: str):
     return f"{dialect}+{driver}" if driver else dialect
 
 
-def _get_uri(dialect: str, login: str, host: str, schema: str):
-    s = config('DATABASE_URI', default=URI.get(dialect, URI[None]))
-    return s.format(_get_scheme(dialect), login, host, schema)
-
-
 def get_uri():
-    login = _get_login()
     dialect = config('DATABASE_DIALECT')
     host = config('DATABASE_HOST', default=HOST)
     schema = config('DATABASE_SCHEMA', default=SCHEMA)
-    return _get_uri(dialect, login, host, schema)
+    s = config('DATABASE_URI', default=URI.get(dialect, URI[None]))
+    return s.format(_get_scheme(dialect), _get_login(), host, schema)
 
 
 if __name__ == '__main__':
