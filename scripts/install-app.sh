@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # install-app.sh: install uWSGI application
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -98,10 +98,6 @@ install_venv() {
     fi
 }
 
-restart_app() {
-    signal_app HUP
-}
-
 # Set script directory
 SCRIPT_DIR="$(dirname $0)"
 
@@ -131,7 +127,7 @@ if install_venv; then
     enable_app $APP_CONFIG $UWSGI_CONF_FILES
 
     # Restart application
-    restart_app
+    signal_app HUP
 
     # Tail the log file
     tail_logfile

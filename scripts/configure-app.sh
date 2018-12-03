@@ -97,6 +97,8 @@ signal_app() {
 
 	if [ -n "$pid" ]; then
 	    for signal in "$@"; do
+		printf "Sending signal SIG%s to PID %s\n" $signal $pid
+
 		if sudo kill -s $signal $pid; then
 		    sleep 5
 		else

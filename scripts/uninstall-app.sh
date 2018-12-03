@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # uninstall-app.sh: uninstall uWSGI application
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
