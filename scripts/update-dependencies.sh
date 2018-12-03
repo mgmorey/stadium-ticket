@@ -21,8 +21,8 @@ PIP=pip3
 script_dir=$(dirname $0)
 
 if which pipenv >/dev/null 2>&1; then
-    pipenv update -d
     $script_dir/lock_requirements.sh
+    pipenv update -d
 elif which $PIP >/dev/null 2>&1; then
     $PIP install -r requirements.txt --user
 fi
