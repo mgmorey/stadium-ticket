@@ -1,7 +1,10 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 APP_NAME=stadium-ticket
 APP_PORT=5000
+
+APP_VARS="APP_DIR APP_GID APP_NAME APP_PIDFILE  \
+APP_PORT APP_SOCKET APP_UID APP_RUNDIR APP_VARDIR"
 
 abort() {
     printf "$@" >&2
@@ -11,17 +14,19 @@ abort() {
 configure_app() {
     if [ $# -gt 0 ]; then
 	generate_ini $SOURCE_DIR/app.ini | sh | sudo sh -c "cat >$1"
+	source=$1
+	shift
 
-	if [ $# -gt 1 ]; then
-	    sudo ln -sf $1 $2
-	fi
+	for dest in "$@"; do
+	    sudo ln -sf $source $dest
+	done
     fi
 }
 
 generate_ini() {
     printf "%s" sed
 
-    for var in APP_DIR APP_GID APP_NAME APP_PORT APP_UID APP_RUNDIR; do
+    for var in $APP_VARS; do
 	eval value="\$$var"
 	printf -- " -e 's|\$(%s)|%s|g'" "$var" "$value"
     done
@@ -90,9 +95,12 @@ restart_app() {
 
 # Set application directory names using name variable
 APP_DIR=/opt/$APP_NAME
-APP_ETCDIR=/etc/uwsgi
-APP_RUNDIR=/opt/var/$APP_NAME
-APP_VARDIR=/opt/var/$APP_NAME
+APP_ETCDIR=/etc/opt/$APP_NAME
+APP_RUNDIR=/var/opt/$APP_NAME
+APP_VARDIR=/var/opt/$APP_NAME
+UWSGI_ETCDIR=/etc/uwsgi
+
+APP_CONFIG=$APP_ETCDIR/$APP_NAME.ini
 
 # Set distro-specific parameters
 distro_name=$(get-os-distro-name)
@@ -105,11 +113,11 @@ case "$kernel_name" in
 		APP_GID=www-data
 		APP_UID=www-data
 
-		APP_CONFIG_AVAIL=$APP_ETCDIR/apps-available/$APP_NAME.ini
-		APP_CONFIG_ENABLED=$APP_ETCDIR/apps-enabled/$APP_NAME.ini
+		APP_CONF_AVAIL=$UWSGI_ETCDIR/apps-available/$APP_NAME.ini
+		APP_CONF_ENABLED=$UWSGI_ETCDIR/apps-enabled/$APP_NAME.ini
 		APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 
-		APP_CONFIG_FILES="$APP_CONFIG_AVAIL $APP_CONFIG_ENABLED"
+		APP_CONF_FILES="$APP_CONFIG $APP_CONF_AVAIL $APP_CONF_ENABLED"
 		APP_PIDFILE=$APP_RUNDIR/pid
 		APP_SOCKET=$APP_RUNDIR/socket
 		;;
@@ -117,9 +125,9 @@ case "$kernel_name" in
 		APP_GID=nogroup
 		APP_UID=nobody
 
-		APP_CONFIG=$APP_ETCDIR/vassals/$APP_NAME.ini
+		APP_VASSAL=$UWSGI_ETCDIR/vassals/$APP_NAME.ini
 
-		APP_CONFIG_FILES="$APP_CONFIG"
+		APP_CONF_FILES="$APP_CONFIG $APP_VASSAL"
 		APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
 		APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
 		;;
@@ -148,7 +156,7 @@ if [ -n "$packages" ]; then
 fi
 
 # Create application directories
-sudo mkdir -p $APP_DIR $APP_RUNDIR $APP_VARDIR
+sudo mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
 
 # Install virtual environment
 if install_venv; then
@@ -157,7 +165,7 @@ if install_venv; then
     install_app
 
     # Configure application
-    configure_app $APP_CONFIG_FILES
+    configure_app $APP_CONF_FILES
 
     # Restart application
     restart_app
