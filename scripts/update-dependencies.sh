@@ -19,7 +19,7 @@
 PIP=pip3
 
 if which pipenv >/dev/null 2>&1; then
-    pipenv install --dev
+    pipenv sync -d
 elif which $PIP >/dev/null 2>&1; then
     $PIP install -r requirements.txt --user
 fi
