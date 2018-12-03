@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-tmpfile=$(mktemp -p .)
+tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile ${tmpfile}~" 0 INT QUIT TERM
 
 if [ -r .env ]; then
@@ -26,5 +26,6 @@ elif [ -r .env-template ]; then
 fi
 
 if $EDITOR $tmpfile; then
-   mv -f $tmpfile .env
+    mv -f $tmpfile .env
+    chgrp $USER .env
 fi

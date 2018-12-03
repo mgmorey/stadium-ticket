@@ -16,11 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-tmpfile=$(mktemp -p .)
+tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 
 if pipenv lock -dr >$tmpfile; then
     if pipenv lock -r >>$tmpfile; then
 	mv -f $tmpfile requirements.txt
+	chgrp $USER requirements.txt
+	chmod a+r requirements.txt
     fi
 fi
