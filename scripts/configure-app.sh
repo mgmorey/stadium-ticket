@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # configure-app: open application configuration in a text editor
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 tmpfile=$(mktemp -p .)
-trap "/bin/rm -f $tmpfile ${tmpfile}~" INT QUIT TERM
+trap "/bin/rm -f $tmpfile ${tmpfile}~" 0 INT QUIT TERM
 
 if [ -r .env ]; then
     cp -f .env $tmpfile
