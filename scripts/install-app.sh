@@ -21,7 +21,7 @@ configure_app() {
 generate_ini() {
     printf "%s" sed
 
-    for var in APP_NAME APP_PORT APP_GID APP_UID APP_DIR; do
+    for var in APP_DIR APP_GID APP_NAME APP_PORT APP_UID APP_RUNDIR; do
 	eval value="\$$var"
 	printf -- " -e 's|\$(%s)|%s|g'" "$var" "$value"
     done
@@ -49,7 +49,7 @@ install_app() {
      done
 
      # Make application the owner of the app and data directories
-     sudo chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR)
+     sudo chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR)
 }
 
 install_venv() {
@@ -90,9 +90,9 @@ restart_app() {
 
 # Set application directory names using name variable
 APP_DIR=/opt/$APP_NAME
-ETC_DIR=/etc/uwsgi
-RUN_DIR=/var/run/uwsgi/app/$APP_NAME
-VAR_DIR=/opt/var/$APP_NAME
+APP_ETCDIR=/etc/uwsgi
+APP_RUNDIR=/opt/var/$APP_NAME
+APP_VARDIR=/opt/var/$APP_NAME
 
 # Set distro-specific parameters
 distro_name=$(get-os-distro-name)
@@ -104,15 +104,24 @@ case "$kernel_name" in
 	    (ubuntu)
 		APP_GID=www-data
 		APP_UID=www-data
-		APP_CONFIG_AVAIL=$ETC_DIR/apps-available/$APP_NAME.ini
-		APP_CONFIG_ENABLED=$ETC_DIR/apps-enabled/$APP_NAME.ini
+
+		APP_CONFIG_AVAIL=$APP_ETCDIR/apps-available/$APP_NAME.ini
+		APP_CONFIG_ENABLED=$APP_ETCDIR/apps-enabled/$APP_NAME.ini
+		APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
+
 		APP_CONFIG_FILES="$APP_CONFIG_AVAIL $APP_CONFIG_ENABLED"
+		APP_PIDFILE=$APP_RUNDIR/pid
+		APP_SOCKET=$APP_RUNDIR/socket
 		;;
 	    (opensuse-*)
 		APP_GID=nogroup
 		APP_UID=nobody
-		APP_CONFIG=$ETC_DIR/vassals/$APP_NAME.ini
+
+		APP_CONFIG=$APP_ETCDIR/vassals/$APP_NAME.ini
+
 		APP_CONFIG_FILES="$APP_CONFIG"
+		APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+		APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
@@ -125,7 +134,6 @@ case "$kernel_name" in
 esac
 
 # Set application filenames using directory variables
-APP_PIDFILE=$RUN_DIR/pid
 APP_PIPFILES="Pipfile Pipfile.lock requirements.txt"
 
 # Set script and source directories
@@ -140,7 +148,7 @@ if [ -n "$packages" ]; then
 fi
 
 # Create application directories
-sudo mkdir -p $APP_DIR $VAR_DIR
+sudo mkdir -p $APP_DIR $APP_RUNDIR $APP_VARDIR
 
 # Install virtual environment
 if install_venv; then

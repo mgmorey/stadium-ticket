@@ -5,15 +5,49 @@ APP_NAME=stadium-ticket
 
 # Set application directory names using name variable
 APP_DIR=/opt/$APP_NAME
-ETC_DIR=/etc/uwsgi
-LOG_DIR=/var/log/uwsgi/app
-RUN_DIR=/var/run/uwsgi/app/$APP_NAME
-VAR_DIR=/opt/var/$APP_NAME
+APP_ETCDIR=/etc/uwsgi
+APP_RUNDIR=/opt/var/$APP_NAME
+APP_VARDIR=/opt/var/$APP_NAME
+
+case "$kernel_name" in
+    (Linux)
+	case "$distro_name" in
+	    (ubuntu)
+		APP_GID=www-data
+		APP_UID=www-data
+
+		APP_CONFIG_AVAIL=$APP_ETCDIR/apps-available/$APP_NAME.ini
+		APP_CONFIG_ENABLED=$APP_ETCDIR/apps-enabled/$APP_NAME.ini
+		APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
+
+		APP_CONFIG_FILES="$APP_CONFIG_AVAIL $APP_CONFIG_ENABLED"
+		APP_PIDFILE=$APP_RUNDIR/pid
+		APP_SOCKET=$APP_RUNDIR/socket
+		;;
+	    (opensuse-*)
+		APP_GID=nogroup
+		APP_UID=nobody
+
+		APP_CONFIG=$APP_ETCDIR/vassals/$APP_NAME.ini
+
+		APP_CONFIG_FILES="$APP_CONFIG"
+		APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+		APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
+		;;
+	    (*)
+		abort "%s: Distro not supported\n" "$distro_name"
+		;;
+	esac
+	;;
+    (*)
+	abort "%s: Operating system not supported\n" "$kernel_name"
+	;;
+esac
 
 # Set application filenames using directory variables
-APP_CONFIG_FILES="$ETC_DIR/*/$APP_NAME.ini"
+APP_CONFIG_FILES="$APP_ETCDIR/*/$APP_NAME.ini"
 APP_LOGFILE=$LOG_DIR/$APP_NAME.log
-APP_PIDFILE=$RUN_DIR/pid
+APP_PIDFILE=$APP_RUNDIR/pid
 
 # Send interrupt signal to app
 for i in 1 2 3 4 5 6; do
@@ -35,4 +69,4 @@ for i in 1 2 3 4 5 6; do
 done
 
 # Remove application and configuration
-sudo /bin/rm -rf $APP_CONFIG_FILES $APP_DIR $APP_LOGFILE $RUN_DIR $VAR_DIR
+sudo /bin/rm -rf $APP_CONFIG_FILES $APP_DIR $APP_LOGFILE $APP_VARDIR

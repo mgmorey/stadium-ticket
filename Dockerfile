@@ -21,9 +21,10 @@ RUN printf "$RETRY_LOOP" "$APT_INSTALL" | sh
 
 # Create application directories
 ENV APP_DIR=/opt/$APP_NAME
-ENV ETC_DIR=/opt/etc/$APP_NAME
-ENV VAR_DIR=/opt/var/$APP_NAME
-RUN mkdir -p $APP_DIR $ETC_DIR $VAR_DIR
+ENV APP_ETCDIR=/opt/etc/$APP_NAME
+ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
+ENV APP_VARDIR=/opt/var/$APP_NAME
+RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
 
 # Install pipenv package
 RUN pip3 install pipenv
@@ -43,14 +44,16 @@ RUN pipenv sync
 # Copy application files
 COPY app/ $APP_DIR/app/
 COPY .env $APP_DIR/
-COPY app.ini $ETC_DIR/
+COPY app.ini $APP_ETCDIR/
 
 # Make application owner of its own directories
-RUN chown -R $APP_UID:$APP_GID $APP_DIR $VAR_DIR
+RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR
 
 # Change working directory
-WORKDIR $VAR_DIR
+WORKDIR $APP_VARDIR
 
 # Expose application port and start
 EXPOSE $APP_PORT
-CMD /usr/bin/uwsgi --ini $ETC_DIR/app.ini
+ENV APP_PIDFILE=$APP_RUNDIR/pid
+ENV APP_SOCKET=$APP_RUNDIR/socket
+CMD /usr/bin/uwsgi --ini $APP_ETCDIR/app.ini
