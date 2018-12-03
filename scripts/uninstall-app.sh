@@ -19,24 +19,11 @@ SCRIPT_DIR="$(dirname $0)"
 # Set application parameters
 . $SCRIPT_DIR/configure-app.sh
 
-# Send interrupt signal to app
-for i in 1 2 3 4 5 6; do
-    if [ -r $APP_PIDFILE ]; then
-	pid=$(cat $APP_PIDFILE)
+# Terminate the application
+signal_app INT INT TERM KILL
 
-	if [ -n "$pid" ]; then
-	    if sudo kill -s INT $pid; then
-		sleep 5
-	    else
-		break
-	    fi
-	else
-	    break
-	fi
-    else
-	break
-    fi
-done
+# Tail the log file
+tail_logfile
 
 # Remove application and configuration
-sudo /bin/rm -rf $UWSGI_CONF_FILES $APP_DIR $APP_VARDIR $APP_SOCKET $APP_PIDFILE
+sudo /bin/rm -rf $UWSGI_CONF_FILES $APP_ETCDIR $APP_DIR $APP_VARDIR

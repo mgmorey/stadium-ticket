@@ -90,6 +90,29 @@ configure_ubuntu() {
     "
 }
 
+signal_app() {
+    # Send restart signal to app
+    if [ -n "${APP_PIDFILE:-}" -a -r $APP_PIDFILE ]; then
+	pid="$(cat $APP_PIDFILE)"
+
+	if [ -n "$pid" ]; then
+	    for signal in "$@"; do
+		if sudo kill -s $signal $pid; then
+		    sleep 5
+		else
+		    break
+		fi
+	    done
+	fi
+    fi
+}
+
+tail_logfile() {
+    if [ -n "${APP_LOGFILE:-}" ]; then
+	sudo tail $APP_LOGFILE
+    fi
+}
+
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
 

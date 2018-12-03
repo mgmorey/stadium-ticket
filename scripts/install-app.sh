@@ -99,14 +99,7 @@ install_venv() {
 }
 
 restart_app() {
-    # Send restart signal to app
-    if [ -r $APP_PIDFILE ]; then
-	pid=$(cat $APP_PIDFILE)
-
-	if [ -n "$pid" ]; then
-	    sudo kill -s HUP $pid || true
-	fi
-    fi
+    signal_app HUP
 }
 
 # Set script directory
@@ -140,4 +133,6 @@ if install_venv; then
     # Restart application
     restart_app
 
+    # Tail the log file
+    tail_logfile
 fi
