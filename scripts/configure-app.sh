@@ -1,6 +1,6 @@
 #!/bin/sh -eux
 
-tmpfile="tmp$$"
+tmpfile=".env-$$.tmp"
 trap "/bin/rm -f $tmpfile ${tmpfile}~" INT QUIT TERM
 
 if [ -r .env ]; then
