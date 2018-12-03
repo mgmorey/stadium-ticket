@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 tmpfile=$(mktemp -p .)
-trap "/bin/rm -f $tmpfile" INT QUIT TERM
+trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 
 if pipenv lock -dr >$tmpfile; then
     if pipenv lock -r >>$tmpfile; then
