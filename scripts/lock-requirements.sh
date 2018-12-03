@@ -19,6 +19,8 @@
 tmpfile=$(mktemp -p .)
 trap "/bin/rm -f $tmpfile" INT QUIT TERM
 
-if pipenv lock -r >$file; then
-    mv -f $tmpfile requirements.txt
+if pipenv lock -dr >$tmpfile; then
+    if pipenv lock -r >>$tmpfile; then
+	mv -f $tmpfile requirements.txt
+    fi
 fi
