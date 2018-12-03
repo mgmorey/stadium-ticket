@@ -16,27 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FLASK_ENV=development
-
-script_dir=$(dirname $0)
-source_dir=$script_dir/..
-
-if [ "$1" = -s -o "$1" = --sync ]; then
-    sync=true
-    shift
-else
-    sync=false
-fi
-
 if which pipenv >/dev/null 2>&1; then
-    if [ "$sync" = true ]; then
-	pipenv sync
-    fi
-
-    set -x
     pipenv run "$@"
 elif . $source_dir/.env; then
-    export FLASK_APP FLASK_ENV DATABASE_HOST DATABASE_USER DATABASE_PASSWORD
-    set -x
+    export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_USER
+    export FLASK_APP FLASK_ENV
     "$@"
 fi

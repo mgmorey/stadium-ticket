@@ -1,6 +1,6 @@
-#!/bin/sh -eu
+#!/bin/sh
 
-# install-pipenv: install Python 3 Version Management
+# update-packages: update packages in PIP virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -18,34 +18,8 @@
 
 PIP=pip3
 
-abort() {
-    printf "$@" >&2
-    exit 1
-}
-
-distro_name=$(get-os-distro-name)
-kernel_name=$(get-os-kernel-name)
-script_dir=$(dirname $0)
-
-data=$($script_dir/get-python-package.sh)
-package_name=$(printf "%s" "$data" | awk '{print $1}')
-package_modifier=$(printf "%s" "$data" | awk '{print $2}')
-
-case "$kernel_name" in
-    (Linux)
-	case "$distro_name" in
-	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
-		;;
-	esac
-	;;
-    (FreeBSD)
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
-	;;
-esac
-
-$PIP install pipenv --user
+if which pipenv >/dev/null 2>&1; then
+    pipenv install --dev
+elif which $PIP >/dev/null 2>&1; then
+    $PIP install -r requirements.txt --user
+fi

@@ -1,13 +1,14 @@
 export FLASK_ENV := development
 export PYTHONPATH := $(PWD)
 
+PIP=pip3
 SCRIPT_DIR = scripts
 SQL_DIR = sql
 
-caches = $(shell find . -type d '(' -name __pycache__ -o -name .pytest_cache ')' -print)
-modules = $(shell find . -type f -name '*.py')
+caches = $(shell find . -type d -name '*py*cache' -print)
+modules = $(shell find . -type f -name '*.py' -print)
 
-all:	Pipfile.lock requirements.txt .env style sync test
+all:	Pipfile.lock requirements.txt .env pystyle unittest
 
 build:	.env Pipfile.lock
 	docker-compose up --build
@@ -18,19 +19,15 @@ clean:
 debug:	reset
 	$(SCRIPT_DIR)/run.sh flask run --port 5001
 
-install:	.env Pipfile.lock
+install:	Pipfile.lock .env
 	$(SCRIPT_DIR)/install-app.sh
 
-pip:	requirements.txt
-	pip3 install pip --upgrade --user
-	pip3 install -r requirements.txt --user
-
-pipenv:
+pipenv:	Pipfile
 	$(SCRIPT_DIR)/install-pipenv.sh
 	pipenv install --dev
 
-run:
-	docker-compose up
+pystyle:
+	@which pycodestyle >/dev/null 2>&1 && pycodestyle $(modules) || true
 
 reset:	schema
 	$(SCRIPT_DIR)/sql.sh <$(SQL_DIR)/reset.sql
@@ -41,29 +38,27 @@ schema:
 stress:
 	$(SCRIPT_DIR)/load-test.sh
 
-style:
-	@which pycodestyle >/dev/null 2>&1 && pycodestyle $(modules) || true
-
-sync:
-	@which pipenv >/dev/null 2>&1 && pipenv sync --dev || true
-
-test:	reset
-	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
-
-traffic:
+test:
 	$(SCRIPT_DIR)/app-test.sh
 
 uninstall:
 	$(SCRIPT_DIR)/uninstall-app.sh
 
-.PHONY: all build clean debug install pip pipenv reset run schema stress style sync test traffic uninstall
+unittest:	reset
+	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
 
+update:
+	$(SCRIPT_DIR)/update-dependencies.sh
+
+.PHONY: all build clean debug install pipenv pystyle reset
+.PHONY: schema stress test uninstall unittest update
+
+
+Pipfile.lock:	Pipfile
+	pipenv sync --dev
+
+requirements.txt:	Pipfile
+	$(SCRIPT_DIR)/lock-requirements.sh
 
 .env:	.env-template
 	$(SCRIPT_DIR)/configure-app.sh
-
-Pipfile.lock:	Pipfile
-	pipenv install || true
-
-requirements.txt:	Pipfile
-	pipenv lock -r >tmp$$$$ && mv -f tmp$$$$ requirements.txt || true
