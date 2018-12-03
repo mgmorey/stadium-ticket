@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -eu
 
 # update-packages: update packages in PIP virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -21,7 +21,7 @@ PIP=pip3
 script_dir=$(dirname $0)
 
 if which pipenv >/dev/null 2>&1; then
-    $script_dir/lock_requirements.sh
+    $script_dir/lock-requirements.sh
     pipenv update -d
 elif which $PIP >/dev/null 2>&1; then
     $PIP install -r requirements.txt --user
