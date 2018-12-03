@@ -1,56 +1,23 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
-# Application-specific parameters
-APP_NAME=stadium-ticket
+# uninstall-app.sh: uninstall uWSGI application
+# Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
-# Set application directory names using name variable
-APP_DIR=/opt/$APP_NAME
-APP_ETCDIR=/etc/uwsgi
-APP_RUNDIR=/opt/var/$APP_NAME
-APP_VARDIR=/opt/var/$APP_NAME
-UWSGI_ETCDIR=/etc/uwsgi
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 
-APP_CONFIG=$APP_ETCDIR/$APP_NAME.ini
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-case "$kernel_name" in
-    (Linux)
-	case "$distro_name" in
-	    (ubuntu)
-		APP_GID=www-data
-		APP_UID=www-data
+# Set script directory
+SCRIPT_DIR="$(dirname $0)"
 
-		APP_CONF_AVAIL=$APP_ETCDIR/apps-available/$APP_NAME.ini
-		APP_CONF_ENABLED=$APP_ETCDIR/apps-enabled/$APP_NAME.ini
-		APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
-
-		APP_CONF_FILES="$APP_CONFIG $APP_CONF_AVAIL $APP_CONF_ENABLED"
-		APP_PIDFILE=$APP_RUNDIR/pid
-		APP_SOCKET=$APP_RUNDIR/socket
-		;;
-	    (opensuse-*)
-		APP_GID=nogroup
-		APP_UID=nobody
-
-		APP_CONFIG=$APP_ETCDIR/vassals/$APP_NAME.ini
-
-		APP_CONF_FILES="$APP_CONFIG"
-		APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-		APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
-		;;
-	esac
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
-	;;
-esac
-
-# Set application filenames using directory variables
-APP_CONF_FILES="$APP_ETCDIR/*/$APP_NAME.ini"
-APP_LOGFILE=$LOG_DIR/$APP_NAME.log
-APP_PIDFILE=$APP_RUNDIR/pid
+# Set application parameters
+. $SCRIPT_DIR/configure-app.sh
 
 # Send interrupt signal to app
 for i in 1 2 3 4 5 6; do
@@ -72,4 +39,4 @@ for i in 1 2 3 4 5 6; do
 done
 
 # Remove application and configuration
-sudo /bin/rm -rf $APP_CONF_FILES $APP_DIR $APP_LOGFILE $APP_VARDIR
+sudo /bin/rm -rf $APP_CONF_FILES $APP_DIR $APP_PIDFILE $APP_SOCKET $APP_VARDIR
