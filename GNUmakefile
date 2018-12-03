@@ -60,4 +60,4 @@ requirements.txt:	Pipfile
 	$(SCRIPT_DIR)/lock-requirements.sh
 
 .env:	.env-template
-	$(SCRIPT_DIR)/configure-app.sh
+	$(SCRIPT_DIR)/configure-env.sh
