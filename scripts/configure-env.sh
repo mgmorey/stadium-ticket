@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# configure-app: open application configuration in a text editor
+# configure-env: open application environment in a text editor
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
