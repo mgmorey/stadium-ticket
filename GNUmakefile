@@ -27,7 +27,6 @@ install:	Pipfile.lock .env
 
 pipenv:	Pipfile
 	$(SCRIPT_DIR)/install-pipenv.sh
-	pipenv install --dev
 
 pystyle:
 	@which pycodestyle >/dev/null 2>&1 && pycodestyle $(modules) || true
@@ -44,10 +43,10 @@ stress:
 uninstall:
 	$(SCRIPT_DIR)/uninstall-app.sh
 
-unittest:	reset
+unittest:	update reset
 	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
 
-update:
+update:	Pipfile.lock requirements.txt
 	$(SCRIPT_DIR)/update-dependencies.sh
 
 .PHONY: all build clean client debug install pipenv pystyle 
@@ -55,7 +54,7 @@ update:
 
 
 Pipfile.lock:	Pipfile
-	pipenv sync --dev
+	pipenv lock -d
 
 requirements.txt:	Pipfile
 	$(SCRIPT_DIR)/lock-requirements.sh
