@@ -5,7 +5,7 @@ PIP=pip3
 SCRIPT_DIR = scripts
 SQL_DIR = sql
 
-caches = $(shell find . -type d -name '*py*cache' -print)
+caches = $(shell find . -type d -name '*py*cache*' -print)
 modules = $(shell find . -type f -name '*.py' -print)
 
 all:	Pipfile.lock requirements.txt .env pystyle unittest
