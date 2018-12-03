@@ -59,8 +59,8 @@ configure_opensuse() {
 
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    APP_PIDFILE=$APP_RUNDIR/pid
-    APP_SOCKET=$APP_RUNDIR/socket
+    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_CONF_FILES="\
     $UWSGI_ETCDIR/vassals/$APP_NAME.ini \
     "
@@ -92,26 +92,50 @@ configure_ubuntu() {
 
 signal_app() {
     # Send restart signal to app
-    if [ -n "${APP_PIDFILE:-}" -a -r $APP_PIDFILE ]; then
-	pid="$(cat $APP_PIDFILE)"
+    if [ -n "${APP_PIDFILE:-}" ]; then
+	if [ -r $APP_PIDFILE ]; then
+	    pid="$(cat $APP_PIDFILE)"
 
-	if [ -n "$pid" ]; then
-	    for signal in "$@"; do
-		printf "Sending signal SIG%s to PID %s\n" $signal $pid
+	    if [ -n "$pid" ]; then
+		for signal in "$@"; do
+		    printf "%s\n" ""
+		    printf "Sending SIG%s to process ID: %s\n" $signal $pid
 
-		if sudo kill -s $signal $pid; then
-		    sleep 5
-		else
-		    break
-		fi
-	    done
+		    if sudo kill -s $signal $pid; then
+			printf "SIG%s received by %s\n" $signal $pid
+			printf "Waiting %s seconds\n" 5
+			sleep 5
+		    else
+			break
+		    fi
+		done
+	    fi
+	elif [ -e $APP_PIDFILE ]; then
+	    printf "No permission to read PID file: %s\n" $APP_PIDFILE >&2
+	else
+	    printf "No such PID file: %s\n" $APP_PIDFILE >&2
 	fi
+    else
+	printf "No PID file to read\n"
     fi
 }
 
 tail_logfile() {
     if [ -n "${APP_LOGFILE:-}" ]; then
-	sudo tail $APP_LOGFILE
+	if [ -r $APP_LOGFILE ]; then
+	    printf "%s\n" ""
+	    printf "%s\n" "========================================================================"
+	    printf "%s\n" "Contents of $APP_LOGFILE (or last ten lines):"
+	    printf "%s\n" "------------------------------------------------------------------------"
+	    sudo tail $APP_LOGFILE
+	    printf "%s\n" "------------------------------------------------------------------------"
+	elif [ -e $APP_LOGFILE ]; then
+	    printf "No permission to read log file: %s\n" $APP_LOGFILE >&2
+	else
+	    printf "No such log file: %s\n" $APP_LOGFILE >&2
+	fi
+    else
+	printf "No log file to read\n"
     fi
 }
 
