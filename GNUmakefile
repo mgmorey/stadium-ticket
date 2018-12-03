@@ -54,7 +54,7 @@ update:	Pipfile.lock requirements.txt
 
 
 Pipfile.lock:	Pipfile
-	pipenv update -d
+	pipenv update -d || true
 
 requirements.txt:	Pipfile
 	$(SCRIPT_DIR)/lock-requirements.sh
