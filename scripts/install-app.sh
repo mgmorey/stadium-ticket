@@ -68,7 +68,9 @@ install_app() {
      done
 
      # Make application the owner of the app and data directories
-     sudo chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR)
+     if [ "$APP_GID" != root -o "$APP_UID" != root ]; then
+	 sudo chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR
+     fi)
 }
 
 install_venv() {
@@ -133,7 +135,7 @@ if install_venv; then
     install_app
 
     # Enable application
-    enable_app $APP_CONF_FILES
+    enable_app $APP_CONFIG $UWSGI_CONF_FILES
 
     # Restart application
     restart_app

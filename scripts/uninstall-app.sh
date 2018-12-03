@@ -39,4 +39,4 @@ for i in 1 2 3 4 5 6; do
 done
 
 # Remove application and configuration
-sudo /bin/rm -rf $APP_CONF_FILES $APP_DIR $APP_PIDFILE $APP_SOCKET $APP_VARDIR
+sudo /bin/rm -rf $UWSGI_CONF_FILES $APP_DIR $APP_VARDIR $APP_SOCKET $APP_PIDFILE
