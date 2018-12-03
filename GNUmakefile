@@ -60,7 +60,7 @@ uninstall:
 
 
 .env:	.env-template
-	cp .env-template tmp$$$$ && $(EDITOR) tmp$$$$ && mv tmp$$$$ .env
+	$(SCRIPT_DIR)/configure-app.sh
 
 Pipfile.lock:	Pipfile
 	pipenv install || true
