@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+script_dir=$(dirname $0)
+source_dir=$script_dir/..
+
 if which pipenv >/dev/null 2>&1; then
     pipenv run "$@"
 elif . $source_dir/.env; then
