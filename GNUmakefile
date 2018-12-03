@@ -43,7 +43,7 @@ stress:
 uninstall:
 	$(SCRIPT_DIR)/uninstall-app.sh
 
-unittest:	update reset
+unittest:	reset
 	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
 
 update:	Pipfile.lock requirements.txt
@@ -54,7 +54,7 @@ update:	Pipfile.lock requirements.txt
 
 
 Pipfile.lock:	Pipfile
-	pipenv lock -d
+	pipenv update -d
 
 requirements.txt:	Pipfile
 	$(SCRIPT_DIR)/lock-requirements.sh
