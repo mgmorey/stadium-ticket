@@ -11,6 +11,7 @@ HOST = 'localhost'
 USER = 'root'
 SCHEMA = 'stadium-tickets'
 URI = {
+    'sqlite': "{0}:////tmp/{3}.db",
     None: "{0}://{1}@{2}/{3}"
 }
 
