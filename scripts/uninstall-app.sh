@@ -8,6 +8,9 @@ APP_DIR=/opt/$APP_NAME
 APP_ETCDIR=/etc/uwsgi
 APP_RUNDIR=/opt/var/$APP_NAME
 APP_VARDIR=/opt/var/$APP_NAME
+UWSGI_ETCDIR=/etc/uwsgi
+
+APP_CONFIG=$APP_ETCDIR/$APP_NAME.ini
 
 case "$kernel_name" in
     (Linux)
@@ -16,11 +19,11 @@ case "$kernel_name" in
 		APP_GID=www-data
 		APP_UID=www-data
 
-		APP_CONFIG_AVAIL=$APP_ETCDIR/apps-available/$APP_NAME.ini
-		APP_CONFIG_ENABLED=$APP_ETCDIR/apps-enabled/$APP_NAME.ini
+		APP_CONF_AVAIL=$APP_ETCDIR/apps-available/$APP_NAME.ini
+		APP_CONF_ENABLED=$APP_ETCDIR/apps-enabled/$APP_NAME.ini
 		APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 
-		APP_CONFIG_FILES="$APP_CONFIG_AVAIL $APP_CONFIG_ENABLED"
+		APP_CONF_FILES="$APP_CONFIG $APP_CONF_AVAIL $APP_CONF_ENABLED"
 		APP_PIDFILE=$APP_RUNDIR/pid
 		APP_SOCKET=$APP_RUNDIR/socket
 		;;
@@ -30,7 +33,7 @@ case "$kernel_name" in
 
 		APP_CONFIG=$APP_ETCDIR/vassals/$APP_NAME.ini
 
-		APP_CONFIG_FILES="$APP_CONFIG"
+		APP_CONF_FILES="$APP_CONFIG"
 		APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
 		APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
 		;;
@@ -45,7 +48,7 @@ case "$kernel_name" in
 esac
 
 # Set application filenames using directory variables
-APP_CONFIG_FILES="$APP_ETCDIR/*/$APP_NAME.ini"
+APP_CONF_FILES="$APP_ETCDIR/*/$APP_NAME.ini"
 APP_LOGFILE=$LOG_DIR/$APP_NAME.log
 APP_PIDFILE=$APP_RUNDIR/pid
 
@@ -69,4 +72,4 @@ for i in 1 2 3 4 5 6; do
 done
 
 # Remove application and configuration
-sudo /bin/rm -rf $APP_CONFIG_FILES $APP_DIR $APP_LOGFILE $APP_VARDIR
+sudo /bin/rm -rf $APP_CONF_FILES $APP_DIR $APP_LOGFILE $APP_VARDIR
