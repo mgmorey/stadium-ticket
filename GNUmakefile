@@ -16,6 +16,9 @@ build:	.env Pipfile.lock
 clean:
 	@/bin/rm -rf $(caches)
 
+client:
+	$(SCRIPT_DIR)/app-test.sh
+
 debug:	reset
 	$(SCRIPT_DIR)/run.sh flask run --port 5001
 
@@ -38,9 +41,6 @@ schema:
 stress:
 	$(SCRIPT_DIR)/load-test.sh
 
-test:
-	$(SCRIPT_DIR)/app-test.sh
-
 uninstall:
 	$(SCRIPT_DIR)/uninstall-app.sh
 
@@ -50,8 +50,8 @@ unittest:	reset
 update:
 	$(SCRIPT_DIR)/update-dependencies.sh
 
-.PHONY: all build clean debug install pipenv pystyle reset
-.PHONY: schema stress test uninstall unittest update
+.PHONY: all build clean client debug install pipenv pystyle 
+.PHONY: reset schema stress uninstall unittest update
 
 
 Pipfile.lock:	Pipfile
