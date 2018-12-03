@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# mysql.sh: wrapper for invoking MySQL client
+# sql.sh: wrapper for invoking SQL database client
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -20,9 +20,13 @@ script_dir=$(dirname $0)
 source_dir=$script_dir/..
 
 if . $source_dir/.env; then
-    exec mysql \
-	 -h ${DATABASE_HOST:-$MYSQL_HOST} \
-	 -u ${DATABASE_USER:-$MYSQL_USER} \
-	 -p"${DATABASE_PASSWORD:-$MYSQL_PASSWORD}" \
-	 "$@"
+    case $DATABASE_DIALECT in
+	(*mysql)
+	    exec $DATABASE_DIALECT \
+		 -h ${DATABASE_HOST:-$MYSQL_HOST} \
+		 -u ${DATABASE_USER:-$MYSQL_USER} \
+		 -p"${DATABASE_PASSWORD:-$MYSQL_PASSWORD}" \
+		 "$@"
+	    ;;
+    esac
 fi

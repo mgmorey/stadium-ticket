@@ -33,10 +33,10 @@ run:
 	docker-compose up
 
 reset:	schema
-	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/reset.sql
+	$(SCRIPT_DIR)/sql.sh <$(SQL_DIR)/reset.sql
 
 schema:
-	$(SCRIPT_DIR)/mysql.sh <$(SQL_DIR)/schema.sql
+	$(SCRIPT_DIR)/sql.sh <$(SQL_DIR)/schema.sql
 
 stress:
 	$(SCRIPT_DIR)/load-test.sh
