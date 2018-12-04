@@ -29,7 +29,7 @@ def _get_hostname(dialect: str):
 
 
 def _get_login(dialect: str):
-    if '{1}' not in _get_uri(dialect):
+    if '{3}' not in _get_uri(dialect):
         return None
 
     password = config('DATABASE_PASSWORD')
