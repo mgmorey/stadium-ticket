@@ -121,21 +121,26 @@ signal_app() {
 }
 
 tail_logfile() {
+    contents=""
     if [ -n "${APP_LOGFILE:-}" ]; then
 	if [ -r $APP_LOGFILE ]; then
-	    printf "%s\n" ""
-	    printf "%s\n" "========================================================================"
-	    printf "%s\n" "Contents of $APP_LOGFILE (or last ten lines):"
-	    printf "%s\n" "------------------------------------------------------------------------"
-	    sudo tail $APP_LOGFILE
-	    printf "%s\n" "------------------------------------------------------------------------"
+	    contents=$(tail $APP_LOGFILE)
 	elif [ -e $APP_LOGFILE ]; then
-	    printf "No permission to read log file: %s\n" $APP_LOGFILE >&2
+	    contents=$(sudo tail $APP_LOGFILE)
 	else
 	    printf "No such log file: %s\n" $APP_LOGFILE >&2
 	fi
     else
 	printf "No log file to read\n"
+    fi
+
+    if [ -n "$contents" ]; then
+	printf "%s\n" ""
+	printf "%s\n" "========================================================================"
+	printf "%s\n" "Contents of $APP_LOGFILE (or last ten lines):"
+	printf "%s\n" "------------------------------------------------------------------------"
+	printf "%s\n" "$contents"
+	printf "%s\n" "------------------------------------------------------------------------"
     fi
 }
 
