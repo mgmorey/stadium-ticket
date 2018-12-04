@@ -121,12 +121,13 @@ signal_app() {
 }
 
 tail_logfile() {
-    contents=""
+    tmpfile=$(mktemp)
+
     if [ -n "${APP_LOGFILE:-}" ]; then
 	if [ -r $APP_LOGFILE ]; then
-	    contents=$(tail $APP_LOGFILE)
+	    tail $APP_LOGFILE >$tmpfile
 	elif [ -e $APP_LOGFILE ]; then
-	    contents=$(sudo tail $APP_LOGFILE)
+	    sudo tail $APP_LOGFILE >$tmpfile
 	else
 	    printf "No such log file: %s\n" $APP_LOGFILE >&2
 	fi
@@ -134,14 +135,16 @@ tail_logfile() {
 	printf "No log file to read\n"
     fi
 
-    if [ -n "$contents" ]; then
+    if [ -s "$tmpfile" ]; then
 	printf "%s\n" ""
 	printf "%s\n" "========================================================================"
 	printf "%s\n" "Contents of $APP_LOGFILE (or last ten lines):"
 	printf "%s\n" "------------------------------------------------------------------------"
-	printf "%s\n" "$contents"
+	cat $tmpfile
 	printf "%s\n" "------------------------------------------------------------------------"
     fi
+
+    /bin/rm -f $tmpfile
 }
 
 distro_name=$(get-os-distro-name)
