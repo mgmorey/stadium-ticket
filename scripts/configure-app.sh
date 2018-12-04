@@ -169,6 +169,9 @@ case "$kernel_name" in
     (FreeBSD)
 	configure_defaults
 	;;
+    (SunOS)
+	configure_defaults
+	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
