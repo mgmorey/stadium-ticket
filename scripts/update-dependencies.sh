@@ -25,6 +25,7 @@ abort() {
 }
 
 script_dir=$(dirname $0)
+source_dir=$script_dir/..
 
 if which $PIP >/dev/null 2>&1; then
     pip=$PIP
@@ -34,10 +35,9 @@ else
     abort "PIP command unavailable"
 fi
 
-$pip install pipenv --user
 if which pipenv >/dev/null 2>&1; then
     $script_dir/lock-requirements.sh
     pipenv update -d
 elif which $PIP >/dev/null 2>&1; then
-    $pip install -r requirements.txt --user
+    $pip install -r $source_dir/requirements.txt --user
 fi
