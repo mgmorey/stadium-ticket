@@ -11,8 +11,8 @@ HOST = 'localhost'
 USER = 'root'
 SCHEMA = 'stadium-tickets'
 URI = {
-    'sqlite': "{0}:////tmp/{3}.db",
-    None: "{0}://{1}@{2}/{3}"
+    'sqlite': "{0}:////tmp/{1}.db",
+    None: "{0}://{3}@{2}/{1}"
 }
 
 
@@ -21,7 +21,7 @@ def _get_driver(dialect: str):
     return driver.format(dialect) if driver else None
 
 
-def _get_host(dialect: str):
+def _get_hostname(dialect: str):
     if '{2}' not in _get_uri(dialect):
         return None
 
@@ -49,11 +49,10 @@ def _get_uri(dialect: str):
 def get_uri():
     dialect = config('DATABASE_DIALECT')
     schema = config('DATABASE_SCHEMA', default=SCHEMA)
-    s = config('DATABASE_URI', default=_get_uri(dialect))
-    return s.format(_get_scheme(dialect),
-                    _get_login(dialect),
-                    _get_host(dialect),
-                    schema)
+    uri = config('DATABASE_URI', default=_get_uri(dialect))
+    return uri.format(_get_scheme(dialect), schema,
+                      _get_hostname(dialect),
+                      _get_login(dialect))
 
 
 if __name__ == '__main__':
