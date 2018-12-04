@@ -166,6 +166,9 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
+    (FreeBSD)
+	configure_defaults
+	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;

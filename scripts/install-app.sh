@@ -38,21 +38,21 @@ enable_app() {
 }
 
 generate_ini() {
-    printf -- "sed -e 's|^#<\(%s\)>#$|%s|g'" ".*" "\1"
+    printf "%s" "sed -e 's|^#<\\(.*\\)>#$|\\1|g'"
 
     for var in $APP_VARS; do
 	eval value="\$$var"
-	printf -- " -e 's|\$(%s)|%s|g'" "$var" "$value"
+	printf "%s" " -e 's|\$($var)|$value|g'"
     done
 
-    printf -- " %s\n" "$@"
+    printf " %s\n" "$@"
 }
 
 install_app() {
     (cd "$SOURCE_DIR"
 
      # Install application environment file
-     sudo install -D .env "$APP_DIR"
+     sudo install -d -m 644 .env "$APP_DIR"
 
      # Install application code files
      for source in $(find app -type f -name '*.py' -print | sort); do
@@ -62,7 +62,7 @@ install_app() {
 	     (*)
 		 dest="$APP_DIR/$source"
 		 printf "Copying %s to %s\n" "$source" "$dest"
-		 sudo install -D -m 644 "$source" "$dest"
+		 sudo install -d -m 644 "$source" "$dest"
 		 ;;
 	 esac
      done
@@ -78,7 +78,7 @@ install_venv() {
     export LC_ALL=C.UTF-8
     export PIPENV_VENV_IN_PROJECT=true
 
-    if pipenv >/dev/null; then
+    if pipenv >/dev/null 2>&1; then
 	sudo mkdir -p $APP_DIR/.venv
 
 	(cd $SOURCE_DIR && sudo /bin/cp $APP_PIPFILES $APP_DIR)

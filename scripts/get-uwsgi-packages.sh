@@ -20,7 +20,7 @@ DEBIAN_PKGS="uwsgi uwsgi-plugin-python3"
 
 FEDORA_PKGS=""
 
-FREEBSD_PKGS=""
+FREEBSD_PKGS="uwsgi-py36"
 
 OPENSUSE_PKGS="uwsgi uwsgi-python3"
 
