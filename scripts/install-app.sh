@@ -52,7 +52,7 @@ install_app() {
     (cd "$SOURCE_DIR"
 
      # Install application environment file
-     sudo install -d -m 644 .env "$APP_DIR"
+     sudo install -m 644 .env "$APP_DIR"
 
      # Install application code files
      for source in $(find app -type f -name '*.py' -print | sort); do
@@ -62,7 +62,8 @@ install_app() {
 	     (*)
 		 dest="$APP_DIR/$source"
 		 printf "Copying %s to %s\n" "$source" "$dest"
-		 sudo install -d -m 644 "$source" "$dest"
+		 sudo install -d -m 755 $(dirname "$dest")
+		 sudo install -m 644 "$source" "$dest"
 		 ;;
 	 esac
      done
