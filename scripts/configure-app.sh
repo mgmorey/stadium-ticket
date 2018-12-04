@@ -83,7 +83,7 @@ configure_ubuntu() {
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/pid
-    APP_SOCKET=$APP_RUNDIR/socket
+    APP_SOCKET=/run/uwsgi/app/$APP_NAME/socket
     UWSGI_CONF_FILES="\
     $UWSGI_ETCDIR/apps-available/$APP_NAME.ini \
     $UWSGI_ETCDIR/apps-enabled/$APP_NAME.ini \
