@@ -22,14 +22,14 @@ def _get_driver(dialect: str):
 
 
 def _get_host(dialect: str):
-    if dialect == 'sqlite':
+    if '{2}' not in _get_uri(dialect):
         return None
 
     return config('DATABASE_HOST', default=HOST)
 
 
 def _get_login(dialect: str):
-    if dialect == 'sqlite':
+    if '{1}' not in _get_uri(dialect):
         return None
 
     password = config('DATABASE_PASSWORD')
