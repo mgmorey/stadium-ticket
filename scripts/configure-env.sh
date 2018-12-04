@@ -27,5 +27,5 @@ fi
 
 if $EDITOR $tmpfile; then
     mv -f $tmpfile .env
-    chgrp $USER .env
+    chgrp $(id -g) .env
 fi

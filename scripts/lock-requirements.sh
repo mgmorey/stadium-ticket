@@ -22,7 +22,7 @@ trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 if pipenv lock -dr >$tmpfile; then
     if pipenv lock -r >>$tmpfile; then
 	mv -f $tmpfile requirements.txt
-	chgrp $USER requirements.txt
+	chgrp $(id -g) requirements.txt
 	chmod a+r requirements.txt
     fi
 fi
