@@ -38,14 +38,14 @@ enable_app() {
 }
 
 generate_ini() {
-    printf "%s -e 's|^#[ ]*||g" sed
+    printf -- "sed -e 's|^#<\(%s\)>#$|%s|g'" ".*" "\1"
 
     for var in $APP_VARS; do
 	eval value="\$$var"
 	printf -- " -e 's|\$(%s)|%s|g'" "$var" "$value"
     done
 
-    printf " %s\n" "$@"
+    printf -- " %s\n" "$@"
 }
 
 install_app() {
