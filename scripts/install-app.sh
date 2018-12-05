@@ -93,12 +93,17 @@ install_venv() {
     export LANG=C.UTF-8
     export LC_ALL=C.UTF-8
     export PIPENV_VENV_IN_PROJECT=true
-    venv="$(pipenv --venv)"
+    venv="$(pipenv --bare --venv 2>/dev/null || true)"
 
-    if [ -n "$venv" ]; then
+    if [ -z "$venv" ]; then
+	create_venv
+	venv="$(pipenv --bare --venv)"
+    fi
+
+    if [ -n "$venv" -a -d $venv ]; then
 	printf "Copying %s to %s\n" "$venv/" "$APP_DIR/.venv"
 	sudo mkdir -p $APP_DIR/.venv
-	sudo rsync -a $venv/ $APP_DIR/.venv
+	sudo rsync -a "$venv/" $APP_DIR/.venv
     else
 	abort "%s\n" "Unable to create virtual environment"
     fi
@@ -107,23 +112,9 @@ install_venv() {
 # Set script and source directories
 SCRIPT_DIR="$(dirname $0)"
 SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
-
-# Set application parameters
 . $SCRIPT_DIR/configure-app.sh
-
-# Install virtual environment
-create_venv
 install_venv
-
-# Install application
 install_app
-
-# Enable application
 enable_app $APP_CONFIG $UWSGI_APPDIRS
-
-# Restart application
-printf "%s\n" ""
 signal_app HUP
-
-# Tail the log file
 tail_logfile
