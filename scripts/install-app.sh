@@ -29,9 +29,9 @@ create_venv() {
 	 venv="$(pipenv --venv)"
 
 	 if [ -n "$venv" ]; then
-	     printf "Copying %s to %s\n" "$venv/*" "$APP_DIR/.venv"
+	     printf "Copying %s to %s\n" "$venv/" "$APP_DIR/.venv"
 	     sudo mkdir -p $APP_DIR/.venv
-	     sudo rsync -a $venv/* $APP_DIR/.venv
+	     sudo rsync -a $venv/ $APP_DIR/.venv
 	 else
 	     abort "%s\n" "Unable to create virtual environment"
 	 fi
