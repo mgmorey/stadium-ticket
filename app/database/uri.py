@@ -10,7 +10,10 @@ DRIVER = {
 }
 HOST = 'localhost'
 PATTERN = {
-    None: re.compile(r'[0-9A-Za-z_\.\-]+')
+    'DATABASE_HOST': re.compile(r'[^/]+'),
+    'DATABASE_PASSWORD': re.compile(r'[^@]+'),
+    'DATABASE_USER': re.compile(r'[^:]+'),
+    None: re.compile(r'[a-z][0-9a-z-]+')
 }
 SCHEMA = 'stadium-tickets'
 URI = {
@@ -21,11 +24,11 @@ USER = 'root'
 
 
 def _get_config(parameter: str, default: str = None):
-    pattern = _get_pattern(parameter)
+    pattern = PATTERN.get(parameter, PATTERN[None])
     value = config(parameter, default=default)
 
     if not pattern.fullmatch(value):
-        raise ValueError(f"Value \"{value}\" is not a valid identifier")
+        raise ValueError(f"Invalid {parameter} value: \"{value}\"")
 
     return value
 
@@ -49,10 +52,6 @@ def _get_login(dialect: str):
     password = _get_config('DATABASE_PASSWORD')
     user = _get_config('DATABASE_USER', default=os.getenv('USER', USER))
     return f"{user}:{password}" if password else user
-
-
-def _get_pattern(parameter: str):
-    return PATTERN.get(parameter, PATTERN[None])
 
 
 def _get_scheme(dialect: str):
