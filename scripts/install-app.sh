@@ -21,9 +21,6 @@ APP_PORT APP_RUNDIR APP_SOCKET APP_UID APP_VARDIR"
 
 create_venv() {
     (cd $SOURCE_DIR
-     export LANG=C.UTF-8
-     export LC_ALL=C.UTF-8
-     export PIPENV_VENV_IN_PROJECT=true
 
      if ! pipenv sync; then
 	 abort "%s\n" "Unable to create virtual environment"
@@ -90,9 +87,6 @@ install_app() {
 }
 
 install_venv() {
-    export LANG=C.UTF-8
-    export LC_ALL=C.UTF-8
-    export PIPENV_VENV_IN_PROJECT=true
     venv="$(pipenv --bare --venv 2>/dev/null || true)"
 
     if [ -z "$venv" ]; then
@@ -108,6 +102,10 @@ install_venv() {
 	abort "%s\n" "Unable to create virtual environment"
     fi
 }
+
+export LANG=${LANG:-C.UTF-8}
+export LC_ALL=${LC_ALL:-C.UTF-8}
+export PIPENV_VENV_IN_PROJECT=true
 
 # Set script and source directories
 SCRIPT_DIR="$(dirname $0)"
