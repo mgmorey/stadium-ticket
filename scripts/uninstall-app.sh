@@ -26,4 +26,4 @@ signal_app INT INT TERM KILL
 tail_logfile
 
 # Remove application and configuration
-sudo /bin/rm -rf $UWSGI_CONF_FILES $APP_ETCDIR $APP_DIR $APP_VARDIR
+sudo /bin/rm -rf $UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR
