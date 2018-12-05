@@ -31,7 +31,7 @@ OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel %s-devel %s-Flask \
 REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip %s-PyMySQL \
 %s-pytest sclo-%s-python-flask"
 
-SUNOS_PKGS="build-essential pip-%s pytest-%s"
+SUNOS_PKGS="build-essential pip-%s"
 
 UBUNTU_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask \
 %s-flask-restful %s-flask-sqlalchemy %s-pip"
