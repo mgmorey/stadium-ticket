@@ -43,6 +43,22 @@ configure_defaults() {
     UWSGI_CONF_FILES=
 }
 
+configure_freebsd() {
+    # Set application group and user identification
+    APP_GID=uwsgi
+    APP_UID=uwsgi
+
+    # Set application directory names from name variable
+    APP_LOGDIR=$APP_VARDIR
+    APP_RUNDIR=$APP_VARDIR
+
+    # Set additional parameters from directory variables
+    APP_LOGFILE=$APP_LOGDIR/app.log
+    APP_PIDFILE=$APP_RUNDIR/pid
+    APP_SOCKET=$APP_RUNDIR/sock
+    UWSGI_CONF_FILES=
+}
+
 configure_opensuse() {
     # Set application group and user identification
     APP_GID=nogroup
@@ -167,7 +183,7 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD)
-	configure_defaults
+	configure_freebsd
 	;;
     (SunOS)
 	configure_defaults
