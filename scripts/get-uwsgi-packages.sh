@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="uwsgi uwsgi-plugin-python3"
+DEBIAN_PKGS="uwsgi uwsgi-plugin-%s"
 
 FEDORA_PKGS=""
 
@@ -28,7 +28,7 @@ REDHAT_PKGS=""
 
 SUNOS_PKGS=""
 
-UBUNTU_PKGS="uwsgi uwsgi-plugin-python3"
+UBUNTU_PKGS="uwsgi uwsgi-plugin-%s"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
