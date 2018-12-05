@@ -45,7 +45,7 @@ configure_defaults() {
     APP_LOGFILE=$APP_LOGDIR/app.log
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/sock
-    UWSGI_CONF_FILES=
+    UWSGI_APPDIRS=
 }
 
 configure_freebsd() {
@@ -61,7 +61,7 @@ configure_freebsd() {
     APP_LOGFILE=$APP_LOGDIR/app.log
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/sock
-    UWSGI_CONF_FILES=
+    UWSGI_APPDIRS=
 }
 
 configure_opensuse() {
@@ -82,9 +82,7 @@ configure_opensuse() {
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    UWSGI_CONF_FILES="\
-    $UWSGI_ETCDIR/vassals/$APP_NAME.ini \
-    "
+    UWSGI_APPDIRS="vassals"
 }
 
 configure_ubuntu() {
@@ -105,10 +103,7 @@ configure_ubuntu() {
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=/run/uwsgi/app/$APP_NAME/socket
-    UWSGI_CONF_FILES="\
-    $UWSGI_ETCDIR/apps-available/$APP_NAME.ini \
-    $UWSGI_ETCDIR/apps-enabled/$APP_NAME.ini \
-    "
+    UWSGI_APPDIRS="apps-available apps-enabled"
 }
 
 signal_app() {
@@ -119,7 +114,6 @@ signal_app() {
 
 	    if [ -n "$pid" ]; then
 		for signal in "$@"; do
-		    printf "%s\n" ""
 		    printf "Sending SIG%s to process ID: %s\n" $signal $pid
 
 		    if sudo kill -s $signal $pid; then

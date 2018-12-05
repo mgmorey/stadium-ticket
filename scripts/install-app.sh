@@ -25,17 +25,7 @@ create_venv() {
      export LC_ALL=C.UTF-8
      export PIPENV_VENV_IN_PROJECT=true
 
-     if pipenv sync; then
-	 venv="$(pipenv --venv)"
-
-	 if [ -n "$venv" ]; then
-	     printf "Copying %s to %s\n" "$venv/" "$APP_DIR/.venv"
-	     sudo mkdir -p $APP_DIR/.venv
-	     sudo rsync -a $venv/ $APP_DIR/.venv
-	 else
-	     abort "%s\n" "Unable to create virtual environment"
-	 fi
-     else
+     if ! pipenv sync; then
 	 abort "%s\n" "Unable to create virtual environment"
      fi)
 }
@@ -46,8 +36,14 @@ enable_app() {
 	source=$1
 	shift
 
-	for dest in "$@"; do
-	    sudo ln -sf $source $dest
+	for dir in "$@"; do
+	    dest=$UWSGI_ETCDIR/$dir
+
+	    if [ -d "$dest" ]; then
+		sudo ln -sf $source $dest
+	    else
+		printf "%s: No such uWSGI app directory\n" "$dest"
+	    fi
 	done
     fi
 }
@@ -92,6 +88,21 @@ install_app() {
      fi)
 }
 
+install_venv() {
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    export PIPENV_VENV_IN_PROJECT=true
+    venv="$(pipenv --venv)"
+
+    if [ -n "$venv" ]; then
+	printf "Copying %s to %s\n" "$venv/" "$APP_DIR/.venv"
+	sudo mkdir -p $APP_DIR/.venv
+	sudo rsync -a $venv/ $APP_DIR/.venv
+    else
+	abort "%s\n" "Unable to create virtual environment"
+    fi
+}
+
 # Set script and source directories
 SCRIPT_DIR="$(dirname $0)"
 SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
@@ -101,14 +112,16 @@ SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
 
 # Install virtual environment
 create_venv
+install_venv
 
 # Install application
 install_app
 
 # Enable application
-enable_app $APP_CONFIG $UWSGI_CONF_FILES
+enable_app $APP_CONFIG $UWSGI_APPDIRS
 
 # Restart application
+printf "%s\n" ""
 signal_app HUP
 
 # Tail the log file
