@@ -103,13 +103,6 @@ SCRIPT_DIR="$(dirname $0)"
 # Set application parameters
 . $SCRIPT_DIR/configure-app.sh
 
-# Install uWSGI with Python 3 plugin
-packages=$($SCRIPT_DIR/get-uwsgi-packages.sh)
-
-if [ -n "$packages" ]; then
-    install-packages $packages
-fi
-
 # Set source directory
 SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
 
