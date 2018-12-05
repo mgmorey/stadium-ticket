@@ -17,6 +17,11 @@
 APP_NAME=stadium-ticket
 APP_PORT=5000
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
 configure_common() {
     # Set application directory names from name variable
     APP_DIR=/opt/$APP_NAME

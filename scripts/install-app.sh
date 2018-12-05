@@ -16,13 +16,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-APP_PIPFILES="Pipfile Pipfile.lock requirements.txt"
+APP_PIPFILES="Pipfile Pipfile.lock"
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE \
 APP_PORT APP_RUNDIR APP_SOCKET APP_UID APP_VARDIR"
 
-abort() {
-    printf "$@" >&2
-    exit 1
+create_venv() {
+    (cd $SOURCE_DIR
+     export LANG=C.UTF-8
+     export LC_ALL=C.UTF-8
+     export PIPENV_VENV_IN_PROJECT=true
+
+     if pipenv sync; then
+	 venv="$(pipenv --venv)"
+
+	 if [ -n "$venv" -a $venv != $APP_DIR/.venv ]; then
+	     printf "Copying %s to %s\n" "$venv/*" "$APP_DIR/.venv"
+	     sudo mkdir -p $APP_DIR/.venv
+	     sudo sh -c "/bin/cp -rf $venv/* $APP_DIR/.venv"
+	 fi
+     else
+	 abort "%s\n" "Unable to create virtual environment"
+     fi)
 }
 
 enable_app() {
@@ -51,6 +65,9 @@ generate_ini() {
 install_app() {
     (cd "$SOURCE_DIR"
 
+     # Create application directories
+     sudo mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
+
      # Install application environment file
      sudo install -m 600 .env "$APP_DIR"
 
@@ -74,29 +91,6 @@ install_app() {
      fi)
 }
 
-install_venv() {
-    export LANG=C.UTF-8
-    export LC_ALL=C.UTF-8
-    export PIPENV_VENV_IN_PROJECT=true
-
-    if pipenv >/dev/null 2>&1; then
-	sudo mkdir -p $APP_DIR/.venv
-
-	(cd $SOURCE_DIR && sudo /bin/cp $APP_PIPFILES $APP_DIR)
-	(cd $APP_DIR
-
-	 if sudo -H pipenv sync; then
-	     venv="$(sudo -H pipenv --venv)"
-
-	     if [ -n "$venv" -a $venv != $APP_DIR/.venv ]; then
-		 sudo sh -c "/bin/cp -rf $venv/* $APP_DIR/.venv"
-	     fi
-	 else
-	     exit $?
-	 fi)
-    fi
-}
-
 # Set script directory
 SCRIPT_DIR="$(dirname $0)"
 
@@ -106,21 +100,17 @@ SCRIPT_DIR="$(dirname $0)"
 # Set source directory
 SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
 
-# Create application directories
-sudo mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
-
 # Install virtual environment
-if install_venv; then
+create_venv
 
-    # Install application
-    install_app
+# Install application
+install_app
 
-    # Enable application
-    enable_app $APP_CONFIG $UWSGI_CONF_FILES
+# Enable application
+enable_app $APP_CONFIG $UWSGI_CONF_FILES
 
-    # Restart application
-    signal_app HUP
+# Restart application
+signal_app HUP
 
-    # Tail the log file
-    tail_logfile
-fi
+# Tail the log file
+tail_logfile
