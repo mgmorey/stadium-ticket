@@ -63,7 +63,7 @@ install_app() {
 		 dest="$APP_DIR/$source"
 		 printf "Copying %s to %s\n" "$source" "$dest"
 		 sudo install -d -m 755 $(dirname "$dest")
-		 sudo install -m 644 "$source" "$dest"
+		 sudo install -C -m 644 "$source" "$dest"
 		 ;;
 	 esac
      done
