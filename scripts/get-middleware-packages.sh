@@ -28,8 +28,8 @@ FREEBSD_PKGS="openssl-devel %s-Flask %s-Flask-RESTful \
 OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel %s-devel %s-Flask \
 %s-Flask-RESTful %s-Flask-SQLAlchemy %s-pip"
 
-REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip %s-PyMySQL \
-%s-pytest sclo-%s-python-flask"
+REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip \
+sclo-%s-python-flask"
 
 SUNOS_PKGS="build-essential pip-%s"
 
