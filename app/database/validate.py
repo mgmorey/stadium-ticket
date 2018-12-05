@@ -3,8 +3,10 @@
 import re
 
 PATTERN = {
+    'DATABASE_DIALECT': re.compile(r'[\w\d\-]+'),
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
     'DATABASE_PASSWORD': re.compile(r'[\w\d\-\.!\#\$\^&\*\=\+]+'),
+    'DATABASE_SCHEMA': re.compile(r'[\w\d\-]+'),
     'DATABASE_USER': re.compile(r'[\w\d\-]+'),
     None: re.compile(r'[\w\-]+')
 }
