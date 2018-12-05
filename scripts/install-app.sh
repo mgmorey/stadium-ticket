@@ -37,12 +37,13 @@ enable_app() {
 	shift
 
 	for dir in "$@"; do
-	    dest=$UWSGI_ETCDIR/$dir
+	    dest=$UWSGI_ETCDIR/$dir/$APP_NAME.ini
 
-	    if [ -d "$dest" ]; then
-		sudo ln -sf $source $dest
+	    if [ -d $(dirname $dest) ]; then
+		printf "Linking %s to %s\n" $source $dest
+		sudo ln -sf $source "$dest"
 	    else
-		printf "%s: No such uWSGI app directory\n" "$dest"
+		printf "%s: No such directory\n" "$dest"
 	    fi
 	done
     fi
