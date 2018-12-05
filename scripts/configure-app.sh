@@ -171,7 +171,7 @@ configure_common
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (ubuntu)
+	    (debian|ubuntu)
 		configure_ubuntu
 		;;
 	    (opensuse-*)
