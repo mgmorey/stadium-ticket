@@ -33,8 +33,8 @@ configure_defaults() {
     APP_UID=nobody
 
     # Set application directory names from name variable
-    APP_LOGDIR=$APP_VARDIR/$APP_NAME
-    APP_RUNDIR=$APP_VARDIR/$APP_NAME
+    APP_LOGDIR=$APP_VARDIR
+    APP_RUNDIR=$APP_VARDIR
 
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/app.log
@@ -54,8 +54,8 @@ configure_opensuse() {
     UWSGI_RUNDIR=
 
     # Set application directory names
-    APP_LOGDIR=$APP_VARDIR/$APP_NAME
-    APP_RUNDIR=$APP_VARDIR/$APP_NAME
+    APP_LOGDIR=$APP_VARDIR
+    APP_RUNDIR=$APP_VARDIR
 
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
