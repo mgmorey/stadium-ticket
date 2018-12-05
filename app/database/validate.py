@@ -8,6 +8,7 @@ PATTERN = {
     None: re.compile(r'[\w\d\-]+')
 }
 
+
 def validate_string(parameter: str, value: str) -> str:
     pattern = PATTERN.get(parameter, PATTERN[None])
 
