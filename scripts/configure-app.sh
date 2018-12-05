@@ -114,10 +114,10 @@ signal_app() {
 
 	    if [ -n "$pid" ]; then
 		for signal in "$@"; do
-		    printf "Sending SIG%s to process ID: %s\n" $signal $pid
+		    printf "Sending SIG%s to process: %s\n" $signal $pid
 
 		    if sudo kill -s $signal $pid; then
-			printf "SIG%s received by %s\n" $signal $pid
+			printf "SIG%s received by process: %s\n" $signal $pid
 			printf "Waiting %s seconds\n" 5
 			sleep 5
 		    else
