@@ -10,10 +10,10 @@ DRIVER = {
 }
 HOST = 'localhost'
 PATTERN = {
-    'DATABASE_HOST': re.compile(r'[^/]+'),
-    'DATABASE_PASSWORD': re.compile(r'[^@]+'),
-    'DATABASE_USER': re.compile(r'[^:]+'),
-    None: re.compile(r'[a-z][0-9a-z-]+')
+    'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
+    'DATABASE_PASSWORD': re.compile(r'[\w\d!@#\$\^&\*\-\+\.]+'),
+    'DATABASE_USER': re.compile(r'[\w\d\-]+'),
+    None: re.compile(r'[\w\-]+')
 }
 SCHEMA = 'stadium-tickets'
 URI = {
