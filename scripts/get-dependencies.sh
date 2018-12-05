@@ -22,7 +22,7 @@ abort() {
 }
 
 get_deps() {
-    for category in database-client http-client middleware python-dev; do
+    for category in database-client http-client python-dev python-mw; do
 	printf "%s\n" "$script_dir/get-$category-packages.sh"
     done | sh | sort -u
 }
