@@ -66,7 +66,7 @@ python_info=$($script_dir/get-python-package.sh)
 package_name=$(printf "%s" "$python_info" | awk '{print $1}')
 package_modifier=$(printf "%s" "$python_info" | awk '{print $2}')
 
-printf "%s\n" $package_name $package_modifier-pip
+printf "%s\n" $package_name
 
 for package in $packages; do
     case $package in
