@@ -16,25 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask \
-%s-flask-restful %s-flask-sqlalchemy %s-pip"
+DEBIAN_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
-FEDORA_PKGS="gcc libffi-devel openssl-devel %s-devel %s-flask \
-%s-flask-restful %s-flask-sqlalchemy %s-pip"
+FEDORA_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
-FREEBSD_PKGS="openssl-devel %s-Flask %s-Flask-RESTful \
-%s-Flask-SQLAlchemy %s-pip"
+FREEBSD_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
-OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel %s-devel %s-Flask \
-%s-Flask-RESTful %s-Flask-SQLAlchemy %s-pip"
+OPENSUSE_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
-REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip \
-sclo-%s-python-flask"
+REDHAT_PKGS="sclo-%s-python-flask"
 
-SUNOS_PKGS="build-essential pip-%s"
+SUNOS_PKGS=""
 
-UBUNTU_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-flask \
-%s-flask-restful %s-flask-sqlalchemy %s-pip"
+UBUNTU_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
