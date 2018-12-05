@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-APP_PIPFILES="Pipfile Pipfile.lock"
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE \
 APP_PORT APP_RUNDIR APP_SOCKET APP_UID APP_VARDIR"
 
@@ -29,10 +28,12 @@ create_venv() {
      if pipenv sync; then
 	 venv="$(pipenv --venv)"
 
-	 if [ -n "$venv" -a $venv != $APP_DIR/.venv ]; then
-	     printf "Copying %s to %s\n" "$venv/*" "$APP_DIR/.venv"
+	 if [ -n "$venv" ]; then
+	     printf "Copying venv to %s\n" "$APP_DIR/.venv"
 	     sudo mkdir -p $APP_DIR/.venv
-	     sudo sh -c "/bin/cp -rf $venv/* $APP_DIR/.venv"
+	     sudo rsync $venv/ $APP_DIR/.venv/
+	 else
+	     abort "%s\n" "Unable to create virtual environment"
 	 fi
      else
 	 abort "%s\n" "Unable to create virtual environment"
@@ -91,14 +92,12 @@ install_app() {
      fi)
 }
 
-# Set script directory
+# Set script and source directories
 SCRIPT_DIR="$(dirname $0)"
+SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
 
 # Set application parameters
 . $SCRIPT_DIR/configure-app.sh
-
-# Set source directory
-SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
 
 # Install virtual environment
 create_venv
