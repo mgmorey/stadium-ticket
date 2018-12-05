@@ -32,6 +32,7 @@ UBUNTU_PKGS="uwsgi uwsgi-plugin-python3"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
+script_dir=$(dirname $0)
 
 case "$kernel_name" in
     (Linux)
@@ -61,5 +62,19 @@ case "$kernel_name" in
 	;;
 esac
 
+python_info=$($script_dir/get-python-package.sh)
+package_name=$(printf "%s" "$python_info" | awk '{print $1}')
+package_modifier=$(printf "%s" "$python_info" | awk '{print $2}')
 
-printf "%s\n" $packages
+printf "%s\n" $package_name
+
+for package in $packages; do
+    case $package in
+	(*%s*)
+	    printf "$package\n" $package_modifier
+	    ;;
+	(*)
+	    printf "%s\n" $package
+	    ;;
+    esac
+done
