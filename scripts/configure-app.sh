@@ -37,6 +37,11 @@ configure_defaults() {
     APP_GID=nogroup
     APP_UID=nobody
 
+    # Set uWSGI-specific directories
+    UWSGI_ETCDIR=/etc/uwsgi
+    UWSGI_LOGDIR=
+    UWSGI_RUNDIR=
+
     # Set application directory names from name variable
     APP_LOGDIR=$APP_VARDIR
     APP_RUNDIR=$APP_VARDIR
@@ -52,6 +57,11 @@ configure_freebsd() {
     # Set application group and user identification
     APP_GID=uwsgi
     APP_UID=uwsgi
+
+    # Set uWSGI-specific directories
+    UWSGI_ETCDIR=/etc/uwsgi
+    UWSGI_LOGDIR=
+    UWSGI_RUNDIR=
 
     # Set application directory names from name variable
     APP_LOGDIR=$APP_VARDIR
