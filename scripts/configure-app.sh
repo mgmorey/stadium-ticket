@@ -29,12 +29,12 @@ configure_common() {
 
 configure_defaults() {
     # Set application group and user identification
-    APP_GID=root
-    APP_UID=root
+    APP_GID=nogroup
+    APP_UID=nobody
 
     # Set application directory names from name variable
-    APP_LOGDIR=/var/opt/$APP_NAME
-    APP_RUNDIR=/var/opt/$APP_NAME
+    APP_LOGDIR=$APP_VARDIR/$APP_NAME
+    APP_RUNDIR=$APP_VARDIR/$APP_NAME
 
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/app.log
@@ -54,8 +54,8 @@ configure_opensuse() {
     UWSGI_RUNDIR=
 
     # Set application directory names
-    APP_LOGDIR=/var/opt/$APP_NAME
-    APP_RUNDIR=/var/opt/$APP_NAME
+    APP_LOGDIR=$APP_VARDIR/$APP_NAME
+    APP_RUNDIR=$APP_VARDIR/$APP_NAME
 
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
