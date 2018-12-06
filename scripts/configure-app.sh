@@ -71,48 +71,6 @@ configure_defaults() {
     APP_LOGFILE=$APP_LOGDIR/app.log
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/sock
-    UWSGI_APPDIRS=
-}
-
-configure_freebsd() {
-    # Set application group and user identification
-    APP_GID=uwsgi
-    APP_UID=uwsgi
-
-    # Set uWSGI-specific directories
-    UWSGI_ETCDIR=/etc/uwsgi
-    UWSGI_LOGDIR=
-    UWSGI_RUNDIR=
-
-    # Set application directory names from name variable
-    APP_LOGDIR=$APP_VARDIR
-    APP_RUNDIR=$APP_VARDIR
-
-    # Set additional parameters from directory variables
-    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    UWSGI_APPDIRS=
-}
-
-configure_opensuse() {
-    # Set application group and user identification
-    APP_GID=nogroup
-    APP_UID=nobody
-
-    # Set uWSGI-specific directories
-    UWSGI_ETCDIR=/etc/uwsgi
-    UWSGI_LOGDIR=
-    UWSGI_RUNDIR=
-
-    # Set application directory names
-    APP_LOGDIR=$APP_VARDIR
-    APP_RUNDIR=$APP_VARDIR
-
-    # Set additional parameters from directory variables
-    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS="vassals"
 }
 
@@ -184,7 +142,7 @@ case "$kernel_name" in
 		configure_debian
 		;;
 	    (opensuse-*)
-		configure_opensuse
+		configure_defaults
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
@@ -192,7 +150,7 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD)
-	configure_freebsd
+	configure_defaults
 	;;
     (SunOS)
 	configure_defaults
