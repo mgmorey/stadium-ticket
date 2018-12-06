@@ -105,7 +105,6 @@ install_venv() {
 
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
-export PIPENV_VENV_IN_PROJECT=true
 
 # Set script and source directories
 script_dir="$(dirname $0)"
