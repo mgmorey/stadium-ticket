@@ -2,11 +2,11 @@ export FLASK_ENV := development
 export PYTHONPATH := $(PWD)
 
 PIP=pip3
+PYCODESTYLE = pycodestyle --exclude=.git,__pycache__,.tox,.venv
 SCRIPT_DIR = scripts
 SQL_DIR = sql
 
 caches = $(shell find . -type d -name '*py*cache*' -print)
-modules = $(shell find . -type f -name '*.py' -print)
 
 all:	Pipfile.lock requirements.txt .env pystyle unittest
 
@@ -32,7 +32,7 @@ pipenv:	Pipfile
 	$(SCRIPT_DIR)/install-pipenv.sh
 
 pystyle:
-	@which pycodestyle >/dev/null 2>&1 && pycodestyle $(modules) || true
+	@$(PYCODESTYLE) . 2>/dev/null || true
 
 reset:	schema
 	$(SCRIPT_DIR)/sql.sh <$(SQL_DIR)/reset.sql
