@@ -20,7 +20,8 @@ APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
 create_venv() {
-    (cd $source_dir
+    tmpdir=$(mktemp -d)
+    (cd $tmpdir
 
      if [ ! -d .venv ]; then
 	 python3 -m venv .venv
@@ -29,8 +30,14 @@ create_venv() {
      if [ -d .venv ]; then
 	 . .venv/bin/activate
 	 pip3 install --upgrade pip
-	 pip3 install -r requirements.txt
+	 pip3 install -r $source_dir/requirements.txt
+	 printf "Copying %s to %s\n" .venv "$APP_DIR/.venv"
+	 sudo mkdir -p "$APP_DIR/.venv"
+	 sudo rsync -a .venv/ $APP_DIR/.venv
+     else
+	 abort "%s\n" "No available virtualenv"
      fi)
+    /bin/rm -rf $tmpdir
 }
 
 enable_app() {
@@ -90,19 +97,6 @@ install_app() {
      fi)
 }
 
-install_venv() {
-    (cd "$source_dir"
-     create_venv
-
-     if [ -d .venv ]; then
-	 printf "Copying %s to %s\n" .venv "$APP_DIR/.venv"
-	 sudo mkdir -p "$APP_DIR/.venv"
-	 sudo rsync -a .venv/ $APP_DIR/.venv
-     else
-	 abort "%s\n" "No available virtualenv"
-     fi)
-}
-
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
@@ -111,7 +105,7 @@ script_dir="$(dirname $0)"
 source_dir="$(readlink -f "$script_dir/..")"
 
 . $script_dir/configure-app.sh
-install_venv
+create_venv
 install_app
 enable_app $APP_CONFIG $UWSGI_APPDIRS
 signal_app HUP
