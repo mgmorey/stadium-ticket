@@ -32,16 +32,16 @@ enable_app() {
 	generate_ini $SOURCE_DIR/app.ini | sh | sudo sh -c "cat >$1"
 	source=$1
 	shift
-
-	for dir in "$@"; do
-	    dest=$UWSGI_ETCDIR/$dir/$APP_NAME.ini
-
-	    if [ -d $(dirname $dest) ]; then
-		printf "Linking %s to %s\n" $source $dest
-		sudo ln -sf $source "$dest"
-	    fi
-	done
     fi
+
+    for dir in "$@"; do
+	dest=$UWSGI_ETCDIR/$dir/$APP_NAME.ini
+
+	if [ -d $(dirname $dest) ]; then
+	    printf "Linking %s to %s\n" $source $dest
+	    sudo ln -sf $source "$dest"
+	fi
+    done
 }
 
 generate_ini() {
@@ -52,7 +52,7 @@ generate_ini() {
 	printf " %s" "-e 's|\$($var)|$value|g'"
     done
 
-    printf " %s\n" "$@"
+    printf " %s\n" "$*"
 }
 
 install_app() {
