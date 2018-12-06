@@ -19,6 +19,8 @@
 script_dir=$(dirname $0)
 
 if which pipenv >/dev/null 2>&1; then
-    $script_dir/lock-requirements.sh
     pipenv update -d
+elif [ -d $source_dir/.venv ]; then
+    (. $source_dir/.venv/bin/activate
+     pip3 install -r requirements.txt)
 fi
