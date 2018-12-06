@@ -24,7 +24,7 @@ FREEBSD_PKGS="openssl-devel %s-pip"
 
 OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel %s-devel %s-pip"
 
-REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip"
+REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel"
 
 SUNOS_PKGS="build-essential pip-%s"
 
