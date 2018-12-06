@@ -81,25 +81,26 @@ install_app() {
 }
 
 install_venv() {
-    venv="$(pipenv --bare --venv 2>/dev/null || true)"
+    (cd "$SOURCE_DIR"
+     venv="$(pipenv --bare --venv 2>/dev/null || true)"
 
-    if [ -z "$venv" ]; then
-	if create_venv; then
-	    venv="$(pipenv --bare --venv)"
-	elif [ -d .venv ]; then
-	    venv=.venv
-	else
-	    abort "%s\n" "No available virtualenv"
-	fi
-    fi
+     if [ -z "$venv" ]; then
+	 if create_venv; then
+	     venv="$(pipenv --bare --venv)"
+	 elif [ -d .venv ]; then
+	     venv=.venv
+	 else
+	     abort "%s\n" "No available virtualenv"
+	 fi
+     fi
 
-    if [ -n "$venv" -a -d "$venv" ]; then
-	printf "Copying %s to %s\n" "$venv/" "$APP_DIR/.venv"
-	sudo mkdir -p $APP_DIR/.venv
-	sudo rsync -a "$venv/" $APP_DIR/.venv
-    else
-	abort "%s\n" "No available virtualenv"
-    fi
+     if [ -n "$venv" -a -d "$venv" ]; then
+	 printf "Copying %s to %s\n" "$venv/" "$APP_DIR/.venv"
+	 sudo mkdir -p $APP_DIR/.venv
+	 sudo rsync -a "$venv/" $APP_DIR/.venv
+     else
+	 abort "%s\n" "No available virtualenv"
+     fi)
 }
 
 export LANG=${LANG:-en_US.UTF-8}
