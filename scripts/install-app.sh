@@ -74,7 +74,7 @@ install_app() {
      for source in $(find app -type f -name '*.py' -print | sort); do
 	 case "$source" in
 	     (*/test_*.py)
-		 ;;
+	     ;;
 	     (*)
 		 dest="$APP_DIR/$source"
 		 printf "Copying %s to %s\n" "$source" "$dest"
