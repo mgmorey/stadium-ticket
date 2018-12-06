@@ -21,8 +21,16 @@ source_dir=$script_dir/..
 
 if which pipenv >/dev/null 2>&1; then
     pipenv update -d
-elif [ -d $source_dir/.venv ]; then
+else
     (cd $source_dir
-     . .venv/bin/activate
-     pip3 install -r requirements.txt)
+
+     if [ ! -d .venv ]; then
+	 python3 -m venv .venv
+     fi
+
+     if [ -d .venv ]; then
+	 (. .venv/bin/activate
+	  pip3 install --upgrade pip
+	  pip3 install -r requirements.txt)
+     fi)
 fi
