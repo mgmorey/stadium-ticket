@@ -20,11 +20,11 @@ DEBIAN_PKGS="uwsgi uwsgi-plugin-%s"
 
 FEDORA_PKGS=""
 
-FREEBSD_PKGS="uwsgi-py36"
+FREEBSD_PKGS="uwsgi-%s"
 
 OPENSUSE_PKGS="uwsgi uwsgi-python3"
 
-REDHAT_PKGS=""
+REDHAT_PKGS="uwsgi uwsgi-plugin-%s"
 
 SUNOS_PKGS=""
 
