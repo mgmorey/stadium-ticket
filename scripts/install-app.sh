@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE \
-APP_PORT APP_RUNDIR APP_SOCKET APP_UID APP_VARDIR"
+APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
+APP_RUNDIR APP_UID APP_VARDIR"
 
 create_venv() {
     (cd $SOURCE_DIR

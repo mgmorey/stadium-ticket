@@ -49,7 +49,6 @@ configure_debian() {
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/pid
-    APP_SOCKET=/run/uwsgi/app/$APP_NAME/socket
     UWSGI_APPDIRS="apps-available apps-enabled"
 }
 
@@ -70,7 +69,6 @@ configure_defaults() {
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS="vassals"
 }
 
