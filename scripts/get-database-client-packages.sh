@@ -24,7 +24,7 @@ FREEBSD_PKGS="mariadb101-client %s-pymysql %s-sqlalchemy12"
 
 OPENSUSE_PKGS="mariadb-client %s-PyMySQL %s-SQLAlchemy"
 
-REDHAT_PKGS="mariadb %s-PyMySQL %s-sqlalchemy"
+REDHAT_PKGS="mariadb"
 
 SUNOS_PKGS="mariadb-101/client sqlalchemy-%s"
 
