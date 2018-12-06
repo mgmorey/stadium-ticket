@@ -54,6 +54,26 @@ configure_debian() {
 
 configure_defaults() {
     # Set application group and user identification
+    APP_GID=root
+    APP_UID=root
+
+    # Set uWSGI-specific directories
+    UWSGI_ETCDIR=/etc/uwsgi
+    UWSGI_LOGDIR=
+    UWSGI_RUNDIR=
+
+    # Set application directory names from name variable
+    APP_LOGDIR=$APP_VARDIR
+    APP_RUNDIR=$APP_VARDIR
+
+    # Set additional parameters from directory variables
+    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    UWSGI_APPDIRS="vassals"
+}
+
+configure_opensuse() {
+    # Set application group and user identification
     APP_GID=nogroup
     APP_UID=nobody
 
@@ -140,8 +160,11 @@ case "$kernel_name" in
 	    (debian|ubuntu)
 		configure_debian
 		;;
-	    (opensuse-*)
+	    (redhat|centos)
 		configure_defaults
+		;;
+	    (opensuse-*)
+		configure_opensuse
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
