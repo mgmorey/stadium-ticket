@@ -68,9 +68,9 @@ configure_defaults() {
     APP_RUNDIR=$APP_VARDIR
 
     # Set additional parameters from directory variables
-    APP_LOGFILE=$APP_LOGDIR/app.log
-    APP_PIDFILE=$APP_RUNDIR/pid
-    APP_SOCKET=$APP_RUNDIR/sock
+    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS="vassals"
 }
 
