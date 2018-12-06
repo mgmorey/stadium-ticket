@@ -90,8 +90,13 @@ install_venv() {
     venv="$(pipenv --bare --venv 2>/dev/null || true)"
 
     if [ -z "$venv" ]; then
-	create_venv || exit $?
-	venv="$(pipenv --bare --venv)"
+	if create_venv; then
+	    venv="$(pipenv --bare --venv)"
+	elif [ -d .venv ]; then
+	    venv=.venv
+	else
+	    exit $?
+	fi
     fi
 
     if [ -n "$venv" -a -d "$venv" ]; then
