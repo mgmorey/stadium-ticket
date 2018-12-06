@@ -50,7 +50,13 @@ run_venv() {
 pipenv=$(which pipenv 2>/dev/null || true)
 source_dir=$(dirname $0)/..
 
-if [ -z "$pipenv" ]; then
+if [ -n "$pipenv" ]; then
+    venv="$(pipenv --bare --venv 2>/dev/null || true)"
+
+    if [ -z "$venv" ]; then
+	$pipenv update
+    fi
+else    
     create_venv
 fi
 
