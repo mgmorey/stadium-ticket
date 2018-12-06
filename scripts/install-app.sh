@@ -20,11 +20,7 @@ APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
 create_venv() {
-    (cd $SOURCE_DIR
-
-     if ! pipenv sync; then
-	 abort "%s\n" "Unable to create virtual environment"
-     fi)
+    (cd $SOURCE_DIR && pipenv sync 2>/dev/null)
 }
 
 enable_app() {
@@ -93,7 +89,7 @@ install_venv() {
 	elif [ -d .venv ]; then
 	    venv=.venv
 	else
-	    exit $?
+	    abort "%s\n" "No available virtualenv"
 	fi
     fi
 
@@ -102,7 +98,7 @@ install_venv() {
 	sudo mkdir -p $APP_DIR/.venv
 	sudo rsync -a "$venv/" $APP_DIR/.venv
     else
-	abort "%s\n" "Unable to create virtual environment"
+	abort "%s\n" "No available virtualenv"
     fi
 }
 
