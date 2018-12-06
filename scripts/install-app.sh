@@ -20,12 +20,24 @@ APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
 create_venv() {
-    (cd $SOURCE_DIR && pipenv sync 2>/dev/null)
+    (cd $source_dir
+
+     if which pipenv >/dev/null 2>&1; then
+	 pipenv sync
+     else
+	 if [ ! -d .venv ]; then
+	     python3 -m venv .venv
+	 fi
+
+	 . .venv/bin/activate
+	 pip3 install --upgrade pip
+	 pip3 install -r requirements.txt
+     fi)
 }
 
 enable_app() {
     if [ $# -gt 0 ]; then
-	generate_ini $SOURCE_DIR/app.ini | sh | sudo sh -c "cat >$1"
+	generate_ini $source_dir/app.ini | sh | sudo sh -c "cat >$1"
 	source=$1
 	shift
     fi
@@ -52,7 +64,7 @@ generate_ini() {
 }
 
 install_app() {
-    (cd "$SOURCE_DIR"
+    (cd "$source_dir"
 
      # Create application directories
      sudo mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
@@ -81,17 +93,16 @@ install_app() {
 }
 
 install_venv() {
-    (cd "$SOURCE_DIR"
+    (cd "$source_dir"
      venv="$(pipenv --bare --venv 2>/dev/null || true)"
 
      if [ -z "$venv" ]; then
-	 if create_venv; then
-	     venv="$(pipenv --bare --venv)"
-	 elif [ -d .venv ]; then
-	     venv=.venv
-	 else
-	     abort "%s\n" "No available virtualenv"
-	 fi
+	 create_venv
+	 venv="$(pipenv --bare --venv 2>/dev/null || true)"
+     fi
+
+     if [ -z "$venv" -a -d .venv ]; then
+	 venv=.venv
      fi
 
      if [ -n "$venv" -a -d "$venv" ]; then
@@ -108,9 +119,10 @@ export LC_ALL=${LC_ALL:-en_US.UTF-8}
 export PIPENV_VENV_IN_PROJECT=true
 
 # Set script and source directories
-SCRIPT_DIR="$(dirname $0)"
-SOURCE_DIR="$(readlink -f "$SCRIPT_DIR/..")"
-. $SCRIPT_DIR/configure-app.sh
+script_dir="$(dirname $0)"
+source_dir="$(readlink -f "$script_dir/..")"
+
+. $script_dir/configure-app.sh
 install_venv
 install_app
 enable_app $APP_CONFIG $UWSGI_APPDIRS
