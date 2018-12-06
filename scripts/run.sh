@@ -24,8 +24,6 @@ if which pipenv >/dev/null 2>&1; then
 elif . $source_dir/.env; then
     export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_USER
     export FLASK_APP FLASK_ENV
-
-    if [ -d $source_dir/.venv -a -r $source_dir/.venv/bin/activate ]; then
-	(. $source_dir/.venv/bin/activate && "$@")
-    fi
+    (. $source_dir/.venv/bin/activate
+     "$@")
 fi
