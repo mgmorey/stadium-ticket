@@ -55,5 +55,4 @@ WORKDIR $APP_VARDIR
 # Expose application port and start
 EXPOSE $APP_PORT
 ENV APP_PIDFILE=$APP_RUNDIR/pid
-ENV APP_SOCKET=$APP_RUNDIR/socket
 CMD /usr/bin/uwsgi --ini $APP_ETCDIR/app.ini
