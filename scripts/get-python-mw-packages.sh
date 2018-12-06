@@ -24,7 +24,7 @@ FREEBSD_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
 OPENSUSE_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
-REDHAT_PKGS="sclo-%s-python-flask"
+REDHAT_PKGS=""
 
 SUNOS_PKGS=""
 
