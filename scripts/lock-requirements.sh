@@ -23,12 +23,12 @@ tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 
 if which pipenv >/dev/null 2>&1; then
-   if pipenv lock -dr >$tmpfile; then
-       if pipenv lock -r >>$tmpfile; then
-	   requirements=$source_dir/requirements.txt
-	   mv -f $tmpfile $requirements
-	   chgrp $(id -g) $requirements
-	   chmod a+r $requirements
-       fi
-   fi
+    if pipenv lock -dr >$tmpfile; then
+	if pipenv lock -r >>$tmpfile; then
+	    requirements=$source_dir/requirements.txt
+	    mv -f $tmpfile $requirements
+	    chgrp $(id -g) $requirements
+	    chmod a+r $requirements
+	fi
+    fi
 fi
