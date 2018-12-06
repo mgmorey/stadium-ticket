@@ -75,7 +75,6 @@ configure_defaults() {
 }
 
 signal_app() {
-    # Send restart signal to app
     if [ -n "${APP_PIDFILE:-}" ]; then
 	if [ -r $APP_PIDFILE ]; then
 	    pid="$(cat $APP_PIDFILE)"
