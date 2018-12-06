@@ -18,7 +18,7 @@
 
 DEBIAN_PKGS="uwsgi uwsgi-plugin-%s"
 
-FEDORA_PKGS=""
+FEDORA_PKGS="uwsgi uwsgi-plugin-%s"
 
 FREEBSD_PKGS="uwsgi-%s"
 

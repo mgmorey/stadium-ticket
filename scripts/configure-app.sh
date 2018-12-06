@@ -160,7 +160,7 @@ case "$kernel_name" in
 	    (debian|ubuntu)
 		configure_debian
 		;;
-	    (redhat|centos)
+	    (redhat|centos|fedora)
 		configure_defaults
 		;;
 	    (opensuse-*)
@@ -171,10 +171,7 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
-    (FreeBSD)
-	configure_defaults
-	;;
-    (SunOS)
+    (FreeBSD|SunOS)
 	configure_defaults
 	;;
     (*)
