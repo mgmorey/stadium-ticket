@@ -17,10 +17,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 script_dir=$(dirname $0)
+source_dir=$script_dir/..
 
 if which pipenv >/dev/null 2>&1; then
     pipenv update -d
 elif [ -d $source_dir/.venv ]; then
-    (. $source_dir/.venv/bin/activate
+    (cd $source_dir
+     . .venv/bin/activate
      pip3 install -r requirements.txt)
 fi
