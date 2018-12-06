@@ -56,7 +56,7 @@ if [ -n "$pipenv" ]; then
     if [ -z "$venv" ]; then
 	$pipenv update
     fi
-else    
+else
     create_venv
 fi
 
