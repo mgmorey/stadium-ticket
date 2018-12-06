@@ -39,8 +39,6 @@ enable_app() {
 	    if [ -d $(dirname $dest) ]; then
 		printf "Linking %s to %s\n" $source $dest
 		sudo ln -sf $source "$dest"
-	    else
-		printf "%s: No such directory\n" "$dest"
 	    fi
 	done
     fi
