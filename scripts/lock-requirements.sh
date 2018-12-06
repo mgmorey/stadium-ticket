@@ -22,8 +22,8 @@ source_dir=$script_dir/..
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 
-if pipenv lock -dr >$tmpfile; then
-    if pipenv lock -r >>$tmpfile; then
+if pipenv lock -dr >$tmpfile 2>/dev/null; then
+    if pipenv lock -r >>$tmpfile 2>/dev/null; then
 	requirements=$source_dir/requirements.txt
 	mv -f $tmpfile $requirements
 	chgrp $(id -g) $requirements
