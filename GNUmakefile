@@ -8,7 +8,7 @@ SQL_DIR = sql
 
 caches = $(shell find . -type d -name '*py*cache*' -print)
 
-all:	Pipfile.lock requirements.txt .env pystyle unittest
+all:	Pipfile.lock requirements.txt requirements-dev.txt .env pystyle unittest
 
 build:	.env Pipfile.lock
 	docker-compose up --build
@@ -61,6 +61,9 @@ Pipfile.lock:	Pipfile
 
 requirements.txt:	Pipfile
 	$(SCRIPT_DIR)/lock-requirements.sh
+
+requirements-dev.txt:	Pipfile
+	$(SCRIPT_DIR)/lock-requirements.sh -d
 
 .env:	.env-template
 	$(SCRIPT_DIR)/configure-env.sh
