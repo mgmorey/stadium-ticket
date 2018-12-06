@@ -49,7 +49,7 @@ generate_ini() {
 
     for var in $APP_VARS; do
 	eval value="\$$var"
-	printf "%s" " -e 's|\$($var)|$value|g'"
+	printf " %s" "-e 's|\$($var)|$value|g'"
     done
 
     printf " %s\n" "$@"
