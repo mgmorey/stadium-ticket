@@ -45,7 +45,7 @@ enable_app() {
 }
 
 generate_ini() {
-    printf "%s" "sed -e 's|^#<\\(.*\\)>#$|\\1|g'"
+    printf "%s" "sed -e 's|^#<\\(.*\\)>$|\\1|g'"
 
     for var in $APP_VARS; do
 	eval value="\$$var"
