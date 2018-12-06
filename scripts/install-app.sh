@@ -90,11 +90,11 @@ install_venv() {
     venv="$(pipenv --bare --venv 2>/dev/null || true)"
 
     if [ -z "$venv" ]; then
-	create_venv
+	create_venv || exit $?
 	venv="$(pipenv --bare --venv)"
     fi
 
-    if [ -n "$venv" -a -d $venv ]; then
+    if [ -n "$venv" -a -d "$venv" ]; then
 	printf "Copying %s to %s\n" "$venv/" "$APP_DIR/.venv"
 	sudo mkdir -p $APP_DIR/.venv
 	sudo rsync -a "$venv/" $APP_DIR/.venv
@@ -103,8 +103,8 @@ install_venv() {
     fi
 }
 
-export LANG=${LANG:-C.UTF-8}
-export LC_ALL=${LC_ALL:-C.UTF-8}
+export LANG=${LANG:-en_US.UTF-8}
+export LC_ALL=${LC_ALL:-en_US.UTF-8}
 export PIPENV_VENV_IN_PROJECT=true
 
 # Set script and source directories
