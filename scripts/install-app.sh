@@ -20,24 +20,23 @@ APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
 create_venv() {
-    tmpdir=$(mktemp -d)
-    (cd $tmpdir
+    (cd $source_dir
+     venv=.venv-$APP_NAME
 
-     if [ ! -d .venv ]; then
-	 python3 -m venv .venv
+     if [ ! -d $venv ]; then
+	 python3 -m venv $venv
      fi
 
-     if [ -d .venv ]; then
-	 . .venv/bin/activate
+     if [ -d $venv ]; then
+	 . $venv/bin/activate
 	 pip3 install --upgrade pip
 	 pip3 install -r $source_dir/requirements.txt
-	 printf "Copying %s to %s\n" .venv "$APP_DIR/.venv"
+	 printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
 	 sudo mkdir -p "$APP_DIR/.venv"
-	 sudo rsync -a .venv/ $APP_DIR/.venv
+	 sudo rsync -a $venv/ $APP_DIR/.venv
      else
 	 abort "%s\n" "No available virtualenv"
      fi)
-    /bin/rm -rf $tmpdir
 }
 
 enable_app() {
