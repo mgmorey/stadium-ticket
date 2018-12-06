@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# install-pip-requirements: use PIP to install requirements
+# install-requirements: use PIP to install requirements
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
