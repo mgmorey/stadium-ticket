@@ -25,7 +25,7 @@ install_pkgs() {
     packages="$($script_dir/get-uwsgi-packages.sh)"
 
     if [ -n "$packages" ]; then
-	install-packages "$@" $packages
+	install-packages $packages
     fi
 }
 
@@ -50,4 +50,4 @@ case "$kernel_name" in
 	;;
 esac
 
-install_pkgs "$@"
+install_pkgs
