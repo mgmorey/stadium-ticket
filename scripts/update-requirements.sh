@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# update-packages: update packages in PIP virtual environment
+# update-requirements: lock requirements and update virtualenv
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify

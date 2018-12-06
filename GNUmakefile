@@ -50,7 +50,7 @@ unittest:	reset
 	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
 
 update:	Pipfile.lock requirements.txt
-	$(SCRIPT_DIR)/update-dependencies.sh
+	$(SCRIPT_DIR)/update-requirements.sh
 
 .PHONY: all build clean client client-debug debug install pipenv
 .PHONY: opystyle reset schema stress uninstall unittest update
