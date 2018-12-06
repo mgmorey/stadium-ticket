@@ -2,7 +2,7 @@ export FLASK_ENV := development
 export PYTHONPATH := $(PWD)
 
 PIP=pip3
-PYCODESTYLE = pycodestyle --exclude=.git,__pycache__,.tox,.venv
+PYCODESTYLE = pycodestyle --exclude=.git,__pycache__,.tox,.venv*
 SCRIPT_DIR = scripts
 SQL_DIR = sql
 
