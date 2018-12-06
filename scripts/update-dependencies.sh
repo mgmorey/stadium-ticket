@@ -16,28 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PIP=pip3
-PYTHON=python3
-
-abort() {
-    printf "$@" >&2
-    exit 1
-}
-
 script_dir=$(dirname $0)
-source_dir=$script_dir/..
-
-if which $PIP >/dev/null 2>&1; then
-    pip=$PIP
-elif which $PYTHON >/dev/null 2>&1; then
-    pip="$PYTHON -m pip"
-else
-    abort "PIP command unavailable"
-fi
 
 if which pipenv >/dev/null 2>&1; then
     $script_dir/lock-requirements.sh
     pipenv update -d
-elif which $PIP >/dev/null 2>&1; then
-    $pip install -r $source_dir/requirements.txt --user
 fi
