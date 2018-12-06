@@ -22,13 +22,11 @@ APP_RUNDIR APP_UID APP_VARDIR"
 create_venv() {
     (cd $source_dir
 
-     if which pipenv >/dev/null 2>&1; then
-	 pipenv sync
-     else
-	 if [ ! -d .venv ]; then
-	     python3 -m venv .venv
-	 fi
+     if [ ! -d .venv ]; then
+	 python3 -m venv .venv
+     fi
 
+     if [ -d .venv ]; then
 	 . .venv/bin/activate
 	 pip3 install --upgrade pip
 	 pip3 install -r requirements.txt
@@ -94,21 +92,12 @@ install_app() {
 
 install_venv() {
     (cd "$source_dir"
-     venv="$(pipenv --bare --venv 2>/dev/null || true)"
+     create_venv
 
-     if [ -z "$venv" ]; then
-	 create_venv
-	 venv="$(pipenv --bare --venv 2>/dev/null || true)"
-     fi
-
-     if [ -z "$venv" -a -d .venv ]; then
-	 venv=.venv
-     fi
-
-     if [ -n "$venv" -a -d "$venv" ]; then
-	 printf "Copying %s to %s\n" "$venv/" "$APP_DIR/.venv"
-	 sudo mkdir -p $APP_DIR/.venv
-	 sudo rsync -a "$venv/" $APP_DIR/.venv
+     if [ -d .venv ]; then
+	 printf "Copying %s to %s\n" .venv "$APP_DIR/.venv"
+	 sudo mkdir -p "$APP_DIR/.venv"
+	 sudo rsync -a .venv/ $APP_DIR/.venv
      else
 	 abort "%s\n" "No available virtualenv"
      fi)
