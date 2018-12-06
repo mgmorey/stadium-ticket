@@ -32,6 +32,27 @@ configure_common() {
     APP_CONFIG=$APP_ETCDIR/app.ini
 }
 
+configure_debian() {
+    # Set application group and user identification
+    APP_GID=www-data
+    APP_UID=www-data
+
+    # Set uWSGI-specific directories
+    UWSGI_ETCDIR=/etc/uwsgi
+    UWSGI_LOGDIR=/var/log/uwsgi/app
+    UWSGI_RUNDIR=/var/run/uwsgi/app/$APP_NAME
+
+    # Set application directory names
+    APP_LOGDIR=$UWSGI_LOGDIR
+    APP_RUNDIR=$UWSGI_RUNDIR
+
+    # Set additional parameters from directory variables
+    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+    APP_PIDFILE=$APP_RUNDIR/pid
+    APP_SOCKET=/run/uwsgi/app/$APP_NAME/socket
+    UWSGI_APPDIRS="apps-available apps-enabled"
+}
+
 configure_defaults() {
     # Set application group and user identification
     APP_GID=nogroup
@@ -93,27 +114,6 @@ configure_opensuse() {
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS="vassals"
-}
-
-configure_ubuntu() {
-    # Set application group and user identification
-    APP_GID=www-data
-    APP_UID=www-data
-
-    # Set uWSGI-specific directories
-    UWSGI_ETCDIR=/etc/uwsgi
-    UWSGI_LOGDIR=/var/log/uwsgi/app
-    UWSGI_RUNDIR=/var/run/uwsgi/app/$APP_NAME
-
-    # Set application directory names
-    APP_LOGDIR=$UWSGI_LOGDIR
-    APP_RUNDIR=$UWSGI_RUNDIR
-
-    # Set additional parameters from directory variables
-    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    APP_PIDFILE=$APP_RUNDIR/pid
-    APP_SOCKET=/run/uwsgi/app/$APP_NAME/socket
-    UWSGI_APPDIRS="apps-available apps-enabled"
 }
 
 signal_app() {
@@ -181,7 +181,7 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian|ubuntu)
-		configure_ubuntu
+		configure_debian
 		;;
 	    (opensuse-*)
 		configure_opensuse
