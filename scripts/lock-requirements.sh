@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# update-packages: update packages in PIP virtual environment
+# lock-requirements: update requirements.txt using PIP
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+script_dir=$(dirname $0)
+source_dir=$script_dir/..
+
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 
 if pipenv lock -dr >$tmpfile; then
     if pipenv lock -r >>$tmpfile; then
-	mv -f $tmpfile requirements.txt
-	chgrp $(id -g) requirements.txt
-	chmod a+r requirements.txt
+	requirements=$source_dir/requirements.txt
+	mv -f $tmpfile $requirements
+	chgrp $(id -g) $requirements
+	chmod a+r $requirements
     fi
 fi
