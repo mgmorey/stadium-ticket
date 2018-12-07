@@ -20,7 +20,7 @@ DEBIAN_PKGS="mariadb-client-10.1 %s-pymysql %s-sqlalchemy"
 
 FEDORA_PKGS="mariadb %s-PyMySQL %s-sqlalchemy"
 
-FREEBSD_PKGS="mariadb101-client %s-pymysql %s-sqlalchemy12"
+FREEBSD_PKGS="mariadb103-client %s-pymysql %s-sqlalchemy12"
 
 OPENSUSE_PKGS="mariadb-client %s-PyMySQL %s-SQLAlchemy"
 
