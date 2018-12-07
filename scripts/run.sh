@@ -51,7 +51,7 @@ pipenv=$(which pipenv 2>/dev/null || true)
 source_dir=$(dirname $0)/..
 
 if [ -n "$pipenv" ]; then
-    venv="$(pipenv --bare --venv 2>/dev/null || true)"
+    venv="$($pipenv --bare --venv 2>/dev/null || true)"
 
     if [ -z "$venv" ]; then
 	$pipenv update
