@@ -62,10 +62,10 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD)
-	packages="${package:=$FREEBSD_PKG}"
+	packages="${package:-$FREEBSD_PKG}"
 	;;
     (SunOS)
-	packages="$SUNOS_PKG $SUNOS_PKGS"
+	packages="${package:-$SUNOS_PKG} $SUNOS_PKGS"
 	;;
 esac
 
