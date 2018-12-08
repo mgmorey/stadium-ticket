@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-AWKEXPR='{
+FREEBSD_AWK='{
 n = split($1, a, "-");
 
 for(i = 1; i < n; i++) {
@@ -49,11 +49,12 @@ case "$kernel_name" in
 	    (redhat|centos)
 		;;
 	    (opensuse-*)
+		zypper -q search -i -t package | awk 'NR > 3 {print $3}'
 		;;
 	esac
 	;;
     (FreeBSD)
-	pkg info | awk "$AWKEXPR"
+	pkg info | awk "$FREEBSD_AWK"
 	;;
     (SunOS)
 	;;
