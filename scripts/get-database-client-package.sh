@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-REGEX='^(mariadb|mysql)[0-9]*[-/]client(-[0-9\.]+)?$ ^(mariadb|mysql)([0-9]+|-[0-9\.]+)$'
+REGEX='^(database/)?(mariadb|mysql)(-[0-9\.]+/client|-client-[0-9\.]+)$ ^(database/)?(mariadb|mysql)([0-9]+|-[0-9\.]+)$'
 
 script_dir=$(dirname $0)
 tmpfile=$(mktemp)
@@ -26,7 +26,7 @@ trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 $script_dir/get-installed-packages.sh >$tmpfile
 
 for regex in $REGEX; do
-    if egrep $regex $tmpfile; then
+    if egrep "$regex" $tmpfile; then
 	break
     fi
 done
