@@ -44,9 +44,8 @@ case "$kernel_name" in
 	    (debian|ubuntu)
 		apt list --installed | awk -F/ '{print $1}'
 		;;
-	    (fedora)
-		;;
-	    (redhat|centos)
+	    (redhat|centos|fedora)
+		yum list installed | awk '{print $1}' | awk -F. '{print $1}'
 		;;
 	    (opensuse-*)
 		zypper -q search -i -t package | awk 'NR > 3 {print $3}'
