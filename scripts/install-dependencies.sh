@@ -22,8 +22,12 @@ abort() {
 }
 
 install_pkgs() {
-    packages=$($script_dir/get-dependencies.sh)
-    install-packages $packages
+    package_manager="$(get-package-manager)"
+
+    if [ -n "$package_manager" ]; then
+	packages="$($script_dir/get-dependencies.sh)"
+	sudo "$package_manager" install "$@" $packages
+    fi
 }
 
 distro_name=$(get-os-distro-name)
@@ -34,7 +38,6 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
-		install_pkgs
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
@@ -42,9 +45,10 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD|SunOS)
-	install_pkgs
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
 esac
+
+install_pkgs
