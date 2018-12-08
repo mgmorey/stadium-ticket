@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 AWKEXPR='{
-n = split($0, a, "-");
+n = split($1, a, "-");
 
 for(i = 1; i < n; i++) {
     if (i > 1) {
@@ -39,7 +39,7 @@ trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 command="$script_dir/get-package-list-command.sh"
 
 if [ -n "$command" ]; then
-    "$command" | sh | awk '{print $1}' | awk "$AWKEXPR" >$tmpfile
+    "$command" | sh | awk "$AWKEXPR" >$tmpfile
 
     for regex in $REGEX; do
 	if egrep $regex $tmpfile; then
