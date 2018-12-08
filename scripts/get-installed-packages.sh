@@ -57,5 +57,6 @@ case "$kernel_name" in
 	pkg info | awk "$FREEBSD_AWK"
 	;;
     (SunOS)
+	pkg list -s | awk '{print $1}'
 	;;
 esac
