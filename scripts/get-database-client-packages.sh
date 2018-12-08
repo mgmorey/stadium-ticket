@@ -56,7 +56,7 @@ case "$kernel_name" in
 		packages="${package:-$REDHAT_PKG} $REDHAT_PKGS"
 		;;
 	    (opensuse-*)
-		packages="$OPENSUSE_PKG $OPENSUSE_PKGS"
+		packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
 		;;
 	    (ubuntu)
 		packages="$UBUNTU_PKG $UBUNTU_PKGS"
