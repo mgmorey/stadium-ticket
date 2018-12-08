@@ -32,7 +32,7 @@ REDHAT_PKG="mariadb"
 REDHAT_PKGS=""
 
 SUNOS_PKG="mariadb-101/client"
-SUNOS_PKGS="mariadb-101/client sqlalchemy-%s"
+SUNOS_PKGS="sqlalchemy-%s"
 
 UBUNTU_PKG="mariadb-client-10.1"
 UBUNTU_PKGS="%s-pymysql %s-sqlalchemy"
