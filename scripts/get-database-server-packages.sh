@@ -51,7 +51,7 @@ case "$kernel_name" in
 		packages="$FEDORA_PKG"
 		;;
 	    (redhat|centos)
-		packages="$REDHAT_PKG"
+		packages="${package:-$REDHAT_PKG}"
 		;;
 	    (opensuse-*)
 		packages="$OPENSUSE_PKG"
@@ -65,7 +65,7 @@ case "$kernel_name" in
 	packages="${package:-$FREEBSD_PKG}"
 	;;
     (SunOS)
-	packages="${package:-$SUNOS_PKG} $SUNOS_PKGS"
+	packages="${package:-$SUNOS_PKG}"
 	;;
 esac
 
