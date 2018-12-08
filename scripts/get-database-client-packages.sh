@@ -50,7 +50,7 @@ case "$kernel_name" in
 		packages="${package:-$DEBIAN_PKG} $DEBIAN_PKGS"
 		;;
 	    (fedora)
-		packages="$FEDORA_PKG $FEDORA_PKGS"
+		packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
 		;;
 	    (redhat|centos)
 		packages="${package:-$REDHAT_PKG} $REDHAT_PKGS"
