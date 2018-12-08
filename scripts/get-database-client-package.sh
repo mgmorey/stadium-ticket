@@ -36,10 +36,10 @@ tmpfile=$(mktemp)
 
 trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 
-command="$script_dir/get-package-list-command.sh"
+command="$script_dir/get-installed-packages.sh"
 
 if [ -n "$command" ]; then
-    "$command" | sh | awk "$AWKEXPR" >$tmpfile
+    "$command" | awk "$AWKEXPR" >$tmpfile
 
     for regex in $REGEX; do
 	if egrep $regex $tmpfile; then
