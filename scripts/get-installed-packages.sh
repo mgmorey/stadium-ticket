@@ -16,6 +16,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+AWKEXPR='{
+n = split($1, a, "-");
+
+for(i = 1; i < n; i++) {
+    if (i > 1) {
+        printf("-%s", a[i])}
+    else {
+        printf("%s", a[i])
+    }
+}
+
+printf("\n")
+}'
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -39,7 +53,7 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD)
-	pkg info
+	pkg info | awk "$AWKEXPR"
 	;;
     (SunOS)
 	;;
