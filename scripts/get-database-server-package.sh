@@ -16,19 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-AWKEXPR='{
-n = split($1, a, "-");
-
-for(i = 1; i < n; i++) {
-    if (i > 1) {
-        printf("-%s", a[i])}
-    else {
-        printf("%s", a[i])
-    }
-}
-
-printf("\n")
-}'
 REGEX='^(mariadb|mysql)[0-9]+-server ^(mariadb|mysql)[0-9]+'
 
 script_dir=$(dirname $0)
@@ -36,14 +23,10 @@ tmpfile=$(mktemp)
 
 trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 
-command="$script_dir/get-installed-packages.sh"
+$script_dir/get-installed-packages.sh >$tmpfile
 
-if [ -n "$command" ]; then
-    "$command" | awk "$AWKEXPR" >$tmpfile
-
-    for regex in $REGEX; do
-	if egrep $regex $tmpfile; then
-	    break
-	fi
-    done
-fi
+for regex in $REGEX; do
+    if egrep $regex $tmpfile; then
+	break
+    fi
+done
