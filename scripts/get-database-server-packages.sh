@@ -45,7 +45,7 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian)
-		packages="$DEBIAN_PKG"
+		packages="${package:-$DEBIAN_PKG}"
 		;;
 	    (fedora)
 		packages="$FEDORA_PKG"
@@ -57,7 +57,7 @@ case "$kernel_name" in
 		packages="${package:-$OPENSUSE_PKG}"
 		;;
 	    (ubuntu)
-		packages="$UBUNTU_PKG"
+		packages="${package:-$UBUNTU_PKG}"
 		;;
 	esac
 	;;
