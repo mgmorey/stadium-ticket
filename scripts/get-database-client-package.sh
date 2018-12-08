@@ -16,7 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-REGEX='^(mariadb|mysql)[0-9]+-client ^(mariadb|mysql)[0-9]+'
+REGEX='^(mariadb|mysql)([0-9]+-client|-client-[0-9\.]+)
+ ^(mariadb|mysql)([0-9]+|-[0-9\.]+)'
 
 script_dir=$(dirname $0)
 tmpfile=$(mktemp)
