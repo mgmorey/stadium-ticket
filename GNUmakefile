@@ -1,71 +1,69 @@
 export FLASK_ENV := development
 export PYTHONPATH := $(PWD)
 
-PIP = pip3
-PYTHON = python3
-
-PYCODESTYLE = $(PYTHON) -m pycodestyle --exclude=.git,__pycache__,.tox,.venv*
-SCRIPT_DIR = scripts
-SQL_DIR = sql
+pystyle = $(python) -m pycodestyle --exclude=.git,__pycache__,.tox,.venv*
+python = python3
+script_dir = scripts
+sql_dir = sql
 
 caches = $(shell find . -type d -name '*py*cache*' -print)
 
-all:	Pipfile.lock requirements.txt requirements-dev.txt .env pystyle unittest
+all:	Pipfile.lock requirements.txt requirements-dev.txt .env check unittest
 
 build:	.env Pipfile.lock
 	docker-compose up --build
+
+check:
+	@$(pystyle) . 2>/dev/null || true
 
 clean:
 	@/bin/rm -rf $(caches)
 
 client:
-	$(SCRIPT_DIR)/app-test.sh
+	$(script_dir)/app-test.sh
 
 client-debug:
-	$(SCRIPT_DIR)/app-test.sh 5001
+	$(script_dir)/app-test.sh 5001
 
 debug:	reset
-	$(SCRIPT_DIR)/run.sh flask run --port 5001
+	$(script_dir)/run.sh flask run --port 5001
 
 install:	Pipfile.lock .env
-	$(SCRIPT_DIR)/install-app.sh
+	$(script_dir)/install-app.sh
 
 pipenv:	Pipfile
-	$(SCRIPT_DIR)/install-pipenv.sh
-
-pystyle:
-	@$(PYCODESTYLE) . 2>/dev/null || true
+	$(script_dir)/install-pipenv.sh
 
 reset:	schema
-	$(SCRIPT_DIR)/sql.sh <$(SQL_DIR)/reset.sql
+	$(script_dir)/sql.sh <$(sql_dir)/reset.sql
 
 schema:
-	$(SCRIPT_DIR)/sql.sh <$(SQL_DIR)/schema.sql
+	$(script_dir)/sql.sh <$(sql_dir)/schema.sql
 
 stress:
-	$(SCRIPT_DIR)/load-test.sh
+	$(script_dir)/load-test.sh
 
 uninstall:
-	$(SCRIPT_DIR)/uninstall-app.sh
+	$(script_dir)/uninstall-app.sh
 
 unittest:	reset
-	$(SCRIPT_DIR)/run.sh python3 -m unittest discover -vvv
+	$(script_dir)/run.sh python3 -m unittest discover -vvv
 
 update:	Pipfile.lock requirements.txt
-	$(SCRIPT_DIR)/update-requirements.sh
+	$(script_dir)/update-requirements.sh
 
-.PHONY: all build clean client client-debug debug install pipenv
-.PHONY: opystyle reset schema stress uninstall unittest update
+.PHONY: all build check clean client client-debug debug install 
+.PHONY: pipenv reset schema stress uninstall unittest update
 
 
 Pipfile.lock:	Pipfile
 	pipenv update -d || true
 
 requirements.txt:	Pipfile
-	$(SCRIPT_DIR)/lock-requirements.sh
+	$(script_dir)/lock-requirements.sh
 
 requirements-dev.txt:	Pipfile
-	$(SCRIPT_DIR)/lock-requirements.sh -d
+	$(script_dir)/lock-requirements.sh -d
 
 .env:	.env-template
-	$(SCRIPT_DIR)/configure-env.sh
+	$(script_dir)/configure-env.sh
