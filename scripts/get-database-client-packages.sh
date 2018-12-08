@@ -16,49 +16,58 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="mariadb-client-10.1 %s-pymysql %s-sqlalchemy"
+DEBIAN_PKG="mariadb-client-10.1"
+DEBIAN_PKGS="%s-pymysql %s-sqlalchemy"
 
-FEDORA_PKGS="mariadb %s-PyMySQL %s-sqlalchemy"
+FEDORA_PKG="mariadb"
+FEDORA_PKGS="%s-PyMySQL %s-sqlalchemy"
 
-FREEBSD_PKGS="mariadb103-client %s-pymysql %s-sqlalchemy12"
+FREEBSD_PKG="mariadb103-client"
+FREEBSD_PKGS="%s-pymysql %s-sqlalchemy12"
 
-OPENSUSE_PKGS="mariadb-client %s-PyMySQL %s-SQLAlchemy"
+OPENSUSE_PKG="mariadb-client"
+OPENSUSE_PKGS="%s-PyMySQL %s-SQLAlchemy"
 
-REDHAT_PKGS="mariadb"
+REDHAT_PKG="mariadb"
+REDHAT_PKGS=""
 
+SUNOS_PKG="mariadb-101/client"
 SUNOS_PKGS="mariadb-101/client sqlalchemy-%s"
 
-UBUNTU_PKGS="mariadb-client-10.1 %s-pymysql %s-sqlalchemy"
+UBUNTU_PKG="mariadb-client-10.1"
+UBUNTU_PKGS="%s-pymysql %s-sqlalchemy"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
 
+package="$($script_dir/get-database-client-package.sh)"
+
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian)
-		packages=$DEBIAN_PKGS
+		packages="$DEBIAN_PKG $DEBIAN_PKGS"
 		;;
 	    (fedora)
-		packages=$FEDORA_PKGS
+		packages="$FEDORA_PKG $FEDORA_PKGS"
 		;;
 	    (redhat|centos)
-		packages=$REDHAT_PKGS
+		packages="$REDHAT_PKG $REDHAT_PKGS"
 		;;
 	    (opensuse-*)
-		packages=$OPENSUSE_PKGS
+		packages="$OPENSUSE_PKG $OPENSUSE_PKGS"
 		;;
 	    (ubuntu)
-		packages=$UBUNTU_PKGS
+		packages="$UBUNTU_PKG $UBUNTU_PKGS"
 		;;
 	esac
 	;;
     (FreeBSD)
-	packages=$FREEBSD_PKGS
+	packages="${package:=$FREEBSD_PKG} $FREEBSD_PKGS"
 	;;
     (SunOS)
-	packages=$SUNOS_PKGS
+	packages="$SUNOS_PKG $SUNOS_PKGS"
 	;;
 esac
 

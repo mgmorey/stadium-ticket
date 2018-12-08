@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-mysql-server-packages: get MySQL server package names
+# get-database-server-packages: get database server package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,19 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="mariadb-server-10.1"
+DEBIAN_PKG="mariadb-server-10.1"
 
-FEDORA_PKGS="mariadb-server"
+FEDORA_PKG="mariadb-server"
 
-FREEBSD_PKGS="mariadb103-server"
+FREEBSD_PKG="mariadb103-server"
 
-OPENSUSE_PKGS="mariadb"
+OPENSUSE_PKG="mariadb"
 
-REDHAT_PKGS="mariadb-server"
+REDHAT_PKG="mariadb-server"
 
-SUNOS_PKGS="mariadb-101"
+SUNOS_PKG="mariadb-101"
 
-UBUNTU_PKGS="mariadb-server-10.1"
+UBUNTU_PKG="mariadb-server-10.1"
 
 abort() {
     printf "$@" >&2
@@ -37,32 +37,35 @@ abort() {
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
+script_dir=$(dirname $0)
+
+package="$($script_dir/get-database-server-package.sh)"
 
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian)
-		packages=$DEBIAN_PKGS
+		packages="$DEBIAN_PKG"
 		;;
 	    (fedora)
-		packages=$FEDORA_PKGS
+		packages="$FEDORA_PKG"
 		;;
 	    (redhat|centos)
-		packages=$REDHAT_PKGS
+		packages="$REDHAT_PKG"
 		;;
 	    (opensuse-*)
-		packages=$OPENSUSE_PKGS
+		packages="$OPENSUSE_PKG"
 		;;
 	    (ubuntu)
-		packages=$UBUNTU_PKGS
+		packages="$UBUNTU_PKG"
 		;;
 	esac
 	;;
     (FreeBSD)
-	packages=$FREEBSD_PKGS
+	packages="${package:=$FREEBSD_PKG}"
 	;;
     (SunOS)
-	packages=$SUNOS_PKGS
+	packages="$SUNOS_PKG $SUNOS_PKGS"
 	;;
 esac
 
