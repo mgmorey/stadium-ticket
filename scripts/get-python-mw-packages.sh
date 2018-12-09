@@ -20,7 +20,7 @@ DEBIAN_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
 FEDORA_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
-FREEBSD_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy %s-sqlite3"
+FREEBSD_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
 OPENSUSE_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
