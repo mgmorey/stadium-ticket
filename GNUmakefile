@@ -11,9 +11,7 @@ caches = $(shell find . -type d -name '*py*cache*' -print)
 all:	Pipfile.lock requirements.txt requirements-dev.txt .env check unittest
 
 build:	.env Pipfile.lock
-	pip3 install --upgrade --user pip
-	pip3 install --upgrade --user docker-compose
-	docker-compose up --build
+	$(script_dir)/run.sh docker-compose up --build
 
 check:
 	@$(pystyle) . 2>/dev/null || true
@@ -25,7 +23,7 @@ client:
 	$(script_dir)/app-test.sh
 
 client-debug:
-	$(script_dir)/app-test.sh 5001
+	$(script_dir)/app-test.sh -p 5001
 
 debug:	reset
 	$(script_dir)/run.sh flask run --port 5001
