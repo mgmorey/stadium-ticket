@@ -29,8 +29,8 @@ create_venv() {
 
      if [ -d $venv ]; then
 	 . $venv/bin/activate
-	 pip3 install --upgrade pip
-	 pip3 install -r $source_dir/requirements.txt
+	 pip3 install pip --upgrade --user
+	 pip3 install -r $source_dir/requirements.txt --user
 	 printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
 	 sudo mkdir -p "$APP_DIR/.venv"
 	 sudo rsync -a $venv/ $APP_DIR/.venv
