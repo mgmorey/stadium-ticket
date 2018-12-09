@@ -26,7 +26,7 @@ OPENSUSE_PKGS=""
 
 REDHAT_PKGS=""
 
-SUNOS_PKGS="sqlite-3"
+SUNOS_PKGS="database/sqlite-3"
 
 UBUNTU_PKGS=""
 
