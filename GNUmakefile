@@ -11,6 +11,7 @@ caches = $(shell find . -type d -name '*py*cache*' -print)
 all:	Pipfile.lock requirements.txt requirements-dev.txt .env check unittest
 
 build:	.env Pipfile.lock
+	pip3 install --upgrade --user docker-compose
 	docker-compose up --build
 
 check:
