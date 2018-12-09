@@ -17,14 +17,28 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 HEADER="Content-Type: application/json"
-HOST=localhost
-PORT=5000
-
-if [ $# -gt 0 ]; then
-    PORT=$1
-fi
+HOST=${FLASK_HOST:-localhost}
+PORT=${FLASK_PORT:-5000}
 
 script_dir=$(dirname $0)
-url_ticket="http://${HOST}:${PORT}/stadium/ticket"
+
+while getopts 'h:p:' OPTION; do
+    case $OPTION in
+	('h')
+	    HOST="$OPTARG"
+	    ;;
+	('p')
+	    PORT="$OPTARG"
+	    ;;
+	('?')
+	    printf "Usage: %s: [-h <HOST>] [-p <PORT]\n" $(basename $0) >&2
+	    exit 2
+	    ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+base_url="http://${HOST}${PORT:+:}${PORT}"
+url_ticket="$base_url/stadium/ticket"
 
 ab -H "$HEADER" -u $script_dir/put.json -n 1000 -r -c 10 $url_ticket

@@ -17,15 +17,28 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 HEADER="Content-Type: application/json"
-HOST=localhost
-PORT=5000
+HOST=${FLASK_HOST:-localhost}
+PORT=${FLASK_PORT:-5000}
 
-if [ $# -gt 0 ]; then
-    PORT=$1
-fi
+while getopts 'h:p:' OPTION; do
+    case $OPTION in
+	('h')
+	    HOST="$OPTARG"
+	    ;;
+	('p')
+	    PORT="$OPTARG"
+	    ;;
+	('?')
+	    printf "Usage: %s: [-h <HOST>] [-p <PORT]\n" $(basename $0) >&2
+	    exit 2
+	    ;;
+    esac
+done
+shift $(($OPTIND - 1))
 
-url_ticket="http://${HOST}:${PORT}/stadium/ticket"
-url_tickets="http://${HOST}:${PORT}/stadium/tickets"
+base_url="http://${HOST}${PORT:+:}${PORT}"
+url_ticket="$base_url/stadium/ticket"
+url_tickets="$base_url/stadium/tickets"
 
 curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "event": "The Beatles"}' -i $url_ticket
 curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 10, "event": "The Cure"}' -i $url_tickets
