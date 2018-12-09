@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-pip %s-venv"
+DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-pip"
 
 FEDORA_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip"
 
@@ -28,7 +28,7 @@ REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel"
 
 SUNOS_PKGS="build-essential pip-%s"
 
-UBUNTU_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-pip %s-venv"
+UBUNTU_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-pip"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
