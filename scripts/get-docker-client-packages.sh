@@ -24,7 +24,7 @@ FREEBSD_PKGS="docker docker-compose docker-compose-%s"
 
 OPENSUSE_PKGS="docker docker-compose"
 
-REDHAT_PKGS=""
+REDHAT_PKGS="docker-client docker-compose"
 
 SUNOS_PKGS=""
 
