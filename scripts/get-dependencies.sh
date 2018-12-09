@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+CATEGORIES="database-client docker-client http-client \
+python-dev python-mw sqlite"
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -42,6 +45,6 @@ case "$kernel_name" in
 	;;
 esac
 
-for category in database-client http-client python-dev python-mw sqlite; do
+for category in $CATEGORIES; do
     printf "%s\n" "$script_dir/get-$category-packages.sh"
 done | sh | sort -u
