@@ -42,7 +42,7 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian|ubuntu)
-		dpkg-query -Wf '${binary:Package}\n'
+		dpkg-query -Wf '${Package}\n'
 		;;
 	    (redhat|centos|fedora)
 		yum list installed | awk '{print $1}' | awk -F. '{print $1}'
