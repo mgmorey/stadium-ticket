@@ -18,13 +18,13 @@
 
 DEBIAN_PKGS="sqlite3"
 
-FEDORA_PKGS=""
+FEDORA_PKGS="sqlite"
 
 FREEBSD_PKGS="%s-sqlite3 sqlite3"
 
 OPENSUSE_PKGS="sqlite3"
 
-REDHAT_PKGS=""
+REDHAT_PKGS="sqlite"
 
 SUNOS_PKGS="database/sqlite-3"
 
