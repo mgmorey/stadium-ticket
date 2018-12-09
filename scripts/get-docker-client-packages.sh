@@ -22,7 +22,7 @@ FEDORA_PKGS=""
 
 FREEBSD_PKGS="docker docker-compose docker-compose-%s"
 
-OPENSUSE_PKGS=""
+OPENSUSE_PKGS="docker docker-compose"
 
 REDHAT_PKGS=""
 
