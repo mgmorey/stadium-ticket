@@ -37,9 +37,9 @@ create_venv() {
 
 run_venv() {
     if [ -d $source_dir/.venv ]; then
-	printf "Activating virtual environment"
+	printf "%s\n" "Activating virtual environment"
 	. $source_dir/.venv/bin/activate
-	printf "Loading .env environment variables"
+	printf "%s\n" "Loading .env environment variables"
 	. $source_dir/.env
 	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_USER
 	export FLASK_APP FLASK_ENV
