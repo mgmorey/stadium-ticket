@@ -57,4 +57,6 @@ else
     abort "PIP command unavailable"
 fi
 
+$pip install pip --upgrade --user
 $pip install pipenv --user
+
