@@ -22,7 +22,7 @@ FEDORA_PKGS=""
 
 FREEBSD_PKGS="%s-sqlite3 sqlite3"
 
-OPENSUSE_PKGS=""
+OPENSUSE_PKGS="sqlite3"
 
 REDHAT_PKGS=""
 
