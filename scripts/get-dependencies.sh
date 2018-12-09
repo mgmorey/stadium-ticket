@@ -42,6 +42,6 @@ case "$kernel_name" in
 	;;
 esac
 
-for category in database-client http-client python-dev python-mw; do
+for category in database-client http-client python-dev python-mw sqlite; do
     printf "%s\n" "$script_dir/get-$category-packages.sh"
 done | sh | sort -u
