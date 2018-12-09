@@ -35,5 +35,6 @@ else
     abort "PIP command unavailable"
 fi
 
+$pip install --upgrade --user pip
 $pip install -r $source_dir/requirements.txt --user
 $pip install -r $source_dir/requirements-dev.txt --user
