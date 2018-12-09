@@ -14,16 +14,9 @@ Flask-Script = "*"
 Flask-SQLAlchemy = "*"
 PyMySQL = "*"
 SQLAlchemy = "*"
-asn1crypto = "*"
-cffi = "*"
-click = "*"
-cryptography = "*"
-idna = "*"
-itsdangerous = "*"
-pycparser = "*"
 python-decouple = "*"
 python-dotenv = "*"
-six = "*"
+
 
 [requires]
 python_version = "3.6"
