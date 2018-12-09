@@ -1,6 +1,6 @@
 #!/bin/sh -u
 
-# install-uwsgi-packages: install database client packages
+# install-uwsgi-packages: install uWSGI engine packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -19,14 +19,6 @@
 abort() {
     printf "$@" >&2
     exit 1
-}
-
-install_pkgs() {
-    packages="$($script_dir/get-uwsgi-packages.sh)"
-
-    if [ -n "$packages" ]; then
-	install-packages $packages
-    fi
 }
 
 distro_name=$(get-os-distro-name)
@@ -50,4 +42,8 @@ case "$kernel_name" in
 	;;
 esac
 
-install_pkgs
+packages="$($script_dir/get-uwsgi-packages.sh)"
+
+if [ -n "$packages" ]; then
+    install-packages $packages
+fi
