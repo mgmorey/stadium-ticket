@@ -21,12 +21,6 @@ abort() {
     exit 1
 }
 
-get_deps() {
-    for category in database-client http-client python-dev python-mw; do
-	printf "%s\n" "$script_dir/get-$category-packages.sh"
-    done | sh | sort -u
-}
-
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
@@ -35,7 +29,6 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
-		get_deps
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
@@ -43,9 +36,12 @@ case "$kernel_name" in
 	esac
 	;;
     (FreeBSD|SunOS)
-	get_deps
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
 esac
+
+for category in database-client http-client python-dev python-mw; do
+    printf "%s\n" "$script_dir/get-$category-packages.sh"
+done | sh | sort -u
