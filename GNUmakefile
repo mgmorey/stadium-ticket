@@ -11,6 +11,7 @@ caches = $(shell find . -type d -name '*py*cache*' -print)
 all:	Pipfile.lock requirements.txt requirements-dev.txt .env check unittest
 
 build:	.env Pipfile.lock
+	pip3 install --upgrade --user pip
 	pip3 install --upgrade --user docker-compose
 	docker-compose up --build
 
@@ -55,7 +56,6 @@ update:	Pipfile.lock requirements.txt
 
 .PHONY: all build check clean client client-debug debug install 
 .PHONY: pipenv reset schema stress uninstall unittest update
-
 
 Pipfile.lock:	Pipfile
 	pipenv update -d || true
