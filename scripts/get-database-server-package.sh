@@ -16,17 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-REGEX='^(database/)?(mariadb|mysql)([0-9]+-server|-[0-9]+/server|-server(-[0-9\.]+)?)$ ^(database/)?(mariadb|mysql)([0-9]*|-[0-9\.]+)$'
-
 script_dir=$(dirname $0)
 tmpfile=$(mktemp)
 
 trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
-
 $script_dir/get-installed-packages.sh >$tmpfile
-
-for regex in $REGEX; do
-    if egrep $regex $tmpfile; then
-	break
-    fi
-done
+$script_dir/grep-database-package.sh server <$tmpfile || \
+$script_dir/grep-database-package.sh <$tmpfile
