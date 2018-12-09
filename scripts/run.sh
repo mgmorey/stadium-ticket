@@ -1,6 +1,6 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
-# run: wrapper for invoking "pipenv run" if pipenv present
+# run: wrapper for running commands within a virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -30,14 +30,16 @@ create_venv() {
 
      if [ -d .venv ]; then
 	 . .venv/bin/activate
-	 pip3 install --upgrade pip
+	 pip3 install pip --upgrade
 	 pip3 install -r requirements.txt
      fi)
 }
 
 run_venv() {
     if [ -d $source_dir/.venv ]; then
+	printf "Activating virtual environment"
 	. $source_dir/.venv/bin/activate
+	printf "Loading .env environment variables"
 	. $source_dir/.env
 	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_USER
 	export FLASK_APP FLASK_ENV
