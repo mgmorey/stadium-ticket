@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS=""
+DEBIAN_PKGS="sqlite3"
 
 FEDORA_PKGS=""
 
@@ -28,7 +28,7 @@ REDHAT_PKGS=""
 
 SUNOS_PKGS="database/sqlite-3"
 
-UBUNTU_PKGS=""
+UBUNTU_PKGS="sqlite3"
 
 abort() {
     printf "$@" >&2
