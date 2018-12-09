@@ -18,7 +18,7 @@
 
 DEBIAN_PKGS="docker-ce-cli docker-compose"
 
-FEDORA_PKGS=""
+FEDORA_PKGS="docker docker-compose"
 
 FREEBSD_PKGS="docker docker-compose docker-compose-%s"
 
