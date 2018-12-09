@@ -21,15 +21,6 @@ abort() {
     exit 1
 }
 
-install_pkgs() {
-    package_manager="$(get-package-manager)"
-
-    if [ -n "$package_manager" ]; then
-	packages="$($script_dir/get-dependencies.sh)"
-	sudo "$package_manager" install "$@" $packages
-    fi
-}
-
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
@@ -51,4 +42,9 @@ case "$kernel_name" in
 	;;
 esac
 
-install_pkgs
+package_manager="$(get-package-manager)"
+
+if [ -n "$package_manager" ]; then
+    packages="$($script_dir/get-dependencies.sh)"
+    sudo "$package_manager" install $packages
+fi
