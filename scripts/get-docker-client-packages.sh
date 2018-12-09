@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS=""
+DEBIAN_PKGS="docker-ce-cli docker-compose"
 
 FEDORA_PKGS=""
 
