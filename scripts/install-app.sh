@@ -25,18 +25,21 @@ create_venv() {
      venv=.venv-$APP_NAME
 
      if [ ! -d $venv ]; then
+	 printf "%s\n" "Creating virtual environment"
 	 python3 -m venv $venv
      fi
 
      if [ -d $venv ]; then
+	 printf "%s\n" "Activating virtual environment"
 	 . $venv/bin/activate
+	 printf "%s\n" "Installing required packages"
 	 $PIP install --upgrade --user pip
-	 $PIP install -r $source_dir/requirements.txt --user
+	 $PIP install -r requirements.txt
 	 printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
 	 sudo mkdir -p "$APP_DIR/.venv"
 	 sudo rsync -a $venv/ $APP_DIR/.venv
      else
-	 abort "%s\n" "No available virtualenv"
+	 abort "%s\n" "No virtual environment"
      fi)
 }
 
@@ -97,10 +100,10 @@ install_app() {
      fi)
 }
 
+# set default locales
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-# Set script and source directories
 script_dir="$(dirname $0)"
 source_dir="$(readlink -f "$script_dir/..")"
 

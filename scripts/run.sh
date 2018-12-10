@@ -27,11 +27,14 @@ create_venv() {
     (cd $source_dir
 
      if [ ! -d .venv ]; then
+	 printf "%s\n" "Creating virtual environment"
 	 python3 -m venv .venv
      fi
 
      if [ -d .venv ]; then
+	 printf "%s\n" "Activating virtual environment"
 	 . .venv/bin/activate
+	 printf "%s\n" "Installing required packages"
 	 $PIP install --upgrade pip
 	 $PIP install -r requirements.txt -r requirements-dev.txt
      fi)
@@ -47,7 +50,7 @@ run_venv() {
 	export FLASK_APP FLASK_ENV
 	"$@"
     else
-	abort "%s\n" "No available virtualenv"
+	 abort "%s\n" "No virtual environment"
     fi
 }
 
