@@ -1,12 +1,9 @@
-export FLASK_ENV := development
-export PYTHONPATH := $(PWD)
-
-pystyle = $(python) -m pycodestyle --exclude=.git,__pycache__,.tox,.venv*
+caches = $(shell find . -type d -name '*py*cache*' -print)
+exclude = .git,__pycache__,.tox,.venv*
+pystyle = $(python) -m pycodestyle --exclude=$(exclude)
 python = python3
 script_dir = scripts
 sql_dir = sql
-
-caches = $(shell find . -type d -name '*py*cache*' -print)
 
 all:	Pipfile.lock requirements.txt requirements-dev.txt .env check unittest
 
