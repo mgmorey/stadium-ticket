@@ -50,7 +50,7 @@ run_venv() {
 	export FLASK_APP FLASK_ENV
 	"$@"
     else
-	 abort "%s\n" "No virtual environment"
+	abort "%s\n" "No virtual environment"
     fi
 }
 
