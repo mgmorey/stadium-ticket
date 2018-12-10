@@ -16,19 +16,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
 
 cd $source_dir
 
-if which pipenv >/dev/null 2>&1; then
-    pipenv update -d
+if [ -n "$pipenv" ]; then
+    $pipenv update -d
 else
     if [ ! -d .venv ]; then
+	printf "%s\n" "Creating virtual environment"
 	python3 -m venv .venv
     fi
 
+    printf "%s\n" "Activating virtual environment"
     . .venv/bin/activate
+    printf "%s\n" "Installing required packages"
     pip3 install --upgrade pip
     pip3 install -r requirements.txt -r requirements-dev.txt
 fi
