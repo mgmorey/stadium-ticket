@@ -18,6 +18,7 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
+PIP="pip3 -q"
 
 create_venv() {
     (cd $source_dir
@@ -29,8 +30,8 @@ create_venv() {
 
      if [ -d $venv ]; then
 	 . $venv/bin/activate
-	 pip3 install --upgrade --user pip
-	 pip3 install -r $source_dir/requirements.txt --user
+	 $PIP install --upgrade --user pip
+	 $PIP install -r $source_dir/requirements.txt --user
 	 printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
 	 sudo mkdir -p "$APP_DIR/.venv"
 	 sudo rsync -a $venv/ $APP_DIR/.venv
