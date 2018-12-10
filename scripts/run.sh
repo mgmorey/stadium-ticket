@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+PIP="pip3 -q"
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -30,8 +32,8 @@ create_venv() {
 
      if [ -d .venv ]; then
 	 . .venv/bin/activate
-	 pip3 install --upgrade pip
-	 pip3 install -r requirements.txt -r requirements-dev.txt
+	 $PIP install --upgrade pip
+	 $PIP install -r requirements.txt -r requirements-dev.txt
      fi)
 }
 
