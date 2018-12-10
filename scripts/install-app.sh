@@ -33,7 +33,7 @@ create_venv() {
 	 printf "%s\n" "Activating virtual environment"
 	 . $venv/bin/activate
 	 printf "%s\n" "Installing required packages"
-	 $PIP install --upgrade --user pip
+	 $PIP install --upgrade pip
 	 $PIP install -r requirements.txt
 	 printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
 	 sudo mkdir -p "$APP_DIR/.venv"
