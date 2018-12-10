@@ -1,20 +1,21 @@
 caches = $(shell find . -type d -name '*py*cache*' -print)
 exclude = .git,__pycache__,.tox,.venv*
-pystyle = $(python) -m pycodestyle --exclude=$(exclude)
+pycodestyle = $(python) -m pycodestyle
 python = python3
 script_dir = scripts
 sql_dir = sql
+unittest = $(python) -m unittest
 
-all:	Pipfile.lock requirements.txt requirements-dev.txt .env check unittest
+all:	Pipfile.lock requirements.txt requirements-dev.txt .env unittest
 
 build:	.env Pipfile.lock
 	$(script_dir)/run.sh docker-compose up --build
 
 check:
-	@$(pystyle) . 2>/dev/null || true
+	$(script_dir)/run.sh $(pycodestyle) --exclude=$(exclude) .
 
 clean:
-	@/bin/rm -rf $(caches)
+	/bin/rm -rf $(caches)
 
 client:
 	$(script_dir)/app-test.sh
@@ -44,7 +45,7 @@ uninstall:
 	$(script_dir)/uninstall-app.sh
 
 unittest:	reset
-	$(script_dir)/run.sh python3 -m unittest discover -vvv
+	$(script_dir)/run.sh $(unittest) discover -vvv
 
 update:	Pipfile.lock requirements.txt
 	$(script_dir)/update-requirements.sh
