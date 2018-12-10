@@ -1,4 +1,4 @@
-caches = $(shell find app -type d -name '*py*cache*' -print)
+caches = $(shell find . -type d '(' -name '.venv*' -prune -o -name '*py*cache*' -print ')')
 exclude = .git,__pycache__,.tox,.venv*
 pycodestyle = $(python) -m pycodestyle
 python = python3
