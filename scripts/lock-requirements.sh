@@ -16,14 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
-
 tmpfile=$(mktemp)
+
 trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 
-if which pipenv >/dev/null 2>&1; then
-    if pipenv lock -r "$@" >$tmpfile; then
+if [ -n "$pipenv" ]; then
+    if $pipenv lock -r "$@" >$tmpfile; then
 	if [ "$1" = -d ]; then
 	    requirements=$source_dir/requirements-dev.txt
 	else

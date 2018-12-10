@@ -52,7 +52,8 @@ run_venv() {
 }
 
 pipenv=$(which pipenv 2>/dev/null || true)
-source_dir=$(dirname $0)/..
+script_dir=$(dirname $0)
+source_dir=$script_dir/..
 
 if [ -n "$pipenv" ]; then
     venv="$($pipenv --bare --venv 2>/dev/null || true)"
