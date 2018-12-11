@@ -17,7 +17,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 PIP=pip3
-PYTHON=python3
 
 abort() {
     printf "$@" >&2
@@ -49,13 +48,8 @@ case "$kernel_name" in
 	;;
 esac
 
-if which $PIP >/dev/null 2>&1; then
-    pip=$PIP
-elif which $PYTHON >/dev/null 2>&1; then
-    pip="$PYTHON -m pip"
-else
-    abort "PIP command unavailable"
-fi
-
+pip=$(which $PIP)
 $pip install --upgrade --user pip
+
+pip=$(which $PIP)
 $pip install --user pipenv
