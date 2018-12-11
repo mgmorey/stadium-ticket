@@ -57,8 +57,9 @@ def _get_uri(dialect: str):
 
 def get_uri():
     dialect = _get_string('DATABASE_DIALECT')
+    scheme = _get_scheme(dialect)
     schema = _get_string('DATABASE_SCHEMA', default=SCHEMA)
+    endpoint = _get_endpoint(dialect)
+    login = _get_login(dialect)
     uri = config('DATABASE_URI', default=_get_uri(dialect))
-    return uri.format(_get_scheme(dialect), schema,
-                      _get_endpoint(dialect),
-                      _get_login(dialect))
+    return uri.format(scheme, schema, endpoint, login)
