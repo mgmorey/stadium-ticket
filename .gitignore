@@ -1,5 +1,7 @@
 *.log
 *~
 .env
+.python-version
 .venv*
+Makefile
 __pycache__/
