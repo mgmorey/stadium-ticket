@@ -62,7 +62,7 @@ if [ -n "$pipenv" ]; then
     venv="$($pipenv --bare --venv 2>/dev/null || true)"
 
     if [ -z "$venv" ]; then
-	$pipenv update -d
+	$pipenv sync -d
     fi
 else
     create_venv
