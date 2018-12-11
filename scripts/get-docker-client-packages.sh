@@ -28,7 +28,7 @@ REDHAT_PKGS="docker-client docker-compose"
 
 SUNOS_PKGS=""
 
-UBUNTU_PKGS="docker-ce-cli docker-compose"
+UBUNTU_PKGS="docker.io docker-compose docker-doc"
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
