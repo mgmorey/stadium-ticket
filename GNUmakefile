@@ -6,7 +6,7 @@ script_dir = scripts
 sql_dir = sql
 unittest = $(python) -m unittest
 
-all:	Pipfile.lock requirements.txt requirements-dev.txt .env unittest
+all:	Makefile Pipfile.lock requirements.txt requirements-dev.txt .env unittest
 
 build:	.env Pipfile.lock
 	$(script_dir)/run.sh docker-compose up --build
@@ -45,13 +45,16 @@ uninstall:
 	$(script_dir)/uninstall-app.sh
 
 unittest:	reset
-	$(script_dir)/run.sh $(unittest) discover -vvv
+	$(script_dir)/run.sh $(unittest) discover
 
 update:	Pipfile.lock requirements.txt
 	$(script_dir)/update-requirements.sh
 
 .PHONY: all build check clean client client-debug debug install 
 .PHONY: pipenv reset schema stress uninstall unittest update
+
+Makefile:	GNUmakefile
+	ln -s GNUmakefile Makefile
 
 Pipfile.lock:	Pipfile
 	pipenv update -d || true
