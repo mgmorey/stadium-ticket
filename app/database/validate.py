@@ -5,6 +5,7 @@ import re
 PATTERN = {
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
     'DATABASE_PASSWORD': re.compile(r'[\w\d\-\.!\#\$\^&\*\=\+]+'),
+    'DATABASE_PORT': re.compile(r'([\d]+|[\w-]+)'),
     None: re.compile(r'[\w\d\-]+')
 }
 

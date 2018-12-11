@@ -23,11 +23,13 @@ def _get_driver(dialect: str):
     return driver.format(dialect) if driver else None
 
 
-def _get_hostname(dialect: str):
+def _get_endpoint(dialect: str):
     if '{2}' not in _get_uri(dialect):
         return None
 
-    return config('DATABASE_HOST', default=HOST)
+    host = _get_string('DATABASE_HOST', default=HOST)
+    port = _get_string('DATABASE_PORT')
+    return f"{host}:{port}" if port else host
 
 
 def _get_login(dialect: str):
@@ -46,7 +48,7 @@ def _get_scheme(dialect: str):
 
 def _get_string(parameter: str, default: str = None):
     value = config(parameter, default=default)
-    return validate_string(parameter, value)
+    return None if value is None else validate_string(parameter, value)
 
 
 def _get_uri(dialect: str):
@@ -58,5 +60,5 @@ def get_uri():
     schema = _get_string('DATABASE_SCHEMA', default=SCHEMA)
     uri = config('DATABASE_URI', default=_get_uri(dialect))
     return uri.format(_get_scheme(dialect), schema,
-                      _get_hostname(dialect),
+                      _get_endpoint(dialect),
                       _get_login(dialect))
