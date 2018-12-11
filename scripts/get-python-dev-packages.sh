@@ -20,11 +20,11 @@ DEBIAN_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-pip"
 
 FEDORA_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip"
 
-FREEBSD_PKGS="openssl-devel %s-pip"
+FREEBSD_PKGS="gmake openssl-devel %s-pip"
 
-OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel %s-devel %s-pip"
+OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel make %s-devel %s-pip"
 
-REDHAT_PKGS="gcc libffi-devel openssl-devel %s-devel"
+REDHAT_PKGS="gcc libffi-devel make openssl-devel %s-devel"
 
 SUNOS_PKGS="build-essential pip-%s"
 
