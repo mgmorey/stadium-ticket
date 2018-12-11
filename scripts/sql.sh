@@ -23,9 +23,9 @@ if . $source_dir/.env; then
     case $DATABASE_DIALECT in
 	(*mysql)
 	    exec $DATABASE_DIALECT \
-		 -h ${DATABASE_HOST:-$MYSQL_HOST} \
-		 -u ${DATABASE_USER:-$MYSQL_USER} \
-		 -p"${DATABASE_PASSWORD:-$MYSQL_PASSWORD}" \
+		 -h ${DATABASE_HOST:-$localhost} \
+		 -u ${DATABASE_USER:-$USER} \
+		 -p"${DATABASE_PASSWORD:-}" \
 		 "$@"
 	    ;;
     esac
