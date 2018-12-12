@@ -61,5 +61,6 @@ case "$kernel_name" in
 	;;
 esac
 
-
-printf "%s\n" $packages
+if [ -n "${packages:-}" ]; then
+   printf "%s\n" $packages
+fi

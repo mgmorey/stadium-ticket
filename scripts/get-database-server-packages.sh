@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+DARWIN_PKG="mysql"
+
 DEBIAN_PKG="mariadb-server-10.1"
 
 FEDORA_PKG="mariadb-server"
@@ -60,6 +62,9 @@ case "$kernel_name" in
 		packages="${package:-$UBUNTU_PKG}"
 		;;
 	esac
+	;;
+    (Darwin)
+	packages="${package:-$DARWIN_PKG}"
 	;;
     (FreeBSD)
 	packages="${package:-$FREEBSD_PKG}"

@@ -77,7 +77,7 @@ package_modifier=$(printf "%s" "$python_info" | awk '{print $2}')
 
 printf "%s\n" $package_name
 
-for package in $packages; do
+for package in ${packages:-}; do
     case $package in
 	(*%s*)
 	    printf "$package\n" $package_modifier

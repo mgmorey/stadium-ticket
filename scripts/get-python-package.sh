@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+DARWIN_INFO="python python"
+
 DEBIAN_INFO="python3 python3"
 
 FEDORA_INFO="python36 python3"
@@ -60,6 +62,9 @@ case "$kernel_name" in
 		abort "%s: Distro not supported\n" "$distro_name"
 		;;
 	esac
+	;;
+    (Darwin)
+	printf "%s %s\n" $DARWIN_INFO
 	;;
     (FreeBSD)
 	printf "%s %s\n" $FREEBSD_INFO
