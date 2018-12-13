@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+SCRIPT=
+
 while getopts 'x:' OPTION; do
     case $OPTION in
 	('x')
@@ -40,13 +42,13 @@ if . $source_dir/.env; then
 
     case $DATABASE_DIALECT in
 	(mysql)
-	    $DATABASE_DIALECT \
-		-h ${DATABASE_HOST:-$localhost} \
-		-u ${DATABASE_USER:-$USER} \
-		-p"${DATABASE_PASSWORD:-}"
+	    exec $DATABASE_DIALECT \
+		 -h ${DATABASE_HOST:-$localhost} \
+		 -u ${DATABASE_USER:-$USER} \
+		 -p"${DATABASE_PASSWORD:-}"
 	    ;;
 	(sqlite)
-	    sqlite3 /tmp/${DATABASE_SCHEMA:-default}.db
+	    exec sqlite3 /tmp/${DATABASE_SCHEMA:-default}.db
 	    ;;
     esac
 fi
