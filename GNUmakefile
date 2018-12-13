@@ -40,7 +40,7 @@ pipenv:	Pipfile
 reset:	.env schema
 	$(script_dir)/sql.sh <$(sql_dir)/reset-$(DATABASE_DIALECT).sql
 
-schema:	.emv
+schema:	.env
 	$(script_dir)/sql.sh <$(sql_dir)/schema-$(DATABASE_DIALECT).sql
 
 stress:
