@@ -1,3 +1,5 @@
+export DATABASE_DIALECT = $(shell . .env && printf $$DATABASE_DIALECT || true)
+
 caches = $(shell find . -type d '(' -name '.venv*' -prune -o -name '*py*cache*' -print ')')
 exclude = .git,__pycache__,.tox,.venv*
 pycodestyle = $(python) -m pycodestyle
@@ -33,10 +35,10 @@ pipenv:	Pipfile
 	$(script_dir)/install-pipenv.sh
 
 reset:	schema
-	$(script_dir)/sql.sh <$(sql_dir)/reset.sql
+	$(script_dir)/sql.sh <$(sql_dir)/reset-$(DATABASE_DIALECT).sql
 
 schema:
-	$(script_dir)/sql.sh <$(sql_dir)/schema.sql
+	$(script_dir)/sql.sh <$(sql_dir)/schema-$(DATABASE_DIALECT).sql
 
 stress:
 	$(script_dir)/load-test.sh

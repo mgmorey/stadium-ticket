@@ -21,12 +21,15 @@ source_dir=$script_dir/..
 
 if . $source_dir/.env; then
     case $DATABASE_DIALECT in
-	(*mysql)
+	(mysql)
 	    exec $DATABASE_DIALECT \
 		 -h ${DATABASE_HOST:-$localhost} \
 		 -u ${DATABASE_USER:-$USER} \
 		 -p"${DATABASE_PASSWORD:-}" \
 		 "$@"
+	    ;;
+	(sqlite)
+	    exec sqlite3 "$@" /tmp/$DATABASE_SCHEMA.db
 	    ;;
     esac
 fi
