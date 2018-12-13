@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CATEGORIES="database-client docker-client http-client \
+CATEGORIES="dbms-client docker-client http-client \
 python-dev python-mw sqlite"
 
 abort() {

@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-database-client-package: get database client package name
+# grep-dbms-package: grep for database package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-script_dir=$(dirname $0)
-tmpfile=$(mktemp)
-
-trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
-$script_dir/get-installed-packages.sh >$tmpfile
-$script_dir/grep-database-package.sh client <$tmpfile || \
-$script_dir/grep-database-package.sh <$tmpfile
+if [ $# -gt 0 ]; then
+    egrep "^(database/)?(mariadb|mysql)([0-9]+-$1|-[0-9]+/$1|-$1(-[0-9\.]+)?)\$"
+else
+    egrep "^(database/)?(mariadb|mysql)([0-9]*|-[0-9\.]+)\$"
+fi

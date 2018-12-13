@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-database-client-packages: get DBMS client package names
+# get-dbms-client-packages: get DBMS client package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
 
-package="$($script_dir/get-database-client-package.sh)"
+package="$($script_dir/get-dbms-client-package.sh)"
 
 case "$kernel_name" in
     (Linux)

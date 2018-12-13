@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-database-server-packages: get database server package names
+# get-dbms-server-packages: get database server package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
 
-package="$($script_dir/get-database-server-package.sh)"
+package="$($script_dir/get-dbms-server-package.sh)"
 
 case "$kernel_name" in
     (Linux)
