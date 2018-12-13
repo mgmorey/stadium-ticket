@@ -16,7 +16,8 @@ RUN printf "$RETRY_LOOP" "$APT_UPDATE" | sh
 
 # Install dependencies from Debian package repository
 ENV APT_INSTALL="apt-get install -qy --no-install-recommends build-essential \
-mariadb-client-10.1 python3 python3-dev python3-pip uwsgi uwsgi-plugin-python3"
+mariadb-client-10.1 python3 python3-dev python3-pip sqlite3 uwsgi \
+uwsgi-plugin-python3"
 RUN printf "$RETRY_LOOP" "$APT_INSTALL" | sh
 
 # Create application directories
@@ -43,7 +44,9 @@ RUN pipenv sync
 
 # Copy application files
 COPY app/ $APP_DIR/app/
-COPY .env $APP_DIR/
+COPY scripts/sql.sh $APP_DIR/scripts/
+COPY sql/schema-*.sql $APP_DIR/sql/
+COPY .env-docker $APP_DIR/.env
 COPY app.ini $APP_ETCDIR/
 
 # Make application owner of its own directories
@@ -52,7 +55,10 @@ RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR
 # Change working directory
 WORKDIR $APP_VARDIR
 
+# Drop privileges
+USER $APP_UID
+
 # Expose application port and start
 EXPOSE $APP_PORT
 ENV APP_PIDFILE=$APP_RUNDIR/pid
-CMD /usr/bin/uwsgi --ini $APP_ETCDIR/app.ini
+CMD $APP_DIR/scripts/sql.sh -x schema && uwsgi --ini $APP_ETCDIR/app.ini

@@ -1,4 +1,4 @@
-export DATABASE_DIALECT = $(shell . .env && printf $$DATABASE_DIALECT || true)
+export DATABASE_DIALECT = $(shell . .env && printf $$DATABASE_DIALECT)
 
 caches = $(shell $(find))
 exclude = .git,__pycache__,.tox,.venv*
@@ -11,9 +11,9 @@ script_dir = scripts
 sql_dir = sql
 unittest = $(python) -m unittest
 
-all:	Makefile Pipfile.lock requirements.txt requirements-dev.txt .env unittest
+all:	Pipfile.lock requirements.txt requirements-dev.txt .env unittest
 
-build:	.env Pipfile.lock
+build:	.env-docker Pipfile.lock
 	$(script_dir)/run.sh docker-compose up --build
 
 check:
@@ -28,7 +28,7 @@ client:
 client-debug:
 	$(script_dir)/app-test.sh -p 5001
 
-debug:	reset
+debug:	.env reset
 	$(script_dir)/run.sh flask run --port 5001
 
 install:	Pipfile.lock .env
@@ -37,10 +37,10 @@ install:	Pipfile.lock .env
 pipenv:	Pipfile
 	$(script_dir)/install-pipenv.sh
 
-reset:	schema
+reset:	.env schema
 	$(script_dir)/sql.sh <$(sql_dir)/reset-$(DATABASE_DIALECT).sql
 
-schema:
+schema:	.emv
 	$(script_dir)/sql.sh <$(sql_dir)/schema-$(DATABASE_DIALECT).sql
 
 stress:
@@ -49,7 +49,7 @@ stress:
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
-unittest:	reset
+unittest:	.env reset
 	$(script_dir)/run.sh $(unittest) discover
 
 update:	Pipfile.lock requirements.txt
@@ -70,5 +70,8 @@ requirements.txt:	Pipfile
 requirements-dev.txt:	Pipfile
 	$(script_dir)/lock-requirements.sh -d
 
-.env:	.env-template
-	$(script_dir)/configure-env.sh
+.env:		.env-template
+	$(script_dir)/configure-env.sh .env
+
+.env-docker:	.env-template
+	$(script_dir)/configure-env.sh .env-docker
