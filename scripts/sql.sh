@@ -29,7 +29,7 @@ if . $source_dir/.env; then
 		 "$@"
 	    ;;
 	(sqlite)
-	    exec sqlite3 "$@" /tmp/$DATABASE_SCHEMA.db
+	    exec sqlite3 "$@" /tmp/${DATABASE_SCHEMA:-default}.db
 	    ;;
     esac
 fi
