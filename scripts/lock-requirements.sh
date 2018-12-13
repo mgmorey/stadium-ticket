@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -eux
 
 # lock-requirements: update requirements.txt using PIP
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -16,6 +16,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+file=requirements.txt
+opts=
+
+while getopts 'd' OPTION; do
+    case $OPTION in
+	('d')
+	    file=requirements-dev.txt
+	    opts=-d
+	    ;;
+	('?')
+	    printf "Usage: %s: [-d]\n" $(basename $0) >&2
+	    exit 2
+	    ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
 pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
@@ -24,13 +41,8 @@ tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 
 if [ -n "$pipenv" ]; then
-    if $pipenv lock -r "$@" >$tmpfile; then
-	if [ "$1" = -d ]; then
-	    requirements=$source_dir/requirements-dev.txt
-	else
-	    requirements=$source_dir/requirements.txt
-	fi
-
+    if $pipenv lock $opts -r >$tmpfile; then
+	requirements=$source_dir/$file
 	mv -f $tmpfile $requirements
 	chgrp $(id -g) $requirements
 	chmod a+r $requirements
