@@ -22,7 +22,6 @@ opts=
 while getopts 'd' OPTION; do
     case $OPTION in
 	('d')
-	    file=requirements-dev.txt
 	    opts=-d
 	    ;;
 	('?')
@@ -33,6 +32,7 @@ while getopts 'd' OPTION; do
 done
 shift $(($OPTIND - 1))
 
+file=$1
 pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..

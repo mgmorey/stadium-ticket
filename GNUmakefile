@@ -63,10 +63,10 @@ Pipfile.lock:	Pipfile
 	pipenv update -d || true
 
 requirements.txt:	Pipfile
-	$(script_dir)/lock-requirements.sh
+	$(script_dir)/lock-requirements.sh requirements.txt
 
 requirements-dev.txt:	Pipfile
-	$(script_dir)/lock-requirements.sh -d
+	$(script_dir)/lock-requirements.sh -d requirements-dev.txt
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh .env
