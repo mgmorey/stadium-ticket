@@ -33,18 +33,15 @@ done
 shift $(($OPTIND - 1))
 
 file=$1
-pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
 tmpfile=$(mktemp)
 
-trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
+trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
-if [ -n "$pipenv" ]; then
-    if $pipenv lock $opts -r >$tmpfile; then
-	requirements=$source_dir/$file
-	mv -f $tmpfile $requirements
-	chgrp $(id -g) $requirements
-	chmod a+r $requirements
-    fi
+if pipenv lock $opts -r >$tmpfile; then
+    requirements=$source_dir/$file
+    mv -f $tmpfile $requirements
+    chgrp $(id -g) $requirements
+    chmod a+r $requirements
 fi

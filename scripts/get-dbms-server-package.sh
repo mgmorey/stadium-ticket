@@ -19,7 +19,7 @@
 script_dir=$(dirname $0)
 tmpfile=$(mktemp)
 
-trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
+trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 $script_dir/get-installed-packages.sh >$tmpfile
 $script_dir/grep-dbms-package.sh server <$tmpfile || \
 $script_dir/grep-dbms-package.sh <$tmpfile

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 tmpfile=$(mktemp)
-trap "/bin/rm -f $tmpfile ${tmpfile}~" 0 INT QUIT TERM
+trap "/bin/rm -f $tmpfile ${tmpfile}~" EXIT INT QUIT TERM
 
 file=$1
 
