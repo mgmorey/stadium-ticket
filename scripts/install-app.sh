@@ -18,30 +18,34 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
-PIP="pip3 -q"
+PIP=pip3
 
-create_venv() {
-    (cd $source_dir
-     venv=.venv-$APP_NAME
+pip=$(which pip)
 
-     if [ ! -d $venv ]; then
-	 printf "%s\n" "Creating virtual environment"
-	 python3 -m venv $venv
-     fi
+create_venv() (
+    cd $source_dir
+    venv=.venv-$APP_NAME
 
-     if [ -d $venv ]; then
-	 printf "%s\n" "Activating virtual environment"
-	 . $venv/bin/activate
-	 printf "%s\n" "Installing required packages"
-	 $PIP install --upgrade pip
-	 $PIP install -r requirements.txt
-	 printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
-	 sudo mkdir -p "$APP_DIR/.venv"
-	 sudo rsync -a $venv/ $APP_DIR/.venv
-     else
-	 abort "%s\n" "No virtual environment"
-     fi)
-}
+    if [ ! -d $venv ]; then
+	printf "%s\n" "Creating virtual environment"
+	python3 -m venv $venv
+    fi
+
+    if [ -d $venv ]; then
+	printf "%s\n" "Activating virtual environment"
+	. $venv/bin/activate
+	printf "%s\n" "Upgrading pip"
+	$pip install --upgrade pip
+	pip=$(which pip)
+	printf "%s\n" "Installing required packages"
+	$pip install -r requirements.txt
+	printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
+	sudo mkdir -p "$APP_DIR/.venv"
+	sudo rsync -a $venv/ $APP_DIR/.venv
+    else
+	abort "%s\n" "No virtual environment"
+    fi
+)
 
 enable_app() {
     if [ $# -gt 0 ]; then
@@ -64,50 +68,50 @@ generate_ini() {
     printf "%s" "sed -e 's|^#<\\(.*\\)>$|\\1|g'"
 
     for var in $APP_VARS; do
-	eval value="\$$var"
+	eval value=\$$var
 	printf " %s" "-e 's|\$($var)|$value|g'"
     done
 
     printf " %s\n" "$*"
 }
 
-install_app() {
-    (cd "$source_dir"
+install_app() (
+    cd "$source_dir"
 
-     # Create application directories
-     sudo mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
+    # Create application directories
+    sudo mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
 
-     # Install application environment file
-     sudo install -m 600 .env "$APP_DIR"
+    # Install application environment file
+    sudo install -m 600 .env "$APP_DIR"
 
-     # Install application code files
-     for source in $(find app -type f -name '*.py' -print | sort); do
-	 case "$source" in
-	     (*/test_*.py)
-	     ;;
-	     (*)
-		 dest="$APP_DIR/$source"
-		 printf "Copying %s to %s\n" "$source" "$dest"
-		 sudo install -d -m 755 $(dirname "$dest")
-		 sudo install -C -m 644 "$source" "$dest"
-		 ;;
-	 esac
-     done
+    # Install application code files
+    for source in $(find app -type f -name '*.py' -print | sort); do
+	case "$source" in
+	    (*/test_*.py)
+	    ;;
+	    (*)
+		dest="$APP_DIR/$source"
+		printf "Copying %s to %s\n" "$source" "$dest"
+		sudo install -d -m 755 "$(dirname "$dest")"
+		sudo install -C -m 644 "$source" "$dest"
+		;;
+	esac
+    done
 
-     # Make application the owner of the app and data directories
-     if [ "$APP_GID" != root -o "$APP_UID" != root ]; then
-	 sudo chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR
-     fi)
-}
+    # Make application the owner of the app and data directories
+    if [ "$APP_GID" != root -o "$APP_UID" != root ]; then
+	sudo chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR
+    fi
+)
 
 # set default locales
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-script_dir="$(dirname $0)"
-source_dir="$(readlink -f "$script_dir/..")"
+script_dir=$(dirname $0)
+source_dir=$script_dir/..
 
-. $script_dir/configure-app.sh
+. "$script_dir/configure-app.sh"
 create_venv
 install_app
 enable_app $APP_CONFIG $UWSGI_APPDIRS
