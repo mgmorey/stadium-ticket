@@ -24,30 +24,37 @@ abort() {
     exit 1
 }
 
-pipenv=$(which pipenv 2>/dev/null || true)
+pip_update() (
+    cd $source_dir
+
+    if [ ! -d .venv ]; then
+	printf "%s\n" "Creating virtual environment"
+	$PYTHON -m venv .venv
+    fi
+
+    if [ -d .venv ]; then
+	printf "%s\n" "Activating virtual environment"
+	. .venv/bin/activate
+	printf "%s\n" "Upgrading pip"
+	pip="$(which $PYTHON) -m pip"
+	$pip install --upgrade pip
+	pip="$(which $PIP)"
+	printf "%s\n" "Installing required packages"
+	$pip install -r requirements.txt -r requirements-dev.txt
+    else
+	abort "%s\n" "No virtual environment"
+    fi
+)
+
+pipenv_update() {
+    pipenv update -d
+}
+
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
 
 if [ -n "$pipenv" ]; then
-    $pipenv update -d
+    pipenv_update
 else
-    (cd $source_dir
-
-     if [ ! -d .venv ]; then
-	 printf "%s\n" "Creating virtual environment"
-	 $PYTHON -m venv .venv
-     fi
-
-     if [ -d .venv ]; then
-	 printf "%s\n" "Activating virtual environment"
-	 . .venv/bin/activate
-	 printf "%s\n" "Upgrading pip"
-	 pip="$(which $PYTHON) -m pip"
-	 $pip install --upgrade pip
-	 pip="$(which $PIP)"
-	 printf "%s\n" "Installing required packages"
-	 $pip install -r requirements.txt -r requirements-dev.txt --user
-     else
-	 abort "%s\n" "No virtual environment"
-     fi)
+    pip_update
 fi
