@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-SCRIPT=
+script=
 
 while getopts 'x:' OPTION; do
     case $OPTION in
 	('x')
-	    SCRIPT="$OPTARG"
+	    script="$OPTARG"
 	    ;;
 	('?')
 	    printf "Usage: %s: [-x <SCRIPT>]\n" $(basename $0) >&2
@@ -36,8 +36,8 @@ source_dir=$script_dir/..
 sql_dir=$source_dir/sql
 
 if . $source_dir/.env; then
-    if [ -n "$SCRIPT" ]; then
-	exec <$sql_dir/$SCRIPT-$DATABASE_DIALECT.sql
+    if [ -n "$script" ]; then
+	exec <"$sql_dir/$script-$DATABASE_DIALECT.sql"
     fi
 
     case $DATABASE_DIALECT in
