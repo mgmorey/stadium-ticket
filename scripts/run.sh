@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+PIP=pip3
 PYTHON=python3
 
 abort() {
@@ -48,8 +49,8 @@ else
 	 . .venv/bin/activate
 	 pip="$(which $PYTHON) -m pip"
 	 printf "%s\n" "Upgrading pip"
-	 $pip install --upgrade --user pip
-	 pip="$(which $PYTHON) -m pip"
+	 $pip install --upgrade pip
+	 pip="$(which $PIP)"
 	 printf "%s\n" "Installing required packages"
 	 $pip install -r requirements.txt -r requirements-dev.txt --user
 	 printf "%s\n" "Loading .env environment variables"
