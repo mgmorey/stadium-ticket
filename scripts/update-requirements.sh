@@ -29,7 +29,7 @@ source_dir=$script_dir/..
 
 if [ -n "$pipenv" ]; then
     $pipenv update -d
-elif [ -n "$pip" ]; then
+else
     (cd $source_dir
 
      if [ ! -d .venv ]; then
@@ -49,6 +49,4 @@ elif [ -n "$pip" ]; then
      else
 	 abort "%s\n" "No virtual environment"
      fi)
-else
-    abort "Neiher pipenv nor pip available"
 fi
