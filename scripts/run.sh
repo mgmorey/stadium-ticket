@@ -45,12 +45,12 @@ else
      fi
 
      if [ -d .venv ]; then
+	 pip="$(which $PYTHON) -m pip"
 	 printf "%s\n" "Activating virtual environment"
 	 . .venv/bin/activate
-	 pip="$(which $PYTHON) -m pip"
+	 pip="$(which $PIP)"
 	 printf "%s\n" "Upgrading pip"
 	 $pip install --upgrade pip
-	 pip="$(which $PIP)"
 	 printf "%s\n" "Installing required packages"
 	 $pip install -r requirements.txt -r requirements-dev.txt --user
 	 printf "%s\n" "Loading .env environment variables"
