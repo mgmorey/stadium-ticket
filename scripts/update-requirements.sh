@@ -50,6 +50,7 @@ pipenv_update() {
     pipenv update -d
 }
 
+pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
 
