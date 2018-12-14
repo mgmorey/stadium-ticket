@@ -24,11 +24,34 @@ abort() {
     exit 1
 }
 
-pipenv=$(which pipenv 2>/dev/null || true)
-script_dir=$(dirname $0)
-source_dir=$script_dir/..
+pip_run() (
+    cd $source_dir
 
-if [ -n "$pipenv" ]; then
+    if [ ! -d .venv ]; then
+	printf "%s\n" "Creating virtual environment"
+	$PYTHON -m venv .venv
+    fi
+
+    if [ -d .venv ]; then
+	printf "%s\n" "Activating virtual environment"
+	. .venv/bin/activate
+	printf "%s\n" "Upgrading pip"
+	pip="$(which $PYTHON) -m pip"
+	$pip install --upgrade pip
+	pip="$(which $PIP)"
+	printf "%s\n" "Installing required packages"
+	$pip install -r requirements.txt -r requirements-dev.txt --user
+	printf "%s\n" "Loading .env environment variables"
+	. $source_dir/.env
+	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD
+	export DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV
+	"$@"
+    else
+	abort "%s\n" "No virtual environment"
+    fi
+)
+
+pipenv_run() {
     venv="$($pipenv --bare --venv 2>/dev/null || true)"
 
     if [ -z "$venv" ]; then
@@ -36,29 +59,14 @@ if [ -n "$pipenv" ]; then
     fi
 
     $pipenv run "$@"
+}
+
+pipenv=$(which pipenv 2>/dev/null || true)
+script_dir=$(dirname $0)
+source_dir=$script_dir/..
+
+if [ -n "$pipenv" ]; then
+    pipenv_run "$@"
 else
-    (cd $source_dir
-
-     if [ ! -d .venv ]; then
-	 printf "%s\n" "Creating virtual environment"
-	 $PYTHON -m venv .venv
-     fi
-
-     if [ -d .venv ]; then
-	 printf "%s\n" "Activating virtual environment"
-	 . .venv/bin/activate
-	 printf "%s\n" "Upgrading pip"
-	 pip="$(which $PYTHON) -m pip"
-	 $pip install --upgrade pip
-	 pip="$(which $PIP)"
-	 printf "%s\n" "Installing required packages"
-	 $pip install -r requirements.txt -r requirements-dev.txt --user
-	 printf "%s\n" "Loading .env environment variables"
-	 . $source_dir/.env
-	 export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD
-	 export DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV
-	 "$@"
-     else
-	 abort "%s\n" "No virtual environment"
-     fi)
+    pip_run "$@"
 fi
