@@ -18,7 +18,7 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
-PIP=pip3
+PYTHON=python3
 
 create_venv() (
     cd $source_dir
@@ -32,11 +32,11 @@ create_venv() (
     if [ -d $venv ]; then
 	printf "%s\n" "Activating virtual environment"
 	. $venv/bin/activate
+	pip="$(which $PYTHON) -m pip"
 	printf "%s\n" "Upgrading pip"
-	$pip install --upgrade pip
-	pip=$(which pip)
+	$pip install --upgrade --user pip
 	printf "%s\n" "Installing required packages"
-	$pip install -r requirements.txt
+	$pip install -r requirements.txt --user
 	printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
 	sudo mkdir -p "$APP_DIR/.venv"
 	sudo rsync -a $venv/ $APP_DIR/.venv
@@ -106,7 +106,7 @@ install_app() (
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-pip=$(which pip)
+python=$(which $PYTHON)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
 
