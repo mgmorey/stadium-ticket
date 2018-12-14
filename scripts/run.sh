@@ -16,44 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PIP="pip3 -q"
+PIP=pip3
+PYTHON=python3
 
 abort() {
     printf "$@" >&2
     exit 1
 }
 
-create_venv() {
-    (cd $source_dir
-
-     if [ ! -d .venv ]; then
-	 printf "%s\n" "Creating virtual environment"
-	 python3 -m venv .venv
-     fi
-
-     if [ -d .venv ]; then
-	 printf "%s\n" "Activating virtual environment"
-	 . .venv/bin/activate
-	 printf "%s\n" "Installing required packages"
-	 $PIP install --upgrade pip
-	 $PIP install -r requirements.txt -r requirements-dev.txt
-     fi)
-}
-
-run_venv() {
-    if [ -d $source_dir/.venv ]; then
-	printf "%s\n" "Activating virtual environment"
-	. $source_dir/.venv/bin/activate
-	printf "%s\n" "Loading .env environment variables"
-	. $source_dir/.env
-	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_USER
-	export FLASK_APP FLASK_ENV
-	"$@"
-    else
-	abort "%s\n" "No virtual environment"
-    fi
-}
-
+pip=$(which $PIP)
 pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
@@ -64,12 +35,32 @@ if [ -n "$pipenv" ]; then
     if [ -z "$venv" ]; then
 	$pipenv sync -d
     fi
-else
-    create_venv
-fi
 
-if [ -n "$pipenv" ]; then
     $pipenv run "$@"
+elif [ -n "$pip" ]; then
+    (cd $source_dir
+
+     if [ ! -d .venv ]; then
+	 printf "%s\n" "Creating virtual environment"
+	 $PYTHON -m venv .venv
+     fi
+
+     if [ -d .venv ]; then
+	 printf "%s\n" "Activating virtual environment"
+	 . .venv/bin/activate
+	 printf "%s\n" "Upgrading pip"
+	 $PIP install --upgrade pip
+	 pip=$(which $PIP)
+	 printf "%s\n" "Installing required packages"
+	 $PIP install -r requirements.txt -r requirements-dev.txt
+	 printf "%s\n" "Loading .env environment variables"
+	 . $source_dir/.env
+	 export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD
+	 export DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV
+	 "$@"
+     else
+	 abort "%s\n" "No virtual environment"
+     fi)
 else
-    run_venv "$@"
+    abort "Neiher pipenv nor pip available"
 fi

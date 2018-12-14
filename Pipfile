@@ -18,6 +18,10 @@ SQLAlchemy = "*"
 python-decouple = "*"
 python-dotenv = "*"
 
-
 [requires]
 python_version = "3.6"
+
+[scripts]
+build = "docker-compose up --build"
+debug = "flask run --port 5001"
+unittest = "python3 -m unittest discover"

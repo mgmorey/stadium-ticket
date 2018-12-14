@@ -16,17 +16,39 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+SCRIPT=
+
+while getopts 'x:' OPTION; do
+    case $OPTION in
+	('x')
+	    SCRIPT="$OPTARG"
+	    ;;
+	('?')
+	    printf "Usage: %s: [-x <SCRIPT>]\n" $(basename $0) >&2
+	    exit 2
+	    ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
+sql_dir=$source_dir/sql
 
 if . $source_dir/.env; then
+    if [ -n "$SCRIPT" ]; then
+	exec <$sql_dir/$SCRIPT-$DATABASE_DIALECT.sql
+    fi
+
     case $DATABASE_DIALECT in
-	(*mysql)
+	(mysql)
 	    exec $DATABASE_DIALECT \
-		 -h ${DATABASE_HOST:-$MYSQL_HOST} \
-		 -u ${DATABASE_USER:-$MYSQL_USER} \
-		 -p"${DATABASE_PASSWORD:-$MYSQL_PASSWORD}" \
-		 "$@"
+		 -h ${DATABASE_HOST:-$localhost} \
+		 -u ${DATABASE_USER:-$USER} \
+		 -p"${DATABASE_PASSWORD:-}"
+	    ;;
+	(sqlite)
+	    exec sqlite3 /tmp/${DATABASE_SCHEMA:-default}.db
 	    ;;
     esac
 fi

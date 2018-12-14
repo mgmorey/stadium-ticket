@@ -1,6 +1,6 @@
-#!/bin/sh -eu
+#!/bin/sh -u
 
-# get-database-server-packages: get database server package names
+# install-dbms-server-packages: install database server packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,20 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKG="mariadb-server-10.1"
-
-FEDORA_PKG="mariadb-server"
-
-FREEBSD_PKG="mariadb103-server"
-
-OPENSUSE_PKG="mariadb"
-
-REDHAT_PKG="mariadb-server"
-
-SUNOS_PKG="mariadb-101"
-
-UBUNTU_PKG="mariadb-server-10.1"
-
 abort() {
     printf "$@" >&2
     exit 1
@@ -39,34 +25,26 @@ distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
 
-package="$($script_dir/get-database-server-package.sh)"
-
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (debian)
-		packages="${package:-$DEBIAN_PKG}"
+	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
 		;;
-	    (fedora)
-		packages="${package:-$FEDORA_PKG}"
-		;;
-	    (redhat|centos)
-		packages="${package:-$REDHAT_PKG}"
-		;;
-	    (opensuse-*)
-		packages="${package:-$OPENSUSE_PKG}"
-		;;
-	    (ubuntu)
-		packages="${package:-$UBUNTU_PKG}"
+	    (*)
+		abort "%s: Distro not supported\n" "$distro_name"
 		;;
 	esac
 	;;
-    (FreeBSD)
-	packages="${package:-$FREEBSD_PKG}"
+    (FreeBSD|SunOS)
 	;;
-    (SunOS)
-	packages="${package:-$SUNOS_PKG}"
+    (*)
+	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
 esac
 
-printf "%s\n" $packages
+package_manager="$(get-package-manager)"
+
+if [ -n "$package_manager" ]; then
+    packages="$($script_dir/get-dbms-server-packages.sh)"
+    sudo "$package_manager" install $packages
+fi

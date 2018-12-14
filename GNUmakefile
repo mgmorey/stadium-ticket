@@ -1,5 +1,8 @@
-caches = $(shell find . -type d '(' -name '.venv*' -prune -o -name '*py*cache*' -print ')')
+caches = $(shell $(find))
 exclude = .git,__pycache__,.tox,.venv*
+find = find . -type d \( $(prune) -o $(print) \)
+print = -name '*py*cache*' -print
+prune = -name '.venv*' -prune
 pycodestyle = $(python) -m pycodestyle
 python = python3
 script_dir = scripts
@@ -8,7 +11,7 @@ unittest = $(python) -m unittest
 
 all:	Pipfile.lock requirements.txt requirements-dev.txt .env unittest
 
-build:	.env Pipfile.lock
+build:	.env-docker Pipfile.lock
 	$(script_dir)/run.sh docker-compose up --build
 
 check:
@@ -23,7 +26,7 @@ client:
 client-debug:
 	$(script_dir)/app-test.sh -p 5001
 
-debug:	reset
+debug:	.env reset
 	$(script_dir)/run.sh flask run --port 5001
 
 install:	Pipfile.lock .env
@@ -32,11 +35,11 @@ install:	Pipfile.lock .env
 pipenv:	Pipfile
 	$(script_dir)/install-pipenv.sh
 
-reset:	schema
-	$(script_dir)/sql.sh <$(sql_dir)/reset.sql
+reset:	.env schema
+	$(script_dir)/sql.sh -x reset
 
-schema:
-	$(script_dir)/sql.sh <$(sql_dir)/schema.sql
+schema:	.env
+	$(script_dir)/sql.sh -x schema
 
 stress:
 	$(script_dir)/load-test.sh
@@ -44,8 +47,8 @@ stress:
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
-unittest:	reset
-	$(script_dir)/run.sh $(unittest) discover -vvv
+unittest:	.env reset
+	$(script_dir)/run.sh $(unittest) discover
 
 update:	Pipfile.lock requirements.txt
 	$(script_dir)/update-requirements.sh
@@ -53,14 +56,20 @@ update:	Pipfile.lock requirements.txt
 .PHONY: all build check clean client client-debug debug install 
 .PHONY: pipenv reset schema stress uninstall unittest update
 
+Makefile:	GNUmakefile
+	ln -s GNUmakefile Makefile
+
 Pipfile.lock:	Pipfile
 	pipenv update -d || true
 
 requirements.txt:	Pipfile
-	$(script_dir)/lock-requirements.sh
+	$(script_dir)/lock-requirements.sh requirements.txt
 
 requirements-dev.txt:	Pipfile
-	$(script_dir)/lock-requirements.sh -d
+	$(script_dir)/lock-requirements.sh -d requirements-dev.txt
 
-.env:	.env-template
-	$(script_dir)/configure-env.sh
+.env:		.env-template
+	$(script_dir)/configure-env.sh .env
+
+.env-docker:	.env-template
+	$(script_dir)/configure-env.sh .env-docker

@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-database-client-package: get database client package name
+# get-dbms-server-package: get database server package name
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -21,5 +21,5 @@ tmpfile=$(mktemp)
 
 trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
 $script_dir/get-installed-packages.sh >$tmpfile
-$script_dir/grep-database-package.sh client <$tmpfile || \
-$script_dir/grep-database-package.sh <$tmpfile
+$script_dir/grep-dbms-package.sh server <$tmpfile || \
+$script_dir/grep-dbms-package.sh <$tmpfile

@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+DARWIN_PKGS="sqlite"
+
 DEBIAN_PKGS="sqlite3"
 
 FEDORA_PKGS="sqlite"
@@ -58,6 +60,9 @@ case "$kernel_name" in
 		packages="$UBUNTU_PKGS"
 		;;
 	esac
+	;;
+    (Darwin)
+	packages="$DARWIN_PKGS"
 	;;
     (FreeBSD)
 	packages="$FREEBSD_PKGS"

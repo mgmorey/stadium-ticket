@@ -16,23 +16,40 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+PIP=pip3
+PYTHON=python3
+
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
+pip=$(which $PIP)
 pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
 
-cd $source_dir
-
 if [ -n "$pipenv" ]; then
     $pipenv update -d
-else
-    if [ ! -d .venv ]; then
-	printf "%s\n" "Creating virtual environment"
-	python3 -m venv .venv
-    fi
+elif [ -n "$pip" ]; then
+    (cd $source_dir
 
-    printf "%s\n" "Activating virtual environment"
-    . .venv/bin/activate
-    printf "%s\n" "Installing required packages"
-    pip3 install --upgrade pip
-    pip3 install -r requirements.txt -r requirements-dev.txt
+     if [ ! -d .venv ]; then
+	 printf "%s\n" "Creating virtual environment"
+	 $PYTHON -m venv .venv
+     fi
+
+     if [ -d .venv ]; then
+	 printf "%s\n" "Activating virtual environment"
+	 . .venv/bin/activate
+	 printf "%s\n" "Upgrading pip"
+	 $pip install --upgrade pip
+	 pip=$(which $PIP)
+	 printf "%s\n" "Installing required packages"
+	 $pip install -r requirements.txt -r requirements-dev.txt
+     else
+	 abort "%s\n" "No virtual environment"
+     fi)
+else
+    abort "Neiher pipenv nor pip available"
 fi

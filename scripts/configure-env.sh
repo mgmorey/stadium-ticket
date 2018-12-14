@@ -19,13 +19,15 @@
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile ${tmpfile}~" 0 INT QUIT TERM
 
-if [ -r .env ]; then
-    cp -f .env $tmpfile
+file=$1
+
+if [ -r $file ]; then
+    cp -f $file $tmpfile
 elif [ -r .env-template ]; then
     cp -f .env-template $tmpfile
 fi
 
 if $EDITOR $tmpfile; then
-    mv -f $tmpfile .env
-    chgrp $(id -g) .env
+    mv -f $tmpfile $file
+    chgrp $(id -g) $file
 fi

@@ -1,5 +1,8 @@
 *.log
 *~
 .env
+.env-docker
+.python-version
 .venv*
+Makefile
 __pycache__/

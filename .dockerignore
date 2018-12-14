@@ -1,4 +1,5 @@
 **/*.log
+**/.python-version
 **/.pytest_cache
 **/GNUmakefile
 **/Makefile

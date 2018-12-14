@@ -1,6 +1,6 @@
-#!/bin/sh -u
+#!/bin/sh -eu
 
-# install-database-server-packages: install database server packages
+# get-dbms-client-package: get database client package name
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,35 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-abort() {
-    printf "$@" >&2
-    exit 1
-}
-
-distro_name=$(get-os-distro-name)
-kernel_name=$(get-os-kernel-name)
 script_dir=$(dirname $0)
+tmpfile=$(mktemp)
 
-case "$kernel_name" in
-    (Linux)
-	case "$distro_name" in
-	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
-		;;
-	esac
-	;;
-    (FreeBSD|SunOS)
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
-	;;
-esac
-
-package_manager="$(get-package-manager)"
-
-if [ -n "$package_manager" ]; then
-    packages="$($script_dir/get-database-server-packages.sh)"
-    sudo "$package_manager" install $packages
-fi
+trap "/bin/rm -f $tmpfile" 0 INT QUIT TERM
+$script_dir/get-installed-packages.sh >$tmpfile
+$script_dir/grep-dbms-package.sh client <$tmpfile || \
+$script_dir/grep-dbms-package.sh <$tmpfile

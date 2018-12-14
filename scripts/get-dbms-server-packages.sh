@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-python-package: get Python package name
+# get-dbms-server-packages: get database server package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_INFO="python python"
+DARWIN_PKG="mysql"
 
-DEBIAN_INFO="python3 python3"
+DEBIAN_PKG="mariadb-server-10.1"
 
-FEDORA_INFO="python36 python3"
+FEDORA_PKG="mariadb-server"
 
-FREEBSD_INFO="python3 py36"
+FREEBSD_PKG="mariadb103-server"
 
-OPENSUSE_INFO="python3 python3"
+OPENSUSE_PKG="mariadb"
 
-REDHAT_INFO="python36 python36"
+REDHAT_PKG="mariadb-server"
 
-SUNOS_INFO="python-34 34"
+SUNOS_PKG="mariadb-101"
 
-UBUNTU_INFO="python3 python3"
+UBUNTU_PKG="mariadb-server-10.1"
 
 abort() {
     printf "$@" >&2
@@ -39,40 +39,39 @@ abort() {
 
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
+script_dir=$(dirname $0)
+
+package="$($script_dir/get-dbms-server-package.sh)"
 
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian)
-		printf "%s %s\n" $DEBIAN_INFO
+		packages="${package:-$DEBIAN_PKG}"
 		;;
 	    (fedora)
-		printf "%s %s\n" $FEDORA_INFO
-		;;
-	    (opensuse-*)
-		printf "%s %s\n" $OPENSUSE_INFO
+		packages="${package:-$FEDORA_PKG}"
 		;;
 	    (redhat|centos)
-		printf "%s %s\n" $REDHAT_INFO
+		packages="${package:-$REDHAT_PKG}"
+		;;
+	    (opensuse-*)
+		packages="${package:-$OPENSUSE_PKG}"
 		;;
 	    (ubuntu)
-		printf "%s %s\n" $UBUNTU_INFO
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
+		packages="${package:-$UBUNTU_PKG}"
 		;;
 	esac
 	;;
     (Darwin)
-	printf "%s %s\n" $DARWIN_INFO
+	packages="${package:-$DARWIN_PKG}"
 	;;
     (FreeBSD)
-	printf "%s %s\n" $FREEBSD_INFO
+	packages="${package:-$FREEBSD_PKG}"
 	;;
     (SunOS)
-	printf "%s %s\n" $SUNOS_INFO
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
+	packages="${package:-$SUNOS_PKG}"
 	;;
 esac
+
+printf "%s\n" $packages
