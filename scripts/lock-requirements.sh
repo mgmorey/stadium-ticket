@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # lock-requirements: update requirements.txt using PIP
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
