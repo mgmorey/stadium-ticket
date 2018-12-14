@@ -171,7 +171,7 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
-    (FreeBSD|SunOS)
+    (Darwin|FreeBSD|SunOS)
 	configure_defaults
 	;;
     (*)
