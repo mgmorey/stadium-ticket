@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PIP=pip3
 PYTHON=python3
 
 abort() {
@@ -24,7 +23,6 @@ abort() {
     exit 1
 }
 
-pip=$(which $PIP)
 pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
@@ -48,11 +46,12 @@ elif [ -n "$pip" ]; then
      if [ -d .venv ]; then
 	 printf "%s\n" "Activating virtual environment"
 	 . .venv/bin/activate
+	 pip="$(which $PYTHON) -m pip"
 	 printf "%s\n" "Upgrading pip"
-	 $PIP install --upgrade pip
-	 pip=$(which $PIP)
+	 $pip install --upgrade --user pip
+	 pip="$(which $PYTHON) -m pip"
 	 printf "%s\n" "Installing required packages"
-	 $PIP install -r requirements.txt -r requirements-dev.txt
+	 $pip install -r requirements.txt -r requirements-dev.txt --user
 	 printf "%s\n" "Loading .env environment variables"
 	 . $source_dir/.env
 	 export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD

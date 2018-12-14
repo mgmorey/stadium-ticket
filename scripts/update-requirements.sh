@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PIP=pip3
 PYTHON=python3
 
 abort() {
@@ -24,7 +23,6 @@ abort() {
     exit 1
 }
 
-pip=$(which $PIP)
 pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
@@ -42,11 +40,12 @@ elif [ -n "$pip" ]; then
      if [ -d .venv ]; then
 	 printf "%s\n" "Activating virtual environment"
 	 . .venv/bin/activate
+	 pip="$(which $PYTHON) -m pip"
 	 printf "%s\n" "Upgrading pip"
 	 $pip install --upgrade pip
-	 pip=$(which $PIP)
+	 pip="$(which $PYTHON) -m pip"
 	 printf "%s\n" "Installing required packages"
-	 $pip install -r requirements.txt -r requirements-dev.txt
+	 $pip install -r requirements.txt -r requirements-dev.txt --user
      else
 	 abort "%s\n" "No virtual environment"
      fi)
