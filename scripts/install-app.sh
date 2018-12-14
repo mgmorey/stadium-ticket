@@ -20,8 +20,6 @@ APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 PIP=pip3
 
-pip=$(which pip)
-
 create_venv() (
     cd $source_dir
     venv=.venv-$APP_NAME
@@ -49,7 +47,7 @@ create_venv() (
 
 enable_app() {
     if [ $# -gt 0 ]; then
-	generate_ini $source_dir/app.ini | sh | sudo sh -c "cat >$1"
+	generate_ini "$source_dir/app.ini" | sh | sudo sh -c "cat >$1"
 	source=$1
 	shift
     fi
@@ -108,6 +106,7 @@ install_app() (
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
+pip=$(which pip)
 script_dir=$(dirname $0)
 source_dir=$script_dir/..
 
