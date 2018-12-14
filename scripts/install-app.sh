@@ -18,6 +18,8 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
+
+PIP=pip
 PYTHON=python3
 
 create_venv() (
@@ -32,9 +34,10 @@ create_venv() (
     if [ -d $venv ]; then
 	printf "%s\n" "Activating virtual environment"
 	. $venv/bin/activate
-	pip="$(which $PYTHON) -m pip"
 	printf "%s\n" "Upgrading pip"
-	$pip install --upgrade --user pip
+	pip="$(which $PYTHON) -m pip"
+	$pip install --upgrade pip
+	pip="$(which $PIP)"
 	printf "%s\n" "Installing required packages"
 	$pip install -r requirements.txt --user
 	printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
