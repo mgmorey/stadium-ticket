@@ -39,7 +39,7 @@ create_venv() (
 	$pip install --upgrade pip
 	pip="$(which $PIP)"
 	printf "%s\n" "Installing required packages"
-	$pip install -r requirements.txt --user
+	$pip install -r requirements.txt
 	printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
 	sudo mkdir -p "$APP_DIR/.venv"
 	sudo rsync -a $venv/ $APP_DIR/.venv
@@ -55,7 +55,7 @@ enable_app() {
 	shift
     fi
 
-    for dir in "$@"; do
+    for dir; do
 	dest=$UWSGI_ETCDIR/$dir/$APP_NAME.ini
 
 	if [ -d $(dirname $dest) ]; then
