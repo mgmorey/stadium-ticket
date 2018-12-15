@@ -18,8 +18,16 @@
 
 PIP=pip3
 
-script_dir=$(dirname $0)
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
+script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
+
+if [ $(id -u) -eq 0 ]; then
+    exit 0
+fi
 
 cd $source_dir
 

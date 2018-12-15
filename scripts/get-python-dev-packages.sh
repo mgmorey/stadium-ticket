@@ -30,9 +30,13 @@ SUNOS_PKGS="build-essential pip-%s"
 
 UBUNTU_PKGS="build-essential libffi-dev libssl-dev %s-dev %s-pip"
 
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
-script_dir=$(dirname $0)
+script_dir=$(realpath $(dirname $0))
 
 case "$kernel_name" in
     (Linux)

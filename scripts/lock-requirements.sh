@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 file=requirements.txt
 opts=
 
@@ -33,10 +37,14 @@ done
 shift $(($OPTIND - 1))
 
 file=$1
-script_dir=$(dirname $0)
+script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
-tmpfile=$(mktemp)
 
+if [ $(id -u) -eq 0 ]; then
+    exit 0
+fi
+
+tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 if pipenv lock $opts -r >$tmpfile; then

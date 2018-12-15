@@ -16,7 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-script_dir=$(dirname $0)
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
+script_dir=$(realpath $(dirname $0))
 tmpfile=$(mktemp)
 
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM

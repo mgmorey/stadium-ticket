@@ -111,7 +111,11 @@ script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
 . "$script_dir/configure-app.sh"
-create_venv
+
+if [ $(id -u) -gt 0 ]; then
+    create_venv
+fi
+
 install_app
 enable_app $APP_CONFIG $UWSGI_APPDIRS
 signal_app HUP

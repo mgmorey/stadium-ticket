@@ -20,7 +20,11 @@ HEADER="Content-Type: application/json"
 HOST=${FLASK_HOST:-localhost}
 PORT=${FLASK_PORT:-5000}
 
-script_dir=$(dirname $0)
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
+script_dir=$(realpath $(dirname $0))
 
 while getopts 'h:p:' OPTION; do
     case $OPTION in

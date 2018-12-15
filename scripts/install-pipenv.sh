@@ -23,9 +23,13 @@ abort() {
     exit 1
 }
 
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
-script_dir=$(dirname $0)
+script_dir=$(realpath $(dirname $0))
 
 data=$($script_dir/get-python-package.sh)
 package_name=$(printf "%s" "$data" | awk '{print $1}')
@@ -47,6 +51,10 @@ case "$kernel_name" in
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
 esac
+
+if [ $(id -u) -eq 0 ]; then
+    exit 0
+fi
 
 pip=$(which $PIP)
 $pip install --upgrade --user pip

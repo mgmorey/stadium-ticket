@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 script=
 
 while getopts 'x:' OPTION; do
@@ -31,7 +35,7 @@ while getopts 'x:' OPTION; do
 done
 shift $(($OPTIND - 1))
 
-script_dir=$(dirname $0)
+script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 sql_dir=$source_dir/sql
 

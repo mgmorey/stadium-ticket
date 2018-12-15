@@ -30,9 +30,13 @@ SUNOS_PKGS=""
 
 UBUNTU_PKGS="docker.io docker-compose docker-doc"
 
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
-script_dir=$(dirname $0)
+script_dir=$(realpath $(dirname $0))
 
 case "$kernel_name" in
     (Linux)
