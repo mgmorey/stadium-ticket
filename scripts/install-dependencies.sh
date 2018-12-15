@@ -46,5 +46,5 @@ package_manager="$(get-package-manager)"
 
 if [ -n "$package_manager" ]; then
     packages="$($script_dir/get-dependencies.sh)"
-    sudo "$package_manager" install $packages
+    $package_manager install $packages
 fi

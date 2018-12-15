@@ -28,4 +28,4 @@ tail_logfile
 # Remove application and configuration
 files="$UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR"
 printf "Removing %s\n" "$files"
-sudo /bin/rm -rf $files
+/bin/rm -rf $files

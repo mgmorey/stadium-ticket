@@ -34,8 +34,8 @@ create_venv() (
     if [ -d $venv ]; then
 	$script_dir/pip-install-requirements.sh $venv
 	printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
-	sudo mkdir -p "$APP_DIR/.venv"
-	sudo rsync -a $venv/ $APP_DIR/.venv
+	mkdir -p "$APP_DIR/.venv"
+	rsync -a $venv/ $APP_DIR/.venv
     else
 	abort "%s\n" "No virtual environment"
     fi
@@ -43,7 +43,7 @@ create_venv() (
 
 enable_app() {
     if [ $# -gt 0 ]; then
-	generate_ini "$source_dir/app.ini" | sh | sudo sh -c "cat >$1"
+	generate_ini "$source_dir/app.ini" | sh | sh -c "cat >$1"
 	source=$1
 	shift
     fi
@@ -53,7 +53,7 @@ enable_app() {
 
 	if [ -d $(dirname $dest) ]; then
 	    printf "Linking %s to %s\n" $source $dest
-	    sudo ln -sf $source "$dest"
+	    ln -sf $source "$dest"
 	fi
     done
 }
@@ -73,10 +73,10 @@ install_app() (
     cd "$source_dir"
 
     # Create application directories
-    sudo mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
+    mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
 
     # Install application environment file
-    sudo install -m 600 .env "$APP_DIR"
+    install -m 600 .env "$APP_DIR"
 
     # Install application code files
     for source in $(find app -type f -name '*.py' -print | sort); do
@@ -86,15 +86,15 @@ install_app() (
 	    (*)
 		dest="$APP_DIR/$source"
 		printf "Copying %s to %s\n" "$source" "$dest"
-		sudo install -d -m 755 "$(dirname "$dest")"
-		sudo install -C -m 644 "$source" "$dest"
+		install -d -m 755 "$(dirname "$dest")"
+		install -C -m 644 "$source" "$dest"
 		;;
 	esac
     done
 
     # Make application the owner of the app and data directories
     if [ "$APP_GID" != root -o "$APP_UID" != root ]; then
-	sudo chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR
+	chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR
     fi
 )
 

@@ -101,7 +101,7 @@ signal_app() {
 		for signal in "$@"; do
 		    printf "Sending SIG%s to process: %s\n" $signal $pid
 
-		    if sudo kill -s $signal $pid; then
+		    if kill -s $signal $pid; then
 			printf "SIG%s received by process %s\n" $signal $pid
 			printf "Waiting %s seconds\n" 5
 			sleep 5
@@ -129,7 +129,7 @@ tail_logfile() {
 	if [ -r $APP_LOGFILE ]; then
 	    tail $APP_LOGFILE >$tmpfile
 	elif [ -e $APP_LOGFILE ]; then
-	    sudo tail $APP_LOGFILE >$tmpfile
+	    tail $APP_LOGFILE >$tmpfile
 	else
 	    printf "No such log file: %s\n" $APP_LOGFILE >&2
 	fi
