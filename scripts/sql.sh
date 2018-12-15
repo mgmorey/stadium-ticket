@@ -29,6 +29,9 @@ realpath() {
 }
 
 script=
+script_dir=$(realpath $(dirname $0))
+source_dir=$script_dir/..
+sql_dir=$source_dir/sql
 
 while getopts 'x:' OPTION; do
     case $OPTION in
@@ -42,10 +45,6 @@ while getopts 'x:' OPTION; do
     esac
 done
 shift $(($OPTIND - 1))
-
-script_dir=$(realpath $(dirname $0))
-source_dir=$script_dir/..
-sql_dir=$source_dir/sql
 
 if . $source_dir/.env; then
     if [ -n "$script" ]; then

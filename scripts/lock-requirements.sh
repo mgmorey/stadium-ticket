@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
 realpath() {
     if [ -x /usr/bin/realpath ]; then
 	/usr/bin/realpath "$@"
@@ -28,8 +33,9 @@ realpath() {
     fi
 }
 
-file=requirements.txt
 opts=
+script_dir=$(realpath $(dirname $0))
+source_dir=$script_dir/..
 
 while getopts 'd' OPTION; do
     case $OPTION in
@@ -44,9 +50,7 @@ while getopts 'd' OPTION; do
 done
 shift $(($OPTIND - 1))
 
-file=$1
-script_dir=$(realpath $(dirname $0))
-source_dir=$script_dir/..
+file=${1-requirements.txt}
 
 if [ $(id -u) -eq 0 ]; then
     exit 0
@@ -60,4 +64,6 @@ if pipenv lock $opts -r >$tmpfile; then
     mv -f $tmpfile $requirements
     chgrp $(id -g) $requirements
     chmod a+r $requirements
+else
+    abort "Unable to update %s\n" "$file"
 fi
