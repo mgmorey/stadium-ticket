@@ -20,10 +20,10 @@ check:
 clean:
 	/bin/rm -rf $(caches)
 
-client:
+client:	.env
 	$(script_dir)/app-test.sh
 
-client-debug:
+client-debug:	.env
 	$(script_dir)/app-test.sh -p 5001
 
 debug:	.env reset
@@ -41,7 +41,7 @@ reset:	.env schema
 schema:	.env
 	$(script_dir)/sql.sh -x schema
 
-stress:
+stress:	.env
 	$(script_dir)/load-test.sh
 
 uninstall:
