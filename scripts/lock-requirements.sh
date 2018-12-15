@@ -59,11 +59,15 @@ fi
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
-if pipenv lock $opts -r >$tmpfile; then
-    requirements=$source_dir/$file
-    mv -f $tmpfile $requirements
-    chgrp $(id -g) $requirements
-    chmod a+r $requirements
+if which pipenv >/dev/null; then
+    if pipenv lock $opts -r >$tmpfile; then
+	requirements=$source_dir/$file
+	mv -f $tmpfile $requirements
+	chgrp $(id -g) $requirements
+	chmod a+r $requirements
+    else
+	abort "Unable to update %s\n" "$file"
+    fi
 else
-    abort "Unable to update %s\n" "$file"
+    printf "Unable to update %s\n" "$file"
 fi
