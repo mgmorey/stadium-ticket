@@ -70,6 +70,10 @@ pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
+if [ $(id -u) -eq 0 ]; then
+    abort "%s\n" "This script must be run as a non-privileged user"
+fi
+
 if [ -n "$pipenv" ]; then
     pipenv_run "$@"
 else
