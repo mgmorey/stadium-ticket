@@ -150,7 +150,6 @@ tail_logfile() {
 }
 
 
-script_dir=$(realpath $(dirname $0))
 distro_name=$($script_dir/get-os-distro-name.sh)
 kernel_name=$($script_dir/get-os-kernel-name.sh)
 
