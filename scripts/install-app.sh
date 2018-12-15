@@ -43,7 +43,7 @@ create_venv() (
 
 enable_app() {
     if [ $# -gt 0 ]; then
-	generate_ini "$source_dir/app.ini" | sh | sh -c "cat >$1"
+	generate_ini "$source_dir/app.ini" | sh | cat >$1
 	source=$1
 	shift
     fi
