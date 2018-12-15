@@ -17,8 +17,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 HEADER="Content-Type: application/json"
-HOST=${FLASK_HOST:-localhost}
-PORT=${FLASK_PORT:-5000}
 
 realpath() {
     if [ -x /usr/bin/realpath ]; then
@@ -33,14 +31,21 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
+source_dir=$script_dir/..
+
+printf "%s\n" "Loading .env environment variables"
+. $source_dir/.env
+
+host=${FLASK_HOST-${DOCKER_HOST%:*}}
+port=${FLASK_PORT-5000}
 
 while getopts 'h:p:' OPTION; do
     case $OPTION in
 	('h')
-	    HOST="$OPTARG"
+	    host="$OPTARG"
 	    ;;
 	('p')
-	    PORT="$OPTARG"
+	    port="$OPTARG"
 	    ;;
 	('?')
 	    printf "Usage: %s: [-h <HOST>] [-p <PORT]\n" $(basename $0) >&2
@@ -50,7 +55,7 @@ while getopts 'h:p:' OPTION; do
 done
 shift $(($OPTIND - 1))
 
-base_url="http://${HOST}${PORT:+:}${PORT}"
+base_url="http://${host}${port:+:}${port}"
 url_ticket="$base_url/stadium/ticket"
 
 ab -H "$HEADER" -u $script_dir/put.json -n 1000 -r -c 10 $url_ticket
