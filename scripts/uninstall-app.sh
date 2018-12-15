@@ -13,11 +13,23 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+realpath() {
+    if [ -x /usr/bin/realpath ]; then
+	/usr/bin/realpath "$@"
+    else
+	if expr "$1" : '/.*' >/dev/null; then
+	    printf "%s\n" "$1"
+	else
+	    printf "%s\n" "$PWD/${1#./}"
+	fi
+    fi
+}
+
 # Set script directory
-SCRIPT_DIR="$(dirname $0)"
+script_dir=$(realpath $(dirname $0))
 
 # Set application parameters
-. $SCRIPT_DIR/configure-app.sh
+. "$script_dir/configure-app.sh"
 
 # Terminate the application
 signal_app INT INT TERM KILL
