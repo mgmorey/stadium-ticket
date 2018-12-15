@@ -27,8 +27,12 @@ ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 ENV APP_VARDIR=/opt/var/$APP_NAME
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
 
-# Install pipenv package
-RUN pip3 install pipenv
+# Copy application files
+COPY app/ $APP_DIR/app/
+COPY scripts/sql.sh $APP_DIR/scripts/
+COPY sql/schema-*.sql $APP_DIR/sql/
+COPY .env-docker $APP_DIR/.env
+COPY app.ini $APP_ETCDIR/
 
 # Install application Pipfiles
 COPY Pipfile* $APP_DIR/
@@ -36,18 +40,14 @@ COPY Pipfile* $APP_DIR/
 # Change working directory
 WORKDIR $APP_DIR
 
+# Install pipenv package
+RUN pip3 install pipenv
+
 # Install dependencies in Pipfiles
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV PIPENV_VENV_IN_PROJECT=true
 RUN pipenv sync
-
-# Copy application files
-COPY app/ $APP_DIR/app/
-COPY scripts/sql.sh $APP_DIR/scripts/
-COPY sql/schema-*.sql $APP_DIR/sql/
-COPY .env-docker $APP_DIR/.env
-COPY app.ini $APP_ETCDIR/
 
 # Make application owner of its own directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR
@@ -58,7 +58,7 @@ WORKDIR $APP_VARDIR
 # Drop privileges
 USER $APP_UID
 
-# Expose application port and start
+# Expose application port and launch app using uWSGI
 EXPOSE $APP_PORT
 ENV APP_PIDFILE=$APP_RUNDIR/pid
 CMD $APP_DIR/scripts/sql.sh -x schema && uwsgi --ini $APP_ETCDIR/app.ini
