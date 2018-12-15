@@ -34,12 +34,7 @@ create_venv() (
     if [ -d $venv ]; then
 	printf "%s\n" "Activating virtual environment"
 	. $venv/bin/activate
-	printf "%s\n" "Upgrading pip"
-	pip="$(which $PYTHON) -m pip"
-	$pip install --upgrade pip
-	pip="$(which $PIP)"
-	printf "%s\n" "Installing required packages"
-	$pip install -r requirements.txt
+	$script_dir/pip-install-requirements.sh
 	printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
 	sudo mkdir -p "$APP_DIR/.venv"
 	sudo rsync -a $venv/ $APP_DIR/.venv
@@ -105,12 +100,16 @@ install_app() (
     fi
 )
 
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 # set default locales
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 python=$(which $PYTHON)
-script_dir=$(dirname $0)
+script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
 . "$script_dir/configure-app.sh"

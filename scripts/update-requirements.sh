@@ -35,12 +35,7 @@ pip_update() (
     if [ -d .venv ]; then
 	printf "%s\n" "Activating virtual environment"
 	. .venv/bin/activate
-	printf "%s\n" "Upgrading pip"
-	pip="$(which $PYTHON) -m pip"
-	$pip install --upgrade pip
-	pip="$(which $PIP)"
-	printf "%s\n" "Installing required packages"
-	$pip install -r requirements.txt -r requirements-dev.txt
+	$script_dir/pip-install-requirements.sh
     else
 	abort "%s\n" "No virtual environment"
     fi
@@ -50,8 +45,12 @@ pipenv_update() {
     pipenv update -d
 }
 
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 pipenv=$(which pipenv 2>/dev/null || true)
-script_dir=$(dirname $0)
+script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
 if [ -n "$pipenv" ]; then

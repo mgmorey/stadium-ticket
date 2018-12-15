@@ -35,12 +35,7 @@ pip_run() (
     if [ -d .venv ]; then
 	printf "%s\n" "Activating virtual environment"
 	. .venv/bin/activate
-	printf "%s\n" "Upgrading pip"
-	pip="$(which $PYTHON) -m pip"
-	$pip install --upgrade pip
-	pip="$(which $PIP)"
-	printf "%s\n" "Installing required packages"
-	$pip install -r requirements.txt -r requirements-dev.txt --user
+	$script_dir/pip-install-requirements.sh
 	printf "%s\n" "Loading .env environment variables"
 	. $source_dir/.env
 	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD
@@ -61,8 +56,12 @@ pipenv_run() {
     $pipenv run "$@"
 }
 
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 pipenv=$(which pipenv 2>/dev/null || true)
-script_dir=$(dirname $0)
+script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
 if [ -n "$pipenv" ]; then
