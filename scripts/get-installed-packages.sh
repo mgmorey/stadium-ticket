@@ -35,6 +35,19 @@ abort() {
     exit 1
 }
 
+realpath() {
+    if [ -x /usr/bin/realpath ]; then
+	/usr/bin/realpath "$@"
+    else
+	if expr "$1" : '/.*' >/dev/null; then
+	    printf "%s\n" "$1"
+	else
+	    printf "%s\n" "$PWD/${1#./}"
+	fi
+    fi
+}
+
+script_dir=$(realpath $(dirname $0))
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
 

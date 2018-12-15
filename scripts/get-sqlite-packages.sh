@@ -49,9 +49,9 @@ realpath() {
     fi
 }
 
+script_dir=$(realpath $(dirname $0))
 distro_name=$(get-os-distro-name)
 kernel_name=$(get-os-kernel-name)
-script_dir=$(realpath $(dirname $0))
 
 case "$kernel_name" in
     (Linux)

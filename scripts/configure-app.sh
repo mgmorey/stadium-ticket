@@ -149,8 +149,10 @@ tail_logfile() {
     /bin/rm -f $tmpfile
 }
 
-distro_name=$(get-os-distro-name)
-kernel_name=$(get-os-kernel-name)
+
+script_dir=$(realpath $(dirname $0))
+distro_name=$($script_dir/get-os-distro-name.sh)
+kernel_name=$($script_dir/get-os-kernel-name.sh)
 
 configure_common
 
