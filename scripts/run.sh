@@ -33,9 +33,7 @@ pip_run() (
     fi
 
     if [ -d .venv ]; then
-	printf "%s\n" "Activating virtual environment"
-	. .venv/bin/activate
-	$script_dir/pip-install-requirements.sh
+	$script_dir/pip-install-requirements.sh .venv
 	printf "%s\n" "Loading .env environment variables"
 	. $source_dir/.env
 	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD

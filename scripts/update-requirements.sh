@@ -33,9 +33,7 @@ pip_update() (
     fi
 
     if [ -d .venv ]; then
-	printf "%s\n" "Activating virtual environment"
-	. .venv/bin/activate
-	$script_dir/pip-install-requirements.sh
+	$script_dir/pip-install-requirements.sh .venv
     else
 	abort "%s\n" "No virtual environment"
     fi

@@ -32,9 +32,7 @@ create_venv() (
     fi
 
     if [ -d $venv ]; then
-	printf "%s\n" "Activating virtual environment"
-	. $venv/bin/activate
-	$script_dir/pip-install-requirements.sh
+	$script_dir/pip-install-requirements.sh $venv
 	printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
 	sudo mkdir -p "$APP_DIR/.venv"
 	sudo rsync -a $venv/ $APP_DIR/.venv
