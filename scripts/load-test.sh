@@ -21,7 +21,15 @@ HOST=${FLASK_HOST:-localhost}
 PORT=${FLASK_PORT:-5000}
 
 realpath() {
-    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+    if [ -x /usr/bin/realpath ]; then
+	/usr/bin/realpath "$@"
+    else
+	if expr "$1" : '/.*'; then
+	    printf "%s\n" "$1"
+	else
+	    printf "%s\n" "$PWD/${1#./}"
+	fi
+    fi
 }
 
 script_dir=$(realpath $(dirname $0))
