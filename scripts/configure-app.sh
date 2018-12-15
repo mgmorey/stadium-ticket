@@ -92,18 +92,6 @@ configure_opensuse() {
     UWSGI_APPDIRS="vassals"
 }
 
-realpath() {
-    if [ -x /usr/bin/realpath ]; then
-	/usr/bin/realpath "$@"
-    else
-	if expr "$1" : '/.*' >/dev/null; then
-	    printf "%s\n" "$1"
-	else
-	    printf "%s\n" "$PWD/${1#./}"
-	fi
-    fi
-}
-
 signal_app() {
     if [ -n "${APP_PIDFILE:-}" ]; then
 	if [ -r $APP_PIDFILE ]; then
