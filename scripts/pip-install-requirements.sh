@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# pip-install-requirements: update PIP and install requirements
+# pip-install-requirements: install requirements in a virtualenv
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,8 @@
 PIP=pip3
 PYTHON=python3
 
+printf "%s\n" "Activating virtual environment"
+. $1/bin/activate
 printf "%s\n" "Upgrading pip"
 pip="$(which $PYTHON) -m pip"
 $pip install --upgrade pip
