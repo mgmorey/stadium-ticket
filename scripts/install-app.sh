@@ -22,9 +22,7 @@ APP_RUNDIR APP_UID APP_VARDIR"
 PIP=pip
 PYTHON=python3
 
-create_venv() (
-    cd $source_dir
-
+create_venv() {
     if [ ! -d $virtualenv ]; then
 	printf "%s\n" "Creating virtual environment"
 	python3 -m venv $virtualenv
@@ -35,7 +33,7 @@ create_venv() (
     else
 	abort "%s\n" "No virtual environment"
     fi
-)
+}
 
 enable_app() {
     if [ $# -gt 0 ]; then
@@ -65,9 +63,7 @@ generate_ini() {
     printf " %s\n" "$*"
 }
 
-install_app() (
-    cd "$source_dir"
-
+install_app() {
     # Create application directories
     mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
 
@@ -92,11 +88,9 @@ install_app() (
     if [ "$APP_GID" != root -o "$APP_UID" != root ]; then
 	chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR
     fi
-)
+}
 
-install_venv() (
-    cd $source_dir
-
+install_venv() {
     if [ -d $virtualenv ]; then
 	printf "Copying %s to %s\n" $virtualenv "$APP_DIR/.venv"
 	mkdir -p "$APP_DIR/.venv"
@@ -104,7 +98,7 @@ install_venv() (
     else
 	abort "%s\n" "No virtual environment"
     fi
-)
+}
 
 realpath() {
     if [ -x /usr/bin/realpath ]; then
@@ -129,6 +123,7 @@ source_dir=$script_dir/..
 . "$script_dir/configure-app.sh"
 
 virtualenv=.venv-$APP_NAME
+cd "$source_dir"
 
 if [ $(id -u) -gt 0 ]; then
     create_venv
