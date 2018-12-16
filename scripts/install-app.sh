@@ -98,21 +98,16 @@ realpath() {
     fi
 }
 
-# set default locales
-export LANG=${LANG:-en_US.UTF-8}
-export LC_ALL=${LC_ALL:-en_US.UTF-8}
-
-python=$(which $PYTHON)
 script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
-id=$(id -u)
-
-if [ "$id" -gt 0 ]; then
-    "$script_dir/stage-app.sh"
+if [ "$(id -u)" -gt 0 ]; then
+    sh=
 elif [ -n "$SUDO_USER" ]; then
-    su - $SUDO_USER "$script_dir/stage-app.sh"
+    sh="su - $SUDO_USER"
 fi
+
+$sh "$script_dir/stage-app.sh"
 
 . "$script_dir/configure-app.sh"
 
