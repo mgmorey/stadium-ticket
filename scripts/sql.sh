@@ -24,15 +24,27 @@ abort() {
 exec_sql() {
     case "$DATABASE_DIALECT" in
 	(mysql)
-	    exec "$DATABASE_DIALECT" \
-		 -h"${DATABASE_HOST:-$localhost}" \
-		 -u"${DATABASE_USER:-$USER}" \
-		 -p"${DATABASE_PASSWORD:-}"
+	    "$DATABASE_DIALECT" \
+		-h"${DATABASE_HOST:-$localhost}" \
+		-u"${DATABASE_USER:-$USER}" \
+		-p"${DATABASE_PASSWORD:-}"
 	    ;;
 	(sqlite)
-	    exec sqlite3 "/tmp/${DATABASE_SCHEMA:-default}.db"
+	    sqlite3 "/tmp/${DATABASE_SCHEMA:-default}.db"
 	    ;;
     esac
+}
+
+parse_script() {
+    if [ -r "$1" ]; then
+	script="$1"
+    elif [ -r "$sql_dir/$1-$DATABASE_DIALECT.sql" ]; then
+	script="$sql_dir/$1-$DATABASE_DIALECT.sql"
+    else
+	abort "%s: No such script file\n" "$1"
+    fi
+
+    scripts="$scripts${scripts:+ }$script"
 }
 
 realpath() {
@@ -47,15 +59,16 @@ realpath() {
     fi
 }
 
-script=
 script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 sql_dir=$source_dir/sql
 
+scripts=
+
 while getopts 'x:' OPTION; do
     case $OPTION in
 	('x')
-	    script="$OPTARG"
+	    parse_script "$OPTARG"
 	    ;;
 	('?')
 	    printf "Usage: %s: [-x <SCRIPT>]\n" $(basename $0) >&2
@@ -65,12 +78,21 @@ while getopts 'x:' OPTION; do
 done
 shift $(($OPTIND - 1))
 
-if . "$source_dir/.env"; then
-    if [ -n "$script" ]; then
-	exec <"$sql_dir/$script-$DATABASE_DIALECT.sql"
-    fi
+if [ $# -gt 0 ]; then
+    for script; do
+	parse_script $script
+    done
+fi
 
-    exec_sql
+if . "$source_dir/.env"; then
+    if [ -n "$scripts" ]; then
+	for script in $scripts; do
+	    exec <"$script"
+	    exec_sql
+	done
+    else
+	exec_sql
+    fi
 else
     abort "%s: No such environment file\n" "$source_dir/.env"
 fi
