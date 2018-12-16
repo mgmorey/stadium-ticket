@@ -21,7 +21,7 @@ PYTHON=python3
 create_venv() {
     if [ ! -d $virtualenv ]; then
 	printf "%s\n" "Creating virtual environment"
-	python3 -m venv $virtualenv
+	$PYTHON -m venv $virtualenv
     fi
 
     if [ -d $virtualenv ]; then
@@ -43,11 +43,10 @@ realpath() {
     fi
 }
 
-# set default locales
-export LANG=${LANG:-en_US.UTF-8}
-export LC_ALL=${LC_ALL:-en_US.UTF-8}
+if [ $(id -u) -eq 0 ]; then
+    abort "%s\n" "This script must be run as a non-privileged user"
+fi
 
-python=$(which $PYTHON)
 script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
@@ -55,7 +54,4 @@ source_dir=$script_dir/..
 
 virtualenv=.venv-$APP_NAME
 cd "$source_dir"
-
-if [ $(id -u) -gt 0 ]; then
-    create_venv
-fi
+create_venv

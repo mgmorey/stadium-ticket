@@ -106,11 +106,6 @@ python=$(which $PYTHON)
 script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
-. "$script_dir/configure-app.sh"
-
-virtualenv=.venv-$APP_NAME
-cd "$source_dir"
-
 id=$(id -u)
 
 if [ "$id" -gt 0 ]; then
@@ -118,6 +113,11 @@ if [ "$id" -gt 0 ]; then
 elif [ -n "$SUDO_USER" ]; then
     su - $SUDO_USER "$script_dir/stage-app.sh"
 fi
+
+. "$script_dir/configure-app.sh"
+
+virtualenv=.venv-$APP_NAME
+cd "$source_dir"
 
 install_venv
 install_app
