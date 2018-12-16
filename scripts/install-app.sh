@@ -25,7 +25,7 @@ check_parent_dir_permissions() {
 	check_permissions "$dir"
     done
 }
-    
+
 check_permissions() {
     for file; do
 	if [ ! -w "$file" ]; then
@@ -33,7 +33,7 @@ check_permissions() {
 	fi
     done
 }
-    
+
 enable_app() {
     if [ $# -gt 0 ]; then
 	generate_ini "$source_dir/app.ini" | sh | cat >$1
