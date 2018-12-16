@@ -21,6 +21,20 @@ abort() {
     exit 1
 }
 
+exec_sql() {
+    case "$DATABASE_DIALECT" in
+	(mysql)
+	    exec "$DATABASE_DIALECT" \
+		 -h"${DATABASE_HOST:-$localhost}" \
+		 -u"${DATABASE_USER:-$USER}" \
+		 -p"${DATABASE_PASSWORD:-}"
+	    ;;
+	(sqlite)
+	    exec sqlite3 "/tmp/${DATABASE_SCHEMA:-default}.db"
+	    ;;
+    esac
+}
+
 realpath() {
     if [ -x /usr/bin/realpath ]; then
 	/usr/bin/realpath "$@"
@@ -56,17 +70,7 @@ if . "$source_dir/.env"; then
 	exec <"$sql_dir/$script-$DATABASE_DIALECT.sql"
     fi
 
-    case $DATABASE_DIALECT in
-	(mysql)
-	    exec $DATABASE_DIALECT \
-		 -h ${DATABASE_HOST:-$localhost} \
-		 -u ${DATABASE_USER:-$USER} \
-		 -p"${DATABASE_PASSWORD:-}"
-	    ;;
-	(sqlite)
-	    exec sqlite3 /tmp/${DATABASE_SCHEMA:-default}.db
-	    ;;
-    esac
+    exec_sql
 else
     abort "%s: No such environment file\n" "$source_dir/.env"
 fi
