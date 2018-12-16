@@ -19,6 +19,18 @@
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
+change_ownership() {
+    if [ "$(id -un)" != "$APP_UID"  -o "$(id -gn)" != "$APP_GID" ]; then
+	check_permissions "$@"
+
+	if [ "$dryrun" = false ]; then
+	    printf "Changing ownership of directory %s\n" "$@"
+	    chown -R $APP_UID:$APP_GID "$@"
+	fi
+    fi
+
+}
+
 check_permissions() {
     for file; do
 	if [ -z "$file" ]; then
@@ -118,7 +130,7 @@ install_app() {
     done
 
     install_venv "$virtualenv"
-    take_ownership $APP_DIR $APP_VARDIR
+    change_ownership $APP_DIR $APP_VARDIR
     enable_app $APP_CONFIG $UWSGI_APPDIRS
 }
 
@@ -191,19 +203,6 @@ realpath() {
 	    printf "%s\n" "$PWD/${1#./}"
 	fi
     fi
-}
-
-take_ownership() {
-    # Take ownership of the app and data directories
-    if [ "$APP_GID" != root -o "$APP_UID" != root ]; then
-	check_permissions "$@"
-
-	if [ "$dryrun" = false ]; then
-	    printf "Taking ownership of directory %s\n" "$@"
-	    chown -R $APP_UID:$APP_GID "$@"
-	fi
-    fi
-
 }
 
 script_dir=$(realpath $(dirname $0))
