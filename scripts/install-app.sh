@@ -117,16 +117,8 @@ install_app() {
 	esac
     done
 
-    # Make application the owner of the app and data directories
-    if [ "$APP_GID" != root -o "$APP_UID" != root ]; then
-	check_permissions  $APP_DIR $APP_VARDIR
-
-	if [ "$dryrun" = false ]; then
-	    chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR
-	fi
-    fi
-
     install_venv "$virtualenv"
+    take_ownership $APP_DIR $APP_VARDIR
     enable_app $APP_CONFIG $UWSGI_APPDIRS
 }
 
@@ -158,10 +150,13 @@ install_tree() {
 	target="$2"
 
 	if [ -d "$source" ]; then
-	    printf "Installing directory %s to %s\n" "$source" "$target"
 	    check_permissions "$target"
-	    mkdir -p "$(dirname "$target")"
-	    rsync -a "$source" "$target"
+ 
+	    if [ "$dryrun" = false ]; then
+		printf "Installing directory %s to %s\n" "$source" "$target"
+		mkdir -p "$(dirname "$target")"
+		rsync -a "$source" "$target"
+	    fi
 	else
 	    abort "%s: No such directory\n" "$source"
 	fi
@@ -196,6 +191,19 @@ realpath() {
 	    printf "%s\n" "$PWD/${1#./}"
 	fi
     fi
+}
+
+take_ownership() {
+    # Take ownership of the app and data directories
+    if [ "$APP_GID" != root -o "$APP_UID" != root ]; then
+	check_permissions "$@"
+
+	if [ "$dryrun" = false ]; then
+	    printf "Taking ownership of directory %s\n" "$@"
+	    chown -R $APP_UID:$APP_GID "$@"
+	fi
+    fi
+
 }
 
 script_dir=$(realpath $(dirname $0))
