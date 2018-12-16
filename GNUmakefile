@@ -20,7 +20,7 @@ client:	.env
 	$(script_dir)/app-test.sh
 
 client-debug:	.env
-	$(script_dir)/app-test.sh -p 5001
+	$(script_dir)/app-test.sh -h localhost -p 5001
 
 debug:	.env reset
 	$(script_dir)/run.sh flask run --port 5001
