@@ -19,21 +19,7 @@
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
-PIP=pip
 PYTHON=python3
-
-create_venv() {
-    if [ ! -d $virtualenv ]; then
-	printf "%s\n" "Creating virtual environment"
-	python3 -m venv $virtualenv
-    fi
-
-    if [ -d $virtualenv ]; then
-	. $script_dir/initialize-virtualenv.sh 
-    else
-	abort "%s\n" "No virtual environment"
-    fi
-}
 
 enable_app() {
     if [ $# -gt 0 ]; then
@@ -125,8 +111,12 @@ source_dir=$script_dir/..
 virtualenv=.venv-$APP_NAME
 cd "$source_dir"
 
-if [ $(id -u) -gt 0 ]; then
-    create_venv
+id=$(id -u)
+
+if [ "$id" -gt 0 ]; then
+    "$script_dir/stage-app.sh"
+elif [ -n "$SUDO_USER" ]; then
+    su - $SUDO_USER "$script_dir/stage-app.sh"
 fi
 
 install_venv
