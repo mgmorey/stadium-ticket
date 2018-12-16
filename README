@@ -1,20 +1,20 @@
-Stadium Ticket RESTful API for Linux/Unix
+Stadium Ticket RESTful API for POSIX Operating Systems
 
-0.  To install prerequisite packages:
+0.  To install dependencies:
 
-    scripts/install-prerequisites.sh
+    scripts/install-dependencies.sh
 
 1.  To initialize the database schema:
 
-    scripts/mysql.sh <sql/schema.sql
+    scripts/sql.sh [schema-mysql|schema-sqlite]
 
 2.  To reset the database to a known state:
 
-    scripts/mysql.sh <sql/reset.sql
+    scripts/sql.sh [reset-mysql|reset-sqlite]
 
 3.  To run the unit tests:
 
-    app/test_tickets.py
+    python3 -m unittest discover
 
 4.  To start the app:
 
