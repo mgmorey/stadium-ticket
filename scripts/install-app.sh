@@ -19,8 +19,21 @@
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
-PYTHON=python3
-
+check_parent_dir_permissions() {
+    for file in "$@"; do
+	dir="$(dirname "$file")"
+	check_permissions "$dir"
+    done
+}
+    
+check_permissions() {
+    for file; do
+	if [ ! -w "$file" ]; then
+	    abort "%s: No write permission\n" "$file"
+	fi
+    done
+}
+    
 enable_app() {
     if [ $# -gt 0 ]; then
 	generate_ini "$source_dir/app.ini" | sh | cat >$1
@@ -51,9 +64,11 @@ generate_ini() {
 
 install_app() {
     # Create application directories
-    mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
+    check_parent_dir_permissions $app_dirs
+    mkdir -p $app_dirs
 
     # Install application environment file
+    check_permissions "$APP_DIR" "$APP_DIR/.env"
     install -m 600 .env "$APP_DIR"
 
     # Install application code files
@@ -63,8 +78,10 @@ install_app() {
 	    ;;
 	    (*)
 		dest="$APP_DIR/$source"
+		dest_dir="$(dirname "$dest")"
+		check_permissions "$dest_dir" "$dest"
 		printf "Copying %s to %s\n" "$source" "$dest"
-		install -d -m 755 "$(dirname "$dest")"
+		install -d -m 755 "$dest_dir"
 		install -C -m 644 "$source" "$dest"
 		;;
 	esac
@@ -79,7 +96,9 @@ install_app() {
 install_venv() {
     if [ -d $virtualenv ]; then
 	printf "Copying %s to %s\n" $virtualenv "$APP_DIR/.venv"
+	check_permissions "$APP_DIR" "$APP_DIR/.venv"
 	mkdir -p "$APP_DIR/.venv"
+	rsync -an $virtualenv/ $APP_DIR/.venv
 	rsync -a $virtualenv/ $APP_DIR/.venv
     else
 	abort "%s\n" "No virtual environment"
@@ -102,7 +121,7 @@ script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
 if [ "$(id -u)" -gt 0 ]; then
-    sh=
+    sh=/bin/sh
 elif [ -n "$SUDO_USER" ]; then
     sh="su - $SUDO_USER"
 fi
@@ -111,11 +130,12 @@ $sh "$script_dir/stage-app.sh"
 
 . "$script_dir/configure-app.sh"
 
+app_dirs="$APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR"
 virtualenv=.venv-$APP_NAME
 cd "$source_dir"
 
-install_venv
 install_app
+install_venv
 enable_app $APP_CONFIG $UWSGI_APPDIRS
 signal_app HUP
 tail_logfile
