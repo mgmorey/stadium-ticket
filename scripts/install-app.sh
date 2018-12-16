@@ -32,7 +32,7 @@ create_venv() (
     fi
 
     if [ -d $venv ]; then
-	. $script_dir/initialize-virtualenv.sh $venv
+	. $script_dir/initialize-virtualenv.sh 
 	printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
 	mkdir -p "$APP_DIR/.venv"
 	rsync -a $venv/ $APP_DIR/.venv

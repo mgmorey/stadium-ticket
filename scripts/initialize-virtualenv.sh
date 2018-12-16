@@ -20,7 +20,7 @@ PIP=pip3
 PYTHON=python3
 
 printf "%s\n" "Activating virtual environment"
-. .venv/bin/activate
+. ${venv:-.venv}/bin/activate
 printf "%s\n" "Upgrading pip"
 pip="$(which $PYTHON) -m pip"
 $pip install --upgrade pip
