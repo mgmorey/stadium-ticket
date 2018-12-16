@@ -32,10 +32,10 @@ pipenv:	Pipfile
 	$(script_dir)/install-pipenv.sh
 
 reset:	.env schema
-	$(script_dir)/sql.sh -x reset
+	$(script_dir)/sql.sh reset
 
 schema:	.env
-	$(script_dir)/sql.sh -x schema
+	$(script_dir)/sql.sh schema
 
 stress:	.env
 	$(script_dir)/load-test.sh

@@ -61,4 +61,4 @@ USER $APP_UID
 # Expose application port and launch app using uWSGI
 EXPOSE $APP_PORT
 ENV APP_PIDFILE=$APP_RUNDIR/pid
-CMD $APP_DIR/scripts/sql.sh -x schema && uwsgi --ini $APP_ETCDIR/app.ini
+CMD $APP_DIR/scripts/sql.sh schema && uwsgi --ini $APP_ETCDIR/app.ini
