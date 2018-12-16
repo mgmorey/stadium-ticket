@@ -28,7 +28,7 @@ check_parent_dir_permissions() {
 
 check_permissions() {
     for file; do
-	if [ ! -w "$file" ]; then
+	if [ -e "$file" -a ! -w "$file" ]; then
 	    abort "%s: No write permission\n" "$file"
 	fi
     done
