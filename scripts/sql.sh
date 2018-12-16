@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
 realpath() {
     if [ -x /usr/bin/realpath ]; then
 	/usr/bin/realpath "$@"
@@ -46,7 +51,7 @@ while getopts 'x:' OPTION; do
 done
 shift $(($OPTIND - 1))
 
-if . $source_dir/.env; then
+if . "$source_dir/.env"; then
     if [ -n "$script" ]; then
 	exec <"$sql_dir/$script-$DATABASE_DIALECT.sql"
     fi
@@ -62,4 +67,6 @@ if . $source_dir/.env; then
 	    exec sqlite3 /tmp/${DATABASE_SCHEMA:-default}.db
 	    ;;
     esac
+else
+    abort "%s: No such environment file\n" "$source_dir/.env"
 fi
