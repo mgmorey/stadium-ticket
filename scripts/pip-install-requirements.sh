@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# pip-install-pipenv: install Python 3 Version Management via PIP
+# pip-install-requirements: install required packages via PIP
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
