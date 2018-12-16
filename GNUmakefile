@@ -1,8 +1,4 @@
-caches = $(shell $(find))
 exclude = .git,__pycache__,.tox,.venv*
-find = find . -type d \( $(prune) -o $(print) \)
-print = -name '*py*cache*' -print
-prune = -name '.venv*' -prune
 pycodestyle = $(python) -m pycodestyle
 python = python3
 script_dir = scripts
@@ -18,7 +14,7 @@ check:
 	$(script_dir)/run.sh $(pycodestyle) --exclude=$(exclude) .
 
 clean:
-	/bin/rm -rf $(caches)
+	$(script_dir)/clean-python-caches.sh
 
 client:	.env
 	$(script_dir)/app-test.sh
