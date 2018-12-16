@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # sql.sh: wrapper for invoking SQL database client
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
