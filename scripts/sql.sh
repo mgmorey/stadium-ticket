@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 # sql.sh: wrapper for invoking SQL database client
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -65,6 +65,10 @@ sql_dir=$source_dir/sql
 
 scripts=
 
+if ! . "$source_dir/.env"; then
+    abort "%s: No such environment file\n" "$source_dir/.env"
+fi
+
 while getopts 'x:' OPTION; do
     case $OPTION in
 	('x')
@@ -84,15 +88,12 @@ if [ $# -gt 0 ]; then
     done
 fi
 
-if . "$source_dir/.env"; then
-    if [ -n "$scripts" ]; then
-	for script in $scripts; do
-	    exec <"$script"
-	    exec_sql
-	done
-    else
+if [ -n "$scripts" ]; then
+    for script in $scripts; do
+	exec <"$script"
 	exec_sql
-    fi
+    done
 else
-    abort "%s: No such environment file\n" "$source_dir/.env"
+    exec_sql
 fi
+
