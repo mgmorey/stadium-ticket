@@ -96,4 +96,3 @@ if [ -n "$scripts" ]; then
 else
     exec_sql
 fi
-
