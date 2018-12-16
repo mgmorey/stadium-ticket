@@ -24,18 +24,14 @@ PYTHON=python3
 
 create_venv() (
     cd $source_dir
-    venv=.venv-$APP_NAME
 
-    if [ ! -d $venv ]; then
+    if [ ! -d $virtualenv ]; then
 	printf "%s\n" "Creating virtual environment"
-	python3 -m venv $venv
+	python3 -m venv $virtualenv
     fi
 
-    if [ -d $venv ]; then
+    if [ -d $virtualenv ]; then
 	. $script_dir/initialize-virtualenv.sh 
-	printf "Copying %s to %s\n" $venv "$APP_DIR/.venv"
-	mkdir -p "$APP_DIR/.venv"
-	rsync -a $venv/ $APP_DIR/.venv
     else
 	abort "%s\n" "No virtual environment"
     fi
@@ -98,6 +94,18 @@ install_app() (
     fi
 )
 
+install_venv() (
+    cd $source_dir
+
+    if [ -d $virtualenv ]; then
+	printf "Copying %s to %s\n" $virtualenv "$APP_DIR/.venv"
+	mkdir -p "$APP_DIR/.venv"
+	rsync -a $virtualenv/ $APP_DIR/.venv
+    else
+	abort "%s\n" "No virtual environment"
+    fi
+)
+
 realpath() {
     if [ -x /usr/bin/realpath ]; then
 	/usr/bin/realpath "$@"
@@ -120,10 +128,13 @@ source_dir=$script_dir/..
 
 . "$script_dir/configure-app.sh"
 
+virtualenv=.venv-$APP_NAME
+
 if [ $(id -u) -gt 0 ]; then
     create_venv
 fi
 
+install_venv
 install_app
 enable_app $APP_CONFIG $UWSGI_APPDIRS
 signal_app HUP
