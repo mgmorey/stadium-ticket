@@ -52,9 +52,9 @@ configure_debian() {
     UWSGI_APPDIRS="apps-available apps-enabled"
 }
 
-configure_defaults() {
+configure_freebsd() {
     # Set application group and user identification
-    APP_GID=root
+    APP_GID=wheel
     APP_UID=root
 
     # Set uWSGI-specific directories
@@ -69,7 +69,7 @@ configure_defaults() {
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    UWSGI_APPDIRS="vassals"
+    UWSGI_APPDIRS=
 }
 
 configure_opensuse() {
@@ -161,10 +161,7 @@ case "$kernel_name" in
 	    (debian|ubuntu)
 		configure_debian
 		;;
-	    (redhat|centos|fedora)
-		configure_defaults
-		;;
-	    (opensuse-*)
+	    (opensuse-tumbleweed)
 		configure_opensuse
 		;;
 	    (*)
@@ -172,8 +169,8 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
-    (Darwin|FreeBSD|SunOS)
-	configure_defaults
+    (FreeBSD)
+	configure_freebsd
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
