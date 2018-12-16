@@ -123,7 +123,7 @@ source_dir=$script_dir/..
 if [ "$(id -u)" -gt 0 ]; then
     sh=/bin/sh
 elif [ -n "$SUDO_USER" ]; then
-    sh="su - $SUDO_USER"
+    sh="/usr/bin/su $SUDO_USER"
 fi
 
 $sh "$script_dir/stage-app.sh"
