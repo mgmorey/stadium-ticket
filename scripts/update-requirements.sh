@@ -33,7 +33,7 @@ pip_update() (
     fi
 
     if [ -d .venv ]; then
-	. $script_dir/pip-install-requirements.sh .venv
+	. $script_dir/initialize-virtualenv.sh .venv
     else
 	abort "%s\n" "No virtual environment"
     fi

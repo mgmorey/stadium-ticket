@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# pip-install-requirements: install requirements in a virtualenv
+# pip-install-pipenv: install Python 3 Version Management via PIP
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PIP=pip3
-PYTHON=python3
+realpath() {
+    if [ -x /usr/bin/realpath ]; then
+	/usr/bin/realpath "$@"
+    else
+	if expr "$1" : '/.*' >/dev/null; then
+	    printf "%s\n" "$1"
+	else
+	    printf "%s\n" "$PWD/${1#./}"
+	fi
+    fi
+}
 
-printf "%s\n" "Activating virtual environment"
-. .venv/bin/activate
-printf "%s\n" "Upgrading pip"
-pip="$(which $PYTHON) -m pip"
-$pip install --upgrade pip
-pip="$(which $PIP)"
-printf "%s\n" "Installing required packages"
-$pip install -r requirements.txt -r requirements-dev.txt
+script_dir=$(realpath $(dirname $0))
+$script_dir/pip-install-packages.sh $(printf -- "-r %s\n" requirements*.txt)
