@@ -19,36 +19,61 @@
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
-check_parent_dir_permissions() {
-    for file in "$@"; do
-	dir="$(dirname "$file")"
-	check_permissions "$dir"
+check_permissions() {
+    for file; do
+	if [ -z "$file" ]; then
+	    abort "%s\n" "Invalid (empty) file path"
+	elif [ -e "$file" -a ! -w "$file" ]; then
+	    insufficient_permissions "$file"
+	elif [ "$file" != / -a "$file" != . ]; then
+	    check_permissions "$(dirname "$file")"
+	fi
     done
 }
 
-check_permissions() {
-    for file; do
-	if [ -e "$file" -a ! -w "$file" ]; then
-	    abort "%s: No write permission\n" "$file"
-	fi
-    done
+insufficient_permissions() {
+    cat >&2 <<EOF
+You lack permission to install the application.
+Write permission to $1 is required.
+Please try running again as root.
+EOF
+    exit 2
 }
 
 enable_app() {
+    source=app.ini
+	
     if [ $# -gt 0 ]; then
-	generate_ini "$source_dir/app.ini" | sh | cat >$1
-	source=$1
+	target="$APP_CONFIG"
 	shift
-    fi
 
-    for dir; do
-	dest=$UWSGI_ETCDIR/$dir/$APP_NAME.ini
+	check_permissions "$target"
 
-	if [ -d $(dirname $dest) ]; then
-	    printf "Linking %s to %s\n" $source $dest
-	    ln -sf $source "$dest"
+	if [ "$dryrun" = false ]; then
+	    if [ -f "$source" ]; then
+		printf "Generating file %s\n" "$target"
+		mkdir -p "$(dirname "$target")"
+		generate_ini "$source" | sh | cat >"$target"
+	    else
+		abort "%s: No such file\n" "$source"
+	    fi
 	fi
-    done
+
+	source=$target
+
+	for name; do
+	    target=$UWSGI_ETCDIR/$name/$APP_NAME.ini
+	    check_permissions "$target"
+
+	    if [ "$dryrun" = false ]; then
+		printf "Linking file %s to %s\n" "$source" "$target"
+		mkdir -p "$(dirname "$target")"
+		/bin/ln -sf "$source" "$target"
+	    fi
+	done
+    else
+	abort "%s\n" "Invalid number of arguments"
+    fi
 }
 
 generate_ini() {
@@ -63,13 +88,23 @@ generate_ini() {
 }
 
 install_app() {
+    if [ $# -gt 0 ] && [ "$1" = -n ]; then
+	dryrun=true
+	shift
+    else
+	dryrun=false
+    fi
+
     # Create application directories
-    check_parent_dir_permissions $app_dirs
-    mkdir -p $app_dirs
+    check_permissions $app_dirs
+
+    if [ "$dryrun" = false ]; then
+	printf "Creating directory %s\n" $app_dirs
+	mkdir -p $app_dirs
+    fi
 
     # Install application environment file
-    check_permissions "$APP_DIR" "$APP_DIR/.env"
-    install -m 600 .env "$APP_DIR"
+    install_file "$@" 600 .env "$APP_DIR/.env"
 
     # Install application code files
     for source in $(find app -type f -name '*.py' -print | sort); do
@@ -77,32 +112,78 @@ install_app() {
 	    (*/test_*.py)
 	    ;;
 	    (*)
-		dest="$APP_DIR/$source"
-		dest_dir="$(dirname "$dest")"
-		check_permissions "$dest_dir" "$dest"
-		printf "Copying %s to %s\n" "$source" "$dest"
-		install -d -m 755 "$dest_dir"
-		install -C -m 644 "$source" "$dest"
+		install_file 644 "$source" "$APP_DIR/$source"
 		;;
 	esac
     done
 
     # Make application the owner of the app and data directories
     if [ "$APP_GID" != root -o "$APP_UID" != root ]; then
-	chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR
+	check_permissions  $APP_DIR $APP_VARDIR
+
+	if [ "$dryrun" = false ]; then
+	    chown -R $APP_UID:$APP_GID $APP_DIR $APP_VARDIR
+	fi
+    fi
+
+    install_venv "$virtualenv"
+    enable_app $APP_CONFIG $UWSGI_APPDIRS
+}
+
+install_file() {
+    if [ $# -eq 3 ]; then
+	mode="$1"
+	source="$2"
+	target="$3"
+
+	if [ -f $source ]; then
+	    check_permissions "$target"
+
+	    if [ "$dryrun" = false ]; then
+		printf "Installing file %s to %s\n" "$source" "$target"
+		install -d -m 755 "$(dirname "$target")"
+		install -C -m "$mode" "$source" "$target"
+	    fi
+	else
+	    abort "%s: No such file\n" "$source"
+	fi
+    else
+	abort "%s\n" "Invalid number of arguments"
+    fi
+}
+
+install_tree() {
+    if [ $# -eq 2 ]; then
+	source="$1"
+	target="$2"
+
+	if [ -d "$source" ]; then
+	    printf "Installing directory %s to %s\n" "$source" "$target"
+	    check_permissions "$target"
+	    mkdir -p "$(dirname "$target")"
+	    rsync -a "$source" "$target"
+	else
+	    abort "%s: No such directory\n" "$source"
+	fi
+    else
+	abort "%s\n" "Invalid number of arguments"
     fi
 }
 
 install_venv() {
-    if [ -d $virtualenv ]; then
-	printf "Copying %s to %s\n" $virtualenv "$APP_DIR/.venv"
-	check_permissions "$APP_DIR" "$APP_DIR/.venv"
-	mkdir -p "$APP_DIR/.venv"
-	rsync -an $virtualenv/ $APP_DIR/.venv
-	rsync -a $virtualenv/ $APP_DIR/.venv
-    else
-	abort "%s\n" "No virtual environment"
+    install_tree "$1" "$APP_DIR/.venv"
+}
+
+preinstall_app() {
+    install_app -n
+
+    if [ "$(id -u)" -gt 0 ]; then
+	sh=/bin/sh
+    elif [ -n "$SUDO_USER" ]; then
+	sh="su $SUDO_USER"
     fi
+
+    $sh "$script_dir/stage-app.sh"
 }
 
 realpath() {
@@ -120,22 +201,12 @@ realpath() {
 script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
-if [ "$(id -u)" -gt 0 ]; then
-    sh=/bin/sh
-elif [ -n "$SUDO_USER" ]; then
-    sh="su $SUDO_USER"
-fi
-
-$sh "$script_dir/stage-app.sh"
-
 . "$script_dir/configure-app.sh"
 
-app_dirs="$APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR"
+app_dirs="$APP_DIR $APP_ETCDIR $APP_VARDIR"
 virtualenv=.venv-$APP_NAME
 cd "$source_dir"
-
+preinstall_app
 install_app
-install_venv
-enable_app $APP_CONFIG $UWSGI_APPDIRS
 signal_app HUP
 tail_logfile
