@@ -49,8 +49,10 @@ pipenv_run() {
     export LANG=${LANG:-en_US.UTF-8}
     export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-    if [ "$($pipenv graph | wc -l)" -eq 0 ]; then
-	$pipenv sync -d
+    if [ ! "$pipenv" --bare --venv 2>/dev/null ]; then
+	$pipenv --bare install
+    elif [ "$($pipenv graph | wc -c)" -eq 0 ]; then
+	$pipenv --bare sync -d
     fi
 
     $pipenv run "$@"
