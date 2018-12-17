@@ -34,8 +34,8 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
-distro_name=$(get-os-distro-name)
-kernel_name=$(get-os-kernel-name)
+distro_name=$($script_dir/get-os-distro-name.sh)
+kernel_name=$($script_dir/get-os-kernel-name.sh)
 
 case "$kernel_name" in
     (Linux)
@@ -54,7 +54,7 @@ case "$kernel_name" in
 	;;
 esac
 
-package_manager="$(get-package-manager)"
+package_manager="$($script_dir/get-package-manager.sh)"
 
 if [ -n "$package_manager" ]; then
     packages="$($script_dir/get-dependencies.sh)"

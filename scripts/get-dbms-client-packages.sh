@@ -50,8 +50,8 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
-distro_name=$(get-os-distro-name)
-kernel_name=$(get-os-kernel-name)
+distro_name=$($script_dir/get-os-distro-name.sh)
+kernel_name=$($script_dir/get-os-kernel-name.sh)
 
 package="$($script_dir/get-dbms-client-package.sh)"
 
