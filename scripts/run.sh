@@ -25,7 +25,7 @@ abort() {
 }
 
 pip_run() (
-    cd $source_dir
+    cd "$source_dir"
 
     if [ ! -d .venv ]; then
 	printf "%s\n" "Creating virtual environment"
@@ -33,9 +33,10 @@ pip_run() (
     fi
 
     if [ -d .venv ]; then
-	. $script_dir/install-virtualenv.sh .venv
+	printf "%s\n" "Activating virtual environment"
+	. .venv/bin/activate
 	printf "%s\n" "Loading .env environment variables"
-	. $source_dir/.env
+	. .env
 	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD
 	export DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV
 	"$@"
