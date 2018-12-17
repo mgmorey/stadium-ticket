@@ -132,6 +132,26 @@ configure_opensuse() {
     UWSGI_APPDIRS="vassals"
 }
 
+configure_sunos() {
+    # Set application group and user identification
+    APP_GID=sys
+    APP_UID=root
+
+    # Set uWSGI-specific directories
+    UWSGI_ETCDIR=/etc/uwsgi
+    UWSGI_LOGDIR=
+    UWSGI_RUNDIR=
+
+    # Set application directory names from name variable
+    APP_LOGDIR=$APP_VARDIR
+    APP_RUNDIR=$APP_VARDIR
+
+    # Set additional parameters from directory variables
+    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    UWSGI_APPDIRS=
+}
+
 signal_app() {
     if [ -n "${APP_PIDFILE:-}" ]; then
 	if [ -r $APP_PIDFILE ]; then
@@ -207,6 +227,9 @@ case "$kernel_name" in
 	;;
     # (FreeBSD)
     # 	configure_freebsd
+    # 	;;
+    # (SunOS)
+    # 	configure_sunos
     # 	;;
     # (NT)
     # 	configure_nt
