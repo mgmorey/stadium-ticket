@@ -3,10 +3,8 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
-[dev-packages]
-docker-compose = "*"
-pycodestyle = "*"
-pytest = "*"
+[requires]
+python_version = "3.6"
 
 [packages]
 Flask = "*"
@@ -18,8 +16,10 @@ SQLAlchemy = "*"
 python-decouple = "*"
 python-dotenv = "*"
 
-[requires]
-python_version = "3.6"
+[dev-packages]
+docker-compose = "*"
+pycodestyle = "*"
+pytest = "*"
 
 [scripts]
 build = "docker-compose up --build"
