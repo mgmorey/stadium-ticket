@@ -29,7 +29,7 @@ install:	Pipfile.lock .env
 	$(script_dir)/install-app.sh
 
 pipenv:	Pipfile
-	$(script_dir)/install-pipenv.sh
+	$(script_dir)/pip-install-pipenv.sh
 
 reset:	.env schema
 	$(script_dir)/sql.sh reset
