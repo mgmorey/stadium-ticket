@@ -25,13 +25,17 @@ realpath() {
     fi
 }
 
+remove_files() {
+    printf "Removing %s\n" "$@"
+    /bin/rm -rf "$@"
+}
+
 script_dir=$(realpath $(dirname $0))
 
 . "$script_dir/configure-app.sh"
 
 files="$UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR"
+
 signal_app INT INT TERM KILL
 tail_log
-
-printf "Removing %s\n" "$files"
-/bin/rm -rf $files
+remove_files $files
