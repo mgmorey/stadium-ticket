@@ -45,9 +45,9 @@ check_permissions() {
 
 insufficient_permissions() {
     cat >&2 <<EOF
-You lack permission to install the application.
-Write permission to $1 is required.
-Please try running again as root.
+You do not have permission to install the application
+You need write permissions for $1
+Please retry with root privileges
 EOF
     exit 2
 }
