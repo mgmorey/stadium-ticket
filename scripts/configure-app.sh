@@ -144,6 +144,7 @@ signal_app() {
 
 tail_log() {
     tmpfile=$(mktemp)
+    trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
     if [ -z "${APP_LOGFILE:-}" ]; then
 	printf "%s\n" "No log file to open"
@@ -163,8 +164,6 @@ tail_log() {
 	cat $tmpfile
 	printf "%s\n" "------------------------------------------------------------------------"
     fi
-
-    /bin/rm -f $tmpfile
 }
 
 
