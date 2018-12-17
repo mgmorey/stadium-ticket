@@ -20,7 +20,7 @@ DEBIAN_PKGS="docker-ce-cli docker-compose"
 
 FEDORA_PKGS="docker docker-compose"
 
-FREEBSD_PKGS="docker docker-compose docker-compose-%s"
+FREEBSD_PKGS="docker docker-compose-%s"
 
 OPENSUSE_PKGS="docker docker-compose"
 
