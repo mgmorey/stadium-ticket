@@ -19,10 +19,6 @@
 PIP=pip3
 PYTHON=python3
 
-# set default locales
-export LANG=${LANG:-en_US.UTF-8}
-export LC_ALL=${LC_ALL:-en_US.UTF-8}
-
 printf "%s\n" "Activating virtual environment"
 . ${virtualenv:-.venv}/bin/activate
 printf "%s\n" "Upgrading pip"

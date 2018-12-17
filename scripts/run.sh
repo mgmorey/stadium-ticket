@@ -45,6 +45,9 @@ pip_run() (
 )
 
 pipenv_run() {
+    # set default locales
+    export LANG=${LANG:-en_US.UTF-8}
+    export LC_ALL=${LC_ALL:-en_US.UTF-8}
     venv="$($pipenv --bare --venv 2>/dev/null || true)"
 
     if [ -z "$venv" ]; then

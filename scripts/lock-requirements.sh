@@ -60,6 +60,10 @@ tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 if which pipenv >/dev/null; then
+    # set default locales
+    export LANG=${LANG:-en_US.UTF-8}
+    export LC_ALL=${LC_ALL:-en_US.UTF-8}
+
     if pipenv lock $opts -r >$tmpfile; then
 	requirements=$source_dir/$file
 	mv -f $tmpfile $requirements
