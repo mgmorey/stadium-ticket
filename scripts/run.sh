@@ -24,9 +24,7 @@ abort() {
     exit 1
 }
 
-pip_run() (
-    cd "$source_dir"
-
+pip_run() {
     if [ ! -d .venv ]; then
 	printf "%s\n" "Creating virtual environment"
 	$PYTHON -m venv .venv
@@ -38,23 +36,18 @@ pip_run() (
 	printf "%s\n" "Loading .env environment variables"
 	. .env
 	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD
-	export DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV
+	export DATABASE_PORT DATABASE_SCHEMA DATABASE_USER
+	export FLASK_APP FLASK_ENV
 	"$@"
     else
 	abort "%s\n" "No virtual environment"
     fi
-)
+}
 
 pipenv_run() {
     # set default locales
     export LANG=${LANG:-en_US.UTF-8}
     export LC_ALL=${LC_ALL:-en_US.UTF-8}
-    venv="$($pipenv --bare --venv 2>/dev/null || true)"
-
-    if [ -z "$venv" ]; then
-	$pipenv sync -d
-    fi
-
     $pipenv run "$@"
 }
 
@@ -77,6 +70,8 @@ source_dir=$script_dir/..
 if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "This script must be run as a non-privileged user"
 fi
+
+cd "$source_dir"
 
 if [ -n "$pipenv" ]; then
     pipenv_run "$@"
