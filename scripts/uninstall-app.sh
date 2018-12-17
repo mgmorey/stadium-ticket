@@ -35,7 +35,7 @@ script_dir=$(realpath $(dirname $0))
 signal_app INT INT TERM KILL
 
 # Tail the log file
-tail_logfile
+tail_log
 
 # Remove application and configuration
 files="$UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR"
