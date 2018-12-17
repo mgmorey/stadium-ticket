@@ -48,6 +48,11 @@ pipenv_run() {
     # set default locales
     export LANG=${LANG:-en_US.UTF-8}
     export LC_ALL=${LC_ALL:-en_US.UTF-8}
+
+    if [ "$($pipenv graph | wc -l)" -eq 0 ]; then
+	$pipenv sync -d
+    fi
+
     $pipenv run "$@"
 }
 
