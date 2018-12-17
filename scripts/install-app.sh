@@ -122,7 +122,7 @@ install_file() {
 
 	if [ "$dryrun" = false ]; then
 	    if [ -f $source ]; then
-		printf "Installing file %s to %s\n" "$source" "$target"
+		printf "Installing file %s as %s\n" "$source" "$target"
 		install -d -m 755 "$(dirname "$target")"
 		install -C -m "$mode" "$source" "$target"
 	    else
@@ -141,7 +141,7 @@ install_files() {
 	check_permissions "$target"
 
 	if [ "$dryrun" = false ]; then
-	    printf "Installing files to %s\n" "$target"
+	    printf "Installing files in %s\n" "$target"
 	    mkdir -p "$target"
 	    rsync -a "$@" "$target"
 	fi
@@ -152,18 +152,6 @@ install_files() {
 
 install_venv() {
     install_files -t "$APP_DIR/.venv" "$1"/*
-}
-
-preinstall_app() {
-    install_app -n
-
-    if [ "$(id -u)" -gt 0 ]; then
-	sh=/bin/sh
-    elif [ -n "$SUDO_USER" ]; then
-	sh="su $SUDO_USER"
-    fi
-
-    $sh "$script_dir/stage-app.sh"
 }
 
 realpath() {
@@ -178,6 +166,16 @@ realpath() {
     fi
 }
 
+stage_app() {
+    if [ "$(id -u)" -gt 0 ]; then
+	sh=/bin/sh
+    elif [ -n "$SUDO_USER" ]; then
+	sh="su $SUDO_USER"
+    fi
+
+    $sh "$script_dir/stage-app.sh"
+}
+
 script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
@@ -186,7 +184,9 @@ source_dir=$script_dir/..
 app_dirs="$APP_DIR $APP_ETCDIR $APP_VARDIR"
 virtualenv=.venv-$APP_NAME
 cd "$source_dir"
-preinstall_app
+
+install_app -n
+stage_app
 install_app
 signal_app HUP
 tail_log
