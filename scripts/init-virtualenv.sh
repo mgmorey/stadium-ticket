@@ -19,11 +19,14 @@
 PIP=pip3
 PYTHON=python3
 
+# Use no cache if child process of sudo
+pip_opts=${SUDO_USER:+--no-cache-dir}
+
 printf "%s\n" "Activating virtual environment"
 . ${virtualenv:-.venv}/bin/activate
 printf "%s\n" "Upgrading pip"
-pip="$(which $PYTHON) -m pip ${pipflags-}"
+pip="$(which $PYTHON) -m pip $pip_opts"
 $pip install --upgrade pip
-pip="$(which $PIP) ${pipflags-}"
+pip="$(which $PIP) $pip_opts"
 printf "%s\n" "Installing required packages"
 $pip install $(printf -- "-r %s\n" requirements*.txt)
