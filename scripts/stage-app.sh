@@ -27,7 +27,7 @@ create_venv() {
     if [ -d $virtualenv ]; then
 	printf "%s\n" "Activating virtual environment"
 	. $virtualenv/bin/activate
-	. "$script_dir/install-virtualenv.sh "
+	. "$script_dir/install-virtualenv.sh"
     else
 	abort "%s\n" "No virtual environment"
     fi
