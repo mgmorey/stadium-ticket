@@ -214,4 +214,4 @@ cd "$source_dir"
 preinstall_app
 install_app
 signal_app HUP
-tail_logfile
+tail_log

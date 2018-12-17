@@ -142,19 +142,17 @@ signal_app() {
     fi
 }
 
-tail_logfile() {
+tail_log() {
     tmpfile=$(mktemp)
 
-    if [ -n "${APP_LOGFILE:-}" ]; then
-	if [ -r $APP_LOGFILE ]; then
-	    tail $APP_LOGFILE >$tmpfile
-	elif [ -e $APP_LOGFILE ]; then
-	    tail $APP_LOGFILE >$tmpfile
-	else
-	    printf "No such log file: %s\n" $APP_LOGFILE >&2
-	fi
+    if [ -z "${APP_LOGFILE:-}" ]; then
+	printf "%s\n" "No log file to open"
+    elif [ -r $APP_LOGFILE ]; then
+	tail $APP_LOGFILE >$tmpfile
+    elif [ -e $APP_LOGFILE ]; then
+	tail $APP_LOGFILE >$tmpfile
     else
-	printf "No log file to read\n"
+	printf "No such log file: %s\n" $APP_LOGFILE >&2
     fi
 
     if [ -s "$tmpfile" ]; then
