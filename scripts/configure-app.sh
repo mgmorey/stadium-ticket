@@ -138,7 +138,7 @@ signal_app() {
 	    sleep 5
 	fi
     else
-	printf "No PID file to read\n"
+	printf "No PID file to open\n"
     fi
 }
 
@@ -150,7 +150,7 @@ tail_log() {
     elif [ -r $APP_LOGFILE ]; then
 	tail $APP_LOGFILE >$tmpfile
     elif [ -e $APP_LOGFILE ]; then
-	tail $APP_LOGFILE >$tmpfile
+	printf "No permission to read log file: %s\n" $APP_LOGFILE >&2
     else
 	printf "No such log file: %s\n" $APP_LOGFILE >&2
     fi
