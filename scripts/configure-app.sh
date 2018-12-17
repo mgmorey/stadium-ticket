@@ -158,7 +158,7 @@ configure_common
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (debian|ubuntu)
+	    (ubuntu)
 		configure_debian
 		;;
 	    (opensuse-tumbleweed)
@@ -169,9 +169,9 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
-    (FreeBSD)
-	configure_freebsd
-	;;
+    # (FreeBSD)
+    # 	configure_freebsd
+    # 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
