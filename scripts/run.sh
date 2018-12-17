@@ -53,7 +53,7 @@ pipenv_run() {
     if [ ! "$pipenv" --bare --venv 2>/dev/null ]; then
 	# if no virtualenv has been created yet
 	# create one and install packages from Pipfile
-	$pipenv --bare install
+	$pipenv --bare install --ignore-pipfile
     elif [ $($pipenv graph | wc -c) -eq 0 ]; then
 	# else if virtualenv contains no packages
 	# intall packages from Pipfile.lock
