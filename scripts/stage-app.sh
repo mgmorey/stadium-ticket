@@ -52,6 +52,7 @@ source_dir=$script_dir/..
 
 . "$script_dir/configure-app.sh"
 
+pipflags=--no-cache-dir
 virtualenv=.venv-$APP_NAME
 cd "$source_dir"
 create_venv

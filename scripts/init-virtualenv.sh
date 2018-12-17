@@ -22,8 +22,8 @@ PYTHON=python3
 printf "%s\n" "Activating virtual environment"
 . ${virtualenv:-.venv}/bin/activate
 printf "%s\n" "Upgrading pip"
-pip="$(which $PYTHON) -m pip"
+pip="$(which $PYTHON) -m pip ${pipflags-}"
 $pip install --upgrade pip
-pip="$(which $PIP)"
+pip="$(which $PIP) ${pipflags-}"
 printf "%s\n" "Installing required packages"
 $pip install $(printf -- "-r %s\n" requirements*.txt)
