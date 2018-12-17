@@ -33,7 +33,7 @@ change_ownership() {
 
 enable_app() {
     source=app.ini
-	
+
     if [ $# -gt 0 ]; then
 	target="$APP_CONFIG"
 	shift
@@ -134,20 +134,16 @@ install_file() {
     fi
 }
 
-install_tree() {
-    if [ $# -eq 2 ]; then
-	source="$1"
+install_files() {
+    if [ $# -gt 2 ] && [ "$1" = -t ]; then
 	target="$2"
+	shift 2
 	check_permissions "$target"
- 
+
 	if [ "$dryrun" = false ]; then
-	    if [ -d "$source" ]; then
-		printf "Installing directory %s to %s\n" "$source" "$target"
-		mkdir -p "$(dirname "$target")"
-		rsync -a "$source" "$target"
-	    else
-		abort "%s: No such directory\n" "$source"
-	    fi
+	    printf "Installing files to %s\n" "$target"
+	    mkdir -p "$target"
+	    rsync -a "$@" "$target"
 	fi
     else
 	abort "%s\n" "Invalid number of arguments"
@@ -155,7 +151,7 @@ install_tree() {
 }
 
 install_venv() {
-    install_tree "$1" "$APP_DIR/.venv"
+    install_files -t "$APP_DIR/.venv" "$1"/*
 }
 
 preinstall_app() {
