@@ -51,7 +51,7 @@ pipenv_run() {
 
     if [ ! "$pipenv" --bare --venv 2>/dev/null ]; then
 	$pipenv --bare install
-    elif [ "$($pipenv graph | wc -c)" -eq 0 ]; then
+    elif [ $($pipenv graph | wc -c) -eq 0 ]; then
 	$pipenv --bare sync -d
     fi
 
