@@ -33,7 +33,7 @@ pip_run() (
     fi
 
     if [ -d .venv ]; then
-	. $script_dir/init-virtualenv.sh .venv
+	. $script_dir/install-virtualenv.sh .venv
 	printf "%s\n" "Loading .env environment variables"
 	. $source_dir/.env
 	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD
