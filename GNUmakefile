@@ -14,7 +14,7 @@ check:
 	$(script_dir)/run.sh $(pycodestyle) --exclude=$(exclude) .
 
 clean:
-	$(script_dir)/clean-python-caches.sh
+	$(script_dir)/clean-caches.sh
 
 client:	.env
 	$(script_dir)/app-test.sh
