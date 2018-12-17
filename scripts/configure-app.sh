@@ -22,6 +22,26 @@ abort() {
     exit 1
 }
 
+abort_insufficient_permissions() {
+    cat >&2 <<EOF
+You need write permissions for $1
+Please retry with root privileges
+EOF
+    exit 1
+}
+
+check_permissions() {
+    for file; do
+	if [ -z "$file" ]; then
+	    abort "%s\n" "Empty file path"
+	elif [ -e "$file" -a ! -w "$file" ]; then
+	    abort_insufficient_permissions "$file"
+	elif [ "$file" != / -a "$file" != . ]; then
+	    check_permissions "$(dirname "$file")"
+	fi
+    done
+}
+
 configure_common() {
     # Set application directory names from name variable
     APP_DIR=/opt/$APP_NAME

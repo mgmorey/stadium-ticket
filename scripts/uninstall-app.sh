@@ -25,17 +25,32 @@ realpath() {
     fi
 }
 
+remove_app() {
+    if [ $# -gt 0 ] && [ "$1" = -n ]; then
+	dryrun=true
+	shift
+    else
+	dryrun=false
+    fi
+
+    files="$UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR"
+    remove_files $files
+}
+
 remove_files() {
-    printf "Removing %s\n" "$@"
-    /bin/rm -rf "$@"
+    check_permissions "$@"
+
+    if [ "$dryrun" = false ]; then
+	printf "Removing %s\n" "$@"
+	/bin/rm -rf "$@"
+    fi
 }
 
 script_dir=$(realpath $(dirname $0))
 
 . "$script_dir/configure-app.sh"
 
-files="$UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR"
-
+remove_app -n
 signal_app INT INT TERM KILL
 tail_log
-remove_files $files
+remove_app

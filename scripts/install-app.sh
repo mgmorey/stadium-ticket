@@ -31,27 +31,6 @@ change_ownership() {
 
 }
 
-check_permissions() {
-    for file; do
-	if [ -z "$file" ]; then
-	    abort "%s\n" "Invalid (empty) file path"
-	elif [ -e "$file" -a ! -w "$file" ]; then
-	    insufficient_permissions "$file"
-	elif [ "$file" != / -a "$file" != . ]; then
-	    check_permissions "$(dirname "$file")"
-	fi
-    done
-}
-
-insufficient_permissions() {
-    cat >&2 <<EOF
-You do not have permission to install the application
-You need write permissions for $1
-Please retry with root privileges
-EOF
-    exit 2
-}
-
 enable_app() {
     source=app.ini
 	
