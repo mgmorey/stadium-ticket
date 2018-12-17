@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# initialize-virtualenv: activate virtual environment and install requirements
+# init-virtualenv: activate virtual environment and install requirements
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
