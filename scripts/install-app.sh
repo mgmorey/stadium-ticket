@@ -139,17 +139,16 @@ install_file() {
 	mode="$1"
 	source="$2"
 	target="$3"
+	check_permissions "$target"
 
-	if [ -f $source ]; then
-	    check_permissions "$target"
-
-	    if [ "$dryrun" = false ]; then
+	if [ "$dryrun" = false ]; then
+	    if [ -f $source ]; then
 		printf "Installing file %s to %s\n" "$source" "$target"
 		install -d -m 755 "$(dirname "$target")"
 		install -C -m "$mode" "$source" "$target"
+	    else
+		abort "%s: No such file\n" "$source"
 	    fi
-	else
-	    abort "%s: No such file\n" "$source"
 	fi
     else
 	abort "%s\n" "Invalid number of arguments"
@@ -160,17 +159,16 @@ install_tree() {
     if [ $# -eq 2 ]; then
 	source="$1"
 	target="$2"
-
-	if [ -d "$source" ]; then
-	    check_permissions "$target"
+	check_permissions "$target"
  
-	    if [ "$dryrun" = false ]; then
+	if [ "$dryrun" = false ]; then
+	    if [ -d "$source" ]; then
 		printf "Installing directory %s to %s\n" "$source" "$target"
 		mkdir -p "$(dirname "$target")"
 		rsync -a "$source" "$target"
+	    else
+		abort "%s: No such directory\n" "$source"
 	    fi
-	else
-	    abort "%s: No such directory\n" "$source"
 	fi
     else
 	abort "%s\n" "Invalid number of arguments"
