@@ -25,19 +25,13 @@ realpath() {
     fi
 }
 
-# Set script directory
 script_dir=$(realpath $(dirname $0))
 
-# Set application parameters
 . "$script_dir/configure-app.sh"
 
-# Terminate the application
+files="$UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR"
 signal_app INT INT TERM KILL
-
-# Tail the log file
 tail_log
 
-# Remove application and configuration
-files="$UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR"
 printf "Removing %s\n" "$files"
 /bin/rm -rf $files
