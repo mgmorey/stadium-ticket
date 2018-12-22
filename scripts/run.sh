@@ -35,7 +35,7 @@ pip_run() {
 	. .venv/bin/activate
 	. "$script_dir/install-virtualenv.sh"
 	printf "%s\n" "Loading .env environment variables"
-	. .env
+	. ./.env
 	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD
 	export DATABASE_PORT DATABASE_SCHEMA DATABASE_USER
 	export FLASK_APP FLASK_ENV
