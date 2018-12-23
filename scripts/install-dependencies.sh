@@ -58,5 +58,8 @@ package_manager="$($script_dir/get-package-manager.sh)"
 
 if [ -n "$package_manager" ]; then
     packages="$($script_dir/get-dependencies.sh)"
-    $package_manager install $packages
+
+    if [ -n "$packages" ]; then
+	$package_manager install $packages
+    fi
 fi

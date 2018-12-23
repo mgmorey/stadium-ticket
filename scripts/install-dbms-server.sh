@@ -54,9 +54,12 @@ case "$kernel_name" in
 	;;
 esac
 
-package_manager="$(get-package-manager)"
+package_manager="$($script_dir/get-package-manager.sh)"
 
 if [ -n "$package_manager" ]; then
     packages="$($script_dir/get-dbms-server-packages.sh)"
-    $package_manager install $packages
+
+    if [ -n "$packages" ]; then
+	$package_manager install $packages
+    fi
 fi

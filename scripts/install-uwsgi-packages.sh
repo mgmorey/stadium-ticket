@@ -54,8 +54,12 @@ case "$kernel_name" in
 	;;
 esac
 
-packages="$($script_dir/get-uwsgi-packages.sh)"
+package_manager="$($script_dir/get-package-manager.sh)"
 
-if [ -n "$packages" ]; then
-    install-packages $packages
+if [ -n "$package_manager" ]; then
+    packages="$($script_dir/get-uwsgi-packages.sh)"
+
+    if [ -n "$packages" ]; then
+	$package_manager install $packages
+    fi
 fi
