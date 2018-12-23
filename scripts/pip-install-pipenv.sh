@@ -29,4 +29,4 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
-$script_dir/pip-install-packages.sh pipenv
+$script_dir/pip-install.sh pipenv

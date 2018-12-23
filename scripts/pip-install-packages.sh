@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# pip-install-packages: install PyPI packages via PIP utility
+# pip-install: install PyPI packages via PIP utility
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
