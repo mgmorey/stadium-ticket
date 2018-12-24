@@ -36,7 +36,7 @@ check_permissions() {
 	    abort "%s\n" "Empty file path"
 	elif [ -e "$file" -a ! -w "$file" ]; then
 	    abort_insufficient_permissions "$file"
-	elif [ "$file" != / -a "$file" != . ]; then
+	elif ! expr "$file" : '^[\./]$' >/dev/null; then
 	    check_permissions "$(dirname "$file")"
 	fi
     done
