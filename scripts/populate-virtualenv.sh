@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# install-virtualenv: activate virtual environment and install requirements
+# populate-virtualenv: install requirements into virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
