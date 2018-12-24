@@ -97,15 +97,9 @@ install_app() {
 	dryrun=false
     fi
 
-    # Create application directories
     create_app_dirs
-
-    # Install application environment file
     install_file "$@" 600 .env "$APP_DIR/.env"
-
-    # Install application code files
     install_source_files
-
     install_venv "$virtualenv"
     change_ownership $APP_DIR $APP_VARDIR
     enable_app $APP_CONFIG $UWSGI_APPDIRS
