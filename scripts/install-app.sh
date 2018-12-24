@@ -100,7 +100,7 @@ install_app() {
     create_app_dirs
     install_file "$@" 600 .env "$APP_DIR/.env"
     install_source_files
-    install_venv "$virtualenv"
+    install_files "$APP_DIR/.venv" "$virtualenv"/*
     change_ownership $APP_DIR $APP_VARDIR
     enable_app $APP_CONFIG $UWSGI_APPDIRS
 }
@@ -153,10 +153,6 @@ install_source_files() {
 		;;
 	esac
     done
-}
-
-install_venv() {
-    install_files "$APP_DIR/.venv" "$1"/*
 }
 
 realpath() {
