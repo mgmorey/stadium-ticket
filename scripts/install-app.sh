@@ -32,11 +32,15 @@ change_ownership() {
 }
 
 create_app_dirs() {
-    check_permissions $app_dirs
+    if [ $# -gt 0 ]; then
+	check_permissions "$@"
 
-    if [ "$dryrun" = false ]; then
-	printf "Creating directory %s\n" $app_dirs
-	mkdir -p $app_dirs
+	if [ "$dryrun" = false ]; then
+	    printf "Creating directory %s\n" "$@"
+	    mkdir -p "$@"
+	fi
+    else
+	abort "%s\n" "Invalid number of arguments"
     fi
 }
 
@@ -100,7 +104,7 @@ install_app() {
 	dryrun=false
     fi
 
-    create_app_dirs
+    create_app_dirs $app_dirs
     install_source_files 644 app "$APP_DIR"
     install_file "$@" 600 .env "$APP_DIR/.env"
     install_dir "$virtualenv" "$APP_DIR/.venv"
