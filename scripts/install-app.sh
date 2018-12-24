@@ -31,61 +31,59 @@ change_ownership() {
 
 }
 
-create_app_dirs() {
-    if [ $# -gt 0 ]; then
-	check_permissions "$@"
+assert() {
+    if [ ! "$@" ]; then
+	abort "%s: Assertion failed: %s\n" "$0" "$*"
+    fi
+}
 
-	if [ "$dryrun" = false ]; then
-	    printf "Creating directory %s\n" "$@"
-	    mkdir -p "$@"
-	fi
-    else
-	abort "%s\n" "Invalid number of arguments"
+create_app_dirs() {
+    assert $# -ge 1
+    check_permissions "$@"
+
+    if [ "$dryrun" = false ]; then
+	printf "Creating directory %s\n" "$@"
+	mkdir -p "$@"
     fi
 }
 
 create_app_ini() {
-    if [ $# -eq 2 ]; then
-	source="$1"
-	target="$2"
-	check_permissions "$target"
+    assert $# -eq 2
+    source="$1"
+    target="$2"
+    check_permissions "$target"
 
-	if [ "$dryrun" = false ]; then
-	    if [ -f "$source" ]; then
-		printf "Generating file %s\n" "$target"
-		mkdir -p "$(dirname "$target")"
-		generate_ini "$source" | sh | cat >"$target"
-	    else
-		abort "%s: No such file\n" "$source"
-	    fi
+    if [ "$dryrun" = false ]; then
+	if [ -f "$source" ]; then
+	    printf "Generating file %s\n" "$target"
+	    mkdir -p "$(dirname "$target")"
+	    generate_ini "$source" | sh | cat >"$target"
+	else
+	    abort "%s: No such file\n" "$source"
 	fi
-    else
-	abort "%s\n" "Invalid number of arguments"
     fi
 }
 
 enable_app() {
-    if [ $# -gt 0 ]; then
-	create_app_ini app.ini "$1"
-	source=$1
-	shift
+    assert $# -ge 1
+    create_app_ini app.ini "$1"
+    source=$1
+    shift
 
-	for name; do
-	    target=$UWSGI_ETCDIR/$name/$APP_NAME.ini
-	    check_permissions "$target"
+    for name; do
+	target=$UWSGI_ETCDIR/$name/$APP_NAME.ini
+	check_permissions "$target"
 
-	    if [ "$dryrun" = false ]; then
-		printf "Linking file %s to %s\n" "$source" "$target"
-		mkdir -p "$(dirname "$target")"
-		/bin/ln -sf "$source" "$target"
-	    fi
-	done
-    else
-	abort "%s\n" "Invalid number of arguments"
-    fi
+	if [ "$dryrun" = false ]; then
+	    printf "Linking file %s to %s\n" "$source" "$target"
+	    mkdir -p "$(dirname "$target")"
+	    /bin/ln -sf "$source" "$target"
+	fi
+    done
 }
 
 generate_ini() {
+    assert $# -eq 1
     printf "%s" "sed -e 's|^#<\\(.*\\)>$|\\1|g'"
 
     for var in $APP_VARS; do
@@ -113,60 +111,53 @@ install_app() {
 }
 
 install_dir() {
-    if [ $# -eq 2 ]; then
-	source_dir="$1"
-	target_dir="$2"
-	check_permissions "$target_dir"
+    assert $# -eq 2
+    source_dir="$1"
+    target_dir="$2"
+    check_permissions "$target_dir"
 
-	if [ "$dryrun" = false ]; then
-	    printf "Installing files in %s\n" "$target_dir"
-	    mkdir -p "$target_dir"
-	    rsync -a "$source_dir"/* "$target_dir"
-	fi
-    else
-	abort "%s\n" "Invalid number of arguments"
+    if [ "$dryrun" = false ]; then
+	printf "Installing files in %s\n" "$target_dir"
+	mkdir -p "$target_dir"
+	rsync -a "$source_dir"/* "$target_dir"
     fi
 }
 
 install_file() {
-    if [ $# -eq 3 ]; then
-	mode="$1"
-	source="$2"
-	target="$3"
-	check_permissions "$target"
+    assert $# -eq 3
+    mode="$1"
+    source="$2"
+    target="$3"
+    check_permissions "$target"
 
-	if [ "$dryrun" = false ]; then
-	    if [ -f $source ]; then
-		printf "Installing file %s as %s\n" "$source" "$target"
-		install -d -m 755 "$(dirname "$target")"
-		install -C -m "$mode" "$source" "$target"
-	    else
-		abort "%s: No such file\n" "$source"
-	    fi
+    if [ "$dryrun" = false ]; then
+	if [ -f $source ]; then
+	    printf "Installing file %s as %s\n" "$source" "$target"
+	    install -d -m 755 "$(dirname "$target")"
+	    install -C -m "$mode" "$source" "$target"
+	else
+	    abort "%s: No such file\n" "$source"
 	fi
-    else
-	abort "%s\n" "Invalid number of arguments"
     fi
 }
 
 install_source_files() {
-    if [ $# -eq 3 ]; then
-	mode="$1"
-	source_dir="$2"
-	target_dir="$3"
-	check_permissions "$target_dir"
+    assert $# -eq 3
+    mode="$1"
+    source_dir="$2"
+    target_dir="$3"
+    check_permissions "$target_dir"
 
-	for source in $(find "$source_dir" -type f -name '*.py' -print | sort); do
-	    case "$source" in
-		(*/test_*.py)
-		    : # Omit test modules
-		    ;;
-		(*)
-		    install_file "$mode" "$source" "$target_dir/$source"
-		    ;;
-	    esac
-	done
-    fi
+    for source in $(find "$source_dir" -type f -name '*.py' -print | sort); do
+	case "$source" in
+	    (*/test_*.py)
+		: # Omit test modules
+		;;
+	    (*)
+		install_file "$mode" "$source" "$target_dir/$source"
+		;;
+	esac
+    done
 }
 
 realpath() {
