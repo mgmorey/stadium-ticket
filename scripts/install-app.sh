@@ -19,6 +19,10 @@
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
+assert() {
+    [ "$@" ] || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
 change_ownership() {
     if [ "$(id -un)" != "$APP_UID"  -o "$(id -gn)" != "$APP_GID" ]; then
 	check_permissions "$@"
@@ -29,10 +33,6 @@ change_ownership() {
 	fi
     fi
 
-}
-
-assert() {
-    [ "$@" ] || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
 create_app_dirs() {
