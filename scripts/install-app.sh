@@ -104,12 +104,12 @@ install_app() {
 	dryrun=false
     fi
 
-    create_app_dirs $app_dirs
+    create_app_dirs "$APP_DIR" "$APP_ETCDIR" "$APP_VARDIR"
     install_source_files 644 app "$APP_DIR"
     install_file "$@" 600 .env "$APP_DIR/.env"
     install_dir "$virtualenv" "$APP_DIR/.venv"
-    change_ownership $APP_DIR $APP_VARDIR
-    enable_app $APP_CONFIG $UWSGI_APPDIRS
+    change_ownership "$APP_DIR" "$APP_VARDIR"
+    enable_app "$APP_CONFIG" $UWSGI_APPDIRS
 }
 
 install_dir() {
@@ -196,7 +196,6 @@ source_dir=$script_dir/..
 
 . "$script_dir/configure-app.sh"
 
-app_dirs="$APP_DIR $APP_ETCDIR $APP_VARDIR"
 virtualenv=.venv-$APP_NAME
 cd "$source_dir"
 
