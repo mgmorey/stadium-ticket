@@ -41,20 +41,23 @@ create_app_dirs() {
 }
 
 create_app_ini() {
-    source="$1"
-    target="$2"
-    check_permissions "$target"
+    if [ $# -eq 2 ]; then
+	source="$1"
+	target="$2"
+	check_permissions "$target"
 
-    if [ "$dryrun" = false ]; then
-	if [ -f "$source" ]; then
-	    printf "Generating file %s\n" "$target"
-	    mkdir -p "$(dirname "$target")"
-	    generate_ini "$source" | sh | cat >"$target"
-	else
-	    abort "%s: No such file\n" "$source"
+	if [ "$dryrun" = false ]; then
+	    if [ -f "$source" ]; then
+		printf "Generating file %s\n" "$target"
+		mkdir -p "$(dirname "$target")"
+		generate_ini "$source" | sh | cat >"$target"
+	    else
+		abort "%s: No such file\n" "$source"
+	    fi
 	fi
+    else
+	abort "%s\n" "Invalid number of arguments"
     fi
-
 }
 
 enable_app() {
