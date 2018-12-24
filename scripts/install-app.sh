@@ -104,16 +104,7 @@ install_app() {
     install_file "$@" 600 .env "$APP_DIR/.env"
 
     # Install application code files
-    for source in $(find app -type f -name '*.py' -print | sort); do
-	case "$source" in
-	    (*/test_*.py)
-		: # Omit test modules
-		;;
-	    (*)
-		install_file 644 "$source" "$APP_DIR/$source"
-		;;
-	esac
-    done
+    install_source_files
 
     install_venv "$virtualenv"
     change_ownership $APP_DIR $APP_VARDIR
@@ -155,6 +146,19 @@ install_files() {
     else
 	abort "%s\n" "Invalid number of arguments"
     fi
+}
+
+install_source_files() {
+    for source in $(find app -type f -name '*.py' -print | sort); do
+	case "$source" in
+	    (*/test_*.py)
+		: # Omit test modules
+		;;
+	    (*)
+		install_file 644 "$source" "$APP_DIR/$source"
+		;;
+	esac
+    done
 }
 
 install_venv() {
