@@ -107,7 +107,8 @@ install_app() {
     for source in $(find app -type f -name '*.py' -print | sort); do
 	case "$source" in
 	    (*/test_*.py)
-	    ;;
+		: # Omit test modules
+		;;
 	    (*)
 		install_file 644 "$source" "$APP_DIR/$source"
 		;;
