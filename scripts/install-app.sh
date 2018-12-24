@@ -32,9 +32,7 @@ change_ownership() {
 }
 
 assert() {
-    if [ ! "$@" ]; then
-	abort "%s: Assertion failed: %s\n" "$0" "$*"
-    fi
+    [ "$@" ] || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
 create_app_dirs() {
