@@ -98,11 +98,27 @@ install_app() {
     fi
 
     create_app_dirs
-    install_file "$@" 600 .env "$APP_DIR/.env"
     install_source_files 644 app "$APP_DIR"
-    install_files "$APP_DIR/.venv" "$virtualenv"/*
+    install_file "$@" 600 .env "$APP_DIR/.env"
+    install_dir "$virtualenv" "$APP_DIR/.venv"
     change_ownership $APP_DIR $APP_VARDIR
     enable_app $APP_CONFIG $UWSGI_APPDIRS
+}
+
+install_dir() {
+    if [ $# -eq 2 ]; then
+	source_dir="$1"
+	target_dir="$2"
+	check_permissions "$target_dir"
+
+	if [ "$dryrun" = false ]; then
+	    printf "Installing files in %s\n" "$target_dir"
+	    mkdir -p "$target_dir"
+	    rsync -a "$source_dir"/* "$target_dir"
+	fi
+    else
+	abort "%s\n" "Invalid number of arguments"
+    fi
 }
 
 install_file() {
@@ -120,22 +136,6 @@ install_file() {
 	    else
 		abort "%s: No such file\n" "$source"
 	    fi
-	fi
-    else
-	abort "%s\n" "Invalid number of arguments"
-    fi
-}
-
-install_files() {
-    if [ $# -gt 1 ]; then
-	target="$1"
-	shift
-	check_permissions "$target"
-
-	if [ "$dryrun" = false ]; then
-	    printf "Installing files in %s\n" "$target"
-	    mkdir -p "$target"
-	    rsync -a "$@" "$target"
 	fi
     else
 	abort "%s\n" "Invalid number of arguments"
