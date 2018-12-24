@@ -32,7 +32,6 @@ change_ownership() {
 	    chown -R $APP_UID:$APP_GID "$@"
 	fi
     fi
-
 }
 
 create_app_dirs() {
