@@ -127,9 +127,9 @@ install_file() {
 }
 
 install_files() {
-    if [ $# -gt 2 ] && [ "$1" = -t ]; then
-	target="$2"
-	shift 2
+    if [ $# -gt 1 ]; then
+	target="$1"
+	shift
 	check_permissions "$target"
 
 	if [ "$dryrun" = false ]; then
@@ -156,7 +156,7 @@ install_source_files() {
 }
 
 install_venv() {
-    install_files -t "$APP_DIR/.venv" "$1"/*
+    install_files "$APP_DIR/.venv" "$1"/*
 }
 
 realpath() {
