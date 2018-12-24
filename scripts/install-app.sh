@@ -31,26 +31,37 @@ change_ownership() {
 
 }
 
-enable_app() {
-    source=app.ini
+create_app_dirs() {
+    check_permissions $app_dirs
 
-    if [ $# -gt 0 ]; then
-	target="$APP_CONFIG"
-	shift
+    if [ "$dryrun" = false ]; then
+	printf "Creating directory %s\n" $app_dirs
+	mkdir -p $app_dirs
+    fi
+}
 
-	check_permissions "$target"
+create_app_ini() {
+    source="$1"
+    target="$2"
+    check_permissions "$target"
 
-	if [ "$dryrun" = false ]; then
-	    if [ -f "$source" ]; then
-		printf "Generating file %s\n" "$target"
-		mkdir -p "$(dirname "$target")"
-		generate_ini "$source" | sh | cat >"$target"
-	    else
-		abort "%s: No such file\n" "$source"
-	    fi
+    if [ "$dryrun" = false ]; then
+	if [ -f "$source" ]; then
+	    printf "Generating file %s\n" "$target"
+	    mkdir -p "$(dirname "$target")"
+	    generate_ini "$source" | sh | cat >"$target"
+	else
+	    abort "%s: No such file\n" "$source"
 	fi
+    fi
 
-	source=$target
+}
+
+enable_app() {
+    if [ $# -gt 0 ]; then
+	create_app_ini app.ini "$1"
+	source=$1
+	shift
 
 	for name; do
 	    target=$UWSGI_ETCDIR/$name/$APP_NAME.ini
@@ -87,12 +98,7 @@ install_app() {
     fi
 
     # Create application directories
-    check_permissions $app_dirs
-
-    if [ "$dryrun" = false ]; then
-	printf "Creating directory %s\n" $app_dirs
-	mkdir -p $app_dirs
-    fi
+    create_app_dirs
 
     # Install application environment file
     install_file "$@" 600 .env "$APP_DIR/.env"
