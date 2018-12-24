@@ -99,7 +99,7 @@ install_app() {
 
     create_app_dirs
     install_file "$@" 600 .env "$APP_DIR/.env"
-    install_source_files
+    install_source_files 644 app "$APP_DIR"
     install_files "$APP_DIR/.venv" "$virtualenv"/*
     change_ownership $APP_DIR $APP_VARDIR
     enable_app $APP_CONFIG $UWSGI_APPDIRS
@@ -143,16 +143,23 @@ install_files() {
 }
 
 install_source_files() {
-    for source in $(find app -type f -name '*.py' -print | sort); do
-	case "$source" in
-	    (*/test_*.py)
-		: # Omit test modules
-		;;
-	    (*)
-		install_file 644 "$source" "$APP_DIR/$source"
-		;;
-	esac
-    done
+    if [ $# -eq 3 ]; then
+	mode="$1"
+	source_dir="$2"
+	target_dir="$3"
+	check_permissions "$target_dir"
+
+	for source in $(find "$source_dir" -type f -name '*.py' -print | sort); do
+	    case "$source" in
+		(*/test_*.py)
+		    : # Omit test modules
+		    ;;
+		(*)
+		    install_file "$mode" "$source" "$target_dir/$source"
+		    ;;
+	    esac
+	done
+    fi
 }
 
 realpath() {
