@@ -57,11 +57,11 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
-    (FreeBSD|SunOS)
-	printf pkg
-	;;
     (Darwin)
 	printf brew
+	;;
+    (FreeBSD|SunOS)
+	printf pkg
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
