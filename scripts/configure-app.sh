@@ -226,8 +226,8 @@ tail_log() {
     fi
 }
 
-distro_name=$($script_dir/get-os-distro-name.sh)
-kernel_name=$($script_dir/get-os-kernel-name.sh)
+distro_name=$(sh $script_dir/get-os-distro-name.sh)
+kernel_name=$(sh $script_dir/get-os-kernel-name.sh)
 
 configure_common
 

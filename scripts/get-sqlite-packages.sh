@@ -50,8 +50,8 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
-distro_name=$($script_dir/get-os-distro-name.sh)
-kernel_name=$($script_dir/get-os-kernel-name.sh)
+distro_name=$(sh $script_dir/get-os-distro-name.sh)
+kernel_name=$(sh $script_dir/get-os-kernel-name.sh)
 
 case "$kernel_name" in
     (Linux)
@@ -84,7 +84,7 @@ case "$kernel_name" in
 	;;
 esac
 
-data=$($script_dir/get-python-package.sh)
+data=$(sh $script_dir/get-python-package.sh)
 package_name=$(printf "%s" "$data" | awk '{print $1}')
 package_modifier=$(printf "%s" "$data" | awk '{print $2}')
 

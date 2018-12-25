@@ -32,6 +32,6 @@ script_dir=$(realpath $(dirname $0))
 tmpfile=$(mktemp)
 
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
-$script_dir/get-installed-packages.sh >$tmpfile
-$script_dir/grep-dbms-package.sh client <$tmpfile || \
-$script_dir/grep-dbms-package.sh <$tmpfile
+sh $script_dir/get-installed-packages.sh >$tmpfile
+sh $script_dir/grep-dbms-package.sh client <$tmpfile || \
+sh $script_dir/grep-dbms-package.sh <$tmpfile

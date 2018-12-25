@@ -53,7 +53,7 @@ script_dir=$(realpath $(dirname $0))
 distro_name=$($script_dir/get-os-distro-name.sh)
 kernel_name=$($script_dir/get-os-kernel-name.sh)
 
-package="$($script_dir/get-dbms-server-package.sh)"
+package="$(sh $script_dir/get-dbms-server-package.sh)"
 
 case "$kernel_name" in
     (Linux)

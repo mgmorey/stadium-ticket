@@ -29,4 +29,4 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
-$script_dir/pip-install.sh $(printf -- "-r %s\n" requirements*.txt)
+sh $script_dir/pip-install.sh $(printf -- "-r %s\n" requirements*.txt)
