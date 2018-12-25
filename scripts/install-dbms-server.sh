@@ -47,7 +47,7 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
-    (FreeBSD|SunOS)
+    (Darwin|FreeBSD|SunOS)
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
@@ -57,7 +57,7 @@ esac
 package_manager="$($script_dir/get-package-manager.sh)"
 
 if [ -n "$package_manager" ]; then
-    packages="$($script_dir/get-dbms-server-packages.sh)"
+    packages="$(sh $script_dir/get-dbms-server-packages.sh)"
 
     if [ -n "$packages" ]; then
 	$package_manager install $packages
