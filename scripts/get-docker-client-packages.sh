@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+DARWIN_PKGS="docker docker-compose"
+
 DEBIAN_PKGS="docker-ce-cli docker-compose"
 
 FEDORA_PKGS="docker docker-compose"
@@ -65,6 +67,9 @@ case "$kernel_name" in
 		packages="$UBUNTU_PKGS"
 		;;
 	esac
+	;;
+    (Darwin)
+	packages="$DARWIN_PKGS"
 	;;
     (FreeBSD)
 	packages="$FREEBSD_PKGS"

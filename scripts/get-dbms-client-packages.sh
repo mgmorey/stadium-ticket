@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+DARWIN_PKG="mariadb"
+
 DEBIAN_PKG="mariadb-client-10.1"
 DEBIAN_PKGS="%s-pymysql %s-sqlalchemy"
 
@@ -29,7 +31,6 @@ OPENSUSE_PKG="mariadb-client"
 OPENSUSE_PKGS="%s-PyMySQL %s-SQLAlchemy"
 
 REDHAT_PKG="mariadb"
-REDHAT_PKGS=""
 
 SUNOS_PKG="mariadb-101/client"
 SUNOS_PKGS="sqlalchemy-%s"
@@ -65,7 +66,7 @@ case "$kernel_name" in
 		packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
 		;;
 	    (redhat|centos)
-		packages="${package:-$REDHAT_PKG} $REDHAT_PKGS"
+		packages="${package:-$REDHAT_PKG}"
 		;;
 	    (opensuse-*)
 		packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
@@ -74,6 +75,9 @@ case "$kernel_name" in
 		packages="${package:-$UBUNTU_PKG} $UBUNTU_PKGS"
 		;;
 	esac
+	;;
+    (Darwin)
+	packages="${package:-$DARWIN_PKG}"
 	;;
     (FreeBSD)
 	packages="${package:-$FREEBSD_PKG} $FREEBSD_PKGS"

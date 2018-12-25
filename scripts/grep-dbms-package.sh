@@ -19,5 +19,5 @@
 if [ $# -gt 0 ]; then
     egrep "^(database/)?(mariadb|mysql)([0-9]+-$1|-[0-9]+/$1|-$1(-[0-9\.]+)?)\$"
 else
-    egrep "^(database/)?(mariadb|mysql)([0-9]*|-[0-9\.]+)\$"
+    egrep "^(database/)?(mariadb|mysql)([0-9]*|-[0-9\.]+)?\$"
 fi

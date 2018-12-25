@@ -24,6 +24,12 @@ abort() {
     exit 1
 }
 
+get_dependencies() {
+    for category in $CATEGORIES; do
+	sh "$script_dir/get-$category-packages.sh"
+    done
+}
+
 realpath() {
     if [ -x /usr/bin/realpath ]; then
 	/usr/bin/realpath "$@"
@@ -57,6 +63,4 @@ case "$kernel_name" in
 	;;
 esac
 
-for category in $CATEGORIES; do
-    printf "%s\n" "$script_dir/get-$category-packages.sh"
-done | sh | sort -u
+get_dependencies | sort -u
