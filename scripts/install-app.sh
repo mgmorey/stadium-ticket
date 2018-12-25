@@ -20,7 +20,7 @@ APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
 assert() {
-    [ "$@" ] || abort "%s: Assertion failed: %s\n" "$0" "$*"
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
 change_ownership() {
@@ -35,7 +35,7 @@ change_ownership() {
 }
 
 create_app_dirs() {
-    assert $# -ge 1
+    assert [ $# -ge 1 ]
     check_permissions "$@"
 
     if [ "$dryrun" = false ]; then
@@ -45,7 +45,7 @@ create_app_dirs() {
 }
 
 create_app_ini() {
-    assert $# -eq 2
+    assert [ $# -eq 2 ]
     source="$1"
     target="$2"
     check_permissions "$target"
@@ -62,7 +62,7 @@ create_app_ini() {
 }
 
 enable_app() {
-    assert $# -ge 1
+    assert [ $# -ge 1 ]
     create_app_ini app.ini "$1"
     source=$1
     shift
@@ -80,7 +80,7 @@ enable_app() {
 }
 
 generate_ini() {
-    assert $# -eq 1
+    assert [ $# -eq 1 ]
     printf "%s" "sed -e 's|^#<\\(.*\\)>$|\\1|g'"
 
     for var in $APP_VARS; do
@@ -108,7 +108,7 @@ install_app() {
 }
 
 install_dir() {
-    assert $# -eq 2
+    assert [ $# -eq 2 ]
     source_dir="$1"
     target_dir="$2"
     check_permissions "$target_dir"
@@ -121,7 +121,7 @@ install_dir() {
 }
 
 install_file() {
-    assert $# -eq 3
+    assert [ $# -eq 3 ]
     mode="$1"
     source="$2"
     target="$3"
@@ -139,7 +139,7 @@ install_file() {
 }
 
 install_source_files() {
-    assert $# -eq 3
+    assert [ $# -eq 3 ]
     mode="$1"
     source_dir="$2"
     target_dir="$3"
