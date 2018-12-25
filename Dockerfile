@@ -1,6 +1,5 @@
 FROM ubuntu:18.04
 
-# Application-specific parameters
 ENV APP_NAME=stadium-ticket
 ENV APP_PORT=5000
 
@@ -52,11 +51,9 @@ RUN pipenv sync
 # Make application owner of its own directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR
 
-# Change working directory
-WORKDIR $APP_VARDIR
-
-# Drop privileges
+# Drop privileges and Change working directory
 USER $APP_UID
+WORKDIR $APP_VARDIR
 
 # Expose application port and launch app using uWSGI
 EXPOSE $APP_PORT
