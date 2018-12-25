@@ -51,12 +51,12 @@ pipenv_run() {
     export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
     if [ ! "$pipenv" --bare --venv 2>/dev/null ]; then
-	# if no virtualenv has been created yet
-	# create one and install packages from Pipfile
+	# if no virtualenv has been created yet, then
+	# create it and install packages per Pipfile.lock
 	$pipenv --bare install --ignore-pipfile
     elif [ $($pipenv graph | wc -c) -eq 0 ]; then
 	# else if virtualenv contains no packages
-	# intall packages from Pipfile.lock
+	# intall packages per Pipfile.lock
 	$pipenv --bare sync -d
     fi
 
