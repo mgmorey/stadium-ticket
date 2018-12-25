@@ -72,7 +72,7 @@ enable_app() {
 	check_permissions "$target"
 
 	if [ "$dryrun" = false ]; then
-	    printf "Linking file %s to %s\n" "$source" "$target"
+	    printf "Creating symlink to %s as %s\n" "$source" "$target"
 	    mkdir -p "$(dirname "$target")"
 	    /bin/ln -sf "$source" "$target"
 	fi
