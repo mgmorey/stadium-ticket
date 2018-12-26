@@ -226,13 +226,14 @@ tail_log() {
     fi
 }
 
-distro_name=$(sh $script_dir/get-os-distro-name.sh)
 kernel_name=$(sh $script_dir/get-os-kernel-name.sh)
 
 configure_common
 
 case "$kernel_name" in
     (Linux)
+	distro_name=$(sh $script_dir/get-os-distro-name.sh)
+
 	case "$distro_name" in
 	    (ubuntu)
 		configure_debian
