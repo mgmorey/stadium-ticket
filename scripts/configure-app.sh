@@ -202,7 +202,7 @@ tail_log() {
     tmpfile=$(mktemp)
     trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
-    if [ -z "${APP_LOGFILE:-}" ]; then
+    if [ -z "$APP_LOGFILE" ]; then
 	printf "%s\n" "No log file to open"
     elif [ -r $APP_LOGFILE ]; then
 	tail $APP_LOGFILE >$tmpfile
