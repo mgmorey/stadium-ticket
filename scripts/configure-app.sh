@@ -32,9 +32,7 @@ EOF
 
 check_permissions() {
     for file; do
-	if [ -z "$file" ]; then
-	    abort "%s\n" "Empty file path"
-	elif [ -e "$file" -a ! -w "$file" ]; then
+	if [ -e "$file" -a ! -w "$file" ]; then
 	    abort_insufficient_permissions "$file"
 	elif [ "$file" != . -a "$file" != / ]; then
 	    check_permissions "$(dirname "$file")"
