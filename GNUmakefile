@@ -1,17 +1,10 @@
-exclude = .git,__pycache__,.tox,.venv*
-pycodestyle = $(python) -m pycodestyle
-python = python3
 script_dir = scripts
 sql_dir = sql
-unittest = $(python) -m unittest
 
-all:	Pipfile.lock requirements.txt requirements-dev.txt .env test
+all:	Pipfile.lock requirements.txt requirements-dev.txt pytest
 
 build:	.env-docker Pipfile.lock
 	$(script_dir)/run.sh docker-compose up --build
-
-check:
-	$(script_dir)/run.sh $(pycodestyle) --exclude=$(exclude) .
 
 clean:
 	$(script_dir)/clean-caches.sh
@@ -22,10 +15,10 @@ client:	.env
 client-debug:	.env
 	$(script_dir)/app-test.sh -h localhost -p 5001
 
-debug:	.env reset
+debug:	reset
 	$(script_dir)/run.sh flask run --port 5001
 
-install:	Pipfile.lock .env
+install:	requirements-dev.txt requirements.txt
 	$(script_dir)/install-app.sh
 
 pipenv:	Pipfile
@@ -37,28 +30,25 @@ pycode:
 pylint:
 	$(script_dir)/run.sh pylint app
 
-pytest:	.env reset
+pytest:	reset
 	$(script_dir)/run.sh pytest
 
-reset:	.env schema
+reset:	schema
 	$(script_dir)/sql.sh reset
 
-schema:	.env
+schema:
 	$(script_dir)/sql.sh schema
 
-stress:	.env
+stress:
 	$(script_dir)/load-test.sh
-
-test:	.env reset
-	$(script_dir)/run.sh $(unittest) discover
 
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
 update:	Pipfile.lock requirements-dev.txt requirements.txt
 
-.PHONY: all build check clean client client-debug debug install pipenv
-.PHONY: pycode pylint pytest reset schema stress uninstall test update
+.PHONY: all build clean client client-debug debug install pipenv
+.PHONY: pycode pylint pytest reset schema stress uninstall update
 
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
