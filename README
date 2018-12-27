@@ -12,22 +12,26 @@ Stadium Ticket RESTful API for POSIX Operating Systems
 
     scripts/sql.sh [reset-mysql|reset-sqlite]
 
-3.  To run the unit tests:
+3.  To run the unit tests using unittest:
 
     scripts/run.sh python3 -m unittest discover
 
-4.  To start the app:
+4.  To run the unit tests using pytest:
+
+    scripts/run.sh pytest
+
+5.  To start the app:
 
     scripts/run.sh flask run
 
-5.  To test the app:
+6.  To test the app:
 
     scripts/app-test.sh
 
-6.  To stress test the app:
+7.  To stress test the app:
 
     scripts/load-test.sh
 
-7.  To build and run a Docker container:
+8.  To build and run a Docker container:
 
     scripts/run.sh docker-compose up --build
