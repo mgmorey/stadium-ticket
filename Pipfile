@@ -19,6 +19,7 @@ python-dotenv = "*"
 [dev-packages]
 docker-compose = "*"
 pycodestyle = "*"
+pylint = "*"
 pytest = "*"
 
 [scripts]
