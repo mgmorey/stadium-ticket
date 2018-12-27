@@ -27,7 +27,7 @@ elif [ -r .env-template ]; then
     cp -f .env-template $tmpfile
 fi
 
-if $EDITOR $tmpfile; then
+if ${EDITOR:=cat} $tmpfile; then
     mv -f $tmpfile $file
     chgrp $(id -g) $file
 fi
