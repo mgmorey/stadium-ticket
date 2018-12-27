@@ -53,13 +53,10 @@ create_app_ini() {
     check_permissions "$target"
 
     if [ "$dryrun" = false ]; then
-	if [ -f "$source" ]; then
-	    printf "Generating file %s\n" "$target"
-	    mkdir -p "$(dirname "$target")"
-	    generate_ini "$source" | sh | cat >"$target"
-	else
-	    abort "%s: No such file\n" "$source"
-	fi
+	assert [ -r "$source" ]
+	printf "Generating file %s\n" "$target"
+	mkdir -p "$(dirname "$target")"
+	generate_ini "$source" | sh | cat >"$target"
     fi
 }
 
@@ -117,6 +114,7 @@ install_dir() {
     check_permissions "$target_dir"
 
     if [ "$dryrun" = false ]; then
+	assert [ -r "$source_dir" ]
 	printf "Installing files in %s\n" "$target_dir"
 	mkdir -p "$target_dir"
 	rsync -a "$source_dir"/* "$target_dir"
@@ -131,13 +129,10 @@ install_file() {
     check_permissions "$target"
 
     if [ "$dryrun" = false ]; then
-	if [ -f $source ]; then
-	    printf "Installing file %s as %s\n" "$source" "$target"
-	    install -d -m 755 "$(dirname "$target")"
-	    install -C -m "$mode" "$source" "$target"
-	else
-	    abort "%s: No such file\n" "$source"
-	fi
+	assert [ -r "$source" ]
+	printf "Installing file %s as %s\n" "$source" "$target"
+	install -d -m 755 "$(dirname "$target")"
+	install -C -m "$mode" "$source" "$target"
     fi
 }
 
@@ -149,6 +144,8 @@ install_source_files() {
     check_permissions "$target_dir"
 
     for source in $(find "$source_dir" -type f -name '*.py' -print | sort); do
+	assert [ -r "$source" ]
+
 	case "$source" in
 	    (*/test_*.py)
 		: # Omit test modules
