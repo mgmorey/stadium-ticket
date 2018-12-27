@@ -6,6 +6,7 @@ from decouple import config
 
 from .validate import validate_string
 
+DIALECT = 'sqlite'
 DRIVER = {
     'mysql': 'py{0}'
 }
@@ -56,7 +57,7 @@ def _get_uri(dialect: str):
 
 
 def get_uri():
-    dialect = _get_string('DATABASE_DIALECT')
+    dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
     scheme = _get_scheme(dialect)
     schema = _get_string('DATABASE_SCHEMA', default=SCHEMA)
     endpoint = _get_endpoint(dialect)
