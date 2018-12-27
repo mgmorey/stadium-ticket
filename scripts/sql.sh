@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+: ${DATABASE_DIALECT:=sqlite}
+: ${DATABASE_SCHEMA:=stadium-tickets}
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -30,7 +33,7 @@ exec_sql() {
 		-p"${DATABASE_PASSWORD:-}"
 	    ;;
 	(sqlite)
-	    sqlite3 "/tmp/${DATABASE_SCHEMA:-default}.db"
+	    sqlite3 "/tmp/$DATABASE_SCHEMA.db"
 	    ;;
     esac
 }
@@ -44,7 +47,7 @@ parse_script() {
 	abort "%s: No such script file\n" "$1"
     fi
 
-    scripts="$scripts${scripts:+ }$script"
+    scripts="${scripts:+$scripts }$script"
 }
 
 realpath() {
@@ -90,8 +93,12 @@ fi
 
 if [ -n "$scripts" ]; then
     for script in $scripts; do
-	exec <"$script"
-	exec_sql
+	if [ -r $script ]; then
+	    exec <"$script"
+	    exec_sql
+	else
+	    abort "%s: No such readable file\n" "$script"
+	fi
     done
 else
     exec_sql
