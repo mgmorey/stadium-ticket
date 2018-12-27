@@ -3,7 +3,7 @@ sql_dir = sql
 
 all:	Pipfile.lock requirements.txt requirements-dev.txt pytest
 
-build:	.env-docker Pipfile.lock
+build:	Pipfile.lock .env-docker
 	$(script_dir)/run.sh docker-compose up --build
 
 clean:
@@ -18,7 +18,7 @@ client-debug:	.env
 debug:	reset
 	$(script_dir)/run.sh flask run --port 5001
 
-install:	requirements-dev.txt requirements.txt
+install:	requirements-dev.txt requirements.txt .env
 	$(script_dir)/install-app.sh
 
 pipenv:	Pipfile
