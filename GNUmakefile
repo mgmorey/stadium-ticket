@@ -31,6 +31,9 @@ install:	Pipfile.lock .env
 pipenv:	Pipfile
 	$(script_dir)/pip-install-pipenv.sh
 
+pytest:	.env reset
+	$(script_dir)/run.sh pytest
+
 reset:	.env schema
 	$(script_dir)/sql.sh reset
 
@@ -49,8 +52,8 @@ unittest:	.env reset
 update:	Pipfile.lock requirements.txt
 	$(script_dir)/update-requirements.sh
 
-.PHONY: all build check clean client client-debug debug install 
-.PHONY: pipenv reset schema stress uninstall unittest update
+.PHONY: all build check clean client client-debug debug install pipenv
+.PHONY: pytest reset schema stress uninstall unittest update
 
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
