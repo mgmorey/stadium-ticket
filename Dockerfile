@@ -7,7 +7,7 @@ ENV APP_PORT=5000
 ENV APP_GID=www-data
 ENV APP_UID=www-data
 ENV DEBIAN_FRONTEND=noninteractive
-ENV RETRY="i=0; while [ \$i -lt 3 ]; do %s && break; i=\$((i + 1)); done\n"
+ENV RETRY='i=0; while [ $i -lt 3 ]; do %s && break; i=$((i + 1)); done\n'
 
 # Update Debian package repository index
 ENV APT_UPDATE="apt-get update -qy"
