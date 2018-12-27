@@ -24,6 +24,8 @@ assert() {
 }
 
 change_ownership() {
+    assert [ $# -ge 1 ]
+
     if [ "$(id -un)" != "$APP_UID"  -o "$(id -gn)" != "$APP_GID" ]; then
 	check_permissions "$@"
 
@@ -45,7 +47,7 @@ create_app_dirs() {
 }
 
 create_app_ini() {
-    assert [ $# -eq 2 ]
+    assert [ $# -eq 2 ] && [ -n "$1" ] && [ -r "$1" ]
     source="$1"
     target="$2"
     check_permissions "$target"
@@ -62,7 +64,7 @@ create_app_ini() {
 }
 
 enable_app() {
-    assert [ $# -ge 1 ]
+    assert [ $# -ge 1 ] && [ -n "$1" ]
     create_app_ini app.ini "$1"
     source=$1
     shift
@@ -72,6 +74,7 @@ enable_app() {
 	check_permissions "$target"
 
 	if [ "$dryrun" = false ]; then
+	    assert [ -r "$source" ]
 	    printf "Creating link %s\n" "$target"
 	    mkdir -p "$(dirname "$target")"
 	    /bin/ln -sf "$source" "$target"
@@ -80,7 +83,7 @@ enable_app() {
 }
 
 generate_ini() {
-    assert [ $# -eq 1 ]
+    assert [ $# -eq 1 ] && [ -n "$1" ] && [ -r "$1" ]
     printf "%s" "sed -e 's|^#<\\(.*\\)>$|\\1|g'"
 
     for var in $APP_VARS; do
@@ -108,7 +111,7 @@ install_app() {
 }
 
 install_dir() {
-    assert [ $# -eq 2 ]
+    assert [ $# -eq 2 ] && [ -n "$1" ] && [ -r "$1" ]
     source_dir="$1"
     target_dir="$2"
     check_permissions "$target_dir"
@@ -121,7 +124,7 @@ install_dir() {
 }
 
 install_file() {
-    assert [ $# -eq 3 ]
+    assert [ $# -eq 3 ] && [ -n "$1" ] && [ -n "$2" ] && [ -r "$2" ]
     mode="$1"
     source="$2"
     target="$3"
@@ -139,7 +142,7 @@ install_file() {
 }
 
 install_source_files() {
-    assert [ $# -eq 3 ]
+    assert [ $# -eq 3 ] && [ -n "$1" ] && [ -n "$2" ] && [ -r "$2" ]
     mode="$1"
     source_dir="$2"
     target_dir="$3"
