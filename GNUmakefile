@@ -5,7 +5,7 @@ script_dir = scripts
 sql_dir = sql
 unittest = $(python) -m unittest
 
-all:	Pipfile.lock requirements.txt requirements-dev.txt .env unittest
+all:	Pipfile.lock requirements.txt requirements-dev.txt .env test
 
 build:	.env-docker Pipfile.lock
 	$(script_dir)/run.sh docker-compose up --build
@@ -31,6 +31,12 @@ install:	Pipfile.lock .env
 pipenv:	Pipfile
 	$(script_dir)/pip-install-pipenv.sh
 
+pycode:
+	$(script_dir)/run.sh pycodestyle app
+
+pylint:
+	$(script_dir)/run.sh pylint app
+
 pytest:	.env reset
 	$(script_dir)/run.sh pytest
 
@@ -43,17 +49,16 @@ schema:	.env
 stress:	.env
 	$(script_dir)/load-test.sh
 
+test:	.env reset
+	$(script_dir)/run.sh $(unittest) discover
+
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
-unittest:	.env reset
-	$(script_dir)/run.sh $(unittest) discover
-
-update:	Pipfile.lock requirements.txt
-	$(script_dir)/update-requirements.sh
+update:	Pipfile.lock requirements-dev.txt requirements.txt
 
 .PHONY: all build check clean client client-debug debug install pipenv
-.PHONY: pytest reset schema stress uninstall unittest update
+.PHONY: pycode pylint pytest reset schema stress uninstall test update
 
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
