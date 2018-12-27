@@ -170,10 +170,10 @@ realpath() {
 }
 
 stage_app() {
-    if [ "$(id -u)" -gt 0 ]; then
-	sh=/bin/sh
-    elif [ -n "$SUDO_USER" ]; then
+    if [ "$(id -u)" -eq 0 ]; then
 	sh="su $SUDO_USER"
+    else
+	sh=/bin/sh
     fi
 
     $sh "$script_dir/stage-app.sh"

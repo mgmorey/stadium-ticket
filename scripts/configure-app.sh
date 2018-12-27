@@ -32,11 +32,9 @@ EOF
 
 check_permissions() {
     for file; do
-	if [ -z "$file" ]; then
-	    abort "%s\n" "Empty file path"
-	elif [ -e "$file" -a ! -w "$file" ]; then
+	if [ -e "$file" -a ! -w "$file" ]; then
 	    abort_insufficient_permissions "$file"
-	elif ! expr "$file" : '^[\./]$' >/dev/null; then
+	elif [ "$file" != . -a "$file" != / ]; then
 	    check_permissions "$(dirname "$file")"
 	fi
     done
@@ -173,32 +171,30 @@ configure_sunos() {
 }
 
 signal_app() {
-    if [ -n "${APP_PIDFILE:-}" ]; then
-	if [ -r $APP_PIDFILE ]; then
-	    pid="$(cat $APP_PIDFILE)"
+    if [ -z "$APP_PIDFILE" ]; then
+	printf "%s\n" "No PID file to open"
+    elif [ -r $APP_PIDFILE ]; then
+	pid="$(cat $APP_PIDFILE)"
 
-	    if [ -n "$pid" ]; then
-		for signal in "$@"; do
-		    printf "Sending SIG%s to process: %s\n" $signal $pid
+	if [ -n "$pid" ]; then
+	    for signal in "$@"; do
+		printf "Sending SIG%s to process: %s\n" $signal $pid
 
-		    if kill -s $signal $pid; then
-			printf "SIG%s received by process %s\n" $signal $pid
-			printf "Waiting %s seconds\n" 5
-			sleep 5
-		    else
-			break
-		    fi
-		done
-	    fi
-	elif [ -e $APP_PIDFILE ]; then
-	    printf "No permission to read PID file: %s\n" $APP_PIDFILE >&2
-	else
-	    printf "No such PID file: %s\n" $APP_PIDFILE >&2
-	    printf "Waiting %s seconds\n" 5
-	    sleep 5
+		if kill -s $signal $pid; then
+		    printf "SIG%s received by process %s\n" $signal $pid
+		    printf "Waiting %s seconds\n" 5
+		    sleep 5
+		else
+		    break
+		fi
+	    done
 	fi
+    elif [ -e $APP_PIDFILE ]; then
+	printf "No permission to read PID file: %s\n" $APP_PIDFILE >&2
     else
-	printf "No PID file to open\n"
+	printf "No such PID file: %s\n" $APP_PIDFILE >&2
+	printf "Waiting %s seconds\n" 5
+	sleep 5
     fi
 }
 
@@ -206,7 +202,7 @@ tail_log() {
     tmpfile=$(mktemp)
     trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
-    if [ -z "${APP_LOGFILE:-}" ]; then
+    if [ -z "$APP_LOGFILE" ]; then
 	printf "%s\n" "No log file to open"
     elif [ -r $APP_LOGFILE ]; then
 	tail $APP_LOGFILE >$tmpfile
