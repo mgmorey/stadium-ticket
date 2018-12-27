@@ -68,8 +68,8 @@ sql_dir=$source_dir/sql
 
 scripts=
 
-if ! . "$source_dir/.env"; then
-    abort "%s: No such environment file\n" "$source_dir/.env"
+if [ -r "$source_dir/.env" ]; then
+    . "$source_dir/.env"
 fi
 
 while getopts 'x:' OPTION; do
