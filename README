@@ -14,11 +14,11 @@ Stadium Ticket RESTful API for POSIX Operating Systems
 
 3.  To run the unit tests:
 
-    python3 -m unittest discover
+    scripts/run.sh python3 -m unittest discover
 
 4.  To start the app:
 
-    app/app.py
+    scripts/run.sh flask run
 
 5.  To test the app:
 
@@ -30,4 +30,4 @@ Stadium Ticket RESTful API for POSIX Operating Systems
 
 7.  To build and run a Docker container:
 
-    docker-compose up --build
+    scripts/run.sh docker-compose up --build
