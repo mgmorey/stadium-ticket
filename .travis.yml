@@ -9,5 +9,5 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - scripts/sql.sh sql/schema-sqlite.sql
+  - scripts/sql.sh schema
   - pytest
