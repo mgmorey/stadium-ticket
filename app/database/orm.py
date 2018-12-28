@@ -5,7 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 # pylint: disable=invalid-name
 db = SQLAlchemy()
-session = db.session
 # pylint: enable=invalid-name
 
 

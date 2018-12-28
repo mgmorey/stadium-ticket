@@ -3,7 +3,7 @@
 
 import datetime
 
-from .database import Events
+from .database import Events, db
 
 
 class SoldOut(Exception):
