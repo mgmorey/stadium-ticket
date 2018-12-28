@@ -50,25 +50,25 @@ while getopts 'd' OPTION; do
 done
 shift $(($OPTIND - 1))
 
-file=${1-requirements.txt}
-
 if [ $(id -u) -eq 0 ]; then
-    exit 0
+    abort "%s\n" "This script must be run as a non-privileged user"
 fi
 
+cd "$source_dir"
+
+file=${1-requirements.txt}
 tmpfile=$(mktemp)
+
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
-if which pipenv >/dev/null; then
-    # set default locales
+if which pipenv >/dev/null 2>&1; then
     export LANG=${LANG:-en_US.UTF-8}
     export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
     if pipenv lock $opts -r >$tmpfile; then
-	requirements=$source_dir/$file
-	mv -f $tmpfile $requirements
-	chgrp $(id -g) $requirements
-	chmod a+r $requirements
+	/bin/mv -f $tmpfile $file
+	chgrp $(id -g) $file
+	chmod a+r $file
     else
 	abort "Unable to update %s\n" "$file"
     fi
