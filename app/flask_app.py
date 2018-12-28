@@ -36,7 +36,7 @@ def request_ticket():
         abort(400)
 
     try:
-        ticket = Tickets(session, request.json['event'])
+        ticket = Tickets(db.session, request.json['event'])
     except SoldOut as error:
         logging.exception("Error requesting ticket: %s", str(error))
         abort(500)
@@ -71,7 +71,7 @@ def request_tickets():
     count = min(count, max_count)
 
     try:
-        tickets = Tickets(session, request.json['event'], count)
+        tickets = Tickets(db.session, request.json['event'], count)
     except SoldOut as error:
         logging.exception("Error requesting tickets: %s", str(error))
         abort(500)
