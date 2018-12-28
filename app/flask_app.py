@@ -15,10 +15,12 @@ LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 SQLALCHEMY_DATABASE_URI = get_uri()
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+# pylint: disable=invalid-name
 app = Flask(__name__)
 app.config.from_object(__name__)
 db.init_app(app)
 manager = Manager(app)
+# pylint: enable=invalid-name
 
 
 @app.route('/stadium/ticket', methods=['PUT'])

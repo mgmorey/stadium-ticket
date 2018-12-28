@@ -3,11 +3,14 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
+# pylint: disable=invalid-name
 db = SQLAlchemy()
 session = db.session
+# pylint: enable=invalid-name
 
 
 class Events(db.Model):
+    # pylint: disable=no-member,too-few-public-methods
     """Represent one or more stadium events for which tickets are sold."""
     __tablename__ = 'events'
     name = db.Column(db.String(32), primary_key=True)
