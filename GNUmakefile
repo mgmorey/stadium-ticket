@@ -1,7 +1,7 @@
 script_dir = scripts
 sql_dir = sql
 
-all:	Pipfile.lock requirements-dev.txt requirements.txt pylint pytest
+all:	Pipfile.lock requirements-dev.txt requirements.txt sync pylint pytest
 
 build:	Pipfile.lock .env-docker
 	$(script_dir)/run.sh docker-compose up --build
@@ -42,13 +42,14 @@ schema:
 stress:
 	$(script_dir)/load-test.sh
 
+sync:	Pipfile.lock requirements-dev.txt requirements.txt
+	pipenv sync -d || true
+
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
-update:	Pipfile.lock requirements-dev.txt requirements.txt
-
 .PHONY: all build clean client client-debug debug install pipenv
-.PHONY: pycode pylint pytest reset schema stress uninstall update
+.PHONY: pycode pylint pytest reset schema stress sync uninstall
 
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
