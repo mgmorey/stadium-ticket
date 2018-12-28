@@ -27,4 +27,4 @@ pip="$(which $PYTHON) -m pip $pip_opts"
 $pip install --upgrade pip
 pip="$(which $PIP) $pip_opts"
 printf "%s\n" "Installing required packages"
-$pip install $(printf -- "-r %s\n" requirements*.txt)
+$pip install $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
