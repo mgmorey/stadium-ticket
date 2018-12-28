@@ -51,13 +51,10 @@ uninstall:
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
 
-Pipfile.lock:	Pipfile
-	$(script_dir)/update-requirements.sh && touch .update
-
-requirements.txt:	Pipfile
+requirements.txt:	.update
 	$(script_dir)/lock-requirements.sh requirements.txt
 
-requirements-dev.txt:	Pipfile
+requirements-dev.txt:	.update
 	$(script_dir)/lock-requirements.sh -d requirements-dev.txt
 
 .env:		.env-template
@@ -67,4 +64,6 @@ requirements-dev.txt:	Pipfile
 	$(script_dir)/configure-env.sh .env-docker
 
 .update:	Pipfile
-	$(script_dir)/update-requirements.sh && touch .update
+	$(script_dir)/update-requirements.sh
+	$(script_dir)/lock-requirements.sh requirements.txt
+	$(script_dir)/lock-requirements.sh -d requirements-dev.txt
