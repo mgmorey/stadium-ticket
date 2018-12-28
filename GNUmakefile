@@ -1,7 +1,7 @@
 script_dir = scripts
 sql_dir = sql
 
-all:	Pipfile.lock requirements.txt requirements-dev.txt pytest
+all:	Pipfile.lock requirements-dev.txt requirements.txt pylint pytest
 
 build:	Pipfile.lock .env-docker
 	$(script_dir)/run.sh docker-compose up --build
