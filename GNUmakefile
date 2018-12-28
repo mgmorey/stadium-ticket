@@ -3,7 +3,7 @@ sql_dir = sql
 
 all:	.update pylint pytest
 
-build:	Pipfile.lock .env-docker
+build:	.env-docker .update
 	$(script_dir)/run.sh docker-compose up --build
 
 clean:
@@ -18,7 +18,7 @@ client-debug:	.env
 debug:	.update reset
 	$(script_dir)/run.sh flask run --port 5001
 
-install:	requirements-dev.txt requirements.txt .env
+install:	requirements.txt .env
 	$(script_dir)/install-app.sh
 
 pipenv:	Pipfile
@@ -52,7 +52,7 @@ Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
 
 Pipfile.lock:	Pipfile
-	pipenv update -d || true
+	$(script_dir)/update-requirements.sh && touch .update
 
 requirements.txt:	Pipfile
 	$(script_dir)/lock-requirements.sh requirements.txt
@@ -66,5 +66,5 @@ requirements-dev.txt:	Pipfile
 .env-docker:	.env-template
 	$(script_dir)/configure-env.sh .env-docker
 
-.update:	Pipfile Pipfile.lock
+.update:	Pipfile
 	$(script_dir)/update-requirements.sh && touch .update
