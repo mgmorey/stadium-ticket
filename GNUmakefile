@@ -1,7 +1,7 @@
 script_dir = scripts
 sql_dir = sql
 
-all:	Pipfile.lock requirements-dev.txt requirements.txt sync pylint pytest
+all:	.update pylint pytest
 
 build:	Pipfile.lock .env-docker
 	$(script_dir)/run.sh docker-compose up --build
@@ -15,7 +15,7 @@ client:	.env
 client-debug:	.env
 	$(script_dir)/app-test.sh -h localhost -p 5001
 
-debug:	reset
+debug:	.update reset
 	$(script_dir)/run.sh flask run --port 5001
 
 install:	requirements-dev.txt requirements.txt .env
@@ -24,13 +24,13 @@ install:	requirements-dev.txt requirements.txt .env
 pipenv:	Pipfile
 	$(script_dir)/pip-install-pipenv.sh
 
-pycode:
+pycode:	.update
 	$(script_dir)/run.sh pycodestyle app
 
-pylint:
+pylint:	.update
 	$(script_dir)/run.sh pylint app
 
-pytest:	reset
+pytest:	.update reset
 	$(script_dir)/run.sh pytest
 
 reset:	schema
@@ -42,14 +42,11 @@ schema:
 stress:
 	$(script_dir)/load-test.sh
 
-sync:	Pipfile.lock requirements-dev.txt requirements.txt
-	pipenv sync -d || true
-
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
 .PHONY: all build clean client client-debug debug install pipenv
-.PHONY: pycode pylint pytest reset schema stress sync uninstall
+.PHONY: pycode pylint pytest reset schema stress sync uninstall update
 
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
@@ -68,3 +65,6 @@ requirements-dev.txt:	Pipfile
 
 .env-docker:	.env-template
 	$(script_dir)/configure-env.sh .env-docker
+
+.update:	Pipfile Pipfile.lock
+	$(script_dir)/update-requirements.sh && touch .update
