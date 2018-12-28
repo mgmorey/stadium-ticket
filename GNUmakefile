@@ -46,7 +46,7 @@ uninstall:
 	$(script_dir)/uninstall-app.sh
 
 .PHONY: all build clean client client-debug debug install pipenv
-.PHONY: pycode pylint pytest reset schema stress sync uninstall update
+.PHONY: pycode pylint pytest reset schema stress uninstall update
 
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
