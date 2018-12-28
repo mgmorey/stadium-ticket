@@ -108,7 +108,7 @@ install_app() {
 }
 
 install_dir() {
-    assert [ $# -eq 2 ] && [ -n "$1" ] && [ -r "$1" ]
+    assert [ $# -eq 2 ] && [ -n "$1" ]
     source_dir="$1"
     target_dir="$2"
     check_permissions "$target_dir"
