@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Define methods to construct a SQLAlchemy database URI string."""
 
 import os
 
@@ -20,11 +21,13 @@ USER = 'root'
 
 
 def _get_driver(dialect: str):
+    """Return a database URI driver parameter value."""
     driver = DRIVER.get(dialect)
     return driver.format(dialect) if driver else None
 
 
 def _get_endpoint(dialect: str):
+    """Return a database URI endpoint parameter value."""
     if '{2}' not in _get_uri(dialect):
         return None
 
@@ -34,6 +37,7 @@ def _get_endpoint(dialect: str):
 
 
 def _get_login(dialect: str):
+    """Return a database URI login parameter value."""
     if '{3}' not in _get_uri(dialect):
         return None
 
@@ -43,20 +47,24 @@ def _get_login(dialect: str):
 
 
 def _get_scheme(dialect: str):
+    """Return a database URI scheme parameter value."""
     driver = _get_string('DATABASE_DRIVER', default=_get_driver(dialect))
     return f"{dialect}+{driver}" if driver else dialect
 
 
 def _get_string(parameter: str, default: str = None):
+    """Return a validated string parameter value."""
     value = config(parameter, default=default)
     return None if value is None else validate_string(parameter, value)
 
 
 def _get_uri(dialect: str):
+    """Return a database URI format specifier."""
     return URI.get(dialect, URI[None])
 
 
 def get_uri():
+    """Return a database connection URI string."""
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
     scheme = _get_scheme(dialect)
     schema = _get_string('DATABASE_SCHEMA', default=SCHEMA)

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""Manage ticket sales for a stadium event via a RESTful API."""
 
 import logging
 
@@ -22,6 +23,7 @@ manager = Manager(app)
 
 @app.route('/stadium/ticket', methods=['PUT'])
 def request_ticket():
+    """Request a single ticket for an event."""
     if not request.json:
         abort(400)
 
@@ -32,18 +34,19 @@ def request_ticket():
         abort(400)
 
     try:
-        t = Tickets(session, request.json['event'])
-    except Exception as e:
-        logging.exception("Error requesting ticket: %s", str(e))
+        ticket = Tickets(session, request.json['event'])
+    except SoldOut as error:
+        logging.exception("Error requesting ticket: %s", str(error))
         abort(500)
-    return jsonify({'ticket_number': t.serial,
-                    'time': t.issue})
+    return jsonify({'ticket_number': ticket.serial,
+                    'time': ticket.issue})
 
 
 @app.route('/stadium/tickets', methods=['PUT'])
 def request_tickets():
-    MAX_COUNT = 10
-    MIN_COUNT = 1
+    """Request one or more tickets for an event."""
+    max_count = 10
+    min_count = 1
 
     if not request.json:
         abort(400)
@@ -62,17 +65,17 @@ def request_tickets():
         else:
             abort(400)
 
-    count = max(count, MIN_COUNT)
-    count = min(count, MAX_COUNT)
+    count = max(count, min_count)
+    count = min(count, max_count)
 
     try:
-        t = Tickets(session, request.json['event'], count)
-    except Exception as e:
-        logging.exception("Error requesting tickets: %s", str(e))
+        tickets = Tickets(session, request.json['event'], count)
+    except SoldOut as error:
+        logging.exception("Error requesting tickets: %s", str(error))
         abort(500)
-    return jsonify({'ticket_number': t.serial,
-                    'ticket_count': t.count,
-                    'time': t.issue})
+    return jsonify({'ticket_number': tickets.serial,
+                    'ticket_count': tickets.count,
+                    'time': tickets.issue})
 
 
 if __name__ == '__main__':
