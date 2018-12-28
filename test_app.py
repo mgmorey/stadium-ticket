@@ -4,7 +4,8 @@
 import unittest
 
 from app import app
-from app.tickets import SoldOut, Tickets, db
+from app.database import db
+from app.tickets import SoldOut, Tickets
 
 EVENT_1 = 'The Beatles'
 EVENT_2 = 'The Cure'
