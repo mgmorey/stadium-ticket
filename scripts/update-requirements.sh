@@ -35,6 +35,7 @@ pip_update() (
     if [ -d .venv ]; then
 	printf "%s\n" "Activating virtual environment"
 	. .venv/bin/activate
+	REQUIREMENTS=requirements*.txt
 	. "$script_dir/populate-virtualenv.sh"
     else
 	abort "%s\n" "No virtual environment"
@@ -46,6 +47,7 @@ pipenv_update() {
     export LANG=${LANG:-en_US.UTF-8}
     export LC_ALL=${LC_ALL:-en_US.UTF-8}
     pipenv update -d
+    touch .update
 }
 
 realpath() {
