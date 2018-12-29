@@ -25,9 +25,7 @@ abort() {
     exit 1
 }
 
-pip_update() (
-    cd "$source_dir"
-
+pip_update() {
     if [ ! -d .venv ]; then
 	printf "%s\n" "Creating virtual environment"
 	$PYTHON -m venv .venv
@@ -40,12 +38,38 @@ pip_update() (
     else
 	abort "%s\n" "No virtual environment"
     fi
-)
+}
+
+pipenv_lock() {
+    $pipenv lock
+
+    for file; do
+	case $file in
+	    (requirements-dev*.txt)
+		opts=-d
+		;;
+	    (requirements.txt)
+		opts=
+		;;
+	    (*)
+		abort "%s: Invalid filename\n" "$file"
+	esac
+
+	printf "Generating %s\n" "$file"
+	if $pipenv lock $opts -r >$tmpfile; then
+	    /bin/mv -f $tmpfile "$file"
+	    chgrp $(id -g) "$file"
+	    chmod a+r "$file"
+	else
+	    abort "Unable to update %s\n" "$file"
+	fi
+    done
+}
 
 pipenv_update() {
     export LANG=${LANG:-en_US.UTF-8}
     export LC_ALL=${LC_ALL:-en_US.UTF-8}
-    sh -eu "$script_dir/lock-requirements.sh" $REQUIREMENTS
+    pipenv_lock $REQUIREMENTS
     pipenv sync -d
 }
 
@@ -68,6 +92,11 @@ fi
 pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
+
+cd "$source_dir"
+tmpfile=$(mktemp)
+
+trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 if [ -n "$pipenv" ]; then
     pipenv_update
