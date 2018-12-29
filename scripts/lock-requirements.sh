@@ -21,7 +21,7 @@ abort() {
     exit 1
 }
 
-lock_requirements() {
+pipenv_lock() {
     $pipenv lock
 
     for file; do
@@ -76,5 +76,5 @@ export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 if [ -n "$pipenv" ]; then
-    lock_requirements "$@"
+    pipenv_lock "$@"
 fi
