@@ -68,8 +68,8 @@ script_dir=$(realpath $(dirname $0))
 source_dir=$script_dir/..
 
 cd "$source_dir"
-tmpfile=$(mktemp)
 
+tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 export LANG=${LANG:-en_US.UTF-8}

@@ -29,9 +29,10 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
-tmpfile=$(mktemp)
 
+tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
+
 sh -eu $script_dir/get-installed-packages.sh >$tmpfile
 sh -eu $script_dir/grep-dbms-package.sh server <$tmpfile || \
 sh -eu $script_dir/grep-dbms-package.sh <$tmpfile
