@@ -16,21 +16,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS="docker docker-compose"
+DARWIN_PKG="docker"
+DARWIN_PKGS="docker-compose"
 
-DEBIAN_PKGS="docker docker-compose"
+DEBIAN_PKG="docker"
+DEBIAN_PKGS="docker-compose"
 
-FEDORA_PKGS="docker docker-compose"
+FEDORA_PKG="docker"
+FEDORA_PKGS="docker-compose"
 
-FREEBSD_PKGS="docker docker-compose-%s"
+FREEBSD_PKG="docker"
+FREEBSD_PKGS="docker-compose-%s"
 
-OPENSUSE_PKGS="docker docker-compose"
+OPENSUSE_PKG="docker"
+OPENSUSE_PKGS="docker-compose"
 
-REDHAT_PKGS="docker-client docker-compose"
+REDHAT_PKG="docker-client"
+REDHAT_PKGS="docker-compose"
 
+SUNOS_PKG=""
 SUNOS_PKGS=""
 
-UBUNTU_PKGS="docker.io docker-compose docker-doc"
+UBUNTU_PKG="docker.io"
+UBUNTU_PKGS="docker-compose docker-doc"
 
 realpath() {
     if [ -x /usr/bin/realpath ]; then
@@ -47,36 +55,38 @@ realpath() {
 script_dir=$(realpath $(dirname $0))
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 
+package="$(sh -eu $script_dir/get-docker-package.sh)"
+
 case "$kernel_name" in
     (Linux)
 	distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
 
 	case "$distro_name" in
 	    (debian)
-		packages="$DEBIAN_PKGS"
+		packages="${package:-$DEBIAN_PKG} $DEBIAN_PKGS"
 		;;
 	    (fedora)
-		packages="$FEDORA_PKGS"
+		packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
 		;;
 	    (redhat|centos)
-		packages="$REDHAT_PKGS"
+		packages="${package:-$REDHAT_PKG}"
 		;;
 	    (opensuse-*)
-		packages="$OPENSUSE_PKGS"
+		packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
 		;;
 	    (ubuntu)
-		packages="$UBUNTU_PKGS"
+		packages="${package:-$UBUNTU_PKG} $UBUNTU_PKGS"
 		;;
 	esac
 	;;
     (Darwin)
-	packages="$DARWIN_PKGS"
+	packages="${package:-$DARWIN_PKG}"
 	;;
     (FreeBSD)
-	packages="$FREEBSD_PKGS"
+	packages="${package:-$FREEBSD_PKG} $FREEBSD_PKGS"
 	;;
     (SunOS)
-	packages="$SUNOS_PKGS"
+	packages="${package:-$SUNOS_PKG} $SUNOS_PKGS"
 	;;
 esac
 
