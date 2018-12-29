@@ -16,8 +16,4 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-if [ $# -gt 0 ]; then
-    egrep "^(docker|docker.io|docker-ce)([0-9]+-$1|-[0-9]+/$1|-$1(-[0-9\.]+)?)\$"
-else
-    egrep "^(docker|docker.io|docker-ce)([0-9]*|-[0-9\.]+)?\$"
-fi
+egrep "^(docker|docker.io|docker-ce-cli)([0-9]*|-[0-9\.]+)?\$"
