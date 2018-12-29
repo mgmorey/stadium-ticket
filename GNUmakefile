@@ -65,4 +65,4 @@ requirements-dev.txt:	.update
 
 .update:	Pipfile
 	$(script_dir)/update-requirements.sh
-	$(script_dir)/lock-requirements.sh requirements*.txt
+	$(script_dir)/lock-requirements.sh requirements.txt requirements-dev.txt
