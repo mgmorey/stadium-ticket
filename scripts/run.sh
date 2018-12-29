@@ -30,7 +30,7 @@ pip_run() {
 	$PYTHON -m venv .venv
     fi
 
-    if [ -d .venv ]; then
+    if [ -r .venv/bin/activate ]; then
 	printf "%s\n" "Activating virtual environment"
 	. .venv/bin/activate
 	printf "%s\n" "Loading .env environment variables"
@@ -39,6 +39,8 @@ pip_run() {
 	export DATABASE_PORT DATABASE_SCHEMA DATABASE_USER
 	export FLASK_APP FLASK_ENV
 	"$@"
+    elif [ -d .venv ]; then
+	abort "%s\n" "Unable to activate environment"
     else
 	abort "%s\n" "No virtual environment"
     fi
