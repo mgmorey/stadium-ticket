@@ -76,5 +76,9 @@ export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 if [ -n "$pipenv" ]; then
-    pipenv_lock "$@"
+    if [ $# -gt 0 ]; then
+	pipenv_lock "$@"
+    else
+	pipenv_lock requirements*.txt
+    fi
 fi
