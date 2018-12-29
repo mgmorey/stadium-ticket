@@ -16,19 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="build-essential libffi-dev libssl-dev pylint3 %s-dev %s-pip %s-pytest %s-venv"
+DEBIAN_PKGS="build-essential libffi-dev libssl-dev pylint3 \
+%s-dev %s-pip %s-pytest %s-venv"
 
-FEDORA_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip"
+FEDORA_PKGS="gcc libffi-devel openssl-devel \
+%s-devel %s-pip"
 
-FREEBSD_PKGS="gmake openssl-devel %s-pip %s-pytest pylint-%s rsync"
+FREEBSD_PKGS="gmake openssl-devel \
+%s-pip %s-pytest pylint-%s rsync"
 
-OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel make %s-devel %s-pylint %s-pip %s-pytest"
+OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel make \
+%s-devel %s-pylint %s-pip %s-pytest"
 
 REDHAT_PKGS="gcc libffi-devel make openssl-devel %s-devel"
 
 SUNOS_PKGS="build-essential pip-%s"
 
-UBUNTU_PKGS="build-essential libffi-dev libssl-dev pylint3 %s-dev %s-pip %s-pytest %s-venv"
+UBUNTU_PKGS="build-essential libffi-dev libssl-dev pylint3 \
+%s-dev %s-pip %s-pytest %s-venv"
 
 realpath() {
     if [ -x /usr/bin/realpath ]; then
