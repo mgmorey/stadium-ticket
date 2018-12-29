@@ -51,10 +51,10 @@ uninstall:
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
 
-requirements.txt:	Pipfile
+requirements.txt:	Pipfile Pipfile.lock
 	$(script_dir)/lock-requirements.sh requirements.txt
 
-requirements-dev.txt:	Pipfile
+requirements-dev.txt:	Pipfile Pipfile.lock
 	$(script_dir)/lock-requirements.sh requirements-dev.txt
 
 .env:		.env-template
@@ -63,6 +63,6 @@ requirements-dev.txt:	Pipfile
 .env-docker:	.env-template
 	$(script_dir)/configure-env.sh .env-docker
 
-.update:	Pipfile
+.update:	Pipfile Pipfile.lock
 	$(script_dir)/update-requirements.sh
 
