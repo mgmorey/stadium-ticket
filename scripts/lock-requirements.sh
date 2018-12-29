@@ -22,6 +22,8 @@ abort() {
 }
 
 lock_requirements() {
+    $pipenv lock
+
     for file; do
 	case $file in
 	    (requirements-dev*.txt)
