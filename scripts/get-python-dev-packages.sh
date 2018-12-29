@@ -22,7 +22,7 @@ FEDORA_PKGS="gcc libffi-devel openssl-devel %s-devel %s-pip"
 
 FREEBSD_PKGS="gmake openssl-devel %s-pip rsync"
 
-OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel make %s-devel %s-pip"
+OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel make %s-devel %s-pylint %s-pip %s-pytest"
 
 REDHAT_PKGS="gcc libffi-devel make openssl-devel %s-devel"
 
