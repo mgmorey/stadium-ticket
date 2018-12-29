@@ -29,4 +29,7 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
+source_dir=$script_dir/..
+
+cd "$source_dir"
 sh -eu $script_dir/pip-install.sh $(printf -- "-r %s\n" requirements*.txt)
