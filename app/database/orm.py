@@ -9,7 +9,7 @@ db = SQLAlchemy()
 
 
 class Events(db.Model):
-    # pylint: disable=no-member,too-few-public-methods
+    # pylint: disable=too-few-public-methods
     """Represent one or more stadium events for which tickets are sold."""
     __tablename__ = 'events'
     name = db.Column(db.String(32), primary_key=True)
