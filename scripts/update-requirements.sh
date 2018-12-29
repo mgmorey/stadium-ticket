@@ -18,7 +18,7 @@
 
 PIP=pip3
 PYTHON=python3
-REQUIREMENTS="requirements.txt requirements-dev.txt"
+REQUIREMENTS="requirements-dev.txt requirements.txt"
 
 abort() {
     printf "$@" >&2
@@ -45,8 +45,8 @@ pip_update() (
 pipenv_update() {
     export LANG=${LANG:-en_US.UTF-8}
     export LC_ALL=${LC_ALL:-en_US.UTF-8}
-    pipenv update -d
     sh -eu "$script_dir/lock-requirements.sh" $REQUIREMENTS
+    pipenv sync -d
 }
 
 realpath() {
