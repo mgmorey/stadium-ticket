@@ -69,7 +69,7 @@ case "$kernel_name" in
 		packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
 		;;
 	    (redhat|centos)
-		packages="${package:-$REDHAT_PKG}"
+		packages="${package:-$REDHAT_PKG} $REDHAT_PKGS"
 		;;
 	    (opensuse-*)
 		packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
@@ -80,13 +80,13 @@ case "$kernel_name" in
 	esac
 	;;
     (Darwin)
-	packages="${package:-$DARWIN_PKG}"
+	packages="${package:-$DARWIN_PKG} $DARWIN_PKGS"
 	;;
     (FreeBSD)
 	packages="${package:-$FREEBSD_PKG} $FREEBSD_PKGS"
 	;;
     (SunOS)
-	packages="${package:-$SUNOS_PKG} $SUNOS_PKGS"
+	packages="${package:-$SUNOS_PKG}"
 	;;
 esac
 
