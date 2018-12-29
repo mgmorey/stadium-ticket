@@ -1,20 +1,16 @@
 Stadium Ticket RESTful API for POSIX Operating Systems
 
-0.  To install dependencies:
+1.  To install dependencies (may require sudo):
 
     scripts/install-dependencies.sh
 
-1.  To initialize the database schema:
+2.  To initialize the database schema:
 
     scripts/sql.sh [schema-mysql|schema-sqlite]
 
-2.  To reset the database to a known state:
+3.  To reset the database to a known state:
 
     scripts/sql.sh [reset-mysql|reset-sqlite]
-
-3.  To run the unit tests using unittest:
-
-    scripts/run.sh python3 -m unittest discover
 
 4.  To run the unit tests using pytest:
 
