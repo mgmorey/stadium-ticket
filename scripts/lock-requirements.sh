@@ -34,10 +34,11 @@ lock_requirements() {
 		abort "%s: Invalid filename\n" "$file"
 	esac
 
+	printf "Generating %s\n" "$file"
 	if $pipenv lock $opts -r >$tmpfile; then
-	    /bin/mv -f $tmpfile $file
-	    chgrp $(id -g) $file
-	    chmod a+r $file
+	    /bin/mv -f $tmpfile "$file"
+	    chgrp $(id -g) "$file"
+	    chmod a+r "$file"
 	else
 	    abort "Unable to update %s\n" "$file"
 	fi
