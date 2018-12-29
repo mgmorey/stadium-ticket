@@ -18,7 +18,7 @@ client-debug:	.env
 debug:	.update reset
 	$(script_dir)/run.sh flask run --port 5001
 
-install:	requirements.txt .env
+install:	.env .update
 	$(script_dir)/install-app.sh
 
 pipenv:	Pipfile
@@ -51,10 +51,10 @@ uninstall:
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
 
-requirements.txt:	.update
+requirements.txt:	Pipfile
 	$(script_dir)/lock-requirements.sh requirements.txt
 
-requirements-dev.txt:	.update
+requirements-dev.txt:	Pipfile
 	$(script_dir)/lock-requirements.sh requirements-dev.txt
 
 .env:		.env-template
@@ -65,4 +65,4 @@ requirements-dev.txt:	.update
 
 .update:	Pipfile
 	$(script_dir)/update-requirements.sh
-	$(script_dir)/lock-requirements.sh requirements.txt requirements-dev.txt
+
