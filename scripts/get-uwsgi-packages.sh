@@ -22,7 +22,7 @@ DEBIAN_PKGS="uwsgi uwsgi-plugin-%s"
 
 FEDORA_PKGS="uwsgi uwsgi-plugin-%s"
 
-FREEBSD_PKGS="uwsgi-%s"
+FREEBSD_PKGS="rsync uwsgi-%s"
 
 OPENSUSE_PKGS="uwsgi uwsgi-python3"
 
