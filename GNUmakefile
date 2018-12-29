@@ -1,5 +1,4 @@
 script_dir = scripts
-sql_dir = sql
 
 all:	.update pylint pytest
 
@@ -15,7 +14,7 @@ client:	.env
 client-debug:	.env
 	$(script_dir)/app-test.sh -h localhost -p 5001
 
-debug:	.update reset
+debug:		.update reset
 	$(script_dir)/run.sh flask run --port 5001
 
 install:	.env .update
@@ -51,12 +50,6 @@ uninstall:
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
 
-requirements.txt:	Pipfile Pipfile.lock
-	$(script_dir)/lock-requirements.sh requirements.txt
-
-requirements-dev.txt:	Pipfile Pipfile.lock
-	$(script_dir)/lock-requirements.sh requirements-dev.txt
-
 .env:		.env-template
 	$(script_dir)/configure-env.sh .env
 
@@ -65,4 +58,3 @@ requirements-dev.txt:	Pipfile Pipfile.lock
 
 .update:	Pipfile Pipfile.lock
 	$(script_dir)/update-requirements.sh
-
