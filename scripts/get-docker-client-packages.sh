@@ -18,7 +18,7 @@
 
 DARWIN_PKGS="docker docker-compose"
 
-DEBIAN_PKGS="docker-ce-cli docker-compose"
+DEBIAN_PKGS="docker docker-compose"
 
 FEDORA_PKGS="docker docker-compose"
 
