@@ -25,4 +25,4 @@ pytest = "*"
 
 [scripts]
 build = "docker-compose up --build"
-flask = "flask"
+
