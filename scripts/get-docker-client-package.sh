@@ -34,5 +34,4 @@ tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 sh -eu $script_dir/get-installed-packages.sh >$tmpfile
-sh -eu $script_dir/grep-docker-package.sh server <$tmpfile || \
 sh -eu $script_dir/grep-docker-package.sh <$tmpfile
