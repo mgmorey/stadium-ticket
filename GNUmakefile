@@ -55,7 +55,7 @@ requirements.txt:	.update
 	$(script_dir)/lock-requirements.sh requirements.txt
 
 requirements-dev.txt:	.update
-	$(script_dir)/lock-requirements.sh -d requirements-dev.txt
+	$(script_dir)/lock-requirements.sh requirements-dev.txt
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh .env
@@ -65,5 +65,4 @@ requirements-dev.txt:	.update
 
 .update:	Pipfile
 	$(script_dir)/update-requirements.sh
-	$(script_dir)/lock-requirements.sh requirements.txt
-	$(script_dir)/lock-requirements.sh -d requirements-dev.txt
+	$(script_dir)/lock-requirements.sh requirements*.txt
