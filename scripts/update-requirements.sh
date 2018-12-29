@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# update-requirements: lock requirements and update virtualenv
+# update-requirements: update requirements and virtualenv
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
 
 PIP=pip3
 PYTHON=python3
+REQUIREMENTS="requirements.txt requirements-dev.txt"
 
 abort() {
     printf "$@" >&2
@@ -25,7 +26,7 @@ abort() {
 }
 
 pip_update() (
-    cd $source_dir
+    cd "$source_dir"
 
     if [ ! -d .venv ]; then
 	printf "%s\n" "Creating virtual environment"
@@ -35,7 +36,6 @@ pip_update() (
     if [ -d .venv ]; then
 	printf "%s\n" "Activating virtual environment"
 	. .venv/bin/activate
-	REQUIREMENTS=requirements*.txt
 	. "$script_dir/populate-virtualenv.sh"
     else
 	abort "%s\n" "No virtual environment"
@@ -47,7 +47,7 @@ pipenv_update() {
     export LANG=${LANG:-en_US.UTF-8}
     export LC_ALL=${LC_ALL:-en_US.UTF-8}
     pipenv update -d
-    touch .update
+    sh -eu "$(script_dir)/lock-requirements.sh" $REQUIREMENTS
 }
 
 realpath() {
@@ -75,3 +75,5 @@ if [ -n "$pipenv" ]; then
 else
     pip_update
 fi
+
+touch .update
