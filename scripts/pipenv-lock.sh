@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# lock-requirements: generate requirements.txt using pipenv
+# pipenv-lock: generate package requirement lists using pipenv
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
