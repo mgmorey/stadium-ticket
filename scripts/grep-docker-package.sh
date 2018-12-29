@@ -16,4 +16,4 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-egrep "^(docker|docker.io|docker-ce-cli)([0-9]*|-[0-9\.]+)?\$"
+egrep "^(docker|docker.io|docker-ce|docker-ce-cli)([0-9]*|-[0-9\.]+)?\$"
