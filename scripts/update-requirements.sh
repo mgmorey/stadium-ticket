@@ -47,7 +47,7 @@ pipenv_update() {
     export LANG=${LANG:-en_US.UTF-8}
     export LC_ALL=${LC_ALL:-en_US.UTF-8}
     pipenv update -d
-    sh -eu "$(script_dir)/lock-requirements.sh" $REQUIREMENTS
+    sh -eu "$script_dir/lock-requirements.sh" $REQUIREMENTS
 }
 
 realpath() {
