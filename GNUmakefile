@@ -20,9 +20,6 @@ debug:		.update reset
 install:	.env .update
 	$(script_dir)/install-app.sh
 
-pipenv:	Pipfile
-	$(script_dir)/pip-install-pipenv.sh
-
 pycode:	.update
 	$(script_dir)/run.sh pycodestyle app
 
@@ -44,7 +41,7 @@ stress:
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
-.PHONY: all build clean client client-debug debug install pipenv
+.PHONY: all build clean client client-debug debug install
 .PHONY: pycode pylint pytest reset schema stress uninstall
 
 Makefile:	GNUmakefile
