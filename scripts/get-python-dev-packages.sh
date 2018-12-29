@@ -23,12 +23,13 @@ FEDORA_PKGS="gcc libffi-devel openssl-devel \
 %s-devel %s-pip"
 
 FREEBSD_PKGS="gmake openssl-devel \
-%s-pip %s-pytest pylint-%s rsync"
+%s-pip %s-pytest pylint-%s"
 
 OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel make \
 %s-devel %s-pylint %s-pip %s-pytest"
 
-REDHAT_PKGS="gcc libffi-devel make openssl-devel %s-devel"
+REDHAT_PKGS="gcc libffi-devel make openssl-devel \
+%s-devel"
 
 SUNOS_PKGS="build-essential pip-%s"
 
