@@ -1,9 +1,10 @@
 **/*.log
-**/.python-version
 **/.pytest_cache
+**/.python-version
 **/GNUmakefile
 **/Makefile
 **/__pycache__
+**/pylintrc
 **/test_*.py
 */.env
 */.env-template
