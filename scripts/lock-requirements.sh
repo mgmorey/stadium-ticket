@@ -21,6 +21,29 @@ abort() {
     exit 1
 }
 
+lock_requirements() {
+    for file; do
+	case $file in
+	    (requirements-dev*.txt)
+		opts=-d
+		;;
+	    (requirements.txt)
+		opts=
+		;;
+	    (*)
+		abort "%s: Invalid filename\n" "$file"
+	esac
+
+	if $pipenv lock $opts -r >$tmpfile; then
+	    /bin/mv -f $tmpfile $file
+	    chgrp $(id -g) $file
+	    chmod a+r $file
+	else
+	    abort "Unable to update %s\n" "$file"
+	fi
+    done
+}
+
 realpath() {
     if [ -x /usr/bin/realpath ]; then
 	/usr/bin/realpath "$@"
@@ -33,45 +56,22 @@ realpath() {
     fi
 }
 
-opts=
-script_dir=$(realpath $(dirname $0))
-source_dir=$script_dir/..
-
-while getopts 'd' OPTION; do
-    case $OPTION in
-	('d')
-	    opts=-d
-	    ;;
-	('?')
-	    printf "Usage: %s: [-d]\n" $(basename $0) >&2
-	    exit 2
-	    ;;
-    esac
-done
-shift $(($OPTIND - 1))
-
 if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "This script must be run as a non-privileged user"
 fi
 
-cd "$source_dir"
+pipenv=$(which pipenv 2>/dev/null || true)
+script_dir=$(realpath $(dirname $0))
+source_dir=$script_dir/..
 
-file=${1-requirements.txt}
+cd "$source_dir"
 tmpfile=$(mktemp)
 
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
-if which pipenv >/dev/null 2>&1; then
-    export LANG=${LANG:-en_US.UTF-8}
-    export LC_ALL=${LC_ALL:-en_US.UTF-8}
+export LANG=${LANG:-en_US.UTF-8}
+export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-    if pipenv lock $opts -r >$tmpfile; then
-	/bin/mv -f $tmpfile $file
-	chgrp $(id -g) $file
-	chmod a+r $file
-    else
-	abort "Unable to update %s\n" "$file"
-    fi
-else
-    printf "Unable to update %s\n" "$file"
+if [ -n "$pipenv" ]; then
+    lock_requirements "$@"
 fi
