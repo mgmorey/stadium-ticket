@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+export LANG=${LANG:-C.UTF-8}
+export LC_ALL=${LC_ALL:-C.UTF-8}
+
 PIP=pip3
 PYTHON=python3
 
@@ -47,10 +50,6 @@ pip_run() {
 }
 
 pipenv_run() {
-    # set default locales
-    export LANG=${LANG:-en_US.UTF-8}
-    export LC_ALL=${LC_ALL:-en_US.UTF-8}
-
     if [ ! "$pipenv" --bare --venv 2>/dev/null ]; then
 	# if no virtualenv has been created yet, then
 	# create it and install packages per Pipfile.lock
