@@ -18,8 +18,7 @@ class Tickets():
     @staticmethod
     def generate_serial(session, event_name: str, count: int = 1):
         """Return a ticket number and count for a series of tickets."""
-        query = session.query(Events)
-        event = query.filter(Events.name == event_name).first()
+        event = Tickets.get_event(session, event_name)
         last_serial = event.sold
 
         if Tickets.MAX_NUMBER is not None:
@@ -32,10 +31,16 @@ class Tickets():
         return sold, count
 
     @staticmethod
-    def last_serial(session, event_name: str) -> int:
-        """Return the number of the last ticket sold."""
+    def get_event(session, event_name: str):
+        """Return an event object for a given event name."""
         query = session.query(Events)
         event = query.filter(Events.name == event_name).first()
+        return event
+
+    @staticmethod
+    def get_last_serial(session, event_name: str) -> int:
+        """Return the next serial number available for a given event name."""
+        event = Tickets.get_event(session, event_name)
         return event.sold
 
     def __init__(self, session, event: str, count: int = 1):

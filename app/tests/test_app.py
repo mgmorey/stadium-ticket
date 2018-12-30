@@ -25,7 +25,7 @@ class TestTicketsMethods(unittest.TestCase):
 
     def sell_tickets(self, event: str, count: int = 1):
         with app.app_context():
-            last = Tickets.last_serial(db.session, event)
+            last = Tickets.get_last_serial(db.session, event)
             t = Tickets(db.session, event, count)
             self.assertEqual(t.event, event)
             self.assertEqual(t.serial, last)
