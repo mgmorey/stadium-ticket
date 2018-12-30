@@ -6,6 +6,7 @@
 **/__pycache__
 **/pylintrc
 **/test_*.py
+**/tests
 */.env
 */.env-template
 */.git

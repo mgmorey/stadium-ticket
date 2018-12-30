@@ -147,6 +147,9 @@ install_source_files() {
 	assert [ -r "$source" ]
 
 	case "$source" in
+	    (*/tests/*)
+		: # Omit tests folder
+		;;
 	    (*/test_*.py)
 		: # Omit test modules
 		;;
