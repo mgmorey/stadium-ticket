@@ -18,6 +18,7 @@
 
 : ${DATABASE_DIALECT:=sqlite}
 : ${DATABASE_SCHEMA:=stadium-tickets}
+: ${DATABASE_FILENAME:="/tmp/$DATABASE_SCHEMA.sqlite"}
 
 abort() {
     printf "$@" >&2
@@ -33,7 +34,7 @@ exec_sql() {
 		-p"${DATABASE_PASSWORD:-}"
 	    ;;
 	(sqlite)
-	    sqlite3 "/tmp/$DATABASE_SCHEMA.db"
+	    sqlite3 "$DATABASE_FILENAME"
 	    ;;
     esac
 }

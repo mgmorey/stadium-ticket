@@ -13,12 +13,13 @@ DRIVER = {
 HOST = 'localhost'
 SCHEMA = 'stadium-tickets'
 URI = {
-    'sqlite': "{0}:////tmp/{1}.db",
+    'sqlite': "{0}:///{4}",
     None: "{0}://{3}@{2}/{1}"
 }
 USER = 'root'
 
 PATTERN = {
+    'DATABASE_FILENAME': re.compile(r'(/[\w\d\-\.]+){1,}'),
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
     'DATABASE_PASSWORD': re.compile(r'[\w\d\-\.!\#\$\^&\*\=\+]+'),
     'DATABASE_PORT': re.compile(r'([\d]+|[\w-]+)'),
@@ -40,6 +41,16 @@ def _get_endpoint(dialect: str):
     host = _get_string('DATABASE_HOST', default=HOST)
     port = _get_string('DATABASE_PORT')
     return f"{host}:{port}" if port else host
+
+
+def _get_filename(dialect: str, schema: str):
+    """Return a database filename (SQLite3 only)."""
+    if '{4}' not in _get_uri(dialect):
+        return None
+
+    name = f"/tmp/{schema}.sqlite"
+    name = _get_string('DATABASE_FILENAME', default=name)
+    return name
 
 
 def _get_login(dialect: str):
@@ -86,5 +97,6 @@ def get_uri():
     schema = _get_string('DATABASE_SCHEMA', default=SCHEMA)
     endpoint = _get_endpoint(dialect)
     login = _get_login(dialect)
+    name = _get_filename(dialect, schema)
     uri = config('DATABASE_URI', default=_get_uri(dialect))
-    return uri.format(scheme, schema, endpoint, login)
+    return uri.format(scheme, schema, endpoint, login, name)
