@@ -27,7 +27,7 @@ pylint:	.update
 	$(script_dir)/run.sh pylint app
 
 pytest:	.update reset
-	$(script_dir)/run.sh pytest
+	$(script_dir)/run.sh pytest app/tests
 
 reset:	schema
 	$(script_dir)/sql.sh reset

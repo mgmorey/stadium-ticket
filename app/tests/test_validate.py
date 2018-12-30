@@ -3,7 +3,7 @@
 
 import unittest
 
-from app.uri import _validate_string
+from ..uri import _validate_string
 
 
 class TestValidateFunctions(unittest.TestCase):
