@@ -19,7 +19,7 @@ URI = {
 USER = 'root'
 
 PATTERN = {
-    'DATABASE_FILENAME': re.compile(r'(/[\w\d\-\.]+){1,}'),
+    'DATABASE_FILENAME': re.compile(r'(/[\w\d\-][\w\d\-\.]*){1,}'),
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
     'DATABASE_PASSWORD': re.compile(r'[\w\d\-\.!\#\$\^&\*\=\+]+'),
     'DATABASE_PORT': re.compile(r'([\d]+|[\w-]+)'),
