@@ -3,21 +3,18 @@ FROM ubuntu:18.04
 ENV APP_NAME=stadium-ticket
 ENV APP_PORT=5000
 
-# Distro-specific parameters
+# Set Ubuntu-specific parameters
 ENV APP_GID=www-data
 ENV APP_UID=www-data
-ENV DEBIAN_FRONTEND=noninteractive
-ENV RETRY='i=0; while [ $i -lt 3 ]; do %s && break; i=$((i + 1)); done\n'
 
-# Update Debian package repository index
-ENV APT_UPDATE="apt-get update -qy"
-RUN printf "$RETRY" "$APT_UPDATE" | sh
-
-# Install binary dependencies from Debian package repository
+# Update Debian package repository index and install binary packages
 ENV APT_INSTALL="apt-get install -qy --no-install-recommends build-essential \
 mariadb-client-10.1 python3 python3-dev python3-pip sqlite3 uwsgi \
 uwsgi-plugin-python3"
-RUN printf "$RETRY" "$APT_INSTALL" | sh
+ENV APT_UPDATE="apt-get update -qy"
+ENV DEBIAN_FRONTEND=noninteractive
+ENV RETRY='i=0; while [ $i -lt 3 ]; do %s && break; i=$((i + 1)); done\n'
+RUN printf "$RETRY" "$APT_UPDATE" "$APT_INSTALL" | sh -x
 
 # Create application directories
 ENV APP_DIR=/opt/$APP_NAME
@@ -27,25 +24,23 @@ ENV APP_VARDIR=/opt/var/$APP_NAME
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
 
 # Copy application files
+COPY Pipfile* $APP_DIR/
 COPY app/ $APP_DIR/app/
 COPY scripts/sql.sh $APP_DIR/scripts/
 COPY sql/schema-*.sql $APP_DIR/sql/
 COPY .env-docker $APP_DIR/.env
 COPY app.ini $APP_ETCDIR/
 
-# Copy Pipfiles
-COPY Pipfile* $APP_DIR/
-
 # Change to application directory
 WORKDIR $APP_DIR
 
 # Install packages in Pipfiles to virtualenv
-ENV LANG=C.UTF-8
-ENV LC_ALL=C.UTF-8
+ENV LANG=${LANG:-C.UTF-8}
+ENV LC_ALL=${LC_ALL:-C.UTF-8}
 ENV PIPENV_VENV_IN_PROJECT=true
 RUN pip3 install pipenv && pipenv sync
 
-# Make application owner of its own directories
+# Grant application ownership of app, run and data directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR
 
 # Drop privileges and change to data directory
