@@ -78,6 +78,7 @@ def _validate_string(parameter: str, value: str) -> str:
 
     return value
 
+
 def get_uri():
     """Return a database connection URI string."""
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
