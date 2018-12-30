@@ -18,11 +18,29 @@ class TestValidateFunctions(unittest.TestCase):
         value = _validate_string('DATABASE_DIALECT', 'mysql')
         self.assertEqual(value, 'mysql')
 
-    def test_validate_filename_fail(self):
+    def test_validate_filename_fail_1(self):
         self.assertRaises(ValueError,
                           _validate_string,
                           'DATABASE_FILENAME',
                           'foo')
+
+    def test_validate_filename_fail_2(self):
+        self.assertRaises(ValueError,
+                          _validate_string,
+                          'DATABASE_FILENAME',
+                          '/')
+
+    def test_validate_filename_fail_3(self):
+        self.assertRaises(ValueError,
+                          _validate_string,
+                          'DATABASE_FILENAME',
+                          '/.')
+
+    def test_validate_filename_fail_3(self):
+        self.assertRaises(ValueError,
+                          _validate_string,
+                          'DATABASE_FILENAME',
+                          '/tmp/..')
 
     def test_validate_filename_pass(self):
         value = _validate_string('DATABASE_FILENAME', '/tmp/foo.sqlite')
