@@ -2,10 +2,9 @@
 """Define methods to construct a SQLAlchemy database URI string."""
 
 import os
+import re
 
 from decouple import config
-
-from .validate import validate_string
 
 DIALECT = 'sqlite'
 DRIVER = {
@@ -18,6 +17,13 @@ URI = {
     None: "{0}://{3}@{2}/{1}"
 }
 USER = 'root'
+
+PATTERN = {
+    'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
+    'DATABASE_PASSWORD': re.compile(r'[\w\d\-\.!\#\$\^&\*\=\+]+'),
+    'DATABASE_PORT': re.compile(r'([\d]+|[\w-]+)'),
+    None: re.compile(r'[\w\d\-]+')
+}
 
 
 def _get_driver(dialect: str):
@@ -55,13 +61,22 @@ def _get_scheme(dialect: str):
 def _get_string(parameter: str, default: str = None):
     """Return a validated string parameter value."""
     value = config(parameter, default=default)
-    return None if value is None else validate_string(parameter, value)
+    return None if value is None else _validate_string(parameter, value)
 
 
 def _get_uri(dialect: str):
     """Return a database URI format specifier."""
     return URI.get(dialect, URI[None])
 
+
+def _validate_string(parameter: str, value: str) -> str:
+    """Raise a ValueError if parameter value is invalid."""
+    pattern = PATTERN.get(parameter, PATTERN[None])
+
+    if not pattern.fullmatch(value):
+        raise ValueError(f"Invalid {parameter} value: \"{value}\"")
+
+    return value
 
 def get_uri():
     """Return a database connection URI string."""

@@ -3,9 +3,7 @@
 
 import unittest
 
-from app import app
-from app.database import db
-from app.tickets import SoldOut, Tickets
+from app.flask_app import app, db, SoldOut, Tickets
 
 EVENT_1 = 'The Beatles'
 EVENT_2 = 'The Cure'
