@@ -4,7 +4,7 @@
 
 import datetime
 
-from .apps.models import Events
+from .apps import Events
 
 
 class SoldOut(Exception):
