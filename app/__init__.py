@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
-"""Import app."""
+"""Import flask app."""
 
 from .flask_app import app
