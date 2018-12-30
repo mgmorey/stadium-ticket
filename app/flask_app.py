@@ -4,7 +4,7 @@
 
 import logging
 
-from .app import Manager, abort, create_app, db, jsonify, request
+from .app import abort, create_app, db, jsonify, request
 from .tickets import SoldOut, Tickets
 from .uri import get_uri
 
@@ -70,13 +70,3 @@ def request_tickets():
     return jsonify({'ticket_number': tickets.serial,
                     'ticket_count': tickets.count,
                     'time': tickets.issue})
-
-
-if __name__ == '__main__':
-    def main():
-        """Main method (called when module invoked as a script)."""
-        logging.basicConfig(format=LOGGING_FORMAT, level=logging.DEBUG)
-        manager = Manager(app)
-        manager.run()
-
-    main()
