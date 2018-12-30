@@ -39,19 +39,16 @@ COPY Pipfile* $APP_DIR/
 # Change to application directory
 WORKDIR $APP_DIR
 
-# Install pipenv package and create virtualenv
-RUN pip3 install pipenv
-
 # Install packages in Pipfiles to virtualenv
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV PIPENV_VENV_IN_PROJECT=true
-RUN pipenv sync
+RUN pip3 install pipenv && pipenv sync
 
 # Make application owner of its own directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR
 
-# Drop privileges and change to data directory directory
+# Drop privileges and change to data directory
 USER $APP_UID
 WORKDIR $APP_VARDIR
 
