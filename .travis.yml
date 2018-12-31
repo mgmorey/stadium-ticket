@@ -11,4 +11,4 @@ install:
 script:
   - pycodestyle app
   - pylint app
-  - scripts/sql.sh schema && pytest
+  - scripts/run.sh reload-db && pytest
