@@ -12,4 +12,4 @@ script:
   - pycodestyle app
   - pylint app
   - python3 -m app load-db
-  - pytest app/tests
+  - pytest tests
