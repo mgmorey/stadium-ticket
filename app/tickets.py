@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Define SoldOut and Ticket classes."""
+"""Define SoldOut and Tickets classes for stadium events."""
 
 import datetime
 
@@ -19,11 +19,10 @@ class Tickets():
     def generate_serial(session, event_name: str, count: int = 1):
         """Return a ticket number and count for a series of tickets."""
         event = Tickets.get_event(session, event_name)
-        last_serial = event.sold
 
         if Tickets.MAX_NUMBER is not None:
-            if last_serial + count > Tickets.MAX_NUMBER:
-                raise SoldOut("maximum serial number: {Tickets.MAX_NUMBER}")
+            if event.sold + count > event.total:
+                raise SoldOut("maximum serial number: {event.total}")
 
         sold = event.sold
         event.sold = sold + count

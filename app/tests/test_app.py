@@ -50,7 +50,7 @@ class TestTicketsMethods(unittest.TestCase):
         self.sell_tickets(EVENT_4, 1000)
 
     def test_sell_out_event_5_tickets_1001(self):
-        self.sell_out_tickets(EVENT_5)
+        self.sell_out_tickets(EVENT_5, 1001)
 
 
 if __name__ == '__main__':
