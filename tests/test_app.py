@@ -3,7 +3,8 @@
 
 import unittest
 
-from ..flask_app import app, db, SoldOut, Tickets
+from app.apps import Events
+from app.flask_app import app, db, SoldOut, Tickets
 
 EVENT_1 = 'The Beatles'
 EVENT_2 = 'The Cure'
@@ -37,6 +38,15 @@ class TestTicketsMethods(unittest.TestCase):
         with app.app_context():
             with self.assertRaises(SoldOut):
                 t = Tickets(db.session, event, count)
+
+    def setUp(self):
+        with app.app_context():
+            try:
+                for name in [EVENT_1, EVENT_2, EVENT_3, EVENT_4, EVENT_5]:
+                    db.session.add(Events(name=name, sold=0, total=1000))
+                    db.session.commit()
+            except:
+                db.session.rollback()
 
     def test_sell_event_1_ticket(self):
         self.sell_tickets(EVENT_1)

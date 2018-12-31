@@ -14,7 +14,7 @@ client:	.env
 client-debug:	.env
 	$(script_dir)/app-test.sh -h localhost -p 5001
 
-debug:		.update reload
+debug:		.update init-db
 	$(script_dir)/run.sh flask run --port 5001
 
 install:	.env .update
@@ -26,11 +26,11 @@ pycode:	.update
 pylint:	.update
 	$(script_dir)/run.sh pylint app
 
-pytest:	.update reload
-	$(script_dir)/run.sh pytest app/tests
+pytest:	.update init-db
+	$(script_dir)/run.sh pytest tests
 
-reload:
-	$(script_dir)/run.sh python3 -m app reload-db
+init-db:
+	$(script_dir)/run.sh python3 -m app init-db
 
 stress:
 	$(script_dir)/load-test.sh
@@ -41,8 +41,8 @@ stress-debug:
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
-.PHONY: all build clean client client-debug debug install pycode
-.PHONY: pylint pytest reload stress stress-debug uninstall
+.PHONY: all build clean client client-debug debug init-db install
+.PHONY: pycode pylint pytest init-db stress stress-debug uninstall
 
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
