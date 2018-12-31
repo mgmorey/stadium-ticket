@@ -44,7 +44,7 @@ USER $APP_UID
 ENV LANG=${LANG:-C.UTF-8}
 ENV LC_ALL=${LC_ALL:-C.UTF-8}
 ENV PIPENV_VENV_IN_PROJECT=true
-RUN pipenv sync && pipenv run python3 -m app init_db
+RUN pipenv sync && pipenv run python3 -m app init-db
 
 # Change to data directory, expose port and start app
 WORKDIR $APP_VARDIR

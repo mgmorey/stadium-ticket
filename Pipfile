@@ -7,9 +7,9 @@ verify_ssl = true
 python_version = "3.6"
 
 [packages]
+Click = "*"
 Flask = "*"
 Flask-RESTful = "*"
-Flask-Script = "*"
 Flask-SQLAlchemy = "*"
 PyMySQL = "*"
 SQLAlchemy = "*"
@@ -25,4 +25,3 @@ pytest = "*"
 
 [scripts]
 build = "docker-compose up --build"
-
