@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Script to invoke the stadium tickets RESTful API."""
 
@@ -18,11 +17,5 @@ def init_db():
         db.create_all()
 
 
-def main():
-    """Main method (called when module invoked as a script)."""
-    logging.basicConfig(format=LOGGING_FORMAT, level=logging.DEBUG)
-    manager.run()
-
-
-if __name__ == '__main__':
-    main()
+logging.basicConfig(format=LOGGING_FORMAT, level=logging.DEBUG)
+manager.run()
