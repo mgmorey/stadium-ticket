@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Define db object and app creation factory method."""
 
-from flask import Flask, abort, jsonify, request
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()  # pylint: disable=invalid-name

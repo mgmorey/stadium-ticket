@@ -4,7 +4,9 @@
 
 import logging
 
-from .app import abort, create_app, db, jsonify, request
+from flask import abort, jsonify, request
+
+from .app import create_app, db
 from .apps import Events
 from .tickets import SoldOut, Tickets
 from .uri import get_uri
