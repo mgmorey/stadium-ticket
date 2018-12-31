@@ -5,8 +5,8 @@ from app.app import db
 
 
 class Events(db.Model):
-    # pylint: disable=too-few-public-methods
     """Represent one or more stadium events to which tickets are sold."""
+    # pylint: disable=too-few-public-methods
     __tablename__ = 'events'
     name = db.Column(db.String(32), primary_key=True)
     sold = db.Column(db.Integer, nullable=False)

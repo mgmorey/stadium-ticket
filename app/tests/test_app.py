@@ -24,6 +24,7 @@ class TestTicketsMethods(unittest.TestCase):
             self.events[event].add(i)
 
     def sell_tickets(self, event: str, count: int = 1):
+        Tickets.LIMIT_SALES = False
         with app.app_context():
             last = Tickets.get_last_serial(db.session, event)
             t = Tickets(db.session, event, count)
@@ -32,8 +33,8 @@ class TestTicketsMethods(unittest.TestCase):
             self.add_serial(event, t.serial, count)
 
     def sell_out_tickets(self, event: str, count: int = 1):
+        Tickets.LIMIT_SALES = True
         with app.app_context():
-            Tickets.MAX_NUMBER = 0
             with self.assertRaises(SoldOut):
                 t = Tickets(db.session, event, count)
 

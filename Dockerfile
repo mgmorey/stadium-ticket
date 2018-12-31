@@ -40,11 +40,13 @@ RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 WORKDIR $APP_DIR
 USER $APP_UID
 
-# Install dependencies and initialize database schema
+# Install dependencies and initialize/load database
 ENV LANG=${LANG:-C.UTF-8}
 ENV LC_ALL=${LC_ALL:-C.UTF-8}
 ENV PIPENV_VENV_IN_PROJECT=true
-RUN pipenv sync && pipenv run python3 -m app init-db
+RUN pipenv sync
+RUN pipenv run python3 -m app init-db
+RUN pipenv run python3 -m app load-db
 
 # Change to data directory, expose port and start app
 WORKDIR $APP_VARDIR

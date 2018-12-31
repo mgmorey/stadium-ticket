@@ -5,6 +5,7 @@ import logging
 
 import click
 
+from .apps import Events
 from .flask_app import LOGGING_FORMAT, app, db
 
 
@@ -29,6 +30,20 @@ def init_db():
     with app.app_context():
         db.create_all()
     click.echo('Initialized the database')
+
+
+@cli.command()
+def load_db():
+    """Create database schema and tables."""
+    click.echo('Loading the database with test data')
+    with app.app_context():
+        db.session.add(Events(name='SoldOut', sold=0, total=1000))
+        db.session.add(Events(name='The Beatles', sold=0, total=1000))
+        db.session.add(Events(name='The Cure', sold=0, total=1000))
+        db.session.add(Events(name='The Doors', sold=0, total=1000))
+        db.session.add(Events(name='The Who', sold=0, total=1000))
+        db.session.commit()
+    click.echo('Loaded the database with test data')
 
 
 if __name__ == '__main__':

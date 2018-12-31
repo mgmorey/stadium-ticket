@@ -29,11 +29,10 @@ pylint:	.update
 pytest:	.update reset
 	$(script_dir)/run.sh pytest app/tests
 
-reset:	schema
-	$(script_dir)/sql.sh reset
-
-schema:
+reset:
+	$(script_dir)/run.sh drop-db
 	$(script_dir)/run.sh init-db
+	$(script_dir)/run.sh load-db
 
 stress:
 	$(script_dir)/load-test.sh
@@ -42,7 +41,7 @@ uninstall:
 	$(script_dir)/uninstall-app.sh
 
 .PHONY: all build clean client client-debug debug install
-.PHONY: pycode pylint pytest reset schema stress uninstall
+.PHONY: pycode pylint pytest reset stress uninstall
 
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile

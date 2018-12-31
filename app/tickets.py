@@ -13,14 +13,14 @@ class SoldOut(Exception):
 
 class Tickets():
     """Represent one or more tickets for a stadium event."""
-    MAX_NUMBER = None
+    LIMIT_SALES = False
 
     @staticmethod
     def generate_serial(session, event_name: str, count: int = 1):
         """Return a ticket number and count for a series of tickets."""
         event = Tickets.get_event(session, event_name)
 
-        if Tickets.MAX_NUMBER is not None:
+        if Tickets.LIMIT_SALES:
             if event.sold + count > event.total:
                 raise SoldOut("maximum serial number: {event.total}")
 
