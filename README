@@ -6,17 +6,17 @@ Stadium Ticket RESTful API for POSIX Operating Systems
 
 2.  To initialize the database schema:
 
-    scripts/sql.sh [schema-mysql|schema-sqlite]
+    scripts/run.sh python3 -m app init-db
 
-3.  To reset the database to a known state:
+3.  To reset the database to a known state (with test data):
 
-    scripts/sql.sh [reset-mysql|reset-sqlite]
+    scripts/run.sh python3 -m app reload-db
 
 4.  To run the unit tests using pytest:
 
     scripts/run.sh pytest
 
-5.  To start the app:
+5.  To run the app:
 
     scripts/run.sh flask run
 
