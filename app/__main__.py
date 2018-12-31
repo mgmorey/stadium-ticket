@@ -9,6 +9,15 @@ from .apps import Events
 from .flask_app import LOGGING_FORMAT, app, db
 
 
+def _load_data(session):
+    session.add(Events(name='SoldOut', sold=0, total=1000))
+    session.add(Events(name='The Beatles', sold=0, total=1000))
+    session.add(Events(name='The Cure', sold=0, total=1000))
+    session.add(Events(name='The Doors', sold=0, total=1000))
+    session.add(Events(name='The Who', sold=0, total=1000))
+    session.commit()
+
+
 @click.group()
 def cli():
     """Create Click group named cli."""
@@ -34,16 +43,22 @@ def init_db():
 
 @cli.command()
 def load_db():
-    """Create database schema and tables."""
+    """Load the database with test data."""
     click.echo('Loading the database with test data')
     with app.app_context():
-        db.session.add(Events(name='SoldOut', sold=0, total=1000))
-        db.session.add(Events(name='The Beatles', sold=0, total=1000))
-        db.session.add(Events(name='The Cure', sold=0, total=1000))
-        db.session.add(Events(name='The Doors', sold=0, total=1000))
-        db.session.add(Events(name='The Who', sold=0, total=1000))
-        db.session.commit()
+        _load_data(db.session)
     click.echo('Loaded the database with test data')
+
+
+@cli.command()
+def reload_db():
+    """Reload the database with test data."""
+    click.echo('Reloading the database with test data')
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+        _load_data(db.session)
+    click.echo('Reloaded the database with test data')
 
 
 if __name__ == '__main__':
