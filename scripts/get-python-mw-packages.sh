@@ -43,11 +43,11 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
-kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
+kernel_name=$(sh -eu "$script_dir/get-os-kernel-name.sh")
 
 case "$kernel_name" in
     (Linux)
-	distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
+	distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
 
 	case "$distro_name" in
 	    (debian)
@@ -75,7 +75,7 @@ case "$kernel_name" in
 	;;
 esac
 
-data=$(sh -eu $script_dir/get-python-package.sh)
+data=$(sh -eu "$script_dir/get-python-package.sh")
 package_name=$(printf "%s" "$data" | awk '{print $1}')
 package_modifier=$(printf "%s" "$data" | awk '{print $2}')
 

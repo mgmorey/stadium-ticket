@@ -31,7 +31,7 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
-source_dir=$script_dir/..
+source_dir="$script_dir/.."
 
 printf "%s\n" "Loading .env environment variables"
 . $source_dir/.env
@@ -64,4 +64,4 @@ for event in "SoldOut" "The Beatles" "The Cure" "The Doors" "The Who"; do
     curl -i -H "$HEADER" -X PUT -d "{\"command\": \"add_event\", \"event\": \"$event\", \"total\": 1000}" -i $url_event
 done
 
-ab -H "$HEADER" -u $script_dir/put.json -n 1000 -r -c 10 $url_ticket
+ab -H "$HEADER" -u "$script_dir/put.json" -n 1000 -r -c 10 $url_ticket

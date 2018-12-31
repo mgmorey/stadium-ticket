@@ -50,7 +50,7 @@ if [ $(id -u) -eq 0 ]; then
 fi
 
 script_dir=$(realpath $(dirname $0))
-source_dir=$script_dir/..
+source_dir="$script_dir/.."
 
 . "$script_dir/configure-app.sh"
 

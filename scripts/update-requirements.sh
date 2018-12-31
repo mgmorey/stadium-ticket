@@ -92,7 +92,7 @@ fi
 
 pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(realpath $(dirname $0))
-source_dir=$script_dir/..
+source_dir="$script_dir/.."
 
 cd "$source_dir"
 

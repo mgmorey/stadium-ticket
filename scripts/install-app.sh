@@ -179,11 +179,11 @@ stage_app() {
 	sh=/bin/sh
     fi
 
-    $sh "$script_dir/stage-app.sh"
+    $sh -eu "$script_dir/stage-app.sh"
 }
 
 script_dir=$(realpath $(dirname $0))
-source_dir=$script_dir/..
+source_dir="$script_dir/.."
 
 . "$script_dir/configure-app.sh"
 

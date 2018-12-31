@@ -34,11 +34,11 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
-kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
+kernel_name=$(sh -eu "$script_dir/get-os-kernel-name.sh")
 
 case "$kernel_name" in
     (Linux)
-	distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
+	distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
 
 	case "$distro_name" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
@@ -55,10 +55,10 @@ case "$kernel_name" in
 	;;
 esac
 
-package_manager="$(sh -eu $script_dir/get-package-manager.sh)"
+package_manager="$(sh -eu "$script_dir/get-package-manager.sh")"
 
 if [ -n "$package_manager" ]; then
-    packages="$(sh -eu $script_dir/get-uwsgi-packages.sh)"
+    packages="$(sh -eu "$script_dir/get-uwsgi-packages.sh")"
 
     if [ -n "$packages" ]; then
 	$package_manager install $packages
