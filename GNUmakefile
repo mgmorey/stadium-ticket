@@ -33,7 +33,7 @@ reset:	schema
 	$(script_dir)/sql.sh reset
 
 schema:
-	$(script_dir)/sql.sh schema
+	$(script_dir)/run.sh init-db
 
 stress:
 	$(script_dir)/load-test.sh
