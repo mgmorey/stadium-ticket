@@ -16,34 +16,35 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV RETRY='i=0; while [ $i -lt 3 ]; do %s && break; i=$((i + 1)); done\n'
 RUN printf "$RETRY" "$APT_UPDATE" "$APT_INSTALL" | sh -x
 
+# Install PyPI packages
+RUN pip3 install pipenv
+
 # Create application directories
 ENV APP_DIR=/opt/$APP_NAME
 ENV APP_ETCDIR=/opt/etc/$APP_NAME
 ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 ENV APP_VARDIR=/opt/var/$APP_NAME
-RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
+ENV WWW_VARDIR=/var/www
+RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
 # Install application files
-COPY app.ini $APP_ETCDIR/
 COPY app/ $APP_DIR/app/
 COPY .env-docker $APP_DIR/.env
 COPY Pipfile* $APP_DIR/
-
-# Change to application directory
-WORKDIR $APP_DIR
+COPY app.ini $APP_ETCDIR/
 
 # Grant application ownership of app, run and data directories
-RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR
+RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
-# Install dependencies from Pipfile.lock
+# Change to application directory and drop privileges
+WORKDIR $APP_DIR
+USER $APP_UID
+
+# Install dependencies and initialize database schema
 ENV LANG=${LANG:-C.UTF-8}
 ENV LC_ALL=${LC_ALL:-C.UTF-8}
 ENV PIPENV_VENV_IN_PROJECT=true
-RUN pip3 install pipenv && pipenv sync
-
-# Drop privileges and create database
-USER $APP_UID
-RUN pipenv run python3 -m app init_db
+RUN pipenv sync && pipenv run python3 -m app init_db
 
 # Change to data directory, expose port and start app
 WORKDIR $APP_VARDIR
