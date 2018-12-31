@@ -11,5 +11,5 @@ install:
 script:
   - pycodestyle app
   - pylint app
-  - python3 -m app load-db
+  - python3 -m app init-db
   - pytest tests
