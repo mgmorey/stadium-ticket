@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Manage ticket sales for a stadium event via a RESTful API."""
+"""Manage ticket sales for stadium events via a RESTful API."""
 
 import logging
 
