@@ -57,6 +57,11 @@ done
 shift $(($OPTIND - 1))
 
 base_url="http://${host}${port:+:}${port}"
+url_event="$base_url/stadium/event"
 url_ticket="$base_url/stadium/ticket"
+
+for event in "SoldOut" "The Beatles" "The Cure" "The Doors" "The Who"; do
+    curl -i -H "$HEADER" -X PUT -d "{\"command\": \"add_event\", \"event\": \"$event\", \"total\": 1000}" -i $url_event
+done
 
 ab -H "$HEADER" -u $script_dir/put.json -n 1000 -r -c 10 $url_ticket

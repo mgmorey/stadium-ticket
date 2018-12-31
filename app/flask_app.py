@@ -5,6 +5,7 @@
 import logging
 
 from .app import abort, create_app, db, jsonify, request
+from .apps import Events
 from .tickets import SoldOut, Tickets
 from .uri import get_uri
 
@@ -13,6 +14,30 @@ SQLALCHEMY_DATABASE_URI = get_uri()
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 app = create_app(__name__)  # pylint: disable=invalid-name
+
+
+@app.route('/stadium/event', methods=['PUT'])
+def add_event():
+    """Add an event to the calendar."""
+    if not request.json:
+        abort(400)
+
+    if set(request.json.keys()) != {'command', 'event', 'total'}:
+        abort(400)
+
+    if request.json['command'] != 'add_event':
+        abort(400)
+
+    try:
+        event_name = request.json['event']
+        event_total = request.json['total']
+        event = Events(name=event_name, sold=0, total=event_total)
+        db.session.add(event)
+        db.session.commit()
+    except sqlalchemy.exc.IntegrityError as error:
+        logging.exception("Error requesting ticket: %s", str(error))
+        abort(400, 'Duplicate event')
+    return jsonify({'event_name': event_name})
 
 
 @app.route('/stadium/ticket', methods=['PUT'])

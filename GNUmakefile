@@ -35,11 +35,14 @@ reload:
 stress:
 	$(script_dir)/load-test.sh
 
+stress-debug:
+	$(script_dir)/load-test.sh -h localhost -p 5001
+
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
-.PHONY: all build clean client client-debug debug install
-.PHONY: pycode pylint pytest reload stress uninstall
+.PHONY: all build clean client client-debug debug install pycode
+.PHONY: pylint pytest reload stress stress-debug uninstall
 
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
