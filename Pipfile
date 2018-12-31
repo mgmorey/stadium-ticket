@@ -25,3 +25,5 @@ pytest = "*"
 
 [scripts]
 build = "docker-compose up --build"
+drop-db = "python3 -m app drop-db"
+init-db = "python3 -m app init-db"
