@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 ENV APP_NAME=stadium-ticket
 ENV APP_PORT=5000
 
-# Set Ubuntu-specific parameters
+# Set Ubuntu GID/UID
 ENV APP_GID=www-data
 ENV APP_UID=www-data
 
@@ -23,31 +23,30 @@ ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 ENV APP_VARDIR=/opt/var/$APP_NAME
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR
 
-# Copy application files
-COPY Pipfile* $APP_DIR/
-COPY app/ $APP_DIR/app/
-COPY scripts/sql.sh $APP_DIR/scripts/
-COPY sql/schema-*.sql $APP_DIR/sql/
-COPY .env-docker $APP_DIR/.env
+# Install application files
 COPY app.ini $APP_ETCDIR/
+COPY app/ $APP_DIR/app/
+COPY .env-docker $APP_DIR/.env
+COPY Pipfile* $APP_DIR/
 
 # Change to application directory
 WORKDIR $APP_DIR
 
-# Install packages in Pipfiles to virtualenv
+# Grant application ownership of app, run and data directories
+RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR
+
+# Install dependencies from Pipfile.lock
 ENV LANG=${LANG:-C.UTF-8}
 ENV LC_ALL=${LC_ALL:-C.UTF-8}
 ENV PIPENV_VENV_IN_PROJECT=true
 RUN pip3 install pipenv && pipenv sync
 
-# Grant application ownership of app, run and data directories
-RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR
-
-# Drop privileges and change to data directory
+# Drop privileges and create database
 USER $APP_UID
-WORKDIR $APP_VARDIR
+RUN pipenv run python3 -m app init_db
 
-# Expose application port and launch app instance via uWSGI
+# Change to data directory, expose port and start app
+WORKDIR $APP_VARDIR
 EXPOSE $APP_PORT
 ENV APP_PIDFILE=$APP_RUNDIR/pid
-CMD $APP_DIR/scripts/sql.sh schema && uwsgi --ini $APP_ETCDIR/app.ini
+CMD uwsgi --ini $APP_ETCDIR/app.ini
