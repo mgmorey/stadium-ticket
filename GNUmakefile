@@ -30,7 +30,7 @@ pytest:	.update reload
 	$(script_dir)/run.sh pytest app/tests
 
 reload:
-	$(script_dir)/run.sh reload-db
+	$(script_dir)/run.sh python3 -m app reload-db
 
 stress:
 	$(script_dir)/load-test.sh
