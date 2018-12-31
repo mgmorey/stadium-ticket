@@ -98,5 +98,5 @@ def get_uri():
     endpoint = _get_endpoint(dialect)
     login = _get_login(dialect)
     name = _get_filename(dialect, schema)
-    uri = config('DATABASE_URI', default=_get_uri(dialect))
+    uri = _get_uri(dialect)
     return uri.format(scheme, schema, endpoint, login, name)
