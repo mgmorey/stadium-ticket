@@ -40,12 +40,11 @@ RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 WORKDIR $APP_DIR
 USER $APP_UID
 
-# Install dependencies and initialize/load database
+# Install PyPI dependencies
 ENV LANG=${LANG:-C.UTF-8}
 ENV LC_ALL=${LC_ALL:-C.UTF-8}
 ENV PIPENV_VENV_IN_PROJECT=true
 RUN pipenv sync
-RUN pipenv run load-db
 
 # Change to data directory, expose port and start app
 WORKDIR $APP_VARDIR
