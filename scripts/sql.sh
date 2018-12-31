@@ -17,7 +17,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 : ${DATABASE_DIALECT:=sqlite}
-: ${DATABASE_SCHEMA:=stadium-tickets}
 : ${DATABASE_FILENAME:="/tmp/$DATABASE_SCHEMA.sqlite"}
 
 abort() {
