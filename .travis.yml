@@ -11,4 +11,5 @@ install:
 script:
   - pycodestyle app
   - pylint app
-  - scripts/run.sh reload-db && pytest
+  - pipenv run load-db
+  - pytest tests

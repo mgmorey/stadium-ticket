@@ -46,6 +46,7 @@ def load_db():
     """Load the database with test data."""
     click.echo('Loading the database with test data')
     with app.app_context():
+        db.create_all()
         _load_data(db.session)
     click.echo('Loaded the database with test data')
 
