@@ -19,6 +19,7 @@ app = create_app(__name__)  # pylint: disable=invalid-name
 @app.route('/stadium/event', methods=['PUT'])
 def add_event():
     """Add an event to the calendar."""
+
     if not request.json:
         abort(400)
 
