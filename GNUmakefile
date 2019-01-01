@@ -8,7 +8,7 @@ build:	.env-docker .update
 clean:
 	$(script_dir)/clean-caches.sh
 
-client:	.env
+client:		.env
 	$(script_dir)/app-test.sh
 
 client-debug:	.env
