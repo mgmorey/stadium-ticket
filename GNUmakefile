@@ -35,14 +35,11 @@ init-db:
 stress:
 	$(script_dir)/load-test.sh
 
-stress-debug:
-	$(script_dir)/load-test.sh -h localhost -p 5001
-
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
 .PHONY: all build clean client client-debug debug init-db install
-.PHONY: pycode pylint pytest init-db stress stress-debug uninstall
+.PHONY: pycode pylint pytest init-db stress uninstall
 
 Makefile:	GNUmakefile
 	ln -s GNUmakefile Makefile
