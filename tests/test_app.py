@@ -20,8 +20,8 @@ class TestTicketsMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         with app.app_context():
-            for event_name in EVENTS:
-                db.session.add(Events(name=event_name, sold=0, total=1000))
+            events = [Events(name=name, sold=0, total=1000) for name in EVENTS]
+            db.session.add_all(events)
             try:
                 db.session.commit()
             except Exception as error:
