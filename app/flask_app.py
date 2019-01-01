@@ -38,7 +38,7 @@ def add_event():
         db.session.add(event)
         db.session.commit()
     except sqlalchemy.exc.IntegrityError as error:
-        logging.exception("Error requesting ticket: %s", str(error))
+        logging.error("Error adding event: %s", str(error))
         abort(400, 'Duplicate event')
     return jsonify({'event_name': event_name})
 
@@ -58,7 +58,7 @@ def request_ticket():
     try:
         ticket = Tickets(db.session, request.json['event'])
     except SoldOut as error:
-        logging.exception("Error requesting ticket: %s", str(error))
+        logging.error("Error requesting ticket: %s", str(error))
         abort(400, 'No tickets available')
     return jsonify({'ticket_number': ticket.serial,
                     'time': ticket.issue})
@@ -93,7 +93,7 @@ def request_tickets():
     try:
         tickets = Tickets(db.session, request.json['event'], count)
     except SoldOut as error:
-        logging.exception("Error requesting tickets: %s", str(error))
+        logging.error("Error requesting tickets: %s", str(error))
         abort(400, 'No tickets available')
     return jsonify({'ticket_number': tickets.serial,
                     'ticket_count': tickets.count,
