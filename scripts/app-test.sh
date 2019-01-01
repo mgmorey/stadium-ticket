@@ -16,7 +16,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+EVENT_1="SoldOut"
+EVENT_2="The Beatles"
+EVENT_3="The Cure"
+EVENT_4="The Doors"
+EVENT_5="The Who"
 HEADER="Content-Type: application/json"
+
+add_event() {
+    curl -i -H "$HEADER" -X PUT -d "{
+\"command\": \"add_event\",
+\"event\": \"$1\",
+\"total\": $2
+}" -i $url_event
+}
 
 realpath() {
     if [ -x /usr/bin/realpath ]; then
@@ -28,6 +41,21 @@ realpath() {
 	    printf "%s\n" "$PWD/${1#./}"
 	fi
     fi
+}
+
+request_ticket() {
+    curl -i -H "$HEADER" -X PUT -d "{
+\"command\": \"request_ticket\",
+\"event\": \"$1\"
+}" -i $url_ticket
+}
+
+request_tickets() {
+    curl -i -H "$HEADER" -X PUT -d "{
+\"command\": \"request_ticket\",
+\"event\": \"$1\",
+\"count\": $2
+}" -i $url_tickets
 }
 
 script_dir=$(realpath $(dirname $0))
@@ -61,19 +89,19 @@ url_event="$base_url/stadium/event"
 url_ticket="$base_url/stadium/ticket"
 url_tickets="$base_url/stadium/tickets"
 
-for event in "SoldOut" "The Beatles" "The Cure" "The Doors" "The Who"; do
-    curl -i -H "$HEADER" -X PUT -d "{\"command\": \"add_event\", \"event\": \"$event\", \"total\": 1000}" -i $url_event
+for event in "$EVENT_1" "$EVENT_2" "$EVENT_3" "$EVENT_4" "$EVENT_5"; do
+    add_event "$event" 1000
 done
 
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "event": "The Beatles"}' -i $url_ticket
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 10, "event": "The Cure"}' -i $url_tickets
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 100, "event": "The Doors"}' -i $url_tickets
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 100, "event": "The Doors"}' -i $url_tickets
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 100, "event": "The Doors"}' -i $url_tickets
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 100, "event": "The Doors"}' -i $url_tickets
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 100, "event": "The Doors"}' -i $url_tickets
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 100, "event": "The Doors"}' -i $url_tickets
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 100, "event": "The Doors"}' -i $url_tickets
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 100, "event": "The Doors"}' -i $url_tickets
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 100, "event": "The Doors"}' -i $url_tickets
-# curl -i -H "$HEADER" -X PUT -d '{"command": "request_ticket", "count": 100, "event": "The Doors"}' -i $url_tickets
+request_ticket "The Beatles"
+request_tickets "The Cure" 10
+request_tickets "The Doors" 100
+request_tickets "The Doors" 100
+request_tickets "The Doors" 100
+request_tickets "The Doors" 100
+request_tickets "The Doors" 100
+request_tickets "The Doors" 100
+request_tickets "The Doors" 100
+request_tickets "The Doors" 100
+request_tickets "The Doors" 100
+request_tickets "The Doors" 100
