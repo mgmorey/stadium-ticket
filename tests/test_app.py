@@ -11,10 +11,21 @@ EVENT_2 = 'The Cure'
 EVENT_3 = 'The Doors'
 EVENT_4 = 'The Who'
 EVENT_5 = 'SoldOut'
+EVENTS = [EVENT_1, EVENT_2, EVENT_3, EVENT_4, EVENT_5]
 
 
 class TestTicketsMethods(unittest.TestCase):
     events = {}
+
+    @classmethod
+    def setUpClass(cls):
+        with app.app_context():
+            try:
+                for event_name in EVENTS:
+                    db.session.add(Events(name=event_name, sold=0, total=1000))
+                    db.session.commit()
+            except:
+                db.session.rollback()
 
     def add_serial(self, event: str, serial: int, count: int = 1):
         if event not in self.events:
@@ -38,15 +49,6 @@ class TestTicketsMethods(unittest.TestCase):
         with app.app_context():
             with self.assertRaises(SoldOut):
                 t = Tickets(db.session, event, count)
-
-    def setUp(self):
-        with app.app_context():
-            try:
-                for name in [EVENT_1, EVENT_2, EVENT_3, EVENT_4, EVENT_5]:
-                    db.session.add(Events(name=name, sold=0, total=1000))
-                    db.session.commit()
-            except:
-                db.session.rollback()
 
     def test_sell_event_1_ticket(self):
         self.sell_tickets(EVENT_1)
