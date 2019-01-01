@@ -54,4 +54,4 @@ Makefile:	GNUmakefile
 	$(script_dir)/configure-env.sh .env-docker
 
 .update:	Pipfile Pipfile.lock
-	$(script_dir)/update-requirements.sh
+	$(script_dir)/update-virtualenv.sh
