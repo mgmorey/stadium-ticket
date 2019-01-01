@@ -14,6 +14,9 @@ from .apps import Events
 from .tickets import SoldOut, Tickets
 from .uri import get_uri
 
+INTEGRITY_ERRORS = (pymysql.err.IntegrityError,
+                    sqlalchemy.exc.IntegrityError,
+                    sqlite3.IntegrityError)
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 SQLALCHEMY_DATABASE_URI = get_uri()
 SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -40,13 +43,7 @@ def add_event():
     db.session.add(event)
     try:
         db.session.commit()
-    except pymysql.err.IntegrityError as error:
-        logging.error("Error adding event: %s", str(error))
-        abort(400, 'Duplicate event')
-    except sqlalchemy.exc.IntegrityError as error:
-        logging.error("Error adding event: %s", str(error))
-        abort(400, 'Duplicate event')
-    except sqlite3.IntegrityError as error:
+    except INTEGRITY_ERRORS as error:
         logging.error("Error adding event: %s", str(error))
         abort(400, 'Duplicate event')
     else:
