@@ -31,16 +31,17 @@ def add_event():
     if request.json['command'] != 'add_event':
         abort(400)
 
+    event_name = request.json['event']
+    event_total = request.json['total']
+    event = Events(name=event_name, sold=0, total=event_total)
+    db.session.add(event)
     try:
-        event_name = request.json['event']
-        event_total = request.json['total']
-        event = Events(name=event_name, sold=0, total=event_total)
-        db.session.add(event)
         db.session.commit()
     except sqlalchemy.exc.IntegrityError as error:
         logging.error("Error adding event: %s", str(error))
         abort(400, 'Duplicate event')
-    return jsonify({'event_name': event_name})
+    else:
+        return jsonify({'event_name': event_name})
 
 
 @app.route('/stadium/ticket', methods=['PUT'])
@@ -60,8 +61,9 @@ def request_ticket():
     except SoldOut as error:
         logging.error("Error requesting ticket: %s", str(error))
         abort(400, 'No tickets available')
-    return jsonify({'ticket_number': ticket.serial,
-                    'time': ticket.issue})
+    else:
+        return jsonify({'ticket_number': ticket.serial,
+                        'time': ticket.issue})
 
 
 @app.route('/stadium/tickets', methods=['PUT'])
