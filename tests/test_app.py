@@ -20,12 +20,16 @@ class TestTicketsMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         with app.app_context():
-            try:
-                for event_name in EVENTS:
+            for event_name in EVENTS:
+                try:
                     db.session.add(Events(name=event_name, sold=0, total=1000))
-                    db.session.commit()
-            except:
-                db.session.rollback()
+                except:
+                    db.session.rollback()
+                else:
+                    try:
+                        db.session.commit()
+                    except:
+                        pass
 
     def add_serial(self, event: str, serial: int, count: int = 1):
         if event not in self.events:
