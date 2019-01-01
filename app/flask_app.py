@@ -3,8 +3,11 @@
 """Manage ticket sales for stadium events via a RESTful API."""
 
 import logging
+import sqlite3
 
 from flask import abort, jsonify, request
+import pymysql
+import sqlalchemy
 
 from .app import create_app, db
 from .apps import Events
@@ -37,7 +40,13 @@ def add_event():
     db.session.add(event)
     try:
         db.session.commit()
+    except pymysql.err.IntegrityError as error:
+        logging.error("Error adding event: %s", str(error))
+        abort(400, 'Duplicate event')
     except sqlalchemy.exc.IntegrityError as error:
+        logging.error("Error adding event: %s", str(error))
+        abort(400, 'Duplicate event')
+    except sqlite3.IntegrityError as error:
         logging.error("Error adding event: %s", str(error))
         abort(400, 'Duplicate event')
     else:
