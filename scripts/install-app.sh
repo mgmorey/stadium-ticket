@@ -176,10 +176,10 @@ stage_app() {
     if [ "$(id -u)" -eq 0 ]; then
 	sh="su $SUDO_USER"
     else
-	sh=/bin/sh
+	sh="/bin/sh -eu"
     fi
 
-    $sh -eu "$script_dir/stage-app.sh"
+    $sh "$script_dir/stage-app.sh"
 }
 
 script_dir=$(realpath $(dirname $0))
