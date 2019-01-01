@@ -24,11 +24,13 @@ EVENT_5="The Who"
 HEADER="Content-Type: application/json"
 
 add_event() {
-    curl -i -H "$HEADER" -X PUT -d "{
-\"command\": \"add_event\",
-\"event\": \"$1\",
-\"total\": $2
-}" -i $url_event
+    curl -H "$HEADER" -X PUT -d @- -i $url_event <<EOF
+{
+	"command": "add_event",
+	"event": "$1",
+	"total": $2
+}
+EOF
 }
 
 realpath() {
@@ -44,18 +46,22 @@ realpath() {
 }
 
 request_ticket() {
-    curl -i -H "$HEADER" -X PUT -d "{
-\"command\": \"request_ticket\",
-\"event\": \"$1\"
-}" -i $url_ticket
+    curl -H "$HEADER" -X PUT -d @- -i $url_ticket <<EOF
+{
+	"command": "request_ticket",
+	"event": "$1"
+}
+EOF
 }
 
 request_tickets() {
-    curl -i -H "$HEADER" -X PUT -d "{
-\"command\": \"request_ticket\",
-\"event\": \"$1\",
-\"count\": $2
-}" -i $url_tickets
+    curl -H "$HEADER" -X PUT -d @- -i $url_tickets <<EOF
+{
+	"command": "request_ticket",
+	"event": "$1",
+	"count": $2
+}
+EOF
 }
 
 script_dir=$(realpath $(dirname $0))
