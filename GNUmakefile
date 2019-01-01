@@ -21,7 +21,7 @@ install:	.env .update
 	$(script_dir)/install-app.sh
 
 pycode:	.update
-	$(script_dir)/run.sh pycodestyle app
+	$(script_dir)/run.sh pycodestyle app tests
 
 pylint:	.update
 	$(script_dir)/run.sh pylint app
