@@ -72,7 +72,7 @@ def _get_scheme(dialect: str):
 def _get_string(parameter: str, default: str = None):
     """Return a validated string parameter value."""
     value = config(parameter, default=default)
-    return None if value is None else _validate_string(parameter, value)
+    return None if value is None else _validate(parameter, value)
 
 
 def _get_uri(dialect: str):
@@ -80,7 +80,7 @@ def _get_uri(dialect: str):
     return URI.get(dialect, URI[None])
 
 
-def _validate_string(parameter: str, value: str) -> str:
+def _validate(parameter: str, value: str) -> str:
     """Raise a ValueError if parameter value is invalid."""
     pattern = PATTERN.get(parameter, PATTERN[None])
 
