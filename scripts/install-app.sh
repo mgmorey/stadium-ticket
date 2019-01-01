@@ -176,7 +176,7 @@ stage_app() {
     if [ "$(id -u)" -eq 0 ]; then
 	sh="su $SUDO_USER"
     else
-	sh="/bin/sh -eu"
+	sh="sh -eu"
     fi
 
     $sh "$script_dir/stage-app.sh"
