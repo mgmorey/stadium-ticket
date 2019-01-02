@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """Script to invoke the stadium tickets RESTful API."""
 
-import logging
-
 import click
 
-from .flask_app import LOGGING_FORMAT, app, db
+from .flask_app import app, db
 
 
 @click.group()
@@ -32,5 +30,4 @@ def init_db():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format=LOGGING_FORMAT, level=logging.DEBUG)
     cli()
