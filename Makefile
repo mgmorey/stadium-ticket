@@ -41,9 +41,6 @@ uninstall:
 .PHONY: all build clean client client-debug debug init-db install
 .PHONY: pycode pylint pytest init-db stress uninstall
 
-Makefile:	GNUmakefile
-	ln -s GNUmakefile Makefile
-
 .env:		.env-template
 	$(script_dir)/configure-env.sh .env
 
