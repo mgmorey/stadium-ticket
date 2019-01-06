@@ -5,5 +5,4 @@
 .python-version
 .update
 .venv*
-Makefile
 __pycache__/

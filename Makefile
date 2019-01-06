@@ -1,6 +1,6 @@
 script_dir = scripts
 
-all:	.update pycode pylint pytest
+all:	.env .update pycode pylint pytest
 
 build:	.env .env-docker .update
 	$(script_dir)/run.sh docker-compose up --build
