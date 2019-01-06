@@ -22,8 +22,7 @@ DEBIAN_PKGS="build-essential libffi-dev libssl-dev pylint3 \
 FEDORA_PKGS="gcc libffi-devel openssl-devel \
 %s-devel %s-pip %s-pylint %s-pytest"
 
-FREEBSD_PKGS="gmake openssl-devel \
-%s-pip %s-pytest pylint-%s"
+FREEBSD_PKGS="gmake %s-pip %s-pytest pylint-%s"
 
 OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel make \
 %s-devel %s-pylint %s-pip %s-pytest"
