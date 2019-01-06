@@ -94,9 +94,8 @@ def get_uri():
     """Return a database connection URI string."""
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
     scheme = _get_scheme(dialect)
-    schema = _get_string('DATABASE_SCHEMA', default=SCHEMA)
     endpoint = _get_endpoint(dialect)
     login = _get_login(dialect)
-    name = _get_filename(dialect, schema)
+    name = _get_filename(dialect, SCHEMA)
     uri = _get_uri(dialect)
-    return uri.format(scheme, schema, endpoint, login, name)
+    return uri.format(scheme, SCHEMA, endpoint, login, name)
