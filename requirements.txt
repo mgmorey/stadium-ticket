@@ -8,5 +8,5 @@ markupsafe==1.1.0
 pymysql==0.9.3
 python-decouple==3.1
 python-dotenv==0.10.1
-sqlalchemy==1.2.15
+sqlalchemy==1.2.16
 werkzeug==0.14.1
