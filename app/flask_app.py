@@ -45,6 +45,14 @@ def add_event():
         return jsonify({'event_name': event_name})
 
 
+@app.route('/stadium/events', methods=['GET'])
+def get_events():
+    """Retrieve a list of all past and future events."""
+
+    events = [e.name for e in db.session.query(Events).all()]
+    return jsonify({'events': events})
+
+
 @app.route('/stadium/ticket', methods=['PUT'])
 def request_ticket():
     """Request a single ticket for an event."""

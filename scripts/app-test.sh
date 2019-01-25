@@ -45,6 +45,10 @@ realpath() {
     fi
 }
 
+list_events() {
+    curl -H "$HEADER" -X GET -i $url_events
+}
+
 request_ticket() {
     curl -H "$HEADER" -X PUT -d @- -i $url_ticket <<EOF
 {
@@ -92,6 +96,7 @@ shift $(($OPTIND - 1))
 
 base_url="http://${host}${port:+:}${port}"
 url_event="$base_url/stadium/event"
+url_events="$base_url/stadium/events"
 url_ticket="$base_url/stadium/ticket"
 url_tickets="$base_url/stadium/tickets"
 
@@ -99,6 +104,7 @@ for event in "$EVENT_1" "$EVENT_2" "$EVENT_3" "$EVENT_4" "$EVENT_5"; do
     add_event "$event" 1000
 done
 
+list_events
 request_ticket "The Beatles"
 request_tickets "The Cure" 10
 request_tickets "The Doors" 100

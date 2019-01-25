@@ -52,6 +52,11 @@ class TestTicketsMethods(unittest.TestCase):
             with self.assertRaises(SoldOut):
                 t = Tickets(db.session, event, count)
 
+    def test_list_events(self):
+        with app.app_context():
+            events = db.session.query(Events).all()
+            self.assertEqual(len(events), 5)
+
     def test_sell_event_1_ticket(self):
         self.sell_tickets(EVENT_1)
 
