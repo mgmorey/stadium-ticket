@@ -10,8 +10,10 @@ EVENT_1 = 'The Beatles'
 EVENT_2 = 'The Cure'
 EVENT_3 = 'The Doors'
 EVENT_4 = 'The Who'
-EVENT_5 = 'SoldOut'
-EVENTS = [EVENT_1, EVENT_2, EVENT_3, EVENT_4, EVENT_5]
+EVENT_5 = 'Alizée'
+EVENT_6 = 'Maître Gims'
+EVENT_7 = 'SoldOut'
+EVENTS = [EVENT_1, EVENT_2, EVENT_3, EVENT_4, EVENT_5, EVENT_6, EVENT_7]
 
 
 class TestTicketsMethods(unittest.TestCase):
@@ -52,10 +54,10 @@ class TestTicketsMethods(unittest.TestCase):
             with self.assertRaises(SoldOut):
                 t = Tickets(db.session, event, count)
 
-    def test_list_events(self):
+    def test_events(self):
         with app.app_context():
-            events = db.session.query(Events).all()
-            self.assertEqual(len(events), 5)
+            events = [e.name for e in db.session.query(Events).all()]
+            self.assertEqual(set(events), set(EVENTS))
 
     def test_sell_event_1_ticket(self):
         self.sell_tickets(EVENT_1)
