@@ -33,6 +33,9 @@ client-debug:	.env
 debug:		.update init-db
 	$(script_dir)/run.sh flask run --port 5001
 
+init-db:
+	$(script_dir)/run.sh python3 -m app init-db
+
 install:	.env .update
 	$(script_dir)/install-app.sh
 
@@ -44,9 +47,6 @@ pylint:	.update
 
 pytest:	.update init-db
 	$(script_dir)/run.sh pytest tests
-
-init-db:
-	$(script_dir)/run.sh python3 -m app init-db
 
 stress:
 	$(script_dir)/load-test.sh
