@@ -28,15 +28,20 @@ abort() {
     exit 1
 }
 
-pip_update() {
-    if [ ! -d .venv ]; then
+create_venv() {
+    if [ ! -d "$1" ]; then
 	printf "%s\n" "Creating virtual environment"
-	virtualenv -p $PYTHON .venv
+
+	if which virtualenv 2>/dev/null; then
+	    virtualenv -p $PYTHON "$1"
+	else
+	    $PYTHON -m venv "$1"
+	fi
     fi
 
-    if [ -d .venv ]; then
+    if [ -d $1 ]; then
 	printf "%s\n" "Activating virtual environment"
-	. .venv/bin/activate
+	. "$1/bin/activate"
 	. "$script_dir/sync-virtualenv.sh"
     else
 	abort "%s\n" "No virtual environment"
@@ -74,6 +79,10 @@ pipenv_update() {
     pipenv sync -d
 }
 
+pip_update() {
+    create_venv .venv
+}
+
 realpath() {
     if [ -x /usr/bin/realpath ]; then
 	/usr/bin/realpath "$@"
@@ -93,7 +102,6 @@ fi
 pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(realpath $(dirname $0))
 source_dir="$script_dir/.."
-
 cd "$source_dir"
 
 tmpfile=$(mktemp)
