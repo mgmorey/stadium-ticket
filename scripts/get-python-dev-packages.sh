@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="build-essential libffi-dev libssl-dev pylint3 \
+DEBIAN_PKGS="build-essential libffi-dev libssl-dev pylint \
 %s-dev %s-pip %s-pytest %s-venv"
 
 FEDORA_PKGS="gcc libffi-devel openssl-devel \
@@ -32,8 +32,9 @@ REDHAT_PKGS="gcc libffi-devel make openssl-devel \
 
 SUNOS_PKGS="build-essential pip-%s"
 
-UBUNTU_PKGS="build-essential libffi-dev libssl-dev pylint3 \
-%s-dev %s-pip %s-pytest %s-venv virtualenv"
+UBUNTU_PKGS="build-essential libbz2-dev libffi-dev libssl-dev pycodestyle \
+pylint3 %s-dev %s-pip %s-pytest %s-venv libreadline-dev libsqlite3-dev \
+virtualenv"
 
 realpath() {
     if [ -x /usr/bin/realpath ]; then
