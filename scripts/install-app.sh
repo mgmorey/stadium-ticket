@@ -92,13 +92,6 @@ generate_ini() {
 }
 
 install_app() {
-    if [ $# -gt 0 ] && [ "$1" = -n ]; then
-	dryrun=true
-	shift
-    else
-	dryrun=false
-    fi
-
     create_app_dirs "$APP_DIR" "$APP_ETCDIR" "$APP_VARDIR"
     install_source_files 644 app "$APP_DIR"
     install_file "$@" 600 .env "$APP_DIR/.env"
@@ -179,7 +172,7 @@ stage_app() {
 	sh="sh -eu"
     fi
 
-    $sh "$script_dir/stage-app.sh"
+    $sh -c "$script_dir/stage-app.sh"
 }
 
 script_dir=$(realpath $(dirname $0))
@@ -197,7 +190,6 @@ remove_database
 install_app
 
 dryrun=false
-remove_app
 stage_app
 install_app
 signal_app HUP
