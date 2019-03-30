@@ -42,9 +42,6 @@ install:	.env .update
 pycode:	.update
 	$(script_dir)/run.sh pycodestyle app tests
 
-pylint:	.update
-	$(script_dir)/run.sh pylint3 app
-
 pytest:	.update init-db
 	$(script_dir)/run.sh pytest tests
 
@@ -55,7 +52,7 @@ uninstall:
 	$(script_dir)/uninstall-app.sh
 
 .PHONY: all build clean client client-debug debug init-db install
-.PHONY: pycode pylint pytest init-db stress uninstall
+.PHONY: pycode pytest init-db stress uninstall
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh .env
