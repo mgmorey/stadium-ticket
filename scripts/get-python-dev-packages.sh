@@ -17,20 +17,21 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 DEBIAN_PKGS="build-essential libbz2-dev libffi-dev libssl-dev pycodestyle \
-pylint3 %s-dev %s-pip %s-pytest %s-venv libreadline-dev libsqlite3-dev \
+%s-dev %s-pip %s-pytest %s-venv \
+libreadline-dev libsqlite3-dev \
 virtualenv"
 
 FEDORA_PKGS="gcc libffi-devel openssl-devel \
-%s-devel %s-pip %s-pylint %s-pytest"
+%s-devel %s-pip %s-pytest"
 
-FREEBSD_PKGS="gmake %s-pip %s-pytest pylint-%s"
+FREEBSD_PKGS="gmake %s-pip %s-pytest"
 
 OPENSUSE_PKGS="gcc libbz2-devel libffi-devel libopenssl-devel make \
-%s-devel %s-pycodestyle %s-pylint %s-pip %s-pytest \
+%s-devel %s-pycodestyle %s-pip %s-pytest \
 readline-devel sqlite3-devel tk-devel"
 
 REDHAT_PKGS="gcc libffi-devel make openssl-devel \
-%s-devel %s-pycodestyle %s-pylint %s-virtualenv"
+%s-devel %s-pycodestyle %s-virtualenv"
 
 SUNOS_PKGS="build-essential pip-%s"
 
