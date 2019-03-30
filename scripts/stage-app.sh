@@ -18,15 +18,25 @@
 
 PYTHON=python3
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
 create_venv() {
-    if [ ! -d $virtualenv ]; then
+    if [ ! -d "$1" ]; then
 	printf "%s\n" "Creating virtual environment"
-	virtualenv -p $PYTHON $virtualenv
+
+	if which virtualenv 2>/dev/null; then
+	    virtualenv -p $PYTHON "$1"
+	else
+	    $PYTHON -m venv "$1"
+	fi
     fi
 
-    if [ -d $virtualenv ]; then
+    if [ -d $1 ]; then
 	printf "%s\n" "Activating virtual environment"
-	. $virtualenv/bin/activate
+	. "$1/bin/activate"
 	. "$script_dir/sync-virtualenv.sh"
     else
 	abort "%s\n" "No virtual environment"
@@ -54,6 +64,5 @@ source_dir="$script_dir/.."
 
 . "$script_dir/configure-app.sh"
 
-virtualenv=.venv-$APP_NAME
 cd "$source_dir"
-create_venv
+create_venv .venv-$APP_NAME
