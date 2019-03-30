@@ -170,6 +170,28 @@ configure_sunos() {
     UWSGI_APPDIRS=
 }
 
+remove_app() {
+    if [ $# -gt 0 ] && [ "$1" = -n ]; then
+	dryrun=true
+	shift
+    else
+	dryrun=false
+    fi
+
+    database=/tmp/stadium-tickets.sqlite
+    files="$UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR"
+    remove_files $files $database
+}
+
+remove_files() {
+    check_permissions "$@"
+
+    if [ "$dryrun" = false ]; then
+	printf "Removing %s\n" "$@"
+	/bin/rm -rf "$@"
+    fi
+}
+
 signal_app() {
     if [ -z "$APP_PIDFILE" ]; then
 	printf "%s\n" "No PID file to open"

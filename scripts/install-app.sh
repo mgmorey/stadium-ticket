@@ -185,13 +185,17 @@ stage_app() {
 script_dir=$(realpath $(dirname $0))
 source_dir="$script_dir/.."
 
-sh -eu $script_dir/install-uwsgi.sh
 . "$script_dir/configure-app.sh"
+
+sh -eu $script_dir/install-uwsgi.sh
 
 virtualenv=.venv-$APP_NAME
 cd "$source_dir"
 
+remove_app -n
 install_app -n
+
+remove_app
 stage_app
 install_app
 signal_app HUP
