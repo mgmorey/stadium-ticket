@@ -31,7 +31,7 @@ abort() {
 pip_update() {
     if [ ! -d .venv ]; then
 	printf "%s\n" "Creating virtual environment"
-	$PYTHON -m venv .venv
+	virtualenv -p $PYTHON .venv
     fi
 
     if [ -d .venv ]; then
