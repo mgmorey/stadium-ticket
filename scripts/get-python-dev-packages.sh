@@ -16,8 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="build-essential libffi-dev libssl-dev pylint \
-%s-dev %s-pip %s-pytest %s-venv"
+DEBIAN_PKGS="build-essential libbz2-dev libffi-dev libssl-dev pycodestyle \
+pylint3 %s-dev %s-pip %s-pytest %s-venv libreadline-dev libsqlite3-dev \
+virtualenv"
 
 FEDORA_PKGS="gcc libffi-devel openssl-devel \
 %s-devel %s-pip %s-pylint %s-pytest"
@@ -31,10 +32,6 @@ REDHAT_PKGS="gcc libffi-devel make openssl-devel \
 %s-devel"
 
 SUNOS_PKGS="build-essential pip-%s"
-
-UBUNTU_PKGS="build-essential libbz2-dev libffi-dev libssl-dev pycodestyle \
-pylint3 %s-dev %s-pip %s-pytest %s-venv libreadline-dev libsqlite3-dev \
-virtualenv"
 
 realpath() {
     if [ -x /usr/bin/realpath ]; then
@@ -56,7 +53,7 @@ case "$kernel_name" in
 	distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
 
 	case "$distro_name" in
-	    (debian)
+	    (debian|ubuntu)
 		packages=$DEBIAN_PKGS
 		;;
 	    (fedora)
@@ -67,9 +64,6 @@ case "$kernel_name" in
 		;;
 	    (opensuse-*)
 		packages=$OPENSUSE_PKGS
-		;;
-	    (ubuntu)
-		packages=$UBUNTU_PKGS
 		;;
 	esac
 	;;
