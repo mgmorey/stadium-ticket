@@ -21,7 +21,7 @@ PYTHON=python3
 create_venv() {
     if [ ! -d $virtualenv ]; then
 	printf "%s\n" "Creating virtual environment"
-	$PYTHON -m venv $virtualenv
+	virtualenv -p $PYTHON $virtualenv
     fi
 
     if [ -d $virtualenv ]; then
