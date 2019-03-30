@@ -29,7 +29,12 @@ script_dir=$(realpath $(dirname $0))
 
 . "$script_dir/configure-app.sh"
 
-remove_app -n
+dryrun=true
+remove_app
+remove_database
+
+drurun=false
 signal_app INT INT TERM KILL
 tail_log
 remove_app
+remove_database

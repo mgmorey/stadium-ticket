@@ -171,16 +171,11 @@ configure_sunos() {
 }
 
 remove_app() {
-    if [ $# -gt 0 ] && [ "$1" = -n ]; then
-	dryrun=true
-	shift
-    else
-	dryrun=false
-    fi
+    remove_files $UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR
+}
 
-    database=/tmp/stadium-tickets.sqlite
-    files="$UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR"
-    remove_files $files $database
+remove_database() {
+    remove_files /tmp/stadium-tickets.sqlite
 }
 
 remove_files() {

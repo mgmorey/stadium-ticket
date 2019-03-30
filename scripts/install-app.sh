@@ -192,9 +192,11 @@ sh -eu $script_dir/install-uwsgi.sh
 virtualenv=.venv-$APP_NAME
 cd "$source_dir"
 
-remove_app -n
-install_app -n
+dryrun=true
+remove_database
+install_app
 
+dryrun=false
 remove_app
 stage_app
 install_app
