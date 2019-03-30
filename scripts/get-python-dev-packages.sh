@@ -33,7 +33,7 @@ REDHAT_PKGS="gcc libffi-devel make openssl-devel \
 SUNOS_PKGS="build-essential pip-%s"
 
 UBUNTU_PKGS="build-essential libffi-dev libssl-dev pylint3 \
-%s-dev %s-pip %s-pytest %s-venv"
+%s-dev %s-pip %s-pytest %s-venv virtualenv"
 
 realpath() {
     if [ -x /usr/bin/realpath ]; then
