@@ -25,8 +25,9 @@ FEDORA_PKGS="gcc libffi-devel openssl-devel \
 
 FREEBSD_PKGS="gmake %s-pip %s-pytest pylint-%s"
 
-OPENSUSE_PKGS="gcc libffi-devel libopenssl-devel make \
-%s-devel %s-pylint %s-pip %s-pytest"
+OPENSUSE_PKGS="gcc libbz2-devel libffi-devel libopenssl-devel make \
+%s-devel %s-pycodestyle %s-pylint %s-pip %s-pytest \
+readline-devel sqlite3-devel tk-devel"
 
 REDHAT_PKGS="gcc libffi-devel make openssl-devel \
 %s-devel"
