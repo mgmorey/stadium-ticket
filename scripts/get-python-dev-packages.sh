@@ -56,27 +56,27 @@ case "$kernel_name" in
 
 	case "$distro_name" in
 	    (debian)
-		packages="$DEBIAN_PKGS"
+		packages=$DEBIAN_PKGS
 		;;
 	    (fedora)
-		packages="$FEDORA_PKGS"
+		packages=$FEDORA_PKGS
 		;;
 	    (redhat|centos)
-		packages="$REDHAT_PKGS"
+		packages=$REDHAT_PKGS
 		;;
 	    (opensuse-*)
-		packages="$OPENSUSE_PKGS"
+		packages=$OPENSUSE_PKGS
 		;;
 	    (ubuntu)
-		packages="$UBUNTU_PKGS"
+		packages=$UBUNTU_PKGS
 		;;
 	esac
 	;;
     (FreeBSD)
-	packages="$FREEBSD_PKGS"
+	packages=$FREEBSD_PKGS
 	;;
     (SunOS)
-	packages="$SUNOS_PKGS"
+	packages=$SUNOS_PKGS
 	;;
 esac
 
