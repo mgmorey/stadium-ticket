@@ -185,6 +185,7 @@ stage_app() {
 script_dir=$(realpath $(dirname $0))
 source_dir="$script_dir/.."
 
+sh -eu $script_dir/install-uwsgi.sh
 . "$script_dir/configure-app.sh"
 
 virtualenv=.venv-$APP_NAME
