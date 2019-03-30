@@ -34,7 +34,7 @@ remove_app() {
     fi
 
     files="$UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR"
-    remove_files $files
+    remove_files $files /tmp/stadium-tickets.sqlite
 }
 
 remove_files() {
