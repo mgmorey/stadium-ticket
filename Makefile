@@ -16,7 +16,7 @@
 
 script_dir = scripts
 
-all:	.env .update pycode pylint pytest
+all:	.env .update pycode pytest
 
 build:	.env .env-docker .update
 	$(script_dir)/run.sh docker-compose up --build
@@ -43,7 +43,7 @@ pycode:	.update
 	$(script_dir)/run.sh pycodestyle app tests
 
 pylint:	.update
-	$(script_dir)/run.sh pylint app
+	$(script_dir)/run.sh pylint3 app
 
 pytest:	.update init-db
 	$(script_dir)/run.sh pytest tests
@@ -63,5 +63,14 @@ uninstall:
 .env-docker:	.env-template
 	$(script_dir)/configure-env.sh .env-docker
 
-.update:	Pipfile Pipfile.lock
+.update:	Pipfile Pipfile.lock requirements-dev.txt requirements.txt
+	$(script_dir)/update-virtualenv.sh
+
+Pipfile.lock:	Pipfile
+	$(script_dir)/update-virtualenv.sh
+
+requirements-dev.txt:	Pipfile
+	$(script_dir)/update-virtualenv.sh
+
+requirements.txt:	Pipfile
 	$(script_dir)/update-virtualenv.sh
