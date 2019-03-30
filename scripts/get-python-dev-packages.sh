@@ -30,7 +30,7 @@ OPENSUSE_PKGS="gcc libbz2-devel libffi-devel libopenssl-devel make \
 readline-devel sqlite3-devel tk-devel"
 
 REDHAT_PKGS="gcc libffi-devel make openssl-devel \
-%s-devel"
+%s-devel %s-pycodestyle %s-pylint %s-virtualenv"
 
 SUNOS_PKGS="build-essential pip-%s"
 
