@@ -33,14 +33,6 @@ create_venv() {
 	    $PYTHON -m venv "$1"
 	fi
     fi
-
-    if [ -d $1 ]; then
-	printf "%s\n" "Activating virtual environment"
-	. "$1/bin/activate"
-	. "$script_dir/sync-virtualenv.sh"
-    else
-	abort "%s\n" "No virtual environment"
-    fi
 }
 
 realpath() {

@@ -28,6 +28,16 @@ abort() {
     exit 1
 }
 
+activate_venv() {
+    if [ -d $1 ]; then
+	printf "%s\n" "Activating virtual environment"
+	. "$1/bin/activate"
+	. "$script_dir/sync-virtualenv.sh"
+    else
+	abort "%s\n" "No virtual environment"
+    fi
+}
+
 pipenv_lock() {
     $pipenv lock
 
@@ -60,7 +70,8 @@ pipenv_update() {
 }
 
 pip_update() {
-    sh -eu "$script_dir/create-virtualenv.sh" .venv
+    sh -eu "$script_dir/create-virtualenv.sh" $1
+    activate_venv $1
 }
 
 realpath() {
@@ -90,7 +101,7 @@ trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 if [ -n "$pipenv" ]; then
     pipenv_update
 else
-    pip_update
+    pip_update .venv
 fi
 
 touch .update

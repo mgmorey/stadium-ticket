@@ -23,6 +23,16 @@ abort() {
     exit 1
 }
 
+activate_venv() {
+    if [ -d $1 ]; then
+	printf "%s\n" "Activating virtual environment"
+	. "$1/bin/activate"
+	. "$script_dir/sync-virtualenv.sh"
+    else
+	abort "%s\n" "No virtual environment"
+    fi
+}
+
 realpath() {
     if [ -x /usr/bin/realpath ]; then
 	/usr/bin/realpath "$@"
@@ -41,7 +51,9 @@ fi
 
 script_dir=$(realpath $(dirname $0))
 source_dir="$script_dir/.."
+virtualenv=.venv-$APP_NAME
 
 . "$script_dir/configure-app.sh"
 
-sh -eu "$script_dir/create-virtualenv.sh" .venv-$APP_NAME
+sh -eu "$script_dir/create-virtualenv.sh" $virtualenv
+activate_venv $virtualenv
