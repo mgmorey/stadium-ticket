@@ -6,3 +6,4 @@
 .update
 .venv*
 __pycache__/
+logs/
