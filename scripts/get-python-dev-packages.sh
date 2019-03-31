@@ -21,13 +21,14 @@ DEBIAN_PKGS="build-essential libbz2-dev libffi-dev libssl-dev pycodestyle \
 libreadline-dev libsqlite3-dev \
 virtualenv"
 
-FEDORA_PKGS="gcc libffi-devel openssl-devel \
-%s-devel %s-pip %s-pytest"
+FEDORA_PKGS="bzip2-devel gcc libffi-devel libsodium-devel lzma-devel make \
+ncurses-devel openssl-devel pipenv %s-devel %s-pip %s-pycodestyle %s-pytest \
+%s-virtualenv readline-devel sqlite-devel tk-devel"
 
 FREEBSD_PKGS="gmake %s-pip %s-pytest"
 
 OPENSUSE_PKGS="gcc libbz2-devel libffi-devel libopenssl-devel make \
-%s-devel %s-pycodestyle %s-pip %s-pytest \
+%s-devel %s-pip %s-pycodestyle %s-pytest \
 readline-devel sqlite3-devel tk-devel"
 
 REDHAT_PKGS="gcc libffi-devel make openssl-devel \
