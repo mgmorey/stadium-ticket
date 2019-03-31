@@ -18,7 +18,7 @@
 
 DARWIN_PKGS="uwsgi"
 
-DEBIAN_PKGS="uwsgi uwsgi-plugin-%s"
+DEBIAN_PKGS=" %s-venv uwsgi uwsgi-plugin-%s"
 
 FEDORA_PKGS="uwsgi uwsgi-plugin-%s"
 
@@ -29,8 +29,6 @@ OPENSUSE_PKGS="uwsgi uwsgi-python3"
 REDHAT_PKGS="uwsgi uwsgi-plugin-%s"
 
 SUNOS_PKGS=""
-
-UBUNTU_PKGS="uwsgi uwsgi-plugin-%s"
 
 realpath() {
     if [ -x /usr/bin/realpath ]; then
@@ -52,7 +50,7 @@ case "$kernel_name" in
 	distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
 
 	case "$distro_name" in
-	    (debian)
+	    (debian|ubuntu)
 		packages=$DEBIAN_PKGS
 		;;
 	    (fedora)
@@ -63,9 +61,6 @@ case "$kernel_name" in
 		;;
 	    (opensuse-*)
 		packages=$OPENSUSE_PKGS
-		;;
-	    (ubuntu)
-		packages=$UBUNTU_PKGS
 		;;
 	esac
 	;;
