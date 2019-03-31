@@ -26,7 +26,9 @@ abort() {
 activate_venv() {
     if [ -d $1 ]; then
 	printf "%s\n" "Activating virtual environment"
+	set +u
 	. "$1/bin/activate"
+	set -u
 	. "$script_dir/sync-virtualenv.sh"
     else
 	abort "%s\n" "No virtual environment"
@@ -50,5 +52,5 @@ if [ $(id -u) -eq 0 ]; then
 fi
 
 script_dir=$(realpath $(dirname $0))
-sh -eu "$script_dir/create-virtualenv.sh" $1
+$script_dir/create-virtualenv.sh $1
 activate_venv $1
