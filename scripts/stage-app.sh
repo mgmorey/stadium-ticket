@@ -23,26 +23,6 @@ abort() {
     exit 1
 }
 
-create_venv() {
-    if [ ! -d "$1" ]; then
-	printf "%s\n" "Creating virtual environment"
-
-	if which virtualenv 2>/dev/null; then
-	    virtualenv -p $PYTHON "$1"
-	else
-	    $PYTHON -m venv "$1"
-	fi
-    fi
-
-    if [ -d $1 ]; then
-	printf "%s\n" "Activating virtual environment"
-	. "$1/bin/activate"
-	. "$script_dir/sync-virtualenv.sh"
-    else
-	abort "%s\n" "No virtual environment"
-    fi
-}
-
 realpath() {
     if [ -x /usr/bin/realpath ]; then
 	/usr/bin/realpath "$@"
@@ -64,5 +44,4 @@ source_dir="$script_dir/.."
 
 . "$script_dir/configure-app.sh"
 
-cd "$source_dir"
-create_venv .venv-$APP_NAME
+sh -eu "$script_dir/create-virtualenv.sh" .venv-$APP_NAME

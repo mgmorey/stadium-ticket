@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# update-virtualenv: update virtualenv dependencies
+# create-virtualenv.sh: create Python virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,51 +16,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export LANG=${LANG:-en_US.UTF-8}
-export LC_ALL=${LC_ALL:-en_US.UTF-8}
-
-PIP=pip3
 PYTHON=python3
-REQUIREMENTS="requirements-dev.txt requirements.txt"
 
 abort() {
     printf "$@" >&2
     exit 1
 }
 
-pipenv_lock() {
-    $pipenv lock
+create_venv() {
+    if [ ! -d "$1" ]; then
+	printf "%s\n" "Creating virtual environment"
 
-    for file; do
-	case $file in
-	    (requirements-dev*.txt)
-		opts=-d
-		;;
-	    (requirements.txt)
-		opts=
-		;;
-	    (*)
-		abort "%s: Invalid filename\n" "$file"
-	esac
-
-	printf "Generating %s\n" "$file"
-	if $pipenv lock $opts -r >$tmpfile; then
-	    /bin/mv -f $tmpfile "$file"
-	    chgrp $(id -g) "$file"
-	    chmod a+r "$file"
+	if which virtualenv 2>/dev/null; then
+	    virtualenv -p $PYTHON "$1"
 	else
-	    abort "Unable to update %s\n" "$file"
+	    $PYTHON -m venv "$1"
 	fi
-    done
-}
+    fi
 
-pipenv_update() {
-    pipenv_lock $REQUIREMENTS
-    pipenv sync -d
-}
-
-pip_update() {
-    sh -eu "$script_dir/create-virtualenv.sh" .venv
+    if [ -d $1 ]; then
+	printf "%s\n" "Activating virtual environment"
+	. "$1/bin/activate"
+	. "$script_dir/sync-virtualenv.sh"
+    else
+	abort "%s\n" "No virtual environment"
+    fi
 }
 
 realpath() {
@@ -79,18 +59,7 @@ if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "This script must be run as a non-privileged user"
 fi
 
-pipenv=$(which pipenv 2>/dev/null || true)
 script_dir=$(realpath $(dirname $0))
 source_dir="$script_dir/.."
 cd "$source_dir"
-
-tmpfile=$(mktemp)
-trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
-
-if [ -n "$pipenv" ]; then
-    pipenv_update
-else
-    pip_update
-fi
-
-touch .update
+create_venv $1
