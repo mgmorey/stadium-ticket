@@ -28,9 +28,9 @@ ncurses-devel openssl-devel pipenv %s-devel %s-pip %s-pycodestyle %s-pytest \
 FREEBSD_PKGS="gmake libffi libsodium %s-pip %s-bz2file ncurses %s-lzma \
 %s-pip %s-pipenv %s-pycodestyle %s-pytest %s-sqlite3 %s-virtualenv"
 
-OPENSUSE_PKGS="gcc libbz2-devel libffi-devel libopenssl-devel make \
-%s-devel %s-pip %s-pycodestyle %s-pytest \
-readline-devel sqlite3-devel tk-devel"
+OPENSUSE_PKGS="gcc gdbm-devel libbz2-devel libffi-devel libopenssl-devel \
+libsodium-devel make ncurses-devel %s-devel %s-pip %s-pycodestyle %s-pytest \
+%s-virtualenv readline-devel sqlite3-devel tk-devel"
 
 REDHAT_PKGS="gcc libffi-devel make openssl-devel \
 %s-devel %s-pycodestyle %s-virtualenv"
