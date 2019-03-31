@@ -172,7 +172,7 @@ stage_app() {
 	sh="sh -eu"
     fi
 
-    $sh -c "$script_dir/stage-app.sh"
+    $sh -c "$script_dir/stage-app.sh .venv-$APP_NAME"
 }
 
 script_dir=$(realpath $(dirname $0))

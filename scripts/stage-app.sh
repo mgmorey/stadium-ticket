@@ -50,10 +50,5 @@ if [ $(id -u) -eq 0 ]; then
 fi
 
 script_dir=$(realpath $(dirname $0))
-source_dir="$script_dir/.."
-virtualenv=.venv-$APP_NAME
-
-. "$script_dir/configure-app.sh"
-
-sh -eu "$script_dir/create-virtualenv.sh" $virtualenv
-activate_venv $virtualenv
+sh -eu "$script_dir/create-virtualenv.sh" $1
+activate_venv $1
