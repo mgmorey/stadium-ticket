@@ -28,7 +28,7 @@ abort() {
     exit 1
 }
 
-activate_venv() {
+activate_and_sync_venv() {
     if [ -d $1 ]; then
 	printf "%s\n" "Activating virtual environment"
 	. "$1/bin/activate"
@@ -71,7 +71,7 @@ pipenv_update() {
 
 pip_update() {
     sh -eu "$script_dir/create-virtualenv.sh" $1
-    activate_venv $1
+    activate_and_sync_venv $1
 }
 
 realpath() {
