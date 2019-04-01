@@ -21,28 +21,43 @@ export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 PIP=pip3
 PYTHON=python3
+REQUIREMENTS="requirements-dev.txt requirements.txt"
+VIRTUALENV=.venv
 
 abort() {
     printf "$@" >&2
     exit 1
 }
 
+activate_venv() {
+    printf "%s\n" "Activating virtual environment"
+    set +u
+    . "$1/bin/activate"
+    set -u
+}
+
 pip_run() {
-    if [ ! -d .venv ]; then
-	printf "%s\n" "Creating virtual environment"
-	$PYTHON -m venv .venv
+    if [ ! -d $VIRTUALENV ]; then
+	$script_dir/create-virtualenv.sh $VIRTUALENV
+	populate=true
+    else
+	populate=false
     fi
 
-    if [ -r .venv/bin/activate ]; then
-	printf "%s\n" "Activating virtual environment"
-	. .venv/bin/activate
+    if [ -r $VIRTUALENV/bin/activate ]; then
+	activate_venv $VIRTUALENV
+
+	if [ "$populate" = true ]; then
+	    . "$script_dir/sync-virtualenv.sh"
+	fi
+
 	printf "%s\n" "Loading .env environment variables"
 	. ./.env
 	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD
 	export DATABASE_PORT DATABASE_SCHEMA DATABASE_USER
 	export FLASK_APP FLASK_ENV
 	"$@"
-    elif [ -d .venv ]; then
+    elif [ -d $VIRTUALENV ]; then
 	abort "%s\n" "Unable to activate environment"
     else
 	abort "%s\n" "No virtual environment"
