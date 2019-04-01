@@ -19,7 +19,6 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-PIP=pip3
 PYTHON=python3
 REQUIREMENTS="requirements-dev.txt requirements.txt"
 VIRTUALENV=.venv
@@ -90,7 +89,7 @@ realpath() {
     fi
 }
 
-pipenv=$(which pipenv 2>/dev/null || true)
+pipenv="$(which pipenv 2>/dev/null || printf "%s\n" $PYTHON -m pipenv)"
 script_dir=$(realpath $(dirname $0))
 source_dir="$script_dir/.."
 

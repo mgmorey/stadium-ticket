@@ -90,7 +90,7 @@ if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "This script must be run as a non-privileged user"
 fi
 
-pipenv=$(which pipenv 2>/dev/null || true)
+pipenv="$(which pipenv 2>/dev/null || printf "%s\n" $PYTHON -m pipenv)"
 script_dir=$(realpath $(dirname $0))
 source_dir="$script_dir/.."
 cd "$source_dir"
