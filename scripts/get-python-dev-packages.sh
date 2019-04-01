@@ -16,13 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PKGS="build-essential libbz2-dev libffi-dev libgdbm-dev liblzma-dev \
-libncurses5-dev libreadline-dev libsodium-dev libsqlite3-dev libssl-dev %s-dev \
-pycodestyle %s-pip %s-pycodestyle %s-pytest %s-virtualenv tk8.6-dev virtualenv"
+DEBIAN_PKGS="build-essential gcc libbz2-dev libffi-dev libgdbm-dev liblzma-dev \
+libncurses5-dev libreadline-dev libsodium-dev libsqlite3-dev libssl-dev make \
+%s-dev pycodestyle %s-pip %s-pycodestyle %s-pytest %s-virtualenv virtualenv"
 
 FEDORA_PKGS="bzip2-devel gcc libffi-devel libsodium-devel lzma-devel make \
 ncurses-devel openssl-devel pipenv %s-devel %s-pip %s-pycodestyle %s-pytest \
-%s-virtualenv readline-devel sqlite-devel tk-devel"
+%s-virtualenv readline-devel sqlite-devel"
 
 FREEBSD_PKGS="gmake libffi libsodium ncurses %s-bz2file %s-lzma %s-pip \
 %s-pipenv %s-pycodestyle %s-pytest %s-sqlite3 %s-virtualenv"
@@ -30,10 +30,11 @@ FREEBSD_PKGS="gmake libffi libsodium ncurses %s-bz2file %s-lzma %s-pip \
 OPENSUSE_PKGS="gcc gdbm-devel libbz2-devel libffi-devel libopenssl-devel \
 libsodium-devel lzma-sdk-devel make ncurses-devel %s-devel %s-pip \
 %s-pycodestyle %s-pylzma %s-pytest %s-virtualenv \
-readline-devel sqlite3-devel tk-devel"
+readline-devel sqlite3-devel"
 
-REDHAT_PKGS="gcc libffi-devel make openssl-devel \
-%s-devel %s-pycodestyle %s-virtualenv"
+REDHAT_PKGS="bzip2-devel gcc libffi-devel libsodium-devel make \
+ncurses-devel openssl-devel %s-devel %s-pip %s-pytest \
+%s-virtualenv readline-devel sqlite-devel"
 
 SUNOS_PKGS="build-essential pip-%s"
 
