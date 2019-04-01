@@ -84,7 +84,6 @@ realpath() {
     fi
 }
 
-pipenv="$(which pipenv 2>/dev/null || printf "%s\n" $PYTHON -m pipenv)"
 script_dir=$(realpath $(dirname $0))
 source_dir="$script_dir/.."
 
@@ -94,7 +93,13 @@ fi
 
 cd "$source_dir"
 
-if [ -n "$pipenv" ]; then
+for pipenv in pipenv "$PYTHON -m pipenv" false; do
+    if $pipenv >/dev/null 2>&1; then
+	break
+    fi
+done
+
+if [ "$pipenv" != false ]; then
     pipenv_run "$@"
 else
     pip_run "$@"
