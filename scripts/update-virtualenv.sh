@@ -90,7 +90,6 @@ if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "This script must be run as a non-privileged user"
 fi
 
-pipenv="$(which pipenv 2>/dev/null || printf "%s\n" $PYTHON -m pipenv)"
 script_dir=$(realpath $(dirname $0))
 source_dir="$script_dir/.."
 cd "$source_dir"
@@ -98,7 +97,13 @@ cd "$source_dir"
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
-if [ -n "$pipenv" ]; then
+for pipenv in pipenv "$PYTHON -m pipenv" false; do
+    if $pipenv >/dev/null 2>&1; then
+	break
+    fi
+done
+
+if [ "$pipenv" != false ]; then
     pipenv_update
 else
     pip_update .venv
