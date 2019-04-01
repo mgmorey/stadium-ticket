@@ -65,13 +65,8 @@ pip_run() {
 
 pipenv_run() {
     if [ ! "$pipenv" --bare --venv 2>/dev/null ]; then
-	# if no virtualenv has been created yet, then
-	# create it and install packages per Pipfile.lock
+	# create virtualenv and install packages
 	$pipenv --bare install --ignore-pipfile
-    elif [ $($pipenv graph | wc -c) -eq 0 ]; then
-	# else if virtualenv contains no packages
-	# intall packages per Pipfile.lock
-	$pipenv --bare sync -d
     fi
 
     $pipenv run "$@"
