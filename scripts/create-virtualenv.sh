@@ -27,8 +27,8 @@ create_venv() {
     if [ ! -d "$1" ]; then
 	printf "%s\n" "Creating virtual environment"
 
-	if which virtualenv 2>/dev/null; then
-	    virtualenv -p $PYTHON "$1"
+	if [ "$virtualenv" != false ]; then
+	    $virtualenv -p $PYTHON "$1"
 	else
 	    $PYTHON -m venv "$1"
 	fi
@@ -54,4 +54,11 @@ fi
 script_dir=$(realpath $(dirname $0))
 source_dir="$script_dir/.."
 cd "$source_dir"
+
+for virtualenv in virtualenv "$PYTHON -m virtualenv" false; do
+    if $virtualenv >/dev/null 2>&1; then
+	break
+    fi
+done
+
 create_venv $1
