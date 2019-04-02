@@ -1,6 +1,6 @@
-#!/bin/sh -u
+#!/bin/sh -eu
 
-# install-uwsgi-packages: install uWSGI engine packages
+# get-package-install-options: get package installation options
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-abort() {
-    printf "$@" >&2
-    exit 1
-}
-
 realpath() {
     if [ -x /usr/bin/realpath ]; then
 	/usr/bin/realpath "$@"
@@ -34,30 +29,15 @@ realpath() {
 }
 
 script_dir=$(realpath $(dirname $0))
+distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
 kernel_name=$(sh -eu "$script_dir/get-os-kernel-name.sh")
-package_install_options=$(sh -eu "$script_dir/get-package-install-options.sh")
-package_manager="$(sh -eu "$script_dir/get-package-manager.sh")"
-packages="$(sh -eu "$script_dir/get-uwsgi-packages.sh")"
 
 case "$kernel_name" in
     (Linux)
-	distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
-
 	case "$distro_name" in
-	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
+	    (debian|ubuntu)
+		printf "%s\n" "--no-install-recommends"
 		;;
 	esac
 	;;
-    (Darwin|FreeBSD|SunOS)
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
-	;;
 esac
-
-if [ -n "$packages" ]; then
-    $package_manager install $package_install_options $packages
-fi

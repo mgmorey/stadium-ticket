@@ -35,6 +35,9 @@ realpath() {
 
 script_dir=$(realpath $(dirname $0))
 kernel_name=$(sh -eu "$script_dir/get-os-kernel-name.sh")
+package_install_options=$(sh -eu "$script_dir/get-package-install-options.sh")
+package_manager="$(sh -eu "$script_dir/get-package-manager.sh")"
+packages="$(sh -eu "$script_dir/get-dependencies.sh")"
 
 case "$kernel_name" in
     (Linux)
@@ -55,12 +58,6 @@ case "$kernel_name" in
 	;;
 esac
 
-package_manager="$(sh -eu "$script_dir/get-package-manager.sh")"
-
-if [ -n "$package_manager" ]; then
-    packages="$(sh -eu "$script_dir/get-dependencies.sh")"
-
-    if [ -n "$packages" ]; then
-	$package_manager install $packages
-    fi
+if [ -n "$packages" ]; then
+    $package_manager install $package_install_options $packages
 fi
