@@ -64,9 +64,8 @@ pip_run() {
 }
 
 pipenv_run() {
-    if [ ! "$pipenv" --bare --venv 2>/dev/null ]; then
-	# create virtualenv and install packages
-	$pipenv --bare install --ignore-pipfile
+    if ! $pipenv --venv >/dev/null 2>&1; then
+	$pipenv install -d
     fi
 
     $pipenv run "$@"
