@@ -40,3 +40,6 @@ pytest = "*"
 [scripts]
 drop-db = "python3 -m app drop-db"
 init-db = "python3 -m app init-db"
+pycodestyle = "python3 -m pycodestyle"
+pylint = "python3 -m pylint"
+pytest = "python3 -m pytest"
