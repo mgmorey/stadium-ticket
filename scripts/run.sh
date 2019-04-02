@@ -68,7 +68,11 @@ pipenv_run() {
 	$pipenv sync -d
     fi
 
-    $pipenv run "$@"
+    if [ -n "${VIRTUAL_ENV-}" ]; then
+	"$@"
+    else
+	$pipenv run "$@"
+    fi
 }
 
 realpath() {
