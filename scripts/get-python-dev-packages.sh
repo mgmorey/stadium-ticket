@@ -30,8 +30,8 @@ FREEBSD_PKGS="bash gmake libffi libsodium ncurses pylint-%s %s-bz2file %s-lzma \
 
 OPENSUSE_PKGS="gcc gdbm-devel libbz2-devel libffi-devel libopenssl-devel \
 libsodium-devel lzma-sdk-devel make ncurses-devel %s-devel %s-pip \
-%s-pycodestyle %s-pylzma %s-pytest %s-virtualenv readline-devel \
-sqlite3-devel"
+%s-pycodestyle %s-pylint %s-pylzma %s-pytest %s-virtualenv \
+readline-devel sqlite3-devel"
 
 REDHAT_PKGS="bzip2-devel gcc libffi-devel libsodium-devel make \
 ncurses-devel openssl-devel %s-devel %s-pip %s-pytest %s-virtualenv \
