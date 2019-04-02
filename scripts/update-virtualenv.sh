@@ -66,7 +66,7 @@ pipenv_lock() {
 
 pipenv_update() {
     pipenv_lock $REQUIREMENTS
-    pipenv sync -d
+    $pipenv sync -d
 }
 
 pip_update() {
