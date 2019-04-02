@@ -65,7 +65,7 @@ pip_run() {
 
 pipenv_run() {
     if ! $pipenv --venv >/dev/null 2>&1; then
-	$pipenv install -d
+	$pipenv sync -d
     fi
 
     $pipenv run "$@"
