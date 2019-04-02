@@ -22,9 +22,15 @@ PYTHON=python3
 # Use no cache if child process of sudo
 pip_opts=${SUDO_USER:+--no-cache-dir}
 
-printf "%s\n" "Upgrading pip"
-pip="$(which $PYTHON) -m pip $pip_opts"
-$pip install --upgrade pip
-pip="$(which $PIP) $pip_opts"
-printf "%s\n" "Installing required packages"
-$pip install $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
+for pip in $PIP "$PYTHON -m pip" false; do
+    if $pip >/dev/null 2>&1; then
+	break
+    fi
+done
+
+if [ "$pip" != false ]; then
+    printf "%s\n" "Upgrading pip"
+    $pip install --upgrade pip
+    printf "%s\n" "Installing required packages"
+    $pip install $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
+fi
