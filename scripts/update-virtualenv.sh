@@ -22,6 +22,7 @@ export LC_ALL=${LC_ALL:-en_US.UTF-8}
 PIP=pip3
 PYTHON=python3
 REQUIREMENTS="requirements-dev.txt requirements.txt"
+VIRTUALENV=.venv
 
 abort() {
     printf "$@" >&2
@@ -54,6 +55,7 @@ pipenv_lock() {
 	esac
 
 	printf "Generating %s\n" "$file"
+
 	if $pipenv lock $opts -r >$tmpfile; then
 	    /bin/mv -f $tmpfile "$file"
 	    chgrp $(id -g) "$file"
@@ -106,7 +108,7 @@ done
 if [ "$pipenv" != false ]; then
     pipenv_update
 else
-    pip_update .venv
+    pip_update $VIRTUALENV
 fi
 
 touch .update
