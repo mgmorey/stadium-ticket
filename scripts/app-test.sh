@@ -80,7 +80,7 @@ source_dir=$script_dir/..
 printf "%s\n" "Loading .env environment variables"
 . $source_dir/.env
 
-host=${FLASK_HOST-${DOCKER_HOST%:*}}
+host=${FLASK_HOST-localhost}
 port=${FLASK_PORT-5000}
 
 while getopts 'h:p:' OPTION; do
