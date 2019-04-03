@@ -39,7 +39,7 @@ deploy_venv() {
     if [ -r $1/bin/activate ]; then
 	activate_venv $1
 
-	if [ "$sync" = true ]; then
+	if [ "${pip_venvsync:-$sync}" = true ]; then
 	    . $script_dir/sync-virtualenv.sh
 	fi
     elif [ -d $1 ]; then
@@ -49,4 +49,4 @@ deploy_venv() {
     fi
 }
 
-deploy_venv $pip_venv
+deploy_venv $pip_venvname
