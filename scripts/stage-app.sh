@@ -23,14 +23,6 @@ abort() {
     exit 1
 }
 
-activate_venv() {
-    assert [ -n "$1" ] && [ -d $1/bin ] && [ -r $1/bin/activate ]
-    printf "%s\n" "Activating virtual environment"
-    set +u
-    . "$1/bin/activate"
-    set -u
-}
-
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
