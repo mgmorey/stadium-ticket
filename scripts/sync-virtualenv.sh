@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
 PIP=pip3
 PYTHON=python3
 
@@ -28,9 +33,9 @@ for pip in $PIP "$PYTHON -m pip" false; do
     fi
 done
 
-if [ "$pip" != false ]; then
-    printf "%s\n" "Upgrading pip"
-    $pip install --upgrade pip
-    printf "%s\n" "Installing required packages"
-    $pip install $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
-fi
+assert [ "$pip" != false ]
+printf "%s\n" "Upgrading pip"
+$pip install --upgrade pip
+printf "%s\n" "Installing required packages"
+$pip install $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
+
