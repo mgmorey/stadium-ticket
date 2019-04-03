@@ -19,6 +19,8 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
+APP_VARS="DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_PORT \
+DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV"
 PIP_VENV=.venv
 PYTHON=python3
 REQUIREMENTS="requirements-dev.txt requirements.txt"
@@ -42,27 +44,34 @@ assert() {
 }
 
 pip_run() {
-    if [ ! -d $PIP_VENV ]; then
-	sh -eu $script_dir/create-virtualenv.sh $PIP_VENV
+    pip_venv $PIP_VENV
+    printf "%s\n" "Loading .env environment variables"
+    . ./.env
+
+    for var in $APP_VARS; do
+	export var
+    done
+
+    "$@"
+}
+
+pip_venv() {
+    assert [ -n "$1" ]
+
+    if [ ! -d $1 ]; then
+	sh -eu $script_dir/create-virtualenv.sh $1
 	populate=true
     else
 	populate=false
     fi
 
-    if [ -r $PIP_VENV/bin/activate ]; then
-	activate_venv $PIP_VENV
+    if [ -r $1/bin/activate ]; then
+	activate_venv $1
 
 	if [ "$populate" = true ]; then
 	    . $script_dir/sync-virtualenv.sh
 	fi
-
-	printf "%s\n" "Loading .env environment variables"
-	. ./.env
-	export DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD
-	export DATABASE_PORT DATABASE_SCHEMA DATABASE_USER
-	export FLASK_APP FLASK_ENV
-	"$@"
-    elif [ -d $PIP_VENV ]; then
+    elif [ -d $1 ]; then
 	abort "%s\n" "Unable to activate environment"
     else
 	abort "%s\n" "No virtual environment"

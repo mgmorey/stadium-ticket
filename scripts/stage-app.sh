@@ -49,7 +49,7 @@ realpath() {
     fi
 }
 
-stage_app() {
+pip_venv() {
     assert [ -n "$1" ]
 
     if [ ! -d $1 ]; then
@@ -77,4 +77,4 @@ if [ $# -eq 0 ]; then
 fi
 
 script_dir=$(realpath "$(dirname "$0")")
-stage_app $1
+pip_venv $1
