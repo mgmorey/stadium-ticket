@@ -29,13 +29,12 @@ abort() {
 }
 
 activate_and_sync_venv() {
-    if [ -d $1 ]; then
-	printf "%s\n" "Activating virtual environment"
-	. $1/bin/activate
-	. $script_dir/sync-virtualenv.sh
-    else
-	abort "%s\n" "No virtual environment"
-    fi
+    assert [ -n "$1" ] && [ -d $1/bin ] && [ -r $1/bin/activate ]
+    printf "%s\n" "Activating virtual environment"
+    set +u
+    . $1/bin/activate
+    set -u
+    . $script_dir/sync-virtualenv.sh
 }
 
 assert() {
@@ -92,6 +91,10 @@ realpath() {
 	fi
     fi
 }
+
+if [ $# -eq 0 ]; then
+    abort "%s\n" "$0: Not enough arguments"
+fi
 
 if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "$0: Must be run as a non-privileged user"
