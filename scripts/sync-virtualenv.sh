@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PIP=pip3
-PYTHON=python3
-
 if [ -z "$VIRTUAL_ENV" ]; then
     abort "%s\n" "$0: Must run in active virtual environment"
 fi
