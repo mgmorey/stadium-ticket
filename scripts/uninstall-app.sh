@@ -43,6 +43,7 @@ script_dir=$(realpath "$(dirname "$0")")
 dryrun=true
 remove_app
 remove_database
+unset dryrun
 
 dryrun=false
 signal_app INT INT TERM KILL
