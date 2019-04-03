@@ -39,20 +39,6 @@ create_venv() {
     fi
 }
 
-realpath() {
-    assert [ -d "$1" ]
-
-    if [ -x /usr/bin/realpath ]; then
-	/usr/bin/realpath "$1"
-    else
-	if expr "$1" : '/.*' >/dev/null; then
-	    printf "%s\n" "$1"
-	else
-	    printf "%s\n" "$PWD/${1#./}"
-	fi
-    fi
-}
-
 if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
@@ -66,9 +52,5 @@ for virtualenv in virtualenv "$PYTHON -m virtualenv" false; do
 	break
     fi
 done
-
-script_dir=$(realpath "$(dirname "$0")")
-source_dir=$script_dir/..
-cd $source_dir
 
 create_venv $1
