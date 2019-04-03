@@ -68,7 +68,7 @@ pipenv_run() {
 	$pipenv sync -d
     fi
 
-    if [ -n "${VIRTUAL_ENV-}" ]; then
+    if [ "${PIPENV_ACTIVE:-0}" -gt 0 ]; then
 	"$@"
     else
 	$pipenv run "$@"
