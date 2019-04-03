@@ -24,8 +24,8 @@ abort() {
 
 abort_insufficient_permissions() {
     cat >&2 <<EOF
-You need write permissions for $1
-Please retry with root privileges
+$0: You need write permissions for $1
+$0: Please retry with root privileges
 EOF
     exit 1
 }
