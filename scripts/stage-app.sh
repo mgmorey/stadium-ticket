@@ -50,5 +50,5 @@ source_dir=$script_dir/..
 
 cd $source_dir
 
-pip_venv=$1
+pip_venvname=$1
 . $script_dir/deploy-virtualenv.sh
