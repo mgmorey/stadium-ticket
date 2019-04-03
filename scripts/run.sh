@@ -35,7 +35,7 @@ assert() {
 }
 
 pip_run() {
-    . $script_dir/deploy-virtualenv $PIP_VENV
+    . $script_dir/deploy-virtualenv.sh $script_dir $PIP_VENV
     printf "%s\n" "Loading .env environment variables"
     . ./.env
 
@@ -71,6 +71,10 @@ realpath() {
 	fi
     fi
 }
+
+if [ $# -eq 0 ]; then
+    abort "%s\n" "$0: Not enough arguments"
+fi
 
 for pipenv in pipenv "$PYTHON -m pipenv" false; do
     if $pipenv >/dev/null 2>&1; then
