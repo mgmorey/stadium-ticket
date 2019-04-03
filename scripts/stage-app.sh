@@ -23,16 +23,12 @@ abort() {
     exit 1
 }
 
-activate_and_sync_venv() {
-    if [ -d $1 ]; then
-	printf "%s\n" "Activating virtual environment"
-	set +u
-	. $1/bin/activate
-	set -u
-	. $script_dir/sync-virtualenv.sh
-    else
-	abort "%s\n" "No virtual environment"
-    fi
+activate_venv() {
+    assert [ -n "$1" ] && [ -d $1/bin ] && [ -r $1/bin/activate ]
+    printf "%s\n" "Activating virtual environment"
+    set +u
+    . "$1/bin/activate"
+    set -u
 }
 
 assert() {
@@ -53,10 +49,28 @@ realpath() {
     fi
 }
 
-if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "$0: Must be run as a non-privileged user"
-fi
+stage_app() {
+    assert [ -n "$1" ]
+
+    if [ ! -d $1 ]; then
+	$script_dir/create-virtualenv.sh $1
+	populate=true
+    else
+	populate=false
+    fi
+
+    if [ -r $1/bin/activate ]; then
+	activate_venv $1
+
+	if [ "$populate" = true ]; then
+	    . $script_dir/sync-virtualenv.sh
+	fi
+    elif [ -d $1 ]; then
+	abort "%s\n" "Unable to activate environment"
+    else
+	abort "%s\n" "No virtual environment"
+    fi
+}
 
 script_dir=$(realpath "$(dirname "$0")")
-$script_dir/create-virtualenv.sh $1
-activate_and_sync_venv $1
+stage_app $1
