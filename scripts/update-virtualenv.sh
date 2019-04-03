@@ -75,7 +75,7 @@ pipenv_update() {
 pip_update() {
     assert [ -n "$1" ]
     sh -eu $script_dir/create-virtualenv.sh $1
-    activate_and_sync_venv $1
+    activate_venv $1
     . $script_dir/sync-virtualenv.sh
 }
 
