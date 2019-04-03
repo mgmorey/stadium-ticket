@@ -49,4 +49,4 @@ script_dir=$(realpath "$(dirname "$0")")
 source_dir=$script_dir/..
 
 cd $source_dir
-. $script_dir/deploy-virtualenv $1
+. $script_dir/deploy-virtualenv.sh $script_dir $1
