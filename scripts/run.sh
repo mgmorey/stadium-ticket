@@ -44,7 +44,7 @@ assert() {
 }
 
 pip_run() {
-    pip_venv $PIP_VENV
+    . $script_dir/deploy-virtualenv $PIP_VENV
     printf "%s\n" "Loading .env environment variables"
     . ./.env
 
@@ -53,29 +53,6 @@ pip_run() {
     done
 
     "$@"
-}
-
-pip_venv() {
-    assert [ -n "$1" ]
-
-    if [ ! -d $1 ]; then
-	sh -eu $script_dir/create-virtualenv.sh $1
-	populate=true
-    else
-	populate=false
-    fi
-
-    if [ -r $1/bin/activate ]; then
-	activate_venv $1
-
-	if [ "$populate" = true ]; then
-	    . $script_dir/sync-virtualenv.sh
-	fi
-    elif [ -d $1 ]; then
-	abort "%s\n" "Unable to activate environment"
-    else
-	abort "%s\n" "No virtual environment"
-    fi
 }
 
 pipenv_run() {
@@ -104,16 +81,16 @@ realpath() {
     fi
 }
 
-script_dir=$(realpath "$(dirname "$0")")
-source_dir=$script_dir/..
-
-cd $source_dir
-
 for pipenv in pipenv "$PYTHON -m pipenv" false; do
     if $pipenv >/dev/null 2>&1; then
 	break
     fi
 done
+
+script_dir=$(realpath "$(dirname "$0")")
+source_dir=$script_dir/..
+
+cd $source_dir
 
 if [ "$pipenv" != false ]; then
     pipenv_run "$@"

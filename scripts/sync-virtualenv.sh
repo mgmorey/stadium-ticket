@@ -40,14 +40,14 @@ if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "$0: Must run as a non-privileged user"
 fi
 
-# Use no cache if child process of sudo
-pip_opts=${SUDO_USER:+--no-cache-dir}
-
 for pip in $PIP "$PYTHON -m pip" false; do
     if $pip >/dev/null 2>&1; then
 	break
     fi
 done
+
+# Use no cache if child process of sudo
+pip_opts=${SUDO_USER:+--no-cache-dir}
 
 assert [ "$pip" != false ]
 printf "%s\n" "Upgrading pip"

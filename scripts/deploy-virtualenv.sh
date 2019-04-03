@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# update-virtualenv: update virtualenv dependencies
+# deploy-virtualenv.sh: deploy Python virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export LANG=${LANG:-en_US.UTF-8}
-export LC_ALL=${LC_ALL:-en_US.UTF-8}
-
-PIP_VENV=.venv
 PYTHON=python3
-REQUIREMENTS="requirements-dev.txt requirements.txt"
 
 abort() {
     printf "$@" >&2
@@ -29,10 +24,11 @@ abort() {
 }
 
 activate_venv() {
-    assert [ -n "$1" ] && [ -d $1/bin ] && [ -r $1/bin/activate ]
+    assert [ -n "$1" ] && [ -d $1/bin ] && [ -r "$1/bin/activate" ]
     printf "%s\n" "Activating virtual environment"
+    assert [ -r "$1/bin/activate" ]
     set +u
-    . $1/bin/activate
+    . "$1/bin/activate"
     set -u
 }
 
@@ -40,43 +36,27 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-pipenv_lock() {
-    $pipenv lock
-
-    for file; do
-	case $file in
-	    (requirements-dev*.txt)
-		opts=-d
-		;;
-	    (requirements.txt)
-		opts=
-		;;
-	    (*)
-		abort "%s: Invalid filename\n" "$file"
-	esac
-
-	printf "Generating %s\n" "$file"
-
-	if $pipenv lock $opts -r >$tmpfile; then
-	    /bin/mv -f $tmpfile "$file"
-	    chgrp $(id -g) "$file"
-	    chmod a+r "$file"
-	else
-	    abort "Unable to update %s\n" "$file"
-	fi
-    done
-}
-
-pipenv_update() {
-    pipenv_lock $REQUIREMENTS
-    $pipenv sync -d
-}
-
-pip_update() {
+deploy_venv() {
     assert [ -n "$1" ]
-    sh -eu $script_dir/create-virtualenv.sh $1
-    activate_venv $1
-    . $script_dir/sync-virtualenv.sh
+
+    if [ ! -d $1 ]; then
+	sh -eu $script_dir/create-virtualenv.sh $1
+	populate=true
+    else
+	populate=false
+    fi
+
+    if [ -r $1/bin/activate ]; then
+	activate_venv $1
+
+	if [ "$populate" = true ]; then
+	    . $script_dir/sync-virtualenv.sh
+	fi
+    elif [ -d $1 ]; then
+	abort "%s\n" "Unable to activate environment"
+    else
+	abort "%s\n" "No virtual environment"
+    fi
 }
 
 realpath() {
@@ -93,28 +73,13 @@ realpath() {
     fi
 }
 
+if [ $# -eq 0 ]; then
+    abort "%s\n" "$0: Not enough arguments"
+fi
+
 if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "$0: Must be run as a non-privileged user"
 fi
 
-for pipenv in pipenv "$PYTHON -m pipenv" false; do
-    if $pipenv >/dev/null 2>&1; then
-	break
-    fi
-done
-
 script_dir=$(realpath "$(dirname "$0")")
-source_dir=$script_dir/..
-
-tmpfile=$(mktemp)
-trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
-
-cd $source_dir
-
-if [ "$pipenv" != false ]; then
-    pipenv_update
-else
-    pip_update $PIP_VENV
-fi
-
-touch .update
+deploy_venv $1

@@ -49,32 +49,12 @@ realpath() {
     fi
 }
 
-pip_venv() {
-    assert [ -n "$1" ]
-
-    if [ ! -d $1 ]; then
-	sh -eu $script_dir/create-virtualenv.sh $1
-	populate=true
-    else
-	populate=false
-    fi
-
-    if [ -r $1/bin/activate ]; then
-	activate_venv $1
-
-	if [ "$populate" = true ]; then
-	    . $script_dir/sync-virtualenv.sh
-	fi
-    elif [ -d $1 ]; then
-	abort "%s\n" "Unable to activate environment"
-    else
-	abort "%s\n" "No virtual environment"
-    fi
-}
-
 if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
 
 script_dir=$(realpath "$(dirname "$0")")
-pip_venv $1
+source_dir=$script_dir/..
+
+cd $source_dir
+. $script_dir/deploy-virtualenv $1

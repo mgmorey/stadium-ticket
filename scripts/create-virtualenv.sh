@@ -61,14 +61,14 @@ if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "$0: Must be run as a non-privileged user"
 fi
 
-script_dir=$(realpath "$(dirname "$0")")
-source_dir=$script_dir/..
-cd $source_dir
-
 for virtualenv in virtualenv "$PYTHON -m virtualenv" false; do
     if $virtualenv >/dev/null 2>&1; then
 	break
     fi
 done
+
+script_dir=$(realpath "$(dirname "$0")")
+source_dir=$script_dir/..
+cd $source_dir
 
 create_venv $1
