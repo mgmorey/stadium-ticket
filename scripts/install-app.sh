@@ -19,6 +19,11 @@
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -154,8 +159,10 @@ install_source_files() {
 }
 
 realpath() {
+    assert [ -d "$1" ]
+
     if [ -x /usr/bin/realpath ]; then
-	/usr/bin/realpath "$@"
+	/usr/bin/realpath "$1"
     else
 	if expr "$1" : '/.*' >/dev/null; then
 	    printf "%s\n" "$1"
@@ -175,15 +182,15 @@ stage_app() {
     $sh -c "$script_dir/stage-app.sh .venv-$APP_NAME"
 }
 
-script_dir=$(realpath $(dirname $0))
-source_dir="$script_dir/.."
+script_dir=$(realpath "$(dirname "$0")")
+source_dir=$script_dir/..
 
 . "$script_dir/configure-app.sh"
 
 sh -eu $script_dir/install-uwsgi.sh
 
 virtualenv=.venv-$APP_NAME
-cd "$source_dir"
+cd $source_dir
 
 dryrun=true
 remove_database

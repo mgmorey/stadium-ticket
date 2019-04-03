@@ -30,9 +30,14 @@ abort() {
 
 activate_venv() {
     printf "%s\n" "Activating virtual environment"
+    assert [ -d "$1/bin/activate" ]
     set +u
     . "$1/bin/activate"
     set -u
+}
+
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
 pip_run() {
@@ -76,8 +81,10 @@ pipenv_run() {
 }
 
 realpath() {
+    assert [ -d "$1" ]
+
     if [ -x /usr/bin/realpath ]; then
-	/usr/bin/realpath "$@"
+	/usr/bin/realpath "$1"
     else
 	if expr "$1" : '/.*' >/dev/null; then
 	    printf "%s\n" "$1"
@@ -87,14 +94,14 @@ realpath() {
     fi
 }
 
-script_dir=$(realpath $(dirname $0))
-source_dir="$script_dir/.."
+script_dir=$(realpath "$(dirname "$0")")
+source_dir=$script_dir/..
 
 if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "This script must be run as a non-privileged user"
 fi
 
-cd "$source_dir"
+cd $source_dir
 
 for pipenv in pipenv "$PYTHON -m pipenv" false; do
     if $pipenv >/dev/null 2>&1; then

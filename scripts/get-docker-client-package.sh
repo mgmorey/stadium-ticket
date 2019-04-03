@@ -16,9 +16,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
 realpath() {
+    assert [ -d "$1" ]
+
     if [ -x /usr/bin/realpath ]; then
-	/usr/bin/realpath "$@"
+	/usr/bin/realpath "$1"
     else
 	if expr "$1" : '/.*' >/dev/null; then
 	    printf "%s\n" "$1"
@@ -28,7 +39,7 @@ realpath() {
     fi
 }
 
-script_dir=$(realpath $(dirname $0))
+script_dir=$(realpath "$(dirname "$0")")
 
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM

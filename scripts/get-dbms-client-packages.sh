@@ -38,9 +38,20 @@ SUNOS_PKGS="sqlalchemy-%s"
 UBUNTU_PKG="mariadb-client-10.1"
 UBUNTU_PKGS="%s-pymysql %s-sqlalchemy"
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
 realpath() {
+    assert [ -d "$1" ]
+
     if [ -x /usr/bin/realpath ]; then
-	/usr/bin/realpath "$@"
+	/usr/bin/realpath "$1"
     else
 	if expr "$1" : '/.*' >/dev/null; then
 	    printf "%s\n" "$1"
@@ -50,7 +61,7 @@ realpath() {
     fi
 }
 
-script_dir=$(realpath $(dirname $0))
+script_dir=$(realpath "$(dirname "$0")")
 kernel_name=$(sh -eu "$script_dir/get-os-kernel-name.sh")
 
 package="$(sh -eu "$script_dir/get-dbms-client-package.sh")"

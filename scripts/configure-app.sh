@@ -30,6 +30,10 @@ EOF
     exit 1
 }
 
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
 check_permissions() {
     for file; do
 	if [ -e "$file" -a ! -w "$file" ]; then

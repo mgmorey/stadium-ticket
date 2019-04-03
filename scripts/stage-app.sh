@@ -35,9 +35,15 @@ activate_and_sync_venv() {
     fi
 }
 
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
 realpath() {
+    assert [ -d "$1" ]
+
     if [ -x /usr/bin/realpath ]; then
-	/usr/bin/realpath "$@"
+	/usr/bin/realpath "$1"
     else
 	if expr "$1" : '/.*' >/dev/null; then
 	    printf "%s\n" "$1"
@@ -51,6 +57,6 @@ if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "This script must be run as a non-privileged user"
 fi
 
-script_dir=$(realpath $(dirname $0))
+script_dir=$(realpath "$(dirname "$0")")
 $script_dir/create-virtualenv.sh $1
 activate_and_sync_venv $1

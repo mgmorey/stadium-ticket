@@ -33,9 +33,15 @@ add_event() {
 EOF
 }
 
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
 realpath() {
+    assert [ -d "$1" ]
+
     if [ -x /usr/bin/realpath ]; then
-	/usr/bin/realpath "$@"
+	/usr/bin/realpath "$1"
     else
 	if expr "$1" : '/.*' >/dev/null; then
 	    printf "%s\n" "$1"
@@ -68,8 +74,8 @@ request_tickets() {
 EOF
 }
 
-script_dir=$(realpath $(dirname $0))
-source_dir="$script_dir/.."
+script_dir=$(realpath "$(dirname "$0")")
+source_dir=$script_dir/..
 
 printf "%s\n" "Loading .env environment variables"
 . $source_dir/.env
