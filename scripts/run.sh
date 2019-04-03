@@ -35,12 +35,13 @@ assert() {
 }
 
 pip_run() {
-    . $script_dir/deploy-virtualenv.sh $script_dir $PIP_VENV
+    pip_venv=$PIP_VENV
+    . $script_dir/deploy-virtualenv.sh
     printf "%s\n" "Loading .env environment variables"
     . ./.env
 
     for var in $APP_VARS; do
-	export var
+	export $var
     done
 
     "$@"
