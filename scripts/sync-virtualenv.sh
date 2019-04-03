@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+# -*- Mode: Shell-script -*-
 
 # populate-virtualenv: install requirements into virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -18,19 +18,6 @@
 
 PIP=pip3
 PYTHON=python3
-
-abort() {
-    printf "$@" >&2
-    exit 1
-}
-
-assert() {
-    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
-}
-
-if [ $# -eq 0 ]; then
-    abort "%s\n" "$0: Not enough arguments"
-fi
 
 if [ -z "$VIRTUAL_ENV" ]; then
     abort "%s\n" "$0: Must run in active virtual environment"
@@ -54,3 +41,4 @@ printf "%s\n" "Upgrading pip"
 $pip install --upgrade pip
 printf "%s\n" "Installing required packages"
 $pip install $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
+
