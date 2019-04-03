@@ -36,11 +36,12 @@ deploy_venv() {
     assert [ -n "$1" ]
 
     if [ ! -d $1 ]; then
-	sh -eu $script_dir/create-virtualenv.sh $1
 	populate=true
     else
 	populate=false
     fi
+
+    sh -eu $script_dir/create-virtualenv.sh $1
 
     if [ -r $1/bin/activate ]; then
 	activate_venv $1

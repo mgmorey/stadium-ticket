@@ -19,11 +19,11 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-APP_VARS="DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_PORT \
-DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV"
-PIP_VENV=.venv
+NAME=.venv
 PYTHON=python3
 REQUIREMENTS="requirements-dev.txt requirements.txt"
+VARIABLES="DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_PORT \
+DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV"
 
 abort() {
     printf "$@" >&2
@@ -35,13 +35,13 @@ assert() {
 }
 
 pip_run() {
-    pip_venv=$PIP_VENV
+    pip_venv=$NAME
     . $script_dir/deploy-virtualenv.sh
     printf "%s\n" "Loading .env environment variables"
     . ./.env
 
-    for var in $APP_VARS; do
-	export $var
+    for variable in $VARIABLES; do
+	export $variable
     done
 
     "$@"

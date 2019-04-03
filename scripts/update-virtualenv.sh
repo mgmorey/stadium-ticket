@@ -19,7 +19,7 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-PIP_VENV=.venv
+NAME=.venv
 PYTHON=python3
 REQUIREMENTS="requirements-dev.txt requirements.txt"
 
@@ -114,7 +114,7 @@ cd $source_dir
 if [ "$pipenv" != false ]; then
     pipenv_update
 else
-    pip_update $PIP_VENV
+    pip_update $NAME
 fi
 
 touch .update
