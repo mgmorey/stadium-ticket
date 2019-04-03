@@ -20,8 +20,8 @@ export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 PYTHON=python3
+PIP_VENV=.venv
 REQUIREMENTS="requirements-dev.txt requirements.txt"
-VIRTUALENV=.venv
 
 abort() {
     printf "$@" >&2
@@ -107,7 +107,7 @@ done
 if [ "$pipenv" != false ]; then
     pipenv_update
 else
-    pip_update $VIRTUALENV
+    pip_update $PIP_VENV
 fi
 
 touch .update

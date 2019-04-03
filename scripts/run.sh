@@ -20,8 +20,8 @@ export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 PYTHON=python3
+PIP_VENV=.venv
 REQUIREMENTS="requirements-dev.txt requirements.txt"
-VIRTUALENV=.venv
 
 abort() {
     printf "$@" >&2
@@ -36,15 +36,15 @@ activate_venv() {
 }
 
 pip_run() {
-    if [ ! -d $VIRTUALENV ]; then
-	$script_dir/create-virtualenv.sh $VIRTUALENV
+    if [ ! -d $PIP_VENV ]; then
+	$script_dir/create-virtualenv.sh $PIP_VENV
 	populate=true
     else
 	populate=false
     fi
 
-    if [ -r $VIRTUALENV/bin/activate ]; then
-	activate_venv $VIRTUALENV
+    if [ -r $PIP_VENV/bin/activate ]; then
+	activate_venv $PIP_VENV
 
 	if [ "$populate" = true ]; then
 	    . "$script_dir/sync-virtualenv.sh"
@@ -56,7 +56,7 @@ pip_run() {
 	export DATABASE_PORT DATABASE_SCHEMA DATABASE_USER
 	export FLASK_APP FLASK_ENV
 	"$@"
-    elif [ -d $VIRTUALENV ]; then
+    elif [ -d $PIP_VENV ]; then
 	abort "%s\n" "Unable to activate environment"
     else
 	abort "%s\n" "No virtual environment"
