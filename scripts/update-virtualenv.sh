@@ -19,8 +19,8 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-PYTHON=python3
 PIP_VENV=.venv
+PYTHON=python3
 REQUIREMENTS="requirements-dev.txt requirements.txt"
 
 abort() {
