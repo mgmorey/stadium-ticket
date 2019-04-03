@@ -43,7 +43,7 @@ assert() {
 
 pip_run() {
     if [ ! -d $PIP_VENV ]; then
-	$script_dir/create-virtualenv.sh $PIP_VENV
+	sh -eu $script_dir/create-virtualenv.sh $PIP_VENV
 	populate=true
     else
 	populate=false

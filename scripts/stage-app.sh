@@ -53,7 +53,7 @@ stage_app() {
     assert [ -n "$1" ]
 
     if [ ! -d $1 ]; then
-	$script_dir/create-virtualenv.sh $1
+	sh -eu $script_dir/create-virtualenv.sh $1
 	populate=true
     else
 	populate=false
