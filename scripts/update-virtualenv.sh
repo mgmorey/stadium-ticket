@@ -28,13 +28,12 @@ abort() {
     exit 1
 }
 
-activate_and_sync_venv() {
+activate_venv() {
     assert [ -n "$1" ] && [ -d $1/bin ] && [ -r $1/bin/activate ]
     printf "%s\n" "Activating virtual environment"
     set +u
     . $1/bin/activate
     set -u
-    . $script_dir/sync-virtualenv.sh
 }
 
 assert() {
@@ -77,6 +76,7 @@ pip_update() {
     assert [ -n "$1" ]
     sh -eu $script_dir/create-virtualenv.sh $1
     activate_and_sync_venv $1
+    . $script_dir/sync-virtualenv.sh
 }
 
 realpath() {
