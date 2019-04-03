@@ -16,13 +16,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+PIP=pip3
+PYTHON=python3
+
 abort() {
     printf "$@" >&2
     exit 1
 }
 
-PIP=pip3
-PYTHON=python3
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
+if [ $(id -u) -eq 0 ]; then
+    abort "%s\n" "$0: Must run as a non-privileged user"
+fi
+
+if [ -z "$VIRTUAL_ENV" ]; then
+    abort "%s\n" "$0: Must run in active virtual environment"
+fi
 
 # Use no cache if child process of sudo
 pip_opts=${SUDO_USER:+--no-cache-dir}
@@ -38,4 +50,3 @@ printf "%s\n" "Upgrading pip"
 $pip install --upgrade pip
 printf "%s\n" "Installing required packages"
 $pip install $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
-

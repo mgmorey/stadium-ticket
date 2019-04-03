@@ -98,7 +98,7 @@ script_dir=$(realpath "$(dirname "$0")")
 source_dir=$script_dir/..
 
 if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "This script must be run as a non-privileged user"
+    abort "%s\n" "$0: Must be run as a non-privileged user"
 fi
 
 cd $source_dir
