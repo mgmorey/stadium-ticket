@@ -30,7 +30,7 @@ abort() {
 
 activate_venv() {
     printf "%s\n" "Activating virtual environment"
-    assert [ -d "$1/bin/activate" ]
+    assert [ -r "$1/bin/activate" ]
     set +u
     . "$1/bin/activate"
     set -u
