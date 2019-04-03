@@ -72,5 +72,9 @@ stage_app() {
     fi
 }
 
+if [ $# -eq 0 ]; then
+    abort "%s\n" "$0: Not enough arguments"
+fi
+
 script_dir=$(realpath "$(dirname "$0")")
 stage_app $1
