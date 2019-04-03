@@ -97,10 +97,6 @@ realpath() {
 script_dir=$(realpath "$(dirname "$0")")
 source_dir=$script_dir/..
 
-if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "$0: Must be run as a non-privileged user"
-fi
-
 cd $source_dir
 
 for pipenv in pipenv "$PYTHON -m pipenv" false; do
