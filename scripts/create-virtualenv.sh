@@ -53,6 +53,10 @@ realpath() {
     fi
 }
 
+if [ $# -eq 0 ]; then
+    abort "%s\n" "$0: Not enough arguments"
+fi
+
 if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "$0: Must be run as a non-privileged user"
 fi
