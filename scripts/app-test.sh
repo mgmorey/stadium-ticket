@@ -80,7 +80,6 @@ source_dir=$script_dir/..
 printf "%s\n" "Loading .env environment variables"
 . $source_dir/.env
 
-: ${DOCKER_HOST:=localhost}
 host=${FLASK_HOST-${DOCKER_HOST%:*}}
 port=${FLASK_PORT-5000}
 
