@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+# -*- Mode: Shell-script -*-
 
 # deploy-virtualenv.sh: deploy Python virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -15,8 +15,6 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-PYTHON=python3
 
 abort() {
     printf "$@" >&2
@@ -36,9 +34,9 @@ deploy_venv() {
     assert [ -n "$1" ]
 
     if [ ! -d $1 ]; then
-	populate=true
+	sync=true
     else
-	populate=false
+	sync=false
     fi
 
     sh -eu $script_dir/create-virtualenv.sh $1
@@ -46,7 +44,7 @@ deploy_venv() {
     if [ -r $1/bin/activate ]; then
 	activate_venv $1
 
-	if [ "$populate" = true ]; then
+	if [ "$sync" = true ]; then
 	    . $script_dir/sync-virtualenv.sh
 	fi
     elif [ -d $1 ]; then
