@@ -28,12 +28,16 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "$0: Must run as a non-privileged user"
+if [ $# -eq 0 ]; then
+    abort "%s\n" "$0: Not enough arguments"
 fi
 
 if [ -z "$VIRTUAL_ENV" ]; then
     abort "%s\n" "$0: Must run in active virtual environment"
+fi
+
+if [ $(id -u) -eq 0 ]; then
+    abort "%s\n" "$0: Must run as a non-privileged user"
 fi
 
 # Use no cache if child process of sudo
