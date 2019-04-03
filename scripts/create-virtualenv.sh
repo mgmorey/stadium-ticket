@@ -23,6 +23,10 @@ abort() {
     exit 1
 }
 
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
 create_venv() {
     if [ ! -d "$1" ]; then
 	printf "%s\n" "Creating virtual environment"
@@ -33,10 +37,6 @@ create_venv() {
 	    $PYTHON -m venv "$1"
 	fi
     fi
-}
-
-assert() {
-    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
 realpath() {
