@@ -31,8 +31,8 @@ abort() {
 activate_and_sync_venv() {
     if [ -d $1 ]; then
 	printf "%s\n" "Activating virtual environment"
-	. "$1/bin/activate"
-	. "$script_dir/sync-virtualenv.sh"
+	. $1/bin/activate
+	. $script_dir/sync-virtualenv.sh
     else
 	abort "%s\n" "No virtual environment"
     fi
@@ -75,7 +75,7 @@ pipenv_update() {
 }
 
 pip_update() {
-    sh -eu "$script_dir/create-virtualenv.sh" $1
+    sh -eu $script_dir/create-virtualenv.sh $1
     activate_and_sync_venv $1
 }
 

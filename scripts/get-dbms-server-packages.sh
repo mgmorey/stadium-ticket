@@ -56,14 +56,12 @@ realpath() {
 }
 
 script_dir=$(realpath "$(dirname "$0")")
+distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
-
-package="$(sh -eu "$script_dir/get-dbms-server-package.sh")"
+package=$(sh -eu $script_dir/get-dbms-server-package.sh)
 
 case "$kernel_name" in
     (Linux)
-	distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
-
 	case "$distro_name" in
 	    (debian)
 		packages="${package:-$DEBIAN_PKG}"

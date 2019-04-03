@@ -29,7 +29,7 @@ assert() {
 
 get_dependencies() {
     for category in $CATEGORIES; do
-	sh "$script_dir/get-$category-packages.sh"
+	sh $script_dir/get-$category-packages.sh
     done
 }
 
@@ -48,12 +48,11 @@ realpath() {
 }
 
 script_dir=$(realpath "$(dirname "$0")")
-kernel_name=$(sh -eu "$script_dir/get-os-kernel-name.sh")
+distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
+kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 
 case "$kernel_name" in
     (Linux)
-	distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
-
 	case "$distro_name" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
 		;;

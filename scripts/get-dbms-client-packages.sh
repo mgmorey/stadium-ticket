@@ -62,14 +62,12 @@ realpath() {
 }
 
 script_dir=$(realpath "$(dirname "$0")")
-kernel_name=$(sh -eu "$script_dir/get-os-kernel-name.sh")
-
-package="$(sh -eu "$script_dir/get-dbms-client-package.sh")"
+distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
+kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
+package=$(sh -eu $script_dir/get-dbms-client-package.sh)
 
 case "$kernel_name" in
     (Linux)
-	distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
-
 	case "$distro_name" in
 	    (debian)
 		packages="${package:-$DEBIAN_PKG} $DEBIAN_PKGS"
@@ -99,7 +97,7 @@ case "$kernel_name" in
 	;;
 esac
 
-data=$(sh -eu "$script_dir/get-python-package.sh")
+data=$(sh -eu $script_dir/get-python-package.sh)
 package_name=$(printf "%s" "$data" | awk '{print $1}')
 package_modifier=$(printf "%s" "$data" | awk '{print $2}')
 

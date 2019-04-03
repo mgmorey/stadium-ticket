@@ -40,15 +40,14 @@ realpath() {
 }
 
 script_dir=$(realpath "$(dirname "$0")")
-kernel_name=$(sh -eu "$script_dir/get-os-kernel-name.sh")
-package_install_options=$(sh -eu "$script_dir/get-package-install-options.sh")
-package_manager="$(sh -eu "$script_dir/get-package-manager.sh")"
-packages="$(sh -eu "$script_dir/get-uwsgi-packages.sh")"
+distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
+kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
+package_install_options=$(sh -eu $script_dir/get-package-install-options.sh)
+package_manager=$(sh -eu $script_dir/get-package-manager.sh)
+packages=$(sh -eu $script_dir/get-uwsgi-packages.sh)
 
 case "$kernel_name" in
     (Linux)
-	distro_name=$(sh -eu "$script_dir/get-os-distro-name.sh")
-
 	case "$distro_name" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
 		;;

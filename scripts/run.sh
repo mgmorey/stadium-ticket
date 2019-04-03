@@ -52,7 +52,7 @@ pip_run() {
 	activate_venv $PIP_VENV
 
 	if [ "$populate" = true ]; then
-	    . "$script_dir/sync-virtualenv.sh"
+	    . $script_dir/sync-virtualenv.sh
 	fi
 
 	printf "%s\n" "Loading .env environment variables"

@@ -38,7 +38,7 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-. "$script_dir/configure-app.sh"
+. $script_dir/configure-app.sh
 
 dryrun=true
 remove_app

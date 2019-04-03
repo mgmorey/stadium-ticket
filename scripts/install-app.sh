@@ -185,7 +185,7 @@ stage_app() {
 script_dir=$(realpath "$(dirname "$0")")
 source_dir=$script_dir/..
 
-. "$script_dir/configure-app.sh"
+. $script_dir/configure-app.sh
 
 sh -eu $script_dir/install-uwsgi.sh
 

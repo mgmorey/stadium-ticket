@@ -27,9 +27,9 @@ activate_and_sync_venv() {
     if [ -d $1 ]; then
 	printf "%s\n" "Activating virtual environment"
 	set +u
-	. "$1/bin/activate"
+	. $1/bin/activate
 	set -u
-	. "$script_dir/sync-virtualenv.sh"
+	. $script_dir/sync-virtualenv.sh
     else
 	abort "%s\n" "No virtual environment"
     fi
