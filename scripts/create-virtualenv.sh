@@ -58,10 +58,10 @@ if [ $# -eq 0 ]; then
 fi
 
 if [ -n "${VIRTUAL_ENV:-}" ]; then
-    pathname_1="$(readlink -e "$(realpath "$VIRTUAL_ENV")")"
-    pathname_2="$(readlink -e "$(realpath "$1")")"
+    stats_1="$(stat -Lf "%d %i" "$VIRTUAL_ENV")"
+    stats_2="$(stat -Lf "%d %i" "$1")"
 
-    if [ "$pathname_1" = "$pathname_2" ]; then
+    if [ "$stats_1" = "$stats_2" ]; then
 	abort "%s\n" "$0: Must not be run within the virtual environment"
     fi
 fi
