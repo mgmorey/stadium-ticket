@@ -35,7 +35,7 @@ pip_opts=${SUDO_USER:+--no-cache-dir}
 
 assert [ "$pip" != false ]
 printf "%s\n" "Upgrading pip"
-$pip install --upgrade pip
+$pip install $pip_opts --upgrade pip
 printf "%s\n" "Installing required packages"
-$pip install $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
+$pip install $pip_opts $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
 
