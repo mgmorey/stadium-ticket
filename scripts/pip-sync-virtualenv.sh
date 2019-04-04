@@ -36,7 +36,6 @@ pip_sync_requirements() {
 pip_sync_venv() {
     assert [ -n "$1" ]
 
-    # sanity check (should never evaluate to true)
     if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
 	stats_1="$(stat -Lf "%d %i" "$VIRTUAL_ENV")"
 	stats_2="$(stat -Lf "%d %i" "$1")"
