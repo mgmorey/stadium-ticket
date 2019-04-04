@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+DARWIN_PKGS="gdbm libffi openssl readline zlib"
+
 DEBIAN_PKGS="build-essential gcc libbz2-dev libffi-dev libgdbm-dev liblzma-dev \
 libncurses5-dev libreadline-dev libsodium-dev libsqlite3-dev libssl-dev make \
 pycodestyle pylint3 %s-bcrypt %s-dev %s-nacl %s-pip %s-pycodestyle %s-pytest \
@@ -82,6 +84,9 @@ case "$kernel_name" in
 		packages=$OPENSUSE_PKGS
 		;;
 	esac
+	;;
+    (Darwin)
+	packages=$DARWIN_PKGS
 	;;
     (FreeBSD)
 	packages=$FREEBSD_PKGS

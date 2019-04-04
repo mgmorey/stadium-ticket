@@ -71,6 +71,9 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
+    (Darwin)
+	brew list -1
+	;;
     (FreeBSD)
 	pkg info | awk "$FREEBSD_AWK"
 	;;
