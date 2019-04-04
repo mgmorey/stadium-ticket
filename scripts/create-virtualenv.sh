@@ -39,8 +39,26 @@ create_venv() {
     fi
 }
 
+realpath() {
+    assert [ -d "$1" ]
+
+    if [ -x /usr/bin/realpath ]; then
+	/usr/bin/realpath "$1"
+    else
+	if expr "$1" : '/.*' >/dev/null; then
+	    printf "%s\n" "$1"
+	else
+	    printf "%s\n" "$PWD/${1#./}"
+	fi
+    fi
+}
+
 if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
+fi
+
+if [ "${VIRTUAL_ENV:-}" = "$(realpath "$1")" ]; then
+    abort "%s\n" "$0: Must not be run within the virtual environment"
 fi
 
 if [ $(id -u) -eq 0 ]; then
