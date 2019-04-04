@@ -100,6 +100,8 @@ cd $source_dir
 
 if [ "$pipenv" != false ]; then
     pipenv_run "$@"
-else
+elif [ "$pip" != false ]; then
     pip_run "$@"
+else
+    abort "$0: No pip nor pipenv in path"
 fi
