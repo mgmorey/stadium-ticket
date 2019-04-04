@@ -36,6 +36,10 @@ pip_sync_requirements() {
 pip_sync_venv() {
     assert [ -n "$1" ]
 
+    if [ $(id -u) -eq 0 ]; then
+	abort "%s\n" "$0: Must run as a non-privileged user"
+    fi
+
     if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
 	stats_1="$(stat -Lf "%d %i" "$VIRTUAL_ENV")"
 	stats_2="$(stat -Lf "%d %i" "$1")"
@@ -66,9 +70,5 @@ pip_sync_venv() {
 	abort "%s\n" "$0: No virtual environment"
     fi
 }
-
-if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "$0: Must run as a non-privileged user"
-fi
 
 pip_sync_venv $pip_venvname
