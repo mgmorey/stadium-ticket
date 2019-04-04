@@ -27,6 +27,7 @@ activate_venv() {
 
 deploy_venv() {
     assert [ -n "$1" ]
+    assert [ -z "${VIRTUAL_ENV:-}" ]
 
     if [ ! -d $1 ]; then
 	sync=true
