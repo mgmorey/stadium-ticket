@@ -28,6 +28,8 @@ assert() {
 }
 
 create_venv() {
+    assert [ -n "$1" ]
+
     if [ ! -d "$1" ]; then
 	printf "%s\n" "Creating virtual environment"
 
