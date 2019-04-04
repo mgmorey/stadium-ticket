@@ -57,8 +57,13 @@ if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
 
-if [ "$(realpath "${VIRTUAL_ENV:-}")" = "$(realpath "$1")" ]; then
-    abort "%s\n" "$0: Must not be run within the virtual environment"
+if [ -n "${VIRTUAL_ENV:-}" ]; then
+    path1="$(readlink -e "$(realpath "$VIRTUAL_ENV")")"
+    path2="$(readlink -e "$(realpath "$1")")"
+
+    if [ "$path1" = "$path2" ]; then
+	abort "%s\n" "$0: Must not be run within the virtual environment"
+    fi
 fi
 
 if [ $(id -u) -eq 0 ]; then
