@@ -87,6 +87,10 @@ realpath() {
     fi
 }
 
+if [ -n "${VIRTUAL_ENV:-}" ]; then
+    abort "%s\n" "$0: Must not be run within a virtual environment"
+fi
+
 if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "$0: Must be run as a non-privileged user"
 fi
