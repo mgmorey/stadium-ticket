@@ -40,7 +40,7 @@ deploy_venv() {
 	activate_venv $1
 
 	if [ "${pip_venvsync:-$sync}" = true ]; then
-	    . $script_dir/sync-virtualenv.sh
+	    sync_venv
 	fi
     elif [ -d $1 ]; then
 	abort "%s\n" "Unable to activate environment"
@@ -48,5 +48,21 @@ deploy_venv() {
 	abort "%s\n" "No virtual environment"
     fi
 }
+
+sync_venv() {
+    assert [ "$pip" != false ]
+    printf "%s\n" "Upgrading pip"
+    $pip install $pip_opts --upgrade pip
+    printf "%s\n" "Installing required packages"
+    $pip install $pip_opts $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
+}
+
+if [ -z "$VIRTUAL_ENV" ]; then
+    abort "%s\n" "$0: Must run in active virtual environment"
+fi
+
+if [ $(id -u) -eq 0 ]; then
+    abort "%s\n" "$0: Must run as a non-privileged user"
+fi
 
 deploy_venv $pip_venvname

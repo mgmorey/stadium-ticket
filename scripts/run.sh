@@ -78,11 +78,20 @@ if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
 
+for pip in $PIP "$PYTHON -m pip" false; do
+    if $pip >/dev/null 2>&1; then
+	break
+    fi
+done
+
 for pipenv in pipenv "$PYTHON -m pipenv" false; do
     if $pipenv >/dev/null 2>&1; then
 	break
     fi
 done
+
+# Use no cache if child process of sudo
+pip_opts=${SUDO_USER:+--no-cache-dir}
 
 script_dir=$(realpath "$(dirname "$0")")
 source_dir=$script_dir/..
