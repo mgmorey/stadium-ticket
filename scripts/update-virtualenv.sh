@@ -34,6 +34,7 @@ assert() {
 }
 
 pipenv_lock() {
+    assert [ "$pip" != false ]
     $pipenv lock
 
     for file; do
