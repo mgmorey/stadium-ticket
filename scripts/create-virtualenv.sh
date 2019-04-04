@@ -43,15 +43,6 @@ if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
 
-if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
-    stats_1="$(stat -Lf "%d %i" "$VIRTUAL_ENV")"
-    stats_2="$(stat -Lf "%d %i" "$1")"
-
-    if [ "$stats_1" = "$stats_2" ]; then
-	abort "%s\n" "$0: Must not be run within the virtual environment"
-    fi
-fi
-
 if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "$0: Must be run as a non-privileged user"
 fi
