@@ -16,6 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+sync_venv() {
+    assert [ "$pip" != false ]
+    printf "%s\n" "Upgrading pip"
+    $pip install $pip_opts --upgrade pip
+    printf "%s\n" "Installing required packages"
+    $pip install $pip_opts $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
+}
+
 if [ -z "$VIRTUAL_ENV" ]; then
     abort "%s\n" "$0: Must run in active virtual environment"
 fi
@@ -33,9 +41,4 @@ done
 # Use no cache if child process of sudo
 pip_opts=${SUDO_USER:+--no-cache-dir}
 
-assert [ "$pip" != false ]
-printf "%s\n" "Upgrading pip"
-$pip install $pip_opts --upgrade pip
-printf "%s\n" "Installing required packages"
-$pip install $pip_opts $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
-
+sync_venv
