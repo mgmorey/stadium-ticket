@@ -69,7 +69,7 @@ pip_update() {
     assert [ -n "$1" ]
     pip_venvname=$1
     pip_venvsync=true
-    . $script_dir/deploy-virtualenv.sh
+    . $script_dir/pip-sync-virtualenv.sh
 }
 
 realpath() {

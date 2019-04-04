@@ -1,6 +1,6 @@
 # -*- Mode: Shell-script -*-
 
-# deploy-virtualenv.sh: deploy Python virtual environment
+# pip-sync-virtualenv.sh: deploy PIP virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,15 @@ activate_venv() {
     set -u
 }
 
-deploy_venv() {
+pip_sync_requirements() {
+    assert [ "$pip" != false ]
+    printf "%s\n" "Upgrading pip"
+    $pip install $pip_opts --upgrade pip
+    printf "%s\n" "Installing required packages"
+    $pip install $pip_opts $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
+}
+
+pip_sync_venv() {
     assert [ -n "$1" ]
     assert [ -z "${VIRTUAL_ENV:-}" ]
 
@@ -42,7 +50,7 @@ deploy_venv() {
 	assert [ -n "${VIRTUAL_ENV:-}" ]
 
 	if [ "${pip_venvsync:-$sync}" = true ]; then
-	    sync_venv
+	    pip_sync_requirements
 	fi
     elif [ -d $1 ]; then
 	abort "%s\n" "$0: Unable to activate environment"
@@ -51,16 +59,8 @@ deploy_venv() {
     fi
 }
 
-sync_venv() {
-    assert [ "$pip" != false ]
-    printf "%s\n" "Upgrading pip"
-    $pip install $pip_opts --upgrade pip
-    printf "%s\n" "Installing required packages"
-    $pip install $pip_opts $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
-}
-
 if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "$0: Must run as a non-privileged user"
 fi
 
-deploy_venv $pip_venvname
+pip_sync_venv $pip_venvname

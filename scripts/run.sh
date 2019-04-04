@@ -37,7 +37,7 @@ assert() {
 
 pip_run() {
     pip_venvname=$NAME
-    . $script_dir/deploy-virtualenv.sh
+    . $script_dir/pip-sync-virtualenv.sh
     printf "%s\n" "Loading .env environment variables"
     . ./.env
 

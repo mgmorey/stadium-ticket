@@ -61,4 +61,4 @@ source_dir=$script_dir/..
 cd $source_dir
 
 pip_venvname=$1
-. $script_dir/deploy-virtualenv.sh
+. $script_dir/pip-sync-virtualenv.sh
