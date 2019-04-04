@@ -42,6 +42,12 @@ realpath() {
     fi
 }
 
+stage_app() {
+    assert [ -n "$1" ]
+    pip_venvname=$1
+    . $script_dir/pip-sync-virtualenv.sh
+}
+
 if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
@@ -60,5 +66,4 @@ source_dir=$script_dir/..
 
 cd $source_dir
 
-pip_venvname=$1
-. $script_dir/pip-sync-virtualenv.sh
+stage_app $1
