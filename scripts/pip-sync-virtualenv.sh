@@ -57,7 +57,7 @@ pip_sync_venv() {
 	activate_venv $1
 	assert [ -n "${VIRTUAL_ENV:-}" ]
 
-	if [ "${pip_venvsync:-$sync}" = true ]; then
+	if [ "${venv_sync:-$sync}" = true ]; then
 	    pip_sync_requirements
 	fi
     elif [ -d $1 ]; then
@@ -67,4 +67,4 @@ pip_sync_venv() {
     fi
 }
 
-pip_sync_venv $pip_venvname
+pip_sync_venv $venv_name

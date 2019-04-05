@@ -100,7 +100,7 @@ install_app() {
     create_app_dirs "$APP_DIR" "$APP_ETCDIR" "$APP_VARDIR"
     install_source_files 644 app "$APP_DIR"
     install_file "$@" 600 .env "$APP_DIR/.env"
-    install_dir "$virtualenv" "$APP_DIR/.venv"
+    install_dir "$venv_name" "$APP_DIR/.venv"
     change_ownership "$APP_DIR" "$APP_VARDIR"
     enable_app "$APP_CONFIG" $UWSGI_APPDIRS
 }
@@ -189,7 +189,7 @@ source_dir=$script_dir/..
 
 sh -eu $script_dir/install-uwsgi.sh
 
-virtualenv=.venv-$APP_NAME
+venv_name=.venv-$APP_NAME
 cd $source_dir
 
 dryrun=true

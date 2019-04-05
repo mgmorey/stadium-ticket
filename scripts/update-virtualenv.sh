@@ -19,10 +19,10 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-NAME=.venv
 PIP=pip3
 PYTHON=python3
 REQUIREMENTS="requirements-dev.txt requirements.txt"
+VENV_NAME=.venv
 
 abort() {
     printf "$@" >&2
@@ -68,8 +68,8 @@ pipenv_update() {
 
 pip_update() {
     assert [ -n "$1" ]
-    pip_venvname=$1
-    pip_venvsync=true
+    venv_name=$1
+    venv_sync=true
     . $script_dir/pip-sync-virtualenv.sh
 }
 
@@ -121,7 +121,7 @@ cd $source_dir
 if [ "$pipenv" != false ]; then
     pipenv_update
 else
-    pip_update $NAME
+    pip_update $VENV_NAME
 fi
 
 touch .update

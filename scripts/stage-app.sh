@@ -44,7 +44,7 @@ realpath() {
 
 stage_app() {
     assert [ -n "$1" ]
-    pip_venvname=$1
+    venv_name=$1
     . $script_dir/pip-sync-virtualenv.sh
 }
 
