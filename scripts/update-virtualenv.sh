@@ -40,10 +40,10 @@ pipenv_lock() {
     for file; do
 	case $file in
 	    (requirements-dev*.txt)
-		opts=-d
+		pipenv_opts=-dr
 		;;
 	    (requirements.txt)
-		opts=
+		pipenv_opts=-r
 		;;
 	    (*)
 		abort "%s: Invalid filename\n" $file
@@ -51,14 +51,15 @@ pipenv_lock() {
 
 	printf "Generating %s\n" $file
 
-	if $pipenv lock $opts -r >$tmpfile; then
+	if $pipenv lock $pipenv_opts >$tmpfile; then
 	    /bin/mv -f $tmpfile $file
-	    chgrp $(id -g) $file
-	    chmod a+r $file
 	else
 	    abort "Unable to update %s\n" $file
 	fi
     done
+
+    chgrp $(id -g) "$@"
+    chmod a+r "$@"
 }
 
 pipenv_update() {
