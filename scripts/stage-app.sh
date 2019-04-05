@@ -18,6 +18,7 @@
 
 PIP=pip3
 PYTHON=python3
+VENV_REQS="requirements.txt"
 
 abort() {
     printf "$@" >&2
@@ -45,6 +46,7 @@ realpath() {
 stage_app() {
     assert [ -n "$1" ]
     venv_name=$1
+    venv_reqs=$VENV_REQS
     . $script_dir/pip-sync-virtualenv.sh
 }
 
