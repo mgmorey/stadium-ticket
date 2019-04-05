@@ -30,7 +30,7 @@ pip_sync_requirements() {
     printf "%s\n" "Upgrading pip"
     $pip install $pip_opts --upgrade pip
     printf "%s\n" "Installing required packages"
-    $pip install $pip_opts $(printf -- "-r %s\n" ${REQUIREMENTS:-requirements.txt})
+    $pip install $pip_opts $(printf -- "-r %s\n" ${venv_reqs:-requirements.txt})
 }
 
 pip_sync_venv() {

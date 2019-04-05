@@ -21,8 +21,8 @@ export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 PIP=pip3
 PYTHON=python3
-REQUIREMENTS="requirements-dev.txt requirements.txt"
 VENV_NAME=.venv
+VENV_REQS="requirements-dev.txt requirements.txt"
 
 abort() {
     printf "$@" >&2
@@ -62,7 +62,7 @@ pipenv_lock() {
 }
 
 pipenv_update() {
-    pipenv_lock $REQUIREMENTS
+    pipenv_lock $VENV_REQS
     $pipenv sync -d
 }
 
