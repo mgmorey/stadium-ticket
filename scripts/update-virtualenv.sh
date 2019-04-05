@@ -46,10 +46,10 @@ pipenv_lock() {
 		opts=
 		;;
 	    (*)
-		abort "%s: Invalid filename\n" "$file"
+		abort "%s: Invalid filename\n" $file
 	esac
 
-	printf "Generating %s\n" "$file"
+	printf "Generating %s\n" $file
 
 	if $pipenv lock $opts -r >$tmpfile; then
 	    /bin/mv -f $tmpfile $file
