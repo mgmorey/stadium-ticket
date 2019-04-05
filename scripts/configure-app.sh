@@ -254,7 +254,7 @@ case "$kernel_name" in
 	    (ubuntu)
 		configure_debian
 		;;
-	    (opensuse-tumbleweed)
+	    (opensuse-*)
 		configure_opensuse
 		;;
 	    (*)
