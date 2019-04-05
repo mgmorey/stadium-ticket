@@ -19,16 +19,16 @@
 DARWIN_PKGS="gdbm libffi openssl readline zlib"
 
 DEBIAN_PKGS="libbz2-dev libffi-dev libgdbm-dev liblzma-dev libncurses5-dev \
-libreadline-dev libsodium-dev libsqlite3-dev libssl-dev pycodestyle pylint3 \
-%s-bcrypt %s-dev %s-nacl %s-pip %s-pycodestyle %s-pytest %s-virtualenv \
-virtualenv zlib1g-dev"
+libreadline-dev libsodium-dev libsqlite3-dev libssl-dev pycodestyle \
+pylint3 %s-bcrypt %s-dev %s-nacl %s-pip %s-pycodestyle %s-pytest \
+%s-virtualenv virtualenv zlib1g-dev"
 
 FEDORA_PKGS="bzip2-devel gcc libffi-devel libsodium-devel lzma-devel make \
 ncurses-devel openssl-devel %s-devel %s-pip %s-pycodestyle %s-pytest \
 %s-virtualenv readline-devel sqlite-devel"
 
-FREEBSD_PKGS="bash gmake libffi libsodium ncurses pylint-%s %s-bz2file %s-lzma \
-%s-pip %s-pycodestyle %s-pytest %s-sqlite3 %s-virtualenv"
+FREEBSD_PKGS="bash gmake libffi libsodium make ncurses pylint-%s %s-bz2file \
+%s-lzma %s-pip %s-pycodestyle %s-pytest %s-sqlite3 %s-virtualenv"
 
 OPENSUSE_PKGS="gdbm-devel libbz2-devel libffi-devel libopenssl-devel \
 libsodium-devel lzma-sdk-devel ncurses-devel %s-devel %s-pip \
@@ -39,7 +39,7 @@ REDHAT_PKGS="bzip2-devel gcc libffi-devel libsodium-devel make ncurses-devel \
 openssl-devel pylint %s-devel %s-pip %s-pytest %s-virtualenv pytest \
 readline-devel sqlite-devel"
 
-SUNOS_PKGS="build-essential pip-%s"
+SUNOS_PKGS="pip-%s"
 
 abort() {
     printf "$@" >&2
