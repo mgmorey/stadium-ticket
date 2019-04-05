@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 activate_venv() {
-    assert [ -n "$1" ] && [ -d $1/bin ] && [ -r "$1/bin/activate" ]
+    assert [ -n "$1" ] && [ -d $1/bin ] && [ -r $1/bin/activate ]
     printf "%s\n" "Activating virtual environment"
     assert [ -r "$1/bin/activate" ]
     set +u
