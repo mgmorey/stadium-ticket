@@ -184,12 +184,11 @@ stage_app() {
 
 script_dir=$(realpath "$(dirname "$0")")
 source_dir=$script_dir/..
-
-. $script_dir/configure-app.sh
+venv_name=.venv-$APP_NAME
 
 sh -eu $script_dir/install-uwsgi.sh
+. $script_dir/configure-app.sh
 
-venv_name=.venv-$APP_NAME
 cd $source_dir
 
 dryrun=true
