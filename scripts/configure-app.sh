@@ -36,10 +36,10 @@ assert() {
 
 check_permissions() {
     for file; do
-	if [ -e "$file" -a ! -w "$file" ]; then
-	    abort_insufficient_permissions "$file"
-	elif [ "$file" != . -a "$file" != / ]; then
-	    check_permissions "$(dirname "$file")"
+	if [ -e $file -a ! -w $file ]; then
+	    abort_insufficient_permissions $file
+	elif [ $file != . -a $file != / ]; then
+	    check_permissions $(dirname $file)
 	fi
     done
 }
