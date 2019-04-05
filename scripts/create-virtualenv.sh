@@ -34,9 +34,9 @@ create_venv() {
 	printf "%s\n" "Creating virtual environment"
 
 	if [ "$virtualenv" != false ]; then
-	    $virtualenv -p $PYTHON "$1"
+	    $virtualenv -p $PYTHON $1
 	else
-	    $PYTHON -m venv "$1"
+	    $PYTHON -m venv $1
 	fi
     fi
 }
