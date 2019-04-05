@@ -16,10 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
+if [ $# -eq 0 ]; then
+    abort "%s\n" "$0: Not enough arguments"
+fi
+
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile ${tmpfile}~" EXIT INT QUIT TERM
 
-file=$1
+file="$1"
 
 if [ -r $file ]; then
     cp -f $file $tmpfile
