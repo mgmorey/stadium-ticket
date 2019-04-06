@@ -51,16 +51,17 @@ kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    # (debian|ubuntu)
-	    # 	;;
+	    (debian|ubuntu)
+		whereis $1
+	    	;;
 	    (redhat|centos|fedora)
-		rpm --query $1
+		whereis $1
 	    	;;
 	    (opensuse-*)
-		rpm --query $1
+		whereis $1
 		;;
 	    (*)
-		false
+		abort "%s: Distro not supported\n" "$distro_name"
 		;;
 	esac
 	;;
@@ -71,6 +72,6 @@ case "$kernel_name" in
     # (SunOS)
     # 	;;
     (*)
-	false
+	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
 esac
