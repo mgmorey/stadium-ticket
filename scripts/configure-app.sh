@@ -17,6 +17,9 @@
 APP_NAME=stadium-ticket
 APP_PORT=5000
 
+SLEEP_LONG=10
+SLEEP_SHORT=5
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -175,7 +178,11 @@ configure_sunos() {
 }
 
 remove_app() {
-    remove_files $UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR $APP_VARDIR
+    remove_files $UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR
+}
+
+remove_data() {
+    remove_files $APP_VARDIR
 }
 
 remove_database() {
@@ -203,9 +210,9 @@ signal_app() {
 
 		if kill -s $signal $pid; then
 		    printf "SIG%s received by process %s\n" $signal $pid
-		    printf "Waiting %s seconds\n" 5
-		    sleep 5
+		    sleep $SLEEP_LONG
 		else
+		    sleep $SLEEP_SHORT
 		    break
 		fi
 	    done
@@ -214,9 +221,14 @@ signal_app() {
 	printf "No permission to read PID file: %s\n" $APP_PIDFILE >&2
     else
 	printf "No such PID file: %s\n" $APP_PIDFILE >&2
-	printf "Waiting %s seconds\n" 5
-	sleep 5
+	sleep $SLEEP_SHORT
     fi
+}
+
+sleep() {
+    assert [ -n "$1" ]
+    printf "Sleeping for %s seconds\n" $1
+    /usr/bin/sleep $1
 }
 
 tail_log() {
@@ -240,6 +252,7 @@ tail_log() {
 	printf "%s\n" "------------------------------------------------------------------------"
 	cat $tmpfile
 	printf "%s\n" "------------------------------------------------------------------------"
+	printf "%s\n" ""
     fi
 }
 
