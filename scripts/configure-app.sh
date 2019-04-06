@@ -175,6 +175,16 @@ configure_sunos() {
     UWSGI_APPDIRS=
 }
 
+read_pidfile() {
+    assert [ -n "$APP_PIDFILE" ]
+
+    if [ -r $APP_PIDFILE ]; then
+	pid=$(cat $APP_PIDFILE)
+    elif [ -e $APP_PIDFILE ]; then
+	abort "No permission to read PID file: %s\n" $APP_PIDFILE
+    fi
+}
+
 remove_database() {
     remove_files "$APP_DATABASE"
 }
@@ -189,13 +199,10 @@ remove_files() {
 }
 
 signal_app() {
-    assert [ -n "$APP_PIDFILE" ]
+    read_pidfile
     result=1
 
-    if [ -r $APP_PIDFILE ]; then
-	pid="$(cat $APP_PIDFILE)"
-	assert [ -n "$pid" ]
-
+    if [ -n "${pid:-}" ]; then
 	for signal in "$@"; do
 	    printf "Sending SIG%s to process: %s\n" $signal $pid
 
@@ -208,8 +215,6 @@ signal_app() {
 		break
 	    fi
 	done
-    elif [ -e $APP_PIDFILE ]; then
-	abort "No permission to read PID file: %s\n" $APP_PIDFILE
     fi
 
     return $result
@@ -226,18 +231,18 @@ tail_log() {
 
     if [ -r $APP_LOGFILE ]; then
 	tail $APP_LOGFILE >$tmpfile
+
+	if [ -s "$tmpfile" ]; then
+	    printf "%s\n" ""
+	    printf "%s\n" "========================================================================"
+	    printf "%s\n" "Contents of $APP_LOGFILE (or last ten lines):"
+	    printf "%s\n" "------------------------------------------------------------------------"
+	    cat $tmpfile
+	    printf "%s\n" "------------------------------------------------------------------------"
+	    printf "%s\n" ""
+	fi
     elif [ -e $APP_LOGFILE ]; then
 	printf "No permission to read log file: %s\n" $APP_LOGFILE >&2
-    fi
-
-    if [ -s "$tmpfile" ]; then
-	printf "%s\n" ""
-	printf "%s\n" "========================================================================"
-	printf "%s\n" "Contents of $APP_LOGFILE (or last ten lines):"
-	printf "%s\n" "------------------------------------------------------------------------"
-	cat $tmpfile
-	printf "%s\n" "------------------------------------------------------------------------"
-	printf "%s\n" ""
     fi
 }
 
