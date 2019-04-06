@@ -61,3 +61,5 @@ for dryrun in true false; do
 
     remove_app
 done
+
+printf "%s\n" "App removed successfully"
