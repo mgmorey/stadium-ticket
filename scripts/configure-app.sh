@@ -20,21 +20,12 @@ APP_PORT=5000
 SLEEP_LONG=10
 SLEEP_SHORT=5
 
-abort() {
-    printf "$@" >&2
-    exit 1
-}
-
 abort_insufficient_permissions() {
     cat >&2 <<EOF
 $0: You need write permissions for $1
 $0: Please retry with root privileges
 EOF
     exit 1
-}
-
-assert() {
-    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
 check_permissions() {
@@ -197,11 +188,10 @@ remove_files() {
 }
 
 signal_app() {
+    assert [ -n "$APP_PIDFILE" ]
     result=1
 
-    if [ -z "$APP_PIDFILE" ]; then
-	printf "%s\n" "No PID file to open"
-    elif [ -r $APP_PIDFILE ]; then
+    if [ -r $APP_PIDFILE ]; then
 	pid="$(cat $APP_PIDFILE)"
 
 	if [ -n "$pid" ]; then
@@ -217,11 +207,14 @@ signal_app() {
 		    break
 		fi
 	    done
+	else
+	    printf "Empty PID file: %s\n" $APP_PIDFILE >&2
 	fi
     elif [ -e $APP_PIDFILE ]; then
-	printf "No permission to read PID file: %s\n" $APP_PIDFILE >&2
+	abort "No permission to read PID file: %s\n" $APP_PIDFILE
     else
 	printf "No such PID file: %s\n" $APP_PIDFILE >&2
+	sleep $SLEEP_LONG
     fi
 
     return $result
@@ -234,12 +227,9 @@ sleep() {
 }
 
 tail_log() {
-    tmpfile=$(mktemp)
-    trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
+    assert [ -n "$APP_LOGFILE" ] && [ -n "$tmpfile" ]
 
-    if [ -z "$APP_LOGFILE" ]; then
-	printf "%s\n" "No log file to open"
-    elif [ -r $APP_LOGFILE ]; then
+    if [ -r $APP_LOGFILE ]; then
 	tail $APP_LOGFILE >$tmpfile
     elif [ -e $APP_LOGFILE ]; then
 	printf "No permission to read log file: %s\n" $APP_LOGFILE >&2

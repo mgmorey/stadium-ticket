@@ -48,6 +48,9 @@ script_dir=$(realpath "$(dirname "$0")")
 
 . $script_dir/configure-app.sh
 
+tmpfile=$(mktemp)
+trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
+
 for dryrun in true false; do
     remove_config
 

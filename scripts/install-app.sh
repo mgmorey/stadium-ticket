@@ -192,6 +192,8 @@ fi
 . $script_dir/configure-app.sh
 
 cd $source_dir
+tmpfile=$(mktemp)
+trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 for dryrun in true false; do
     if [ $dryrun = false ]; then
@@ -202,7 +204,7 @@ for dryrun in true false; do
     install_app_and_config
 done
 
-if ! signal_app HUP; then
+if ! signal_app HUP && [ "$distro_name" = ubuntu ]; then
     service uwsgi restart
     sleep $SLEEP_LONG
 fi
