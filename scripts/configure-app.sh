@@ -19,7 +19,7 @@ APP_PORT=5000
 
 DOUBLE="======================================================================"
 SINGLE="----------------------------------------------------------------------"
-SLEEP_INTERVAL=10
+KILL_INTERVAL=10
 
 abort_insufficient_permissions() {
     cat >&2 <<EOF
@@ -176,7 +176,7 @@ configure_sunos() {
     UWSGI_APPDIRS=
 }
 
-read_pidfile() {
+read_pid_file() {
     assert [ -n "$APP_PIDFILE" ]
 
     if [ -r $APP_PIDFILE ]; then
@@ -217,7 +217,7 @@ print_file_tail() {
 }
 
 signal_app() {
-    read_pidfile
+    read_pid_file
     result=1
 
     if [ -n "${pid:-}" ]; then
@@ -227,7 +227,7 @@ signal_app() {
 	    fi
 
 	    if kill -s $signal $pid; then
-		sleep $SLEEP_INTERVAL "Waiting for process to handle SIG$signal"
+		sleep $KILL_INTERVAL "Waiting for process to handle SIG$signal"
 		result=0
 	    else
 		break
