@@ -51,14 +51,12 @@ kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (debian|ubuntu)
-		whereis $1
-	    	;;
-	    (redhat|centos|fedora)
-		whereis $1
+	    (ubuntu)
+		status=$(dpkg-query -Wf '${Status}\n' "$1")
+		test "$status" = "install ok installed"
 	    	;;
 	    (opensuse-*)
-		whereis $1
+		rpm --query $1 >/dev/null 2>&1
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
