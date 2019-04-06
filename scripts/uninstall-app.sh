@@ -52,7 +52,7 @@ for dryrun in true false; do
     remove_config
 
     if [ $dryrun = false ]; then
-	signal_app INT INT TERM KILL
+	signal_app INT INT TERM KILL || true
 	tail_log
     fi
 
