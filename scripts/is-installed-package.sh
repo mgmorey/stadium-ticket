@@ -52,7 +52,7 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (ubuntu)
-		status=$(dpkg-query -Wf '${Status}\n' "$1")
+		status=$(dpkg-query -Wf '${Status}\n' $1)
 		test "$status" = "install ok installed"
 	    	;;
 	    (opensuse-*)
