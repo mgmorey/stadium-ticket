@@ -96,7 +96,7 @@ generate_ini() {
     printf " %s\n" "$*"
 }
 
-install_app() {
+install_app_and_config() {
     create_app_dirs "$APP_DIR" "$APP_ETCDIR" "$APP_VARDIR"
     install_source_files 644 app "$APP_DIR"
     install_file "$@" 600 .env "$APP_DIR/.env"
@@ -199,7 +199,7 @@ for dryrun in true false; do
     fi
 
     remove_database
-    install_app
+    install_app_and_config
 done
 
 signal_app HUP
