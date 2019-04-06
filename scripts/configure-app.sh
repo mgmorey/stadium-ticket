@@ -193,28 +193,22 @@ signal_app() {
 
     if [ -r $APP_PIDFILE ]; then
 	pid="$(cat $APP_PIDFILE)"
+	assert [ -n "$pid" ]
 
-	if [ -n "$pid" ]; then
-	    for signal in "$@"; do
-		printf "Sending SIG%s to process: %s\n" $signal $pid
+	for signal in "$@"; do
+	    printf "Sending SIG%s to process: %s\n" $signal $pid
 
-		if kill -s $signal $pid; then
-		    printf "SIG%s received by process %s\n" $signal $pid
-		    sleep $SLEEP_LONG
-		    result=0
-		else
-		    sleep $SLEEP_SHORT
-		    break
-		fi
-	    done
-	else
-	    printf "Empty PID file: %s\n" $APP_PIDFILE >&2
-	fi
+	    if kill -s $signal $pid; then
+		printf "SIG%s received by process %s\n" $signal $pid
+		sleep $SLEEP_LONG
+		result=0
+	    else
+		sleep $SLEEP_SHORT
+		break
+	    fi
+	done
     elif [ -e $APP_PIDFILE ]; then
 	abort "No permission to read PID file: %s\n" $APP_PIDFILE
-    else
-	printf "No such PID file: %s\n" $APP_PIDFILE >&2
-	sleep $SLEEP_LONG
     fi
 
     return $result
@@ -233,8 +227,6 @@ tail_log() {
 	tail $APP_LOGFILE >$tmpfile
     elif [ -e $APP_LOGFILE ]; then
 	printf "No permission to read log file: %s\n" $APP_LOGFILE >&2
-    else
-	printf "No such log file: %s\n" $APP_LOGFILE >&2
     fi
 
     if [ -s "$tmpfile" ]; then
@@ -268,14 +260,14 @@ case "$kernel_name" in
 	esac
 	;;
     # (Darwin)
-    # 	configure_darwin
-    # 	;;
+    #	configure_darwin
+    #	;;
     # (FreeBSD)
-    # 	configure_freebsd
-    # 	;;
+    #	configure_freebsd
+    #	;;
     # (SunOS)
-    # 	configure_sunos
-    # 	;;
+    #	configure_sunos
+    #	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;

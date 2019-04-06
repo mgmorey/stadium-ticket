@@ -204,8 +204,11 @@ for dryrun in true false; do
     install_app_and_config
 done
 
-if ! signal_app HUP && [ "$distro_name" = ubuntu ]; then
-    service uwsgi restart
+if ! signal_app HUP; then
+    if [ "$distro_name" = ubuntu ]; then
+	service uwsgi restart
+    fi
+
     sleep $SLEEP_LONG
 fi
 
