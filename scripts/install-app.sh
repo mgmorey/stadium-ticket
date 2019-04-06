@@ -212,4 +212,4 @@ if ! signal_app HUP; then
     sleep $SLEEP_LONG
 fi
 
-tail_log
+tail_log_file

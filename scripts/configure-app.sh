@@ -198,6 +198,23 @@ remove_files() {
     fi
 }
 
+print_file_tail() {
+    assert [ -n "$1" -a -n "$tmpfile" ]
+    tail $1 >$tmpfile
+
+    if [ ! -s "$tmpfile" ]; then
+	return
+    fi
+
+    printf "%s\n" ""
+    printf "%s\n" "========================================================================"
+    printf "%s\n" "Contents of $APP_LOGFILE (or last ten lines):"
+    printf "%s\n" "------------------------------------------------------------------------"
+    cat $tmpfile
+    printf "%s\n" "------------------------------------------------------------------------"
+    printf "%s\n" ""
+}
+
 signal_app() {
     read_pidfile
     result=1
@@ -226,21 +243,11 @@ sleep() {
     /bin/sleep $1
 }
 
-tail_log() {
+tail_log_file() {
     assert [ -n "$APP_LOGFILE" ] && [ -n "$tmpfile" ]
 
     if [ -r $APP_LOGFILE ]; then
-	tail $APP_LOGFILE >$tmpfile
-
-	if [ -s "$tmpfile" ]; then
-	    printf "%s\n" ""
-	    printf "%s\n" "========================================================================"
-	    printf "%s\n" "Contents of $APP_LOGFILE (or last ten lines):"
-	    printf "%s\n" "------------------------------------------------------------------------"
-	    cat $tmpfile
-	    printf "%s\n" "------------------------------------------------------------------------"
-	    printf "%s\n" ""
-	fi
+	print_file_tail $APP_LOGFILE
     elif [ -e $APP_LOGFILE ]; then
 	printf "No permission to read log file: %s\n" $APP_LOGFILE >&2
     fi

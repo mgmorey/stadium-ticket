@@ -56,7 +56,7 @@ for dryrun in true false; do
 
     if [ $dryrun = false ]; then
 	signal_app INT INT TERM KILL || true
-	tail_log
+	tail_log_file
     fi
 
     remove_app
