@@ -17,6 +17,8 @@
 APP_NAME=stadium-ticket
 APP_PORT=5000
 
+DOUBLE="======================================================================"
+SINGLE="----------------------------------------------------------------------"
 SLEEP_LONG=10
 SLEEP_SHORT=5
 
@@ -206,13 +208,13 @@ print_file_tail() {
 	return
     fi
 
-    printf "%s\n" ""
-    printf "%s\n" "========================================================================"
+    printf "\n"
+    printf "%s\n" $DOUBLE
     printf "%s\n" "Contents of $APP_LOGFILE (or last ten lines):"
-    printf "%s\n" "------------------------------------------------------------------------"
+    printf "%s\n" $SINGLE
     cat $tmpfile
-    printf "%s\n" "------------------------------------------------------------------------"
-    printf "%s\n" ""
+    printf "%s\n" $SINGLE
+    printf "\n"
 }
 
 signal_app() {
