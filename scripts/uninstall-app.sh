@@ -37,7 +37,7 @@ realpath() {
 }
 
 remove_app() {
-    remove_files $APP_RUNDIR $APP_DIR $APP_VARDIR
+    remove_files $APP_RUNDIR $APP_DIR $APP_VARDIR $APP_LOGFILE
 }
 
 remove_config() {
