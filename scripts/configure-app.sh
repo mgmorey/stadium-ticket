@@ -216,7 +216,6 @@ signal_app() {
 	printf "No permission to read PID file: %s\n" $APP_PIDFILE >&2
     else
 	printf "No such PID file: %s\n" $APP_PIDFILE >&2
-	sleep $SLEEP_SHORT
     fi
 
     return $result
