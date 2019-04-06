@@ -18,6 +18,7 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
+POLL_INTERVAL=2
 
 abort() {
     printf "$@" >&2
@@ -204,12 +205,19 @@ for dryrun in true false; do
     install_app_and_config
 done
 
-if ! signal_app HUP; then
-    if [ "$distro_name" = ubuntu ]; then
-	service uwsgi restart
-    fi
+if signal_app HUP; then
+    sleep $SLEEP_INTERVAL "Waiting for app to restart"
+elif [ "$distro_name" = ubuntu ]; then
+    /bin/rm -f $APP_PIDFILE
+    service uwsgi restart
+    sleep $POLL_INTERVAL "Waiting for app to start"
+    i=0
 
-    sleep $SLEEP_INTERVAL "Waiting for app to start"
+    until [ -e $APP_PIDFILE -o $i -ge 10 ]; do
+	sleep $POLL_INTERVAL "Waiting for app to start"
+	i=$((i + 1))
+    done
 fi
 
 tail_log_file
+
