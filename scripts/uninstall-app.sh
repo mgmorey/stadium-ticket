@@ -62,4 +62,4 @@ for dryrun in true false; do
     remove_app
 done
 
-printf "%s\n" "App removed successfully"
+printf "App %s stopped and removed successfully\n" $APP_NAME

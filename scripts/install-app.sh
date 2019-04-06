@@ -223,7 +223,7 @@ fi
 
 if [ -e $APP_PIDFILE ]; then
     tail_log_file
-    printf "%s\n" "App started successfully"
+    printf "App %s installed and started successfully\n" $APP_NAME
 else
     abort "%s\n" "App may not have started"
 fi
