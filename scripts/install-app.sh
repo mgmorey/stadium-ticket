@@ -206,7 +206,7 @@ done
 
 if ! signal_app HUP; then
     if [ "$distro_name" = ubuntu ]; then
-	service uwsgi start
+	service uwsgi restart
     fi
 
     sleep $SLEEP_INTERVAL "Waiting for app to start"
