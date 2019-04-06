@@ -191,7 +191,7 @@ remove_files() {
 }
 
 signal_app() {
-    result=0
+    result=1
 
     if [ -z "$APP_PIDFILE" ]; then
 	printf "%s\n" "No PID file to open"
@@ -205,9 +205,9 @@ signal_app() {
 		if kill -s $signal $pid; then
 		    printf "SIG%s received by process %s\n" $signal $pid
 		    sleep $SLEEP_LONG
+		    result=0
 		else
 		    sleep $SLEEP_SHORT
-		    result=1
 		    break
 		fi
 	    done
