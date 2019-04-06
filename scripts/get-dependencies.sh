@@ -54,7 +54,7 @@ kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
+	    (debian|ubuntu|fedora|opensuse-*)
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
