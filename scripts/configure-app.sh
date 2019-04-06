@@ -19,8 +19,7 @@ APP_PORT=5000
 
 DOUBLE="======================================================================"
 SINGLE="----------------------------------------------------------------------"
-SLEEP_LONG=10
-SLEEP_SHORT=2
+SLEEP_INTERVAL=10
 
 abort_insufficient_permissions() {
     cat >&2 <<EOF
@@ -210,7 +209,7 @@ print_file_tail() {
 
     printf "\n"
     printf "%s\n" $DOUBLE
-    printf "%s\n" "Contents of $APP_LOGFILE (or last ten lines):"
+    printf "%s\n" "Contents of $APP_LOGFILE (last 10 lines)"
     printf "%s\n" $SINGLE
     cat $tmpfile
     printf "%s\n" $SINGLE
@@ -224,15 +223,13 @@ signal_app() {
     if [ -n "${pid:-}" ]; then
 	for signal in "$@"; do
 	    if [ $result -gt 0 ]; then
-		printf "Sending SIG%s to process: %s\n" $signal $pid
+		printf "Sending SIG%s to process (pid: %s)\n" $signal $pid
 	    fi
 
 	    if kill -s $signal $pid; then
-		printf "SIG%s received by process %s\n" $signal $pid
-		sleep $SLEEP_LONG
+		sleep $SLEEP_INTERVAL "Waiting for process to handle SIG$signal"
 		result=0
 	    else
-		sleep $SLEEP_SHORT
 		break
 	    fi
 	done
@@ -242,8 +239,8 @@ signal_app() {
 }
 
 sleep() {
-    assert [ -n "$1" ]
-    printf "Sleeping for %s seconds\n" $1
+    assert [ -n "$1" -a -n "$2" ]
+    printf "%s\n" "$2"
     /bin/sleep $1
 }
 
