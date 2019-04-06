@@ -37,15 +37,11 @@ realpath() {
 }
 
 remove_app() {
-    remove_files $APP_DIR
+    remove_files $APP_DIR $APP_VARDIR
 }
 
 remove_config() {
     remove_files $UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR
-}
-
-remove_data() {
-    remove_files $APP_VARDIR
 }
 
 script_dir=$(realpath "$(dirname "$0")")
@@ -61,6 +57,5 @@ for dryrun in true false; do
     fi
 
     remove_app
-    remove_data
     remove_database
 done
