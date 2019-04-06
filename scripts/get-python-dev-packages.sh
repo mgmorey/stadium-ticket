@@ -18,10 +18,7 @@
 
 DARWIN_PKGS="gdbm libffi openssl readline zlib"
 
-DEBIAN_PKGS="libbz2-dev libffi-dev libgdbm-dev liblzma-dev libncurses5-dev \
-libreadline-dev libsodium-dev libsqlite3-dev libssl-dev pycodestyle \
-pylint3 %s-bcrypt %s-dev %s-nacl %s-pip %s-pycodestyle %s-pytest \
-%s-virtualenv virtualenv zlib1g-dev"
+DEBIAN_PKGS="make %s-pip %s-venv %s-virtualenv"
 
 FEDORA_PKGS="bzip2-devel gcc libffi-devel libsodium-devel lzma-devel make \
 ncurses-devel openssl-devel %s-devel %s-pip %s-pycodestyle %s-pytest \
