@@ -18,8 +18,6 @@
 
 DEBIAN_PKGS="apache2-utils curl"
 
-FEDORA_PKGS="curl httpd-tools"
-
 FREEBSD_PKGS="apache24 curl"
 
 OPENSUSE_PKGS="apache2-utils curl"
@@ -63,10 +61,7 @@ case "$kernel_name" in
 	    (debian)
 		packages="$DEBIAN_PKGS"
 		;;
-	    (fedora)
-		packages="$FEDORA_PKGS"
-		;;
-	    (redhat|centos)
+	    (fedora|redhat|centos)
 		packages="$REDHAT_PKGS"
 		;;
 	    (opensuse-*)
