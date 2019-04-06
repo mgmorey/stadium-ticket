@@ -223,7 +223,9 @@ signal_app() {
 
     if [ -n "${pid:-}" ]; then
 	for signal in "$@"; do
-	    printf "Sending SIG%s to process: %s\n" $signal $pid
+	    if [ $result -gt 0 ]; then
+		printf "Sending SIG%s to process: %s\n" $signal $pid
+	    fi
 
 	    if kill -s $signal $pid; then
 		printf "SIG%s received by process %s\n" $signal $pid
