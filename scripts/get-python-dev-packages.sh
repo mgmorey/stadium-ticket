@@ -16,22 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS="gdbm libffi openssl readline zlib"
+DARWIN_PKGS=""
 
 DEBIAN_PKGS="make %s-pip %s-venv %s-virtualenv"
 
-FEDORA_PKGS="bzip2-devel gcc libffi-devel libsodium-devel lzma-devel make \
-ncurses-devel openssl-devel %s-devel %s-pip %s-pycodestyle %s-pytest \
-%s-virtualenv readline-devel sqlite-devel"
+FREEBSD_PKGS="bash gmake %s-pip %s-virtualenv"
 
-FREEBSD_PKGS="bash gmake libffi libsodium ncurses pylint-%s %s-bz2file \
-%s-lzma %s-pip %s-pycodestyle %s-pytest %s-sqlite3 %s-virtualenv"
+OPENSUSE_PKGS="gcc make %s-pip %s-virtualenv"
 
-OPENSUSE_PKGS="make %s-pip %s-virtualenv"
-
-REDHAT_PKGS="bzip2-devel gcc libffi-devel libsodium-devel make ncurses-devel \
-openssl-devel pylint %s-devel %s-pip %s-pytest %s-virtualenv pytest \
-readline-devel sqlite-devel"
+REDHAT_PKGS="gcc make %s-pip %s-virtualenv"
 
 SUNOS_PKGS="pip-%s"
 
@@ -68,10 +61,7 @@ case "$kernel_name" in
 	    (debian|ubuntu)
 		packages=$DEBIAN_PKGS
 		;;
-	    (fedora)
-		packages=$FEDORA_PKGS
-		;;
-	    (redhat|centos)
+	    (fedora|redhat|centos)
 		packages=$REDHAT_PKGS
 		;;
 	    (opensuse-*)
