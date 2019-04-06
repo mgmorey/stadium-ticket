@@ -271,9 +271,6 @@ case "$kernel_name" in
     # (SunOS)
     # 	configure_sunos
     # 	;;
-    # (NT)
-    # 	configure_nt
-    # 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
 	;;
