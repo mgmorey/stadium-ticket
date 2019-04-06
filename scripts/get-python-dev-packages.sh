@@ -27,7 +27,7 @@ FEDORA_PKGS="bzip2-devel gcc libffi-devel libsodium-devel lzma-devel make \
 ncurses-devel openssl-devel %s-devel %s-pip %s-pycodestyle %s-pytest \
 %s-virtualenv readline-devel sqlite-devel"
 
-FREEBSD_PKGS="bash gmake libffi libsodium make ncurses pylint-%s %s-bz2file \
+FREEBSD_PKGS="bash gmake libffi libsodium ncurses pylint-%s %s-bz2file \
 %s-lzma %s-pip %s-pycodestyle %s-pytest %s-sqlite3 %s-virtualenv"
 
 OPENSUSE_PKGS="gdbm-devel libbz2-devel libffi-devel libopenssl-devel \
