@@ -74,6 +74,7 @@ configure_darwin() {
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS=
 }
 
@@ -94,6 +95,7 @@ configure_debian() {
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/pid
+    APP_SOCKET=$APP_RUNDIR/socket
     UWSGI_APPDIRS="apps-available apps-enabled"
 }
 
@@ -114,6 +116,7 @@ configure_freebsd() {
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS=
 }
 
@@ -134,6 +137,7 @@ configure_nt() {
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS="vassals"
 }
 
@@ -154,6 +158,7 @@ configure_opensuse() {
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS="vassals"
 }
 
@@ -174,6 +179,7 @@ configure_sunos() {
     # Set additional parameters from directory variables
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS=
 }
 
