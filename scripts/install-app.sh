@@ -100,7 +100,7 @@ install_app() {
     create_app_dirs "$APP_DIR" "$APP_ETCDIR" "$APP_VARDIR"
     install_source_files 644 app "$APP_DIR"
     install_file "$@" 600 .env "$APP_DIR/.env"
-    install_dir "$venv_name" "$APP_DIR/.venv"
+    install_dir .venv-$APP_NAME "$APP_DIR/.venv"
     change_ownership "$APP_DIR" "$APP_VARDIR"
     enable_app "$APP_CONFIG" $UWSGI_APPDIRS
 }
@@ -187,13 +187,14 @@ source_dir=$script_dir/..
 
 sh -eu $script_dir/install-uwsgi.sh
 . $script_dir/configure-app.sh
-venv_name=.venv-$APP_NAME
 
 cd $source_dir
 
-stage_app
-
 for dryrun in true false; do
+    if [ $dryrun = false ]; then
+	stage_app
+    fi
+
     remove_database
     install_app
 done
