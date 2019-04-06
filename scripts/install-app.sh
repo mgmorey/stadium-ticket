@@ -191,13 +191,12 @@ venv_name=.venv-$APP_NAME
 
 cd $source_dir
 
-dryrun=true
-remove_database
-install_app
-unset dryrun
-
-dryrun=false
 stage_app
-install_app
+
+for dryrun in true false; do
+    remove_database
+    install_app
+done
+
 signal_app HUP
 tail_log

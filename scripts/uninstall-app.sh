@@ -40,13 +40,12 @@ script_dir=$(realpath "$(dirname "$0")")
 
 . $script_dir/configure-app.sh
 
-dryrun=true
-remove_app
-remove_database
-unset dryrun
+for dryrun in true false; do
+    if [ $dryrun = false ]; then
+	signal_app INT INT TERM KILL
+	tail_log
+    fi
 
-dryrun=false
-signal_app INT INT TERM KILL
-tail_log
-remove_app
-remove_database
+    remove_app
+    remove_database
+done
