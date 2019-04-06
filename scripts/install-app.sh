@@ -185,7 +185,7 @@ stage_app() {
 script_dir=$(realpath "$(dirname "$0")")
 source_dir=$script_dir/..
 
-if ! sh -eu $script_dir/installed-package.sh uwsgi >dev/null 2>&1; then
+if ! sh -eu $script_dir/get-installed-package.sh uwsgi >/dev/null 2>&1; then
     sh -eu $script_dir/install-uwsgi.sh
 fi
 
