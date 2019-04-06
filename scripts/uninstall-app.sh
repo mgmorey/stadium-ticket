@@ -37,7 +37,7 @@ realpath() {
 }
 
 remove_app() {
-    remove_files $APP_RUNDIR $APP_DIR $APP_VARDIR $APP_LOGFILE
+    remove_files $APP_RUNDIR $APP_DIR $APP_VARDIR $APP_LOGFILE $APP_DATABASE
 }
 
 remove_config() {
@@ -60,5 +60,4 @@ for dryrun in true false; do
     fi
 
     remove_app
-    remove_database
 done

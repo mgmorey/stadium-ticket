@@ -46,6 +46,7 @@ configure_common() {
 
     # Set additional parameters from directory variables
     APP_CONFIG=$APP_ETCDIR/app.ini
+    APP_DATABASE=/tmp/stadium-tickets.sqlite
 }
 
 configure_darwin() {
@@ -175,7 +176,7 @@ configure_sunos() {
 }
 
 remove_database() {
-    remove_files /tmp/stadium-tickets.sqlite
+    remove_files "$APP_DATABASE"
 }
 
 remove_files() {
