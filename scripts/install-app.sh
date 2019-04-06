@@ -207,7 +207,7 @@ for dryrun in true false; do
 done
 
 
-if signal_app HUP && [ "$distro_name" = ubuntu ]; then
+if ! signal_app HUP && [ "$distro_name" = ubuntu ]; then
     /bin/rm -f $APP_PIDFILE
     service uwsgi restart
     sleep $POLL_INTERVAL "Waiting for app to start"
