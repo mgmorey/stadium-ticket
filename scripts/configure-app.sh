@@ -20,7 +20,7 @@ APP_PORT=5000
 DOUBLE="======================================================================"
 SINGLE="----------------------------------------------------------------------"
 SLEEP_LONG=10
-SLEEP_SHORT=5
+SLEEP_SHORT=2
 
 abort_insufficient_permissions() {
     cat >&2 <<EOF
