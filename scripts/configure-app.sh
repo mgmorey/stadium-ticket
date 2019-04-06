@@ -191,6 +191,8 @@ remove_files() {
 }
 
 signal_app() {
+    result=0
+
     if [ -z "$APP_PIDFILE" ]; then
 	printf "%s\n" "No PID file to open"
     elif [ -r $APP_PIDFILE ]; then
@@ -205,6 +207,7 @@ signal_app() {
 		    sleep $SLEEP_LONG
 		else
 		    sleep $SLEEP_SHORT
+		    result=1
 		    break
 		fi
 	    done
@@ -215,12 +218,14 @@ signal_app() {
 	printf "No such PID file: %s\n" $APP_PIDFILE >&2
 	sleep $SLEEP_SHORT
     fi
+
+    return $result
 }
 
 sleep() {
     assert [ -n "$1" ]
     printf "Sleeping for %s seconds\n" $1
-    /usr/bin/sleep $1
+    /bin/sleep $1
 }
 
 tail_log() {

@@ -202,5 +202,9 @@ for dryrun in true false; do
     install_app_and_config
 done
 
-signal_app HUP
+if ! signal_app HUP; then
+    service uwsgi restart
+    sleep $SLEEP_LONG
+fi
+
 tail_log
