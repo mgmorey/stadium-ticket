@@ -177,14 +177,6 @@ configure_sunos() {
     UWSGI_APPDIRS=
 }
 
-remove_app() {
-    remove_files $UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR $APP_DIR
-}
-
-remove_data() {
-    remove_files $APP_VARDIR
-}
-
 remove_database() {
     remove_files /tmp/stadium-tickets.sqlite
 }

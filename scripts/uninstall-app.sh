@@ -36,19 +36,31 @@ realpath() {
     fi
 }
 
+remove_app() {
+    remove_files $APP_DIR
+}
+
+remove_config() {
+    remove_files $UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR
+}
+
+remove_data() {
+    remove_files $APP_VARDIR
+}
+
 script_dir=$(realpath "$(dirname "$0")")
 
 . $script_dir/configure-app.sh
 
 for dryrun in true false; do
-    remove_app
+    remove_config
 
     if [ $dryrun = false ]; then
 	signal_app INT INT TERM KILL
 	tail_log
     fi
 
+    remove_app
     remove_data
     remove_database
-
 done
