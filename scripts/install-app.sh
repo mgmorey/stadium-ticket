@@ -185,22 +185,35 @@ stage_app() {
 }
 
 start_app() {
-    if ! signal_app HUP && [ "$distro_name" = ubuntu ]; then
+    if signal_app HUP; then
+	restart_service=false
+	signal_received=true
+    else
+	if [ "$distro_name" = ubuntu ]; then
+	    restart_service=true
+	else
+	    restart_service=false
+	fi
+	signal_received=false
+    fi
+
+    if [ $restart_service = true ]; then
 	/bin/rm -f $APP_PIDFILE
 	service uwsgi restart
-	sleep $POLL_INTERVAL "Waiting for app to start"
+	sleep $POLL_INTERVAL "Waiting for service and app to start"
+	interval=$POLL_INTERVAL
 	i=0
 
 	until [ -e $APP_PIDFILE -o $i -ge $POLL_COUNT ]; do
-	    sleep $POLL_INTERVAL "Waiting for app to start"
+	    sleep $POLL_INTERVAL "Waiting for service and app to start"
 	    i=$((i + 1))
 	done
-    elif [ "$distro_name" != ubuntu ]; then
-	sleep $KILL_INTERVAL "Waiting for app to start"
+    elif [ $signal_received = false ]; then
+	sleep $KILL_INTERVAL "Waiting for app to restart automatically"
     fi
 
     if [ ! -e $APP_PIDFILE ]; then
-	printf "%s\n" "A timeout occurred waiting for the app to start" >&2
+	printf "%s\n" "App did not start in a timely fashion" >&2
     fi
 }
 
