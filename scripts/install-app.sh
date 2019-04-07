@@ -18,8 +18,8 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
-POLL_COUNT=10
-POLL_INTERVAL=2
+POLL_COUNT=20
+WAIT_INTERVAL=2
 
 abort() {
     printf "$@" >&2
@@ -198,22 +198,25 @@ start_app() {
     fi
 
     if [ $restart_service = true ]; then
-	/bin/rm -f $APP_PIDFILE
-	service uwsgi restart
-	sleep $POLL_INTERVAL "Waiting for service and app to start"
-	interval=$POLL_INTERVAL
-	i=0
-
-	until [ -e $APP_PIDFILE -o $i -ge $POLL_COUNT ]; do
-	    sleep $POLL_INTERVAL "Waiting for service and app to start"
-	    i=$((i + 1))
-	done
-
-	if [ ! -e $APP_PIDFILE ]; then
-	    printf "%s\n" "App did not start in a timely fashion" >&2
-	fi
+	start_service
     elif [ $signal_received = false ]; then
 	sleep $KILL_INTERVAL "Waiting for app to restart automatically"
+    fi
+}
+
+start_service() {
+    /bin/rm -f $APP_PIDFILE
+    service uwsgi restart
+    sleep $WAIT_INTERVAL "Waiting for service and app to start"
+    i=0
+
+    while [ ! -e $APP_PIDFILE -a $i -lt $POLL_COUNT ]; do
+	/bin/sleep 1
+	i=$((i + 1))
+    done
+
+    if [ $i -ge $POLL_COUNT ]; then
+	printf "%s\n" "App did not start in a timely fashion" >&2
     fi
 }
 

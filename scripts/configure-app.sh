@@ -19,7 +19,8 @@ APP_PORT=5000
 
 DOUBLE="======================================================================"
 SINGLE="----------------------------------------------------------------------"
-KILL_INTERVAL=10
+KILL_COUNT=20
+KILL_INTERVAL=5
 
 abort_insufficient_permissions() {
     cat >&2 <<EOF
@@ -210,20 +211,37 @@ signal_app() {
     pid=$(sh -eu $script_dir/read-file.sh $APP_PIDFILE)
     result=1
 
-    if [ -n "$pid" ]; then
-	for signal in "$@"; do
-	    if [ $result -gt 0 ]; then
-		printf "Sending SIG%s to process (pid: %s)\n" $signal $pid
-	    fi
+    if [ -z "$pid" ]; then
+	return $result
+    fi
 
+    for signal in "$@"; do
+	if [ $result -gt 0 ]; then
+	    printf "Sending SIG%s to process (pid: %s)\n" $signal $pid
+	fi
+
+	if [ $signal = HUP ]; then
 	    if kill -s $signal $pid; then
 		sleep $KILL_INTERVAL "Waiting for process to handle SIG$signal"
 		result=0
 	    else
 		break
 	    fi
-	done
-    fi
+	else
+	    printf "%s\n" "Waiting for process to die"
+	    i=0
+
+	    while kill -s $signal $pid && [ $i -lt $KILL_COUNT ]; do
+		/bin/sleep 1
+		i=$((i + 1))
+	    done
+
+	    if [ $i -lt $KILL_COUNT ]; then
+		result=0
+		break
+	    fi
+	fi
+    done
 
     return $result
 }
