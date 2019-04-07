@@ -194,6 +194,7 @@ start_app() {
 	else
 	    restart_service=false
 	fi
+
 	signal_received=false
     fi
 
