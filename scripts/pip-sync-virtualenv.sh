@@ -1,6 +1,6 @@
 # -*- Mode: Shell-script -*-
 
-# pip-sync-virtualenv.sh: deploy PIP virtual environment
+# pip-sync-virtualenv.sh: deploy Python virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
