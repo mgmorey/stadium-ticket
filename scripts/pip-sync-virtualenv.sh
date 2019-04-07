@@ -16,12 +16,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+PYTHON=python3
+
 activate_venv() {
     assert [ -n "$1" ] && [ -d $1/bin ] && [ -r $1/bin/activate ]
     printf "%s\n" "Activating virtual environment"
     set +u
     . "$1/bin/activate"
     set -u
+}
+
+create_venv() {
+    assert [ -n "$1" ]
+    printf "%s\n" "Creating virtual environment"
+
+    for virtualenv in virtualenv "$PYTHON -m virtualenv" false; do
+	if $virtualenv >/dev/null 2>&1; then
+	    break
+	fi
+    done
+
+    if [ "$virtualenv" != false ]; then
+	$virtualenv -p $PYTHON $1
+    else
+	$PYTHON -m venv $1
+    fi
 }
 
 pip_sync_requirements() {
@@ -44,13 +63,12 @@ pip_sync_venv() {
 	fi
     fi
 
-    if [ ! -d $1 ]; then
-	sync=true
-    else
+    if [ -d $1 ]; then
 	sync=false
+    else
+	sync=true
+	create_venv $1
     fi
-
-    sh -eu $script_dir/create-virtualenv.sh $1
 
     if [ -r $1/bin/activate ]; then
 	activate_venv $1
