@@ -50,6 +50,7 @@ pytest:	.update init-db
 
 realclean:	clean
 	$(script_dir)/clean-virtualenvs.sh
+	@/bin/rm -f .update
 
 stress:
 	$(script_dir)/load-test.sh
