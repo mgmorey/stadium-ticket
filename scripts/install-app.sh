@@ -184,6 +184,22 @@ stage_app() {
     $sh -c "$script_dir/stage-app.sh .venv-$APP_NAME"
 }
 
+start_app() {
+    if ! signal_app HUP && [ "$distro_name" = ubuntu ]; then
+	/bin/rm -f $APP_PIDFILE
+	service uwsgi restart
+	sleep $POLL_INTERVAL "Waiting for app to start"
+	i=0
+
+	until [ -e $APP_PIDFILE -o $i -ge $POLL_COUNT ]; do
+	    sleep $POLL_INTERVAL "Waiting for app to start"
+	    i=$((i + 1))
+	done
+    elif [ "$distro_name" != ubuntu ]; then
+	sleep $KILL_INTERVAL "Waiting for app to start"
+    fi
+}
+
 script_dir=$(realpath "$(dirname "$0")")
 source_dir=$script_dir/..
 
@@ -206,24 +222,11 @@ for dryrun in true false; do
     install_app_and_config
 done
 
-if ! signal_app HUP && [ "$distro_name" = ubuntu ]; then
-    /bin/rm -f $APP_PIDFILE
-    service uwsgi restart
-    sleep $POLL_INTERVAL "Waiting for app to start"
-    i=0
-
-    until [ -e $APP_PIDFILE -o $i -ge $POLL_COUNT ]; do
-	sleep $POLL_INTERVAL "Waiting for app to start"
-	i=$((i + 1))
-    done
-elif [ "$distro_name" != ubuntu ]; then
-    sleep $KILL_INTERVAL "Waiting for app to start"
-fi
-
+start_app
 tail_log_file
 
 if [ ! -e $APP_PIDFILE ]; then
-    abort "%s\n" "App may not have started"
+    abort "%s\n" "A timeout occurred waiting for the app to start"
 fi
 
 printf "App %s installed and started successfully\n" $APP_NAME
