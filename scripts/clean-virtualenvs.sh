@@ -25,8 +25,9 @@ for pipenv in pipenv "$PYTHON -m pipenv" false; do
 done
 
 if [ "$pipenv" != false ]; then
-    $pipenv --rm
+    if $pipenv --venv >/dev/null 2>&1; then
+	$pipenv --rm
+    fi
 fi
 
 /bin/rm -rf .venv*
-
