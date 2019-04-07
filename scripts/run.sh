@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# run: wrapper for running commands within a virtual environment
+# run: run command within a Python 3 virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
