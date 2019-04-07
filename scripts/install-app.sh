@@ -223,15 +223,15 @@ start_service() {
 script_dir=$(realpath "$(dirname "$0")")
 source_dir=$script_dir/..
 
-if ! sh -eu $script_dir/is-installed-package.sh uwsgi; then
-    sh -eu $script_dir/install-uwsgi.sh
-fi
-
 . $script_dir/configure-app.sh
 
 cd $source_dir
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
+
+if ! sh -eu $script_dir/is-installed-package.sh uwsgi; then
+    sh -eu $script_dir/install-uwsgi.sh
+fi
 
 for dryrun in true false; do
     if [ $dryrun = false ]; then
