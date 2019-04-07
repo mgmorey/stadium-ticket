@@ -206,7 +206,6 @@ for dryrun in true false; do
     install_app_and_config
 done
 
-
 if ! signal_app HUP && [ "$distro_name" = ubuntu ]; then
     /bin/rm -f $APP_PIDFILE
     service uwsgi restart
@@ -217,14 +216,14 @@ if ! signal_app HUP && [ "$distro_name" = ubuntu ]; then
 	sleep $POLL_INTERVAL "Waiting for app to start"
 	i=$((i + 1))
     done
-else
+elif [ "$distro_name" != ubuntu ]; then
     sleep $KILL_INTERVAL "Waiting for app to start"
 fi
 
 tail_log_file
 
-if [ -e $APP_PIDFILE ]; then
-    printf "App %s installed and started successfully\n" $APP_NAME
-else
+if [ ! -e $APP_PIDFILE ]; then
     abort "%s\n" "App may not have started"
 fi
+
+printf "App %s installed and started successfully\n" $APP_NAME
