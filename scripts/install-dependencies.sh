@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+HOMEBREW_URL=https://raw.githubusercontent.com/Homebrew/install/master/install
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -61,7 +63,12 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
-    (Darwin|FreeBSD|SunOS)
+    (Darwin)
+	if ! brew info >/dev/null 2>&1; then
+	    /usr/bin/ruby -e $expr "$(curl -fsSL $HOMEBREW_URL)"
+	fi
+	;;
+    (FreeBSD|SunOS)
 	;;
     (*)
 	abort "%s: Operating system not supported\n" "$kernel_name"
