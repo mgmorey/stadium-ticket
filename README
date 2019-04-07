@@ -6,24 +6,33 @@ Stadium Ticket RESTful API for POSIX Operating Systems
 
 2.  To initialize the database schema:
 
-    scripts/run.sh python3 -m app init-db
+    scripts/run.sh python3 -m app init-db (or "make init-db")
 
 3.  To run the unit tests using pytest:
 
-    scripts/run.sh pytest
+    scripts/run.sh pytest (or "make pytest")
 
-4.  To run the app:
+4.  To run the app in debugging mode:
 
-    scripts/run.sh flask run
+    scripts/run.sh flask run (or "make debug")
 
 5.  To test the app:
 
-    scripts/app-test.sh
+    scripts/app-test.sh (or "make client")
 
 6.  To stress test the app:
 
-    scripts/load-test.sh
+    scripts/load-test.sh (or "make stress")
 
-7.  To build and run a Docker container:
+7.  To build and run a Docker container (may require sudo):
 
-    scripts/run.sh docker-compose up --build
+    scripts/run.sh docker-compose up --build (or "make build")
+
+8. To install the app locally (may require sudo):
+
+   scripts/install-app.sh (or "make install")
+
+9. To uninstall the app (may require sudo):
+
+   scripts/uninstall-app.sh (or "make uninstall")
+
