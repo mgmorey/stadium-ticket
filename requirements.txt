@@ -3,7 +3,7 @@ click==7.0
 flask-sqlalchemy==2.3.2
 flask==1.0.2
 itsdangerous==1.1.0
-jinja2==2.10
+jinja2==2.10.1
 markupsafe==1.1.1
 pymysql==0.9.3
 python-decouple==3.1
