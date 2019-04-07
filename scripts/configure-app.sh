@@ -176,16 +176,6 @@ configure_sunos() {
     UWSGI_APPDIRS=
 }
 
-read_pid_file() {
-    assert [ -n "$APP_PIDFILE" ]
-
-    if [ -r $APP_PIDFILE ]; then
-	pid=$(cat $APP_PIDFILE)
-    elif [ -e $APP_PIDFILE ]; then
-	abort "No permission to read PID file: %s\n" $APP_PIDFILE
-    fi
-}
-
 remove_database() {
     remove_files "$APP_DATABASE"
 }
@@ -217,10 +207,10 @@ print_file_tail() {
 }
 
 signal_app() {
-    read_pid_file
+    pid=$(sh -eu $script_dir/read-file.sh $APP_PIDFILE)
     result=1
 
-    if [ -n "${pid:-}" ]; then
+    if [ -n "$pid" ]; then
 	for signal in "$@"; do
 	    if [ $result -gt 0 ]; then
 		printf "Sending SIG%s to process (pid: %s)\n" $signal $pid
