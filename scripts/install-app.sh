@@ -200,7 +200,7 @@ start_app() {
     fi
 
     if [ ! -e $APP_PIDFILE ]; then
-	abort "%s\n" "A timeout occurred waiting for the app to start"
+	printf "%s\n" "A timeout occurred waiting for the app to start" >&2
     fi
 }
 
