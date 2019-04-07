@@ -48,6 +48,9 @@ pylint:	.update
 pytest:	.update init-db
 	$(script_dir)/run.sh pytest tests
 
+realclean:	clean
+	$(script_dir)/clean-virtualenvs.sh
+
 stress:
 	$(script_dir)/load-test.sh
 
@@ -55,7 +58,7 @@ uninstall:
 	$(script_dir)/uninstall-app.sh
 
 .PHONY: all build clean client client-debug debug init-db install
-.PHONY: pycode pylint pytest init-db stress uninstall
+.PHONY: pycode pylint pytest init-db realclean stress uninstall
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh .env
