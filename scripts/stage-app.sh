@@ -60,6 +60,10 @@ for pip in $PIP "$PYTHON -m pip" false; do
     fi
 done
 
+if [ $(id -u) -eq 0 ]; then
+    abort "%s\n" "$0: Must be run as a non-privileged user"
+fi
+
 # Use no cache if child process of sudo
 pip_opts=${SUDO_USER:+--no-cache-dir}
 
