@@ -40,7 +40,7 @@ case "$interpreter" in
     (*)
 	abort "%s: Invalid interpreter\n" "$interpreter"
 esac
-    
+
 case "$module" in
     (pip|pip3|pipenv|virtualenv)
 	;;
