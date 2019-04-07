@@ -24,6 +24,9 @@ build:	.env .env-docker .update
 clean:
 	$(script_dir)/clean-caches.sh
 
+clean-venvs:
+	$(script_dir)/clean-virtualenvs.sh
+
 client:		.env
 	$(script_dir)/app-test.sh
 
@@ -48,8 +51,7 @@ pylint:	.update
 pytest:	.update init-db
 	$(script_dir)/run.sh pytest tests
 
-realclean:	clean
-	$(script_dir)/clean-virtualenvs.sh
+realclean:	clean clean-venvs
 	@/bin/rm -f .update
 
 stress:
@@ -58,7 +60,7 @@ stress:
 uninstall:
 	$(script_dir)/uninstall-app.sh
 
-.PHONY: all build clean client client-debug debug init-db install
+.PHONY: all build clean clean-venvs client client-debug debug init-db install
 .PHONY: pycode pylint pytest init-db realclean stress uninstall
 
 .env:		.env-template
