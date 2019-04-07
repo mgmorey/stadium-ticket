@@ -208,12 +208,12 @@ start_app() {
 	    sleep $POLL_INTERVAL "Waiting for service and app to start"
 	    i=$((i + 1))
 	done
+
+	if [ ! -e $APP_PIDFILE ]; then
+	    printf "%s\n" "App did not start in a timely fashion" >&2
+	fi
     elif [ $signal_received = false ]; then
 	sleep $KILL_INTERVAL "Waiting for app to restart automatically"
-    fi
-
-    if [ ! -e $APP_PIDFILE ]; then
-	printf "%s\n" "App did not start in a timely fashion" >&2
     fi
 }
 
