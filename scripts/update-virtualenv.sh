@@ -97,18 +97,6 @@ if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "$0: Must be run as a non-privileged user"
 fi
 
-for pip in $PIP "$PYTHON -m pip" false; do
-    if $pip >/dev/null 2>&1; then
-	break
-    fi
-done
-
-for pipenv in pipenv "$PYTHON -m pipenv" false; do
-    if $pipenv >/dev/null 2>&1; then
-	break
-    fi
-done
-
 # Use no cache if child process of sudo
 pip_opts=${SUDO_USER:+--no-cache-dir}
 
@@ -119,6 +107,9 @@ tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 cd $source_dir
+
+pip=$(sh -eu $script_dir/get-python-command.sh $PIP $PYTHON)
+pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv $PYTHON)
 
 if [ "$pipenv" != false ]; then
     pipenv_update

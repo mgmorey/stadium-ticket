@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# stage-app.sh: stage uWSGI application
+# get-python-command: get Python 3 command binary or module
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PIP=pip3
 PYTHON=python3
-VENV_REQS="requirements.txt"
 
 abort() {
     printf "$@" >&2
@@ -29,43 +27,31 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-realpath() {
-    assert [ -d "$1" ]
-
-    if [ -x /usr/bin/realpath ]; then
-	/usr/bin/realpath "$1"
-    else
-	if expr "$1" : '/.*' >/dev/null; then
-	    printf "%s\n" "$1"
-	else
-	    printf "%s\n" "$PWD/${1#./}"
-	fi
-    fi
-}
-
-stage_app() {
-    assert [ -n "$1" ]
-    venv_name=$1
-    venv_reqs=$VENV_REQS
-    . $script_dir/pip-sync-virtualenv.sh
-}
-
 if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
 
-if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "$0: Must be run as a non-privileged user"
-fi
+module="$1"
+interpreter="${2:-$PYTHON}"
 
-# Use no cache if child process of sudo
-pip_opts=${SUDO_USER:+--no-cache-dir}
+case "$interpreter" in
+    (python|python[23])
+	;;
+    (*)
+	abort "%s: Invalid interpreter\n" "$interpreter"
+esac
+    
+case "$module" in
+    (pip|pip3|pipenv|virtualenv)
+	;;
+    (*)
+	abort "%s: Invalid command\n" "$module"
+esac
 
-script_dir=$(realpath "$(dirname "$0")")
-source_dir=$script_dir/..
+for command in $module "$interpreter -m $module" false; do
+    if $command --version >/dev/null 2>&1; then
+	break
+    fi
+done
 
-cd $source_dir
-
-pip=$(sh -eu $script_dir/get-python-command.sh $PIP $PYTHON)
-
-stage_app $1
+printf "%s\n" "$command"

@@ -30,11 +30,7 @@ create_venv() {
     assert [ -n "$1" ]
     printf "%s\n" "Creating virtual environment"
 
-    for virtualenv in virtualenv "$PYTHON -m virtualenv" false; do
-	if $virtualenv >/dev/null 2>&1; then
-	    break
-	fi
-    done
+    virtualenv=$(sh -eu $script_dir/get-python-command.sh virtualenv $PYTHON)
 
     if [ "$virtualenv" != false ]; then
 	$virtualenv -p $PYTHON $1

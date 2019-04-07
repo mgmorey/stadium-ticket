@@ -18,11 +18,32 @@
 
 PYTHON=python3
 
-for pipenv in pipenv "$PYTHON -m pipenv" false; do
-    if $pipenv >/dev/null 2>&1; then
-	break
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
+realpath() {
+    assert [ -d "$1" ]
+
+    if [ -x /usr/bin/realpath ]; then
+	/usr/bin/realpath "$1"
+    else
+	if expr "$1" : '/.*' >/dev/null; then
+	    printf "%s\n" "$1"
+	else
+	    printf "%s\n" "$PWD/${1#./}"
+	fi
     fi
-done
+}
+
+script_dir=$(realpath "$(dirname "$0")")
+
+pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv $PYTHON)
 
 if [ "$pipenv" != false ]; then
     if $pipenv --venv >/dev/null 2>&1; then
