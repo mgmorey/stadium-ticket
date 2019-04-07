@@ -241,4 +241,7 @@ done
 
 start_app
 tail_log_file
-printf "App %s installed and started successfully\n" $APP_NAME
+
+if [ -e $APP_PIDFILE ]; then
+    printf "App %s installed and started successfully\n" $APP_NAME
+fi
