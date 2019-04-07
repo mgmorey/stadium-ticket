@@ -189,7 +189,7 @@ start_app() {
 	restart_service=false
 	signal_received=true
     else
-	if [ "$distro_name" = ubuntu ]; then
+	if [ "$kernel_name" = Linux ] && [ "$distro_name" = ubuntu ]; then
 	    restart_service=true
 	else
 	    restart_service=false
