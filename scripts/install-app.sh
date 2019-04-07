@@ -197,7 +197,6 @@ start_app() {
 
 	signal_received=false
     fi
-
     if [ $restart_service = true ]; then
 	start_service
     elif [ $signal_received = false ]; then
