@@ -198,13 +198,13 @@ print_file_tail() {
 	return
     fi
 
-    printf "\n"
+    printf "%s\n" ""
     printf "%s\n" $DOUBLE
     printf "%s\n" "Contents of $APP_LOGFILE (last 10 lines)"
     printf "%s\n" $SINGLE
     cat $tmpfile
     printf "%s\n" $SINGLE
-    printf "\n"
+    printf "%s\n" ""
 }
 
 signal_app() {
@@ -222,7 +222,8 @@ signal_app() {
 
 	if [ $signal = HUP ]; then
 	    if kill -s $signal $pid; then
-		sleep $KILL_INTERVAL "Waiting for process to handle SIG$signal"
+	        printf "Waiting for process to handle SIG%s\n" "$signal"
+		sleep $KILL_INTERVAL
 		result=0
 	    else
 		break
@@ -232,7 +233,7 @@ signal_app() {
 	    i=0
 
 	    while kill -s $signal $pid && [ $i -lt $KILL_COUNT ]; do
-		/bin/sleep 1
+		sleep 1
 		i=$((i + 1))
 	    done
 
@@ -244,12 +245,6 @@ signal_app() {
     done
 
     return $result
-}
-
-sleep() {
-    assert [ -n "$1" -a -n "$2" ]
-    printf "%s\n" "$2"
-    /bin/sleep $1
 }
 
 tail_log_file() {

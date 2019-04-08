@@ -201,18 +201,20 @@ start_app() {
     if [ $restart_service = true ]; then
 	start_service
     elif [ $signal_received = false ]; then
-	sleep $KILL_INTERVAL "Waiting for app to restart automatically"
+	printf "%s\n" "Waiting for app to restart automatically"
+	sleep $KILL_INTERVAL
     fi
 }
 
 start_service() {
     /bin/rm -f $APP_PIDFILE
     service uwsgi restart
-    sleep $WAIT_INTERVAL "Waiting for service and app to start"
+    printf "%s\n" "Waiting for service and app to start"
+    sleep $WAIT_INTERVAL
     i=0
 
     while [ ! -e $APP_PIDFILE -a $i -lt $POLL_COUNT ]; do
-	/bin/sleep 1
+	sleep 1
 	i=$((i + 1))
     done
 
