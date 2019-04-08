@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PYTHON=python3
-
 activate_venv() {
     assert [ -n "$1" ] && [ -d $1/bin ] && [ -r $1/bin/activate ]
     printf "%s\n" "Activating virtual environment"
