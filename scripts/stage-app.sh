@@ -65,5 +65,6 @@ source_dir=$script_dir/..
 cd $source_dir
 
 pip=$(sh -eu $script_dir/get-python-command.sh $PIP $PYTHON)
+pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv $PYTHON)
 
 stage_app $1
