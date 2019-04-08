@@ -42,6 +42,7 @@ create_venv() {
 pip_sync_requirements() {
     assert [ "$pip" != false ]
     printf "%s\n" "Upgrading pip"
+    pip_opts=${SUDO_USER:+--no-cache-dir}
     $pip install $pip_opts --upgrade pip
     printf "%s\n" "Installing required packages"
     $pip install $pip_opts $(printf -- "-r %s\n" ${venv_reqs:-requirements.txt})
