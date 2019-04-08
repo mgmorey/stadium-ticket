@@ -237,7 +237,8 @@ for dryrun in true false; do
     if [ $dryrun = false ]; then
 	if ! sh -eu $script_dir/is-installed-package.sh uwsgi; then
 	    sh -eu $script_dir/install-uwsgi.sh
-	    service uwsgi start
+	    systemctl enable uwsgi
+	    systemctl start uwsgi
 	fi
 
 	stage_app
