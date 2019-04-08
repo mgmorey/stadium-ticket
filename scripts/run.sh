@@ -84,6 +84,7 @@ if [ $(id -u) -eq 0 ]; then
 fi
 
 script_dir=$(realpath "$(dirname "$0")")
+
 source_dir=$script_dir/..
 
 cd $source_dir

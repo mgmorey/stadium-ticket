@@ -224,6 +224,7 @@ start_service() {
 }
 
 script_dir=$(realpath "$(dirname "$0")")
+
 source_dir=$script_dir/..
 
 . $script_dir/configure-app.sh

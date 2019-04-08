@@ -40,6 +40,7 @@ realpath() {
 }
 
 script_dir=$(realpath "$(dirname "$0")")
+
 distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 package_install_options=$(sh -eu $script_dir/get-package-install-options.sh)

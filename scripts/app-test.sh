@@ -75,6 +75,7 @@ EOF
 }
 
 script_dir=$(realpath "$(dirname "$0")")
+
 source_dir=$script_dir/..
 
 printf "%s\n" "Loading .env environment variables"
