@@ -35,11 +35,16 @@ create_venv() {
 	$virtualenv -p $PYTHON $1
     else
 	venv=$(sh -eu $script_dir/get-python-command.sh venv)
-	$venv $1
+
+	if [ "$venv" != false ]; then
+	    $venv $1
+	else
+	    abort "%s: Unable to create virtual environment\n" "$0"
+	fi
     fi
 }
 
-pip_sync_requirements() {
+sync_requirements() {
     assert [ "$pip" != false ]
     printf "%s\n" "Upgrading pip"
     pip_opts=${SUDO_USER:+--no-cache-dir}
@@ -48,7 +53,7 @@ pip_sync_requirements() {
     $pip install $pip_opts $(printf -- "-r %s\n" ${venv_reqs:-requirements.txt})
 }
 
-pip_sync_venv() {
+sync_venv() {
     assert [ -n "$1" ]
 
     if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
@@ -72,7 +77,7 @@ pip_sync_venv() {
 	assert [ -n "${VIRTUAL_ENV:-}" ]
 
 	if [ "${venv_sync:-$sync}" = true ]; then
-	    pip_sync_requirements
+	    sync_requirements
 	fi
     elif [ -d $1 ]; then
 	abort "%s\n" "$0: Unable to activate environment"
@@ -81,4 +86,4 @@ pip_sync_venv() {
     fi
 }
 
-pip_sync_venv $venv_name
+sync_venv $venv_name

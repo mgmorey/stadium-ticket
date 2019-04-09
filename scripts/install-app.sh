@@ -181,7 +181,9 @@ stage_app() {
 	sh="sh -eu"
     fi
 
-    $sh -c "$script_dir/stage-app.sh .venv-$APP_NAME"
+    if ! $sh -c "$script_dir/stage-app.sh .venv-$APP_NAME"; then
+	abort "%s: Unable to stage virtual environment\n" "$0"
+    fi
 }
 
 start_app() {
