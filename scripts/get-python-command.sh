@@ -39,14 +39,10 @@ case "$name" in
 	done
 	;;
     (python)
-	for command in $name$version $name false; do
-	    if $command --help >/dev/null 2>&1; then
-		break
-	    fi
-	done
+	command=python$version
 	;;
     (*)
-	abort "%s: Invalid command\n" "$name"
+	abort "%s: Invalid command/module\n" "$name"
 esac
 
 printf "%s\n" "$command"
