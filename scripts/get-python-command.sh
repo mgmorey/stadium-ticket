@@ -27,24 +27,20 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-if [ $# -eq 0 ]; then
-    abort "%s\n" "$0: Not enough arguments"
-fi
-
-name="$1"
+name="${1:-python}"
 version="${2:-$VERSION}"
 
 case "$name" in
-    (pip|pipenv|virtualenv)
+    (pip|pipenv|venv|virtualenv)
 	for command in $name$version $name "python$version -m $name" false; do
-	    if $command --version >/dev/null 2>&1; then
+	    if $command --help >/dev/null 2>&1; then
 		break
 	    fi
 	done
 	;;
     (python)
 	for command in $name$version $name false; do
-	    if $command --version >/dev/null 2>&1; then
+	    if $command --help >/dev/null 2>&1; then
 		break
 	    fi
 	done
