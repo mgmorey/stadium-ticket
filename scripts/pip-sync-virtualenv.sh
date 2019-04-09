@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+PYTHON=python3
+
 activate_venv() {
     assert [ -n "$1" ] && [ -d $1/bin ] && [ -r $1/bin/activate ]
     printf "%s\n" "Activating virtual environment"
@@ -30,8 +32,7 @@ create_venv() {
     virtualenv=$(sh -eu $script_dir/get-python-command.sh virtualenv)
 
     if [ "$virtualenv" != false ]; then
-	python=$(sh -eu $script_dir/get-python-command.sh python)
-	$virtualenv -p $python $1
+	$virtualenv -p $PYTHON $1
     else
 	venv=$(sh -eu $script_dir/get-python-command.sh venv)
 	$venv $1
