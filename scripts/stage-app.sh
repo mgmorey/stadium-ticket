@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PIP=pip3
+PIP=pip
 PYTHON=python3
 VENV_REQS="requirements.txt"
 
