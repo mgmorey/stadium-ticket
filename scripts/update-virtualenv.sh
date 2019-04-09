@@ -19,7 +19,6 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-PIP=pip3
 PYTHON=python3
 VENV_NAME=.venv
 VENV_REQS="requirements-dev.txt requirements.txt"
@@ -106,8 +105,8 @@ trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 cd $source_dir
 
-pip=$(sh -eu $script_dir/get-python-command.sh $PIP $PYTHON)
-pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv $PYTHON)
+pip=$(sh -eu $script_dir/get-python-command.sh pip)
+pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
 
 if [ "$pipenv" != false ]; then
     pipenv_update

@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PYTHON=python3
+VERSION=3
 
 abort() {
     printf "$@" >&2
@@ -32,23 +32,16 @@ if [ $# -eq 0 ]; then
 fi
 
 module="$1"
-interpreter="${2:-$PYTHON}"
-
-case "$interpreter" in
-    (python|python[23])
-	;;
-    (*)
-	abort "%s: Invalid interpreter\n" "$interpreter"
-esac
+version="${2:-$VERSION}"
 
 case "$module" in
-    (pip|pip3|pipenv|virtualenv)
+    (pip|pipenv|virtualenv)
 	;;
     (*)
 	abort "%s: Invalid command\n" "$module"
 esac
 
-for command in $module "$interpreter -m $module" false; do
+for command in $module$version $module "python$version -m $module" false; do
     if $command --version >/dev/null 2>&1; then
 	break
     fi

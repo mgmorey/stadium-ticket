@@ -19,7 +19,6 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-PIP=pip3
 PYTHON=python3
 VARS="DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_PORT \
 DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV"
@@ -89,8 +88,8 @@ source_dir=$script_dir/..
 
 cd $source_dir
 
-pip=$(sh -eu $script_dir/get-python-command.sh $PIP $PYTHON)
-pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv $PYTHON)
+pip=$(sh -eu $script_dir/get-python-command.sh pip)
+pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
 
 if [ "$pipenv" != false ]; then
     pipenv_run "$@"

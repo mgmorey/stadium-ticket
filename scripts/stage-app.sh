@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PIP=pip
 PYTHON=python3
 VENV_REQS="requirements.txt"
 
@@ -64,7 +63,7 @@ source_dir=$script_dir/..
 
 cd $source_dir
 
-pip=$(sh -eu $script_dir/get-python-command.sh $PIP $PYTHON)
-pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv $PYTHON)
+pip=$(sh -eu $script_dir/get-python-command.sh pip)
+pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
 
 stage_app $1

@@ -43,7 +43,7 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv $PYTHON)
+pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
 
 if [ "$pipenv" != false ]; then
     if $pipenv --venv >/dev/null 2>&1; then
