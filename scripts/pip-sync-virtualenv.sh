@@ -30,9 +30,11 @@ create_venv() {
     virtualenv=$(sh -eu $script_dir/get-python-command.sh virtualenv)
 
     if [ "$virtualenv" != false ]; then
-	$virtualenv -p $PYTHON $1
+	python=$(sh -eu $script_dir/get-python-command.sh python)
+	$virtualenv -p $python $1
     else
-	$PYTHON -m venv $1
+	venv=$(sh -eu $script_dir/get-python-command.sh venv)
+	$venv $1
     fi
 }
 

@@ -31,20 +31,26 @@ if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
 
-module="$1"
+name="$1"
 version="${2:-$VERSION}"
 
-case "$module" in
+case "$name" in
     (pip|pipenv|virtualenv)
+	for command in $name$version $name "python$version -m $name" false; do
+	    if $command --version >/dev/null 2>&1; then
+		break
+	    fi
+	done
+	;;
+    (python)
+	for command in $name$version $name false; do
+	    if $command --version >/dev/null 2>&1; then
+		break
+	    fi
+	done
 	;;
     (*)
-	abort "%s: Invalid command\n" "$module"
+	abort "%s: Invalid command\n" "$name"
 esac
-
-for command in $module$version $module "python$version -m $module" false; do
-    if $command --version >/dev/null 2>&1; then
-	break
-    fi
-done
 
 printf "%s\n" "$command"

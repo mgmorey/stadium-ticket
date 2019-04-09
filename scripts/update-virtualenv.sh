@@ -19,7 +19,6 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-PYTHON=python3
 VENV_NAME=.venv
 VENV_REQS="requirements-dev.txt requirements.txt"
 
