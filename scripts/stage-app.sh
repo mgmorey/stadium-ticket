@@ -45,7 +45,7 @@ stage_app() {
     assert [ -n "$1" ]
     venv_name=$1
     venv_reqs=$VENV_REQS
-    . $script_dir/pip-sync-virtualenv.sh
+    . $script_dir/sync-virtualenv.sh
 }
 
 if [ $# -eq 0 ]; then

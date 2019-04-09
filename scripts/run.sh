@@ -36,7 +36,7 @@ assert() {
 pip_run() {
     venv_name=$VENV_NAME
     venv_reqs=$VENV_REQS
-    . $script_dir/pip-sync-virtualenv.sh
+    . $script_dir/sync-virtualenv.sh
     printf "%s\n" "Loading .env environment variables"
     . ./.env
 

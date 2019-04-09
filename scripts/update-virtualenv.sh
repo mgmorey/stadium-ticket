@@ -70,7 +70,7 @@ pip_update() {
     venv_name=$1
     venv_reqs=$VENV_REQS
     venv_sync=true
-    . $script_dir/pip-sync-virtualenv.sh
+    . $script_dir/sync-virtualenv.sh
 }
 
 realpath() {

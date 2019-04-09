@@ -1,6 +1,6 @@
 # -*- Mode: Shell-script -*-
 
-# pip-sync-virtualenv.sh: deploy Python virtual environment
+# sync-virtualenv.sh: deploy Python virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -29,18 +29,13 @@ activate_venv() {
 create_venv() {
     assert [ -n "$1" ]
     printf "%s\n" "Creating virtual environment"
-    virtualenv=$(sh -eu $script_dir/get-python-command.sh virtualenv)
 
     if [ "$virtualenv" != false ]; then
 	$virtualenv -p $PYTHON $1
+    elif [ "$venv" != false ]; then
+	$venv $1
     else
-	venv=$(sh -eu $script_dir/get-python-command.sh venv)
-
-	if [ "$venv" != false ]; then
-	    $venv $1
-	else
-	    abort "%s: Unable to create virtual environment\n" "$0"
-	fi
+	abort "%s: Unable to create virtual environment\n" "$0"
     fi
 }
 
@@ -85,5 +80,8 @@ sync_venv() {
 	abort "%s\n" "$0: No virtual environment"
     fi
 }
+
+venv=$(sh -eu $script_dir/get-python-command.sh venv)
+virtualenv=$(sh -eu $script_dir/get-python-command.sh virtualenv)
 
 sync_venv $venv_name

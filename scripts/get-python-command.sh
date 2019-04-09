@@ -42,7 +42,7 @@ case "$name" in
 	command=python$version
 	;;
     (*)
-	abort "%s: Invalid command/module\n" "$name"
+	abort "%s: Invalid command/module '%s'\n" "$0" "$name"
 esac
 
 printf "%s\n" "$command"
