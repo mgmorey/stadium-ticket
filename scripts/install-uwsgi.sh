@@ -41,32 +41,8 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
-kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
-package_install_options=$(sh -eu $script_dir/get-package-install-options.sh)
-package_manager=$(sh -eu $script_dir/get-package-manager.sh)
 packages=$(sh -eu $script_dir/get-uwsgi-packages.sh)
 
-case "$kernel_name" in
-    (Linux)
-	case "$distro_name" in
-	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
-		;;
-	esac
-	;;
-    (Darwin)
-	sh -eu $script_dir/install-homebrew.sh
-	;;
-    (FreeBSD|SunOS)
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
-	;;
-esac
-
 if [ -n "$packages" ]; then
-    $package_manager install $package_install_options $packages
+    sh -eu $script_dir/install-packages.sh $packages
 fi
