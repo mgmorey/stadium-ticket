@@ -104,13 +104,17 @@ trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 cd $source_dir
 
-pip=$(sh -eu $script_dir/get-python-command.sh pip)
 pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
+
+if [ "$pipenv" = false ]; then
+    pip=$(sh -eu $script_dir/get-python-command.sh pip)
 
 if [ "$pipenv" != false ]; then
     pipenv_update
-else
+elif [ "$pip" != false ]; then
     pip_update $VENV_FILENAME
+else
+    abort "$0: No pip nor pipenv in path"
 fi
 
 touch .update
