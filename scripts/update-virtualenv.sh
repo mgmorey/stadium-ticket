@@ -67,9 +67,9 @@ pipenv_update() {
 
 pip_update() {
     assert [ -n "$1" ]
-    venv_name=$1
-    venv_reqs=$VENV_REQS
-    venv_sync=true
+    venv_filename=$1
+    venv_force_sync=true
+    venv_requirements=$VENV_REQUIREMENTS
     . $script_dir/sync-virtualenv.sh
 }
 
@@ -110,7 +110,7 @@ pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
 if [ "$pipenv" != false ]; then
     pipenv_update
 else
-    pip_update $VENV_NAME
+    pip_update $VENV_FILENAME
 fi
 
 touch .update

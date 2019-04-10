@@ -43,8 +43,8 @@ realpath() {
 
 stage_app() {
     assert [ -n "$1" ]
-    venv_name=$1
-    venv_reqs=$VENV_REQS
+    venv_filename=$1
+    venv_requirements=$VENV_REQUIREMENTS
     . $script_dir/sync-virtualenv.sh
 }
 

@@ -22,7 +22,7 @@ export LC_ALL=${LC_ALL:-en_US.UTF-8}
 APP_VARS="DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_PORT \
 DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV"
 
-VENV_NAME=.venv
+VENV_FILENAME=.venv
 VENV_REQUIREMENTS="requirements-dev.txt requirements.txt"
 
 abort() {
@@ -35,7 +35,7 @@ assert() {
 }
 
 pip_run() {
-    venv_name=$VENV_NAME
+    venv_filename=$VENV_FILENAME
     venv_requirements=$VENV_REQUIREMENTS
     . $script_dir/sync-virtualenv.sh
     printf "%s\n" "Loading .env environment variables"

@@ -45,7 +45,7 @@ sync_requirements() {
     pip_opts=${SUDO_USER:+--no-cache-dir}
     $pip install $pip_opts --upgrade pip
     printf "%s\n" "Installing required packages"
-    $pip install $pip_opts $(printf -- "-r %s\n" ${venv_reqs:-requirements.txt})
+    $pip install $pip_opts $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
 }
 
 sync_venv() {
@@ -71,7 +71,7 @@ sync_venv() {
 	activate_venv $1
 	assert [ -n "${VIRTUAL_ENV:-}" ]
 
-	if [ "${venv_sync:-$sync}" = true ]; then
+	if [ "${venv_force_sync:-$sync}" = true ]; then
 	    sync_requirements
 	fi
     elif [ -d $1 ]; then
@@ -84,4 +84,4 @@ sync_venv() {
 venv=$(sh -eu $script_dir/get-python-command.sh venv)
 virtualenv=$(sh -eu $script_dir/get-python-command.sh virtualenv)
 
-sync_venv $venv_name
+sync_venv $venv_filename
