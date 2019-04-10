@@ -110,7 +110,7 @@ pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
 if [ "$pipenv" != false ]; then
     pipenv_update
 else
-    pip_update $VENV_FILENAME
+    pip_update $venv_filename
 fi
 
 touch .update
