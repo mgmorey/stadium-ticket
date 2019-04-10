@@ -61,7 +61,7 @@ pipenv_lock() {
 }
 
 pipenv_update() {
-    pipenv_lock $VENV_REQS
+    pipenv_lock $VENV_REQUIREMENTS
     $pipenv sync -d
 }
 
