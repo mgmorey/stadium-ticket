@@ -69,8 +69,9 @@ sync_venv() {
     if [ -d $1 ]; then
 	sync=false
     else
-	sync=true
+	upgrade_pip_and_virtualenv
 	create_venv $1
+	sync=true
     fi
 
     if [ -r $1/bin/activate ]; then
@@ -84,6 +85,21 @@ sync_venv() {
 	abort "%s: Unable to activate environment\n" "$0"
     else
 	abort "%s: No virtual environment\n" "$0"
+    fi
+}
+
+upgrade_pip_and_virtualenv() {
+    pip=$(sh -eu $script_dir/get-python-command.sh pip)
+
+    if [ "$(id -u)" -eq 0 ]; then
+	sh="su $SUDO_USER"
+    else
+	sh="sh -eu"
+    fi
+
+    if [ "$pip" != false ]; then
+	pip_install="$pip install ${SUDO_USER:+$PIP_SUDO_OPTS}"
+	$sh -c "$pip_install --upgrade --user pip virtualenv"
     fi
 }
 
