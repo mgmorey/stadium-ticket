@@ -19,8 +19,9 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-VARS="DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_PORT \
+APP_VARS="DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_PORT \
 DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV"
+
 VENV_NAME=.venv
 VENV_REQUIREMENTS="requirements-dev.txt requirements.txt"
 
@@ -40,7 +41,7 @@ pip_run() {
     printf "%s\n" "Loading .env environment variables"
     . ./.env
 
-    for var in $VARS; do
+    for var in $APP_VARS; do
 	export $var
     done
 
