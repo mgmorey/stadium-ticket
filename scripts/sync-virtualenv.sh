@@ -56,7 +56,7 @@ sync_venv() {
 	stats_2="$(stat -Lf "%d %i" "$1")"
 
 	if [ "$stats_1" = "$stats_2" ]; then
-	    abort "%s\n" "$0: Must not be run within the virtual environment"
+	    abort "%s: Must not be run within the virtual environment\n" "$0"
 	fi
     fi
 
@@ -75,9 +75,9 @@ sync_venv() {
 	    sync_requirements
 	fi
     elif [ -d $1 ]; then
-	abort "%s\n" "$0: Unable to activate environment"
+	abort "%s: Unable to activate environment\n" "$0"
     else
-	abort "%s\n" "$0: No virtual environment"
+	abort "%s: No virtual environment\n" "$0"
     fi
 }
 
