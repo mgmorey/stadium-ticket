@@ -19,8 +19,8 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-VENV_NAME=.venv
-VENV_REQS="requirements-dev.txt requirements.txt"
+VENV_FILENAME=.venv
+VENV_REQUIREMENTS="requirements-dev.txt requirements.txt"
 
 abort() {
     printf "$@" >&2
@@ -110,7 +110,7 @@ pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
 if [ "$pipenv" != false ]; then
     pipenv_update
 else
-    pip_update $venv_filename
+    pip_update $VENV_FILENAME
 fi
 
 touch .update
