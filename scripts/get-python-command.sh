@@ -27,7 +27,11 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-name="${1:-python}"
+if [ $# -eq 0 ]; then
+    abort "%s\n" "$0: Not enough arguments"
+fi
+
+name="$1"
 version="${2:-$VERSION}"
 
 case "$name" in
