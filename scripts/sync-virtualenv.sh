@@ -29,13 +29,15 @@ activate_venv() {
 create_venv() {
     assert [ -n "$1" ]
     printf "%s\n" "Creating virtual environment"
-    venv=$(sh -eu $script_dir/get-python-command.sh venv)
     virtualenv=$(sh -eu $script_dir/get-python-command.sh virtualenv)
+
+    if [ "$virtualenv" = false ]; then
+	pyvenv=$(sh -eu $script_dir/get-python-command.sh pyvenv)
 
     if [ "$virtualenv" != false ]; then
 	$virtualenv -p $PYTHON $1
-    elif [ "$venv" != false ]; then
-	$venv $1
+    elif [ "$pyvenv" != false ]; then
+	$pyvenv $1
     else
 	abort "%s: Unable to create virtual environment\n" "$0"
     fi

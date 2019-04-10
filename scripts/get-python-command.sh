@@ -31,15 +31,22 @@ name="${1:-python}"
 version="${2:-$VERSION}"
 
 case "$name" in
-    (pip|pipenv|venv|virtualenv)
-	for command in $name$version $name "python$version -m $name" false; do
+    (python)
+	command=python$version
+	;;
+    (pyvenv)
+	for command in "python$version -m venv" false; do
 	    if $command --help >/dev/null 2>&1; then
 		break
 	    fi
 	done
 	;;
-    (python)
-	command=python$version
+    (pip|pipenv|virtualenv)
+	for command in $name$version $name "python$version -m $name" false; do
+	    if $command --help >/dev/null 2>&1; then
+		break
+	    fi
+	done
 	;;
     (*)
 	abort "%s: Invalid command/module '%s'\n" "$0" "$name"
