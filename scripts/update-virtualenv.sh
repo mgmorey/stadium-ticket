@@ -108,6 +108,7 @@ pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
 
 if [ "$pipenv" = false ]; then
     pip=$(sh -eu $script_dir/get-python-command.sh pip)
+fi
 
 if [ "$pipenv" != false ]; then
     pipenv_update
