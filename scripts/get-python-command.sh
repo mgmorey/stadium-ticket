@@ -31,18 +31,15 @@ name="${1:-python}"
 version="${2:-$VERSION}"
 
 case "$name" in
-    (python)
-	command=python$version
-	;;
-    (pyvenv)
-	for command in "python$version -m venv" false; do
+    (pip|pipenv|virtualenv)
+	for command in $name$version $name "python$version -m $name" false; do
 	    if $command --help >/dev/null 2>&1; then
 		break
 	    fi
 	done
 	;;
-    (pip|pipenv|virtualenv)
-	for command in $name$version $name "python$version -m $name" false; do
+    (pyvenv)
+	for command in "python$version -m venv" false; do
 	    if $command --help >/dev/null 2>&1; then
 		break
 	    fi
