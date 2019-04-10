@@ -29,6 +29,8 @@ activate_venv() {
 create_venv() {
     assert [ -n "$1" ]
     printf "%s\n" "Creating virtual environment"
+    venv=$(sh -eu $script_dir/get-python-command.sh venv)
+    virtualenv=$(sh -eu $script_dir/get-python-command.sh virtualenv)
 
     if [ "$virtualenv" != false ]; then
 	$virtualenv -p $PYTHON $1
@@ -80,8 +82,5 @@ sync_venv() {
 	abort "%s: No virtual environment\n" "$0"
     fi
 }
-
-venv=$(sh -eu $script_dir/get-python-command.sh venv)
-virtualenv=$(sh -eu $script_dir/get-python-command.sh virtualenv)
 
 sync_venv $venv_filename
