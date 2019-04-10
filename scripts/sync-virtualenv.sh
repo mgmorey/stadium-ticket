@@ -33,6 +33,7 @@ create_venv() {
 
     if [ "$virtualenv" = false ]; then
 	pyvenv=$(sh -eu $script_dir/get-python-command.sh pyvenv)
+    fi
 
     if [ "$virtualenv" != false ]; then
 	$virtualenv -p $PYTHON $1
