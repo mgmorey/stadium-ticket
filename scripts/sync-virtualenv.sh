@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+PIP_SUDO_OPTS="--no-cache-dir"
 PYTHON=python3
 
 activate_venv() {
@@ -47,7 +48,7 @@ create_venv() {
 sync_requirements() {
     assert [ "$pip" != false ]
     printf "%s\n" "Upgrading pip"
-    pip_install="$pip install ${SUDO_USER:+--no-cache-dir}"
+    pip_install="$pip install ${SUDO_USER:+$PIP_SUDO_OPTS}"
     $pip_install --upgrade pip
     printf "%s\n" "Installing required packages"
     $pip_install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
