@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PIP_SUDO_OPTS="--no-warn-script-location"
-
 abort() {
     printf "$@" >&2
     exit 1
@@ -38,21 +36,6 @@ realpath() {
 	else
 	    printf "%s\n" "$PWD/${1#./}"
 	fi
-    fi
-}
-
-upgrade_pip_and_virtualenv() {
-    pip=$(sh -eu $script_dir/get-python-command.sh pip)
-
-    if [ "$(id -u)" -eq 0 ]; then
-	sh="su $SUDO_USER"
-    else
-	sh="sh -eu"
-    fi
-
-    if [ "$pip" != false ]; then
-	pip_install="$pip install ${SUDO_USER:+$PIP_SUDO_OPTS}"
-	$sh -c "$pip_install --upgrade --user pip virtualenv"
     fi
 }
 
@@ -95,5 +78,3 @@ fi
 if [ -n "$packages" ]; then
     $installer install $install_opts $packages
 fi
-
-upgrade_pip_and_virtualenv
