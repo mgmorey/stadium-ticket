@@ -259,13 +259,25 @@ tail_log_file() {
 
 distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
+release_name=$(sh -eu $script_dir/get-os-release-name.sh)
 
 configure_common
 
 case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
-	    (debian|ubuntu)
+	    (debian)
+		case "$release_name" in
+		    (10)
+			configure_debian
+			;;
+		    (*)
+			abort "%s %s: Release not supported\n" "$distro_name" \
+			      "$release_name"
+			;;
+		esac
+		;;
+	    (ubuntu)
 		configure_debian
 		;;
 	    (opensuse-*)
