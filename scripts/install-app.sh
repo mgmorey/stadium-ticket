@@ -191,11 +191,21 @@ start_app() {
 	restart_service=false
 	signal_received=true
     else
-	if [ "$kernel_name" = Linux ] && [ "$distro_name" = ubuntu ]; then
-	    restart_service=true
-	else
-	    restart_service=false
-	fi
+	case "$kernel_name" in
+	    (Linux)
+		case "$distro_name" in
+		    (debian|ubuntu)
+			restart_service=true
+			;;
+		    (*)
+			restart_service=false
+			;;
+		esac
+		;;
+	    (*)
+		restart_service=false
+		;;
+	esac
 
 	signal_received=false
     fi
