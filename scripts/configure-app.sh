@@ -278,7 +278,15 @@ case "$kernel_name" in
 		esac
 		;;
 	    (ubuntu)
-		configure_debian
+		case "$release_name" in
+		    (18.04)
+			configure_debian
+			;;
+		    (*)
+			abort "%s %s: Release not supported\n" "$distro_name" \
+			      "$release_name"
+			;;
+		esac
 		;;
 	    (opensuse-*)
 		configure_opensuse
