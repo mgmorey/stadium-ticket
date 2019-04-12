@@ -288,8 +288,16 @@ case "$kernel_name" in
 			;;
 		esac
 		;;
-	    (opensuse-*)
-		configure_opensuse
+	    (opensuse-tumbleweed)
+		case "$release_name" in
+		    (2019*)
+			configure_opensuse
+			;;
+		    (*)
+			abort "%s %s: Release not supported\n" "$distro_name" \
+			      "$release_name"
+			;;
+		esac
 		;;
 	    (*)
 		abort "%s: Distro not supported\n" "$distro_name"
