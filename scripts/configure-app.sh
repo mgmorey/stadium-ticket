@@ -279,7 +279,7 @@ case "$kernel_name" in
 		;;
 	    (ubuntu)
 		case "$release_name" in
-		    (18.04)
+		    (18.*|19.04)
 			configure_debian
 			;;
 		    (*)
