@@ -46,12 +46,6 @@ script_dir=$(realpath "$(dirname "$0")")
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 
 case "$kernel_name" in
-    (NT)
-	uname -r
-	;;
-    (Darwin|FreeBSD|GNU)
-	uname -r
-	;;
     (Linux)
 	for key in $KEYS; do
 	    file=/etc/$key-release
@@ -81,8 +75,13 @@ case "$kernel_name" in
 	    /usr/bin/lsb_release -rs
 	fi
 	;;
+    (Darwin|FreeBSD|GNU)
+	uname -r
+	;;
     (SunOS)
-	os_version="$(uname -v)"
-	printf "%s\n" "${os_version#*-}"
+	awk 'NR == 1 {print $3}' /etc/release
+	;;
+    (NT)
+	uname -r
 	;;
 esac
