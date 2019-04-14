@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-keys="os centos fedora redhat system"
+KEYS="os centos fedora redhat system"
 
 abort() {
     printf "$@" >&2
@@ -47,7 +47,7 @@ kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 
 case "$kernel_name" in
     (Linux)
-	for key in $keys; do
+	for key in $KEYS; do
 	    file=/etc/$key-release
 
 	    if [ -r $file ]; then
@@ -69,7 +69,6 @@ case "$kernel_name" in
 	fi
 	;;
     (SunOS)
-	os_name="$(uname -o)"
-	printf "%s\n" "${os_name%-*}"
+	awk 'NR == 1 {printf("%s %s\n", $1, $2)}' /etc/release
 	;;
 esac
