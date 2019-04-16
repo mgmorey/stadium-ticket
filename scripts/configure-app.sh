@@ -312,6 +312,6 @@ case "$kernel_name" in
     #	configure_sunos
     #	;;
     (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
+	abort "%s: Operating system not supported\n" "$pretty_name"
 	;;
 esac
