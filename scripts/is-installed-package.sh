@@ -71,6 +71,6 @@ case "$kernel_name" in
     # (SunOS)
     # 	;;
     (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
+	abort "%s: Operating system not supported\n" "$pretty_name"
 	;;
 esac

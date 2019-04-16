@@ -73,6 +73,6 @@ case "$kernel_name" in
 	printf pkg
 	;;
     (*)
-	abort "%s: Operating system not supported\n" "$kernel_name"
+	abort "%s: Operating system not supported\n" "$pretty_name"
 	;;
 esac
