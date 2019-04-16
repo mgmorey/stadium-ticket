@@ -20,29 +20,36 @@ FILE=/etc/release
 OS_FILE=/etc/os-release
 
 usage() {
-    printf "Usage: %s: [-h|-i|-p|-r]\n" $(basename "$0")
+    printf "Usage: %s: [-h|-i|-k|-p|-r]\n" $(basename "$0")
 }
 
-system_name="$(uname -s)"
+system_name=$(uname -s)
 
 case "$system_name" in
     (Linux)
 	. $OS_FILE
+	kernel_name=$system_name
 	;;
     (Darwin|FreeBSD|GNU|Minix)
 	ID=
+	NAME=$system_name
 	PRETTY_NAME=$(uname -sr)
 	VERSION_ID=$(uname -r)
+	kernel_name=$system_name
 	;;
     (SunOS)
 	ID=$(awk 'NR == 1 {print $1}' $FILE | tr '[:upper:]' '[:lower:]')
+	NAME=$(awk 'NR == 1 {printf("%s %s\n", $1, $2)}' $FILE)
 	PRETTY_NAME=$(awk 'NR == 1 {printf("%s %s %s\n", $1, $2, $3)}' $FILE)
 	VERSION_ID=$(awk 'NR == 1 {print $3}' $FILE)
+	kernel_name=$system_name
 	;;
     (CYGWIN_NT-*)
 	ID=
+	NAME=${system_name%-*}
 	PRETTY_NAME=$system_name
 	VERSION_ID=${system_name#*-}
+	kernel_name=${NAME#*_}
 	;;
 esac
 
@@ -51,7 +58,7 @@ if [ $# -eq 0 -a -n "${ID:-}" ]; then
     exit 0
 fi
 
-while getopts hipr opt
+while getopts hiknpv opt
 do
      case $opt in
 	 (h)
@@ -62,12 +69,22 @@ do
 		 printf "%s\n" "$ID"
 	     fi
 	     ;;
+	 (k)
+	     if [ -n "${kernel_name:-}" ]; then
+		 printf "%s\n" "$kernel_name"
+	     fi
+	     ;;
+	 (n)
+	     if [ -n "${NAME:-}" ]; then
+		 printf "%s\n" "$NAME"
+	     fi
+	     ;;
 	 (p)
 	     if [ -n "${PRETTY_NAME:-}" ]; then
 		 printf "%s\n" "$PRETTY_NAME"
 	     fi
 	     ;;
-	 (r)
+	 (v)
 	     if [ -n "${VERSION_ID:-}" ]; then
 		 printf "%s\n" "$VERSION_ID"
 	     fi
