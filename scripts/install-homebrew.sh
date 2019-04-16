@@ -18,6 +18,43 @@
 
 HOMEBREW_URL=https://raw.githubusercontent.com/Homebrew/install/master/install
 
-if ! brew info >/dev/null 2>&1; then
-    /usr/bin/ruby -e $expr "$(curl -fsSL $HOMEBREW_URL)"
-fi
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
+realpath() {
+    assert [ -d "$1" ]
+
+    if [ -x /usr/bin/realpath ]; then
+	/usr/bin/realpath "$1"
+    else
+	if expr "$1" : '/.*' >/dev/null; then
+	    printf "%s\n" "$1"
+	else
+	    printf "%s\n" "$PWD/${1#./}"
+	fi
+    fi
+}
+
+script_dir=$(realpath "$(dirname "$0")")
+
+distro_name=$(sh -eu $script_dir/get-os-release.sh -i)
+kernel_name=$(sh -eu $script_dir/get-os-release.sh -k)
+pretty_name=$(sh -eu $script_dir/get-os-release.sh -p)
+release_name=$(sh -eu $script_dir/get-os-release.sh -v)
+
+case "$kernel_name" in
+    (Darwin)
+	if ! brew info >/dev/null 2>&1; then
+	    /usr/bin/ruby -e $expr "$(curl -fsSL $HOMEBREW_URL)"
+	fi
+    	;;
+    (*)
+	abort "%s: Operating system not supported\n" "$pretty_name"
+	;;
+esac
