@@ -41,13 +41,12 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
+distro_name=$(sh -eu $script_dir/get-os-release.sh -i)
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 pretty_name=$(sh -eu $script_dir/get-os-release.sh -p)
 
 case "$kernel_name" in
     (Linux)
-	distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
-
 	case "$distro_name" in
 	    (debian|ubuntu)
 		printf apt-get

@@ -257,7 +257,7 @@ tail_log_file() {
     fi
 }
 
-distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
+distro_name=$(sh -eu $script_dir/get-os-release.sh -i)
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 pretty_name=$(sh -eu $script_dir/get-os-release.sh -p)
 release_name=$(sh -eu $script_dir/get-os-release.sh -v)
