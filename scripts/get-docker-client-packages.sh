@@ -67,6 +67,8 @@ script_dir=$(realpath "$(dirname "$0")")
 
 distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
+pretty_name=$(sh -eu $script_dir/get-os-release.sh -p)
+
 package=$(sh -eu $script_dir/get-docker-client-package.sh)
 
 case "$kernel_name" in

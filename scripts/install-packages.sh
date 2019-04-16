@@ -47,6 +47,8 @@ script_dir=$(realpath "$(dirname "$0")")
 
 distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
+pretty_name=$(sh -eu $script_dir/get-os-release.sh -p)
+
 package_install_options=$(sh -eu $script_dir/get-package-install-options.sh)
 package_manager=$(sh -eu $script_dir/get-package-manager.sh)
 
@@ -56,7 +58,7 @@ case "$kernel_name" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
 		;;
 	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
+		abort "%s: Distro not supported\n" "$pretty_name"
 		;;
 	esac
 	;;

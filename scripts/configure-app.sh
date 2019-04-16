@@ -260,6 +260,7 @@ tail_log_file() {
 distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
 release_name=$(sh -eu $script_dir/get-os-release-name.sh)
+pretty_name=$(sh -eu $script_dir/get-os-release.sh -p)
 
 configure_common
 
@@ -272,8 +273,7 @@ case "$kernel_name" in
 			configure_debian
 			;;
 		    (*)
-			abort "%s %s: Release not supported\n" "$distro_name" \
-			      "$release_name"
+			abort "%s: Release not supported\n" "$pretty_name"
 			;;
 		esac
 		;;
@@ -283,8 +283,7 @@ case "$kernel_name" in
 			configure_debian
 			;;
 		    (*)
-			abort "%s %s: Release not supported\n" "$distro_name" \
-			      "$release_name"
+			abort "%s: Release not supported\n" "$pretty_name"
 			;;
 		esac
 		;;
@@ -294,13 +293,12 @@ case "$kernel_name" in
 			configure_opensuse
 			;;
 		    (*)
-			abort "%s %s: Release not supported\n" "$distro_name" \
-			      "$release_name"
+			abort "%s: Release not supported\n" "$pretty_name"
 			;;
 		esac
 		;;
 	    (*)
-		abort "%s: Distro not supported\n" "$distro_name"
+		abort "%s: Distro not supported\n" "$pretty_name"
 		;;
 	esac
 	;;
