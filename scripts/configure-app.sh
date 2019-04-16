@@ -259,8 +259,8 @@ tail_log_file() {
 
 distro_name=$(sh -eu $script_dir/get-os-distro-name.sh)
 kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
-release_name=$(sh -eu $script_dir/get-os-release-name.sh)
 pretty_name=$(sh -eu $script_dir/get-os-release.sh -p)
+release_name=$(sh -eu $script_dir/get-os-release.sh -v)
 
 configure_common
 
