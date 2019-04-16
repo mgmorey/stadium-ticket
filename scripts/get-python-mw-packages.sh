@@ -56,7 +56,7 @@ realpath() {
 script_dir=$(realpath "$(dirname "$0")")
 
 distro_name=$(sh -eu $script_dir/get-os-release.sh -i)
-kernel_name=$(sh -eu $script_dir/get-os-kernel-name.sh)
+kernel_name=$(sh -eu $script_dir/get-os-release.sh -k)
 pretty_name=$(sh -eu $script_dir/get-os-release.sh -p)
 
 case "$kernel_name" in
