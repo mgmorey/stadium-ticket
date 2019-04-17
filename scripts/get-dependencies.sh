@@ -27,7 +27,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_dependencies() {
+get_packages() {
     for category in $CATEGORIES; do
 	sh $script_dir/get-$category-packages.sh
     done
@@ -70,4 +70,4 @@ case "$kernel_name" in
 	;;
 esac
 
-get_dependencies | sort -u
+get_packages | sort -u
