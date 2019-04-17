@@ -19,75 +19,106 @@
 FILE=/etc/release
 OS_FILE=/etc/os-release
 
+print_id() {
+    if [ -n "${ID:-}" ]; then
+	case "$kernel_name" in
+	    (SunOS)
+		printf "%s\n" "$ID" | tr '[:upper:]' '[:lower:]'
+		;;
+	    (*)
+		printf "%s\n" "$ID"
+		;;
+	esac
+    fi
+}
+
+print_name() {
+    if [ -n "${NAME:-}" ]; then
+	printf "%s\n" "$NAME"
+    fi
+}
+
+print_kernel_name() {
+    if [ -n "${kernel_name:-}" ]; then
+	printf "%s\n" "$kernel_name"
+    fi
+}
+
+print_kernel_release() {
+    if [ -n "${kernel_release:-}" ]; then
+	printf "%s\n" "$kernel_release"
+    fi
+}
+
+print_pretty_name() {
+    if [ -n "${PRETTY_NAME:-}" ]; then
+	printf "%s\n" "$PRETTY_NAME"
+    fi
+}
+
+print_version_id() {
+    if [ -n "${VERSION_ID:-}" ]; then
+	printf "%s\n" "$VERSION_ID"
+    fi
+}
+
 usage() {
     printf "Usage: %s: [-h|-i|-k|-n|-p|-r]\n" $(basename "$0")
 }
 
-system_name=$(uname -s)
+sys_info=$(uname -sr)
+kernel_name=${sys_info% *}
+kernel_release=${sys_info#* }
 
-case "$system_name" in
+case "$kernel_name" in
     (Linux)
 	. $OS_FILE
-	kernel_name=$system_name
-	;;
-    (Darwin|FreeBSD|GNU|Minix)
-	ID=
-	NAME=$system_name
-	PRETTY_NAME=$(uname -sr)
-	VERSION_ID=$(uname -r)
-	kernel_name=$system_name
 	;;
     (SunOS)
-	ID=$(awk 'NR == 1 {print $1}' $FILE | tr '[:upper:]' '[:lower:]')
-	NAME=$(awk 'NR == 1 {printf("%s %s\n", $1, $2)}' $FILE)
-	PRETTY_NAME=$(awk 'NR == 1 {printf("%s %s %s\n", $1, $2, $3)}' $FILE)
-	VERSION_ID=$(awk 'NR == 1 {print $3}' $FILE)
-	kernel_name=$system_name
+	data=$(awk 'NR == 1 {printf("%s %s:%s\n", $1, $2, $3)}' $FILE)
+	name=${data%:*}
+	version_id=${data#*:}
+	ID=${name% *}
+	NAME=$name
+	PRETTY_NAME="$name $version_id"
+	VERSION_ID=$version_id
 	;;
-    (CYGWIN_NT-*)
+    (*)
 	ID=
-	NAME=${system_name%-*}
-	PRETTY_NAME=$system_name
-	VERSION_ID=${system_name#*-}
-	kernel_name=${NAME#*_}
+	NAME=$kernel_name
+	PRETTY_NAME=$sys_info
+	VERSION_ID=$kernel_release
 	;;
 esac
 
-if [ $# -eq 0 -a -n "${ID:-}" ]; then
-    printf "%s\n" "$ID"
+if [ $# -eq 0 ]; then
+    print_id
     exit 0
 fi
 
-while getopts hiknpv opt
+while getopts hiknprv opt
 do
      case $opt in
 	 (h)
 	     usage
 	     ;;
 	 (i)
-	     if [ -n "${ID:-}" ]; then
-		 printf "%s\n" "$ID"
-	     fi
+	     print_id
 	     ;;
 	 (k)
-	     if [ -n "${kernel_name:-}" ]; then
-		 printf "%s\n" "$kernel_name"
-	     fi
+	     print_kernel_name
 	     ;;
 	 (n)
-	     if [ -n "${NAME:-}" ]; then
-		 printf "%s\n" "$NAME"
-	     fi
+	     print_name
 	     ;;
 	 (p)
-	     if [ -n "${PRETTY_NAME:-}" ]; then
-		 printf "%s\n" "$PRETTY_NAME"
-	     fi
+	     print_pretty_name
+	     ;;
+	 (r)
+	     print_kernel_release
 	     ;;
 	 (v)
-	     if [ -n "${VERSION_ID:-}" ]; then
-		 printf "%s\n" "$VERSION_ID"
-	     fi
+	     print_version_id
 	     ;;
 	 (?)
 	     usage
