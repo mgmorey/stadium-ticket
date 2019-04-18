@@ -81,7 +81,6 @@ fi
 
 distro_name=$ID
 pretty_name=$PRETTY_NAME
-
 release_name=$kernel_release
 
 while getopts Xhiknprvx opt
