@@ -22,22 +22,22 @@ IS_SHELL_FORMAT=false
 VARS_STANDARD="ID NAME PRETTY_NAME VERSION VERSION_ID"
 VARS_EXTENDED="distro_name kernel_name kernel_release pretty_name release_name"
 
-add_variable() {
-    if [ $is_shell_format = false ]; then
-	vars="${vars}${vars:+ }$1"
-    else
-	usage "%s: conflicting arguments\n" "$0"
-	exit 2
-    fi
-}
-
-set_variables() {
-    if [ $is_shell_format = false -a -z "$vars" ]; then
-	is_shell_format=true
-	vars="$*"
-    else
-	usage "%s: conflicting arguments\n" "$0"
-	exit 2
+queue_variables() {
+    if [ $# -gt 1 ]; then
+	if [ $is_shell_format = false -a -z "$vars" ]; then
+	    is_shell_format=true
+	    vars="$*"
+	else
+	    usage "%s: conflicting options\n" "$0"
+	    exit 2
+	fi
+    elif [ $# -eq 1 ]; then
+	if [ $is_shell_format = false ]; then
+	    vars="${vars}${vars:+ }$1"
+	else
+	    usage "%s: conflicting options\n" "$0"
+	    exit 2
+	fi
     fi
 }
 
@@ -48,7 +48,7 @@ usage() {
     fi
 
     cat <<- EOM
-	Usage: $0: [-i|-k|-n|-p|-r|-v]
+	Usage: $0: [-i] [-k] [-n] [-p] [-r] [-v]
 	       $0: -x
 	       $0: -X
 	       $0: -h
@@ -62,28 +62,28 @@ while getopts Xhiknprvx opt
 do
     case $opt in
 	(i)
-	    add_variable ID
+	    queue_variables ID
 	    ;;
 	(k)
-	    add_variable kernel_name
+	    queue_variables kernel_name
 	    ;;
 	(n)
-	    add_variable NAME
+	    queue_variables NAME
 	    ;;
 	(p)
-	    add_variable PRETTY_NAME
+	    queue_variables PRETTY_NAME
 	    ;;
 	(r)
-	    add_variable kernel_release
+	    queue_variables kernel_release
 	    ;;
 	(v)
-	    add_variable VERSION_ID
+	    queue_variables VERSION_ID
 	    ;;
 	(x)
-	    set_variables $VARS_STANDARD
+	    queue_variables $VARS_STANDARD
 	    ;;
 	(X)
-	    set_variables $VARS_STANDARD $VARS_EXTENDED
+	    queue_variables $VARS_STANDARD $VARS_EXTENDED
 	    ;;
 	(h)
 	    usage
