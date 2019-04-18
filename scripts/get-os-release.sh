@@ -36,6 +36,7 @@ export_extended() {
     printf "kernel_name=%s\n" "$kernel_name"
     printf "kernel_release=%s\n" "$kernel_release"
     printf "pretty_name=\"%s\"\n" "$PRETTY_NAME"
+    printf "release_name=%s\n" "$VERSION_ID"
 }
 
 print_id() {
