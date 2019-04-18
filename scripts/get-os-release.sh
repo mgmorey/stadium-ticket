@@ -18,15 +18,17 @@
 
 FILE=/etc/release
 OS_FILE=/etc/os-release
-
 SHELL_FORMAT=false
-USAGE="Usage: $(basename "$0"): [-a|-b|-h|-i|-k|-n|-p|-r]"
 VARS_STANDARD="ID NAME PRETTY_NAME VERSION VERSION_ID"
 VARS_EXTENDED="distro_name kernel_name kernel_release pretty_name release_name"
 
 usage() {
-    printf "%s\n" "$USAGE"
-    exit 2
+    cat <<- EOM
+	Usage: $0: [-i|-k|-n|-p|-r|-v]
+	       $0: -x
+	       $0: -X
+	       $0: -h
+	EOM
 }
 
 input=$(uname -sr)
@@ -86,14 +88,6 @@ release_name=$VERSION_ID
 while getopts Xhiknprvx opt
 do
      case $opt in
-	 (X)
-	     shell_format=true
-	     vars="$VARS_STANDARD $VARS_EXTENDED"
-	     ;;
-	 (h)
-	     shell_format=false
-	     vars="USAGE"
-	     ;;
 	 (i)
 	     vars="${vars}${vars:+ }ID"
 	     ;;
@@ -116,9 +110,18 @@ do
 	     shell_format=true
 	     vars="$VARS_STANDARD"
 	     ;;
-	 (?)
-	     usage
+	 (X)
+	     shell_format=true
+	     vars="$VARS_STANDARD $VARS_EXTENDED"
 	     ;;
+	 (h)
+	     usage
+	     exit 0
+	     ;;
+	 (\?)
+	     printf "%s\n" ""
+	     usage
+	     exit 2
      esac
 done
 
