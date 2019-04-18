@@ -19,16 +19,28 @@
 FILE=/etc/release
 OS_FILE=/etc/os-release
 
+export_all() {
+    export_basic
+    export_extended
+}
+
+export_basic() {
+    printf "ID=%s\n" "$ID"
+    printf "NAME=\"%s\"\n" "$NAME"
+    printf "PRETTY_NAME=\"%s\"\n" "$PRETTY_NAME"
+    printf "VERSION_ID=%s\n" "$VERSION_ID"
+}
+
+export_extended() {
+    printf "distro_name=%s\n" "$ID"
+    printf "kernel_name=%s\n" "$kernel_name"
+    printf "kernel_release=%s\n" "$kernel_release"
+    printf "pretty_name=\"%s\"\n" "$PRETTY_NAME"
+}
+
 print_id() {
     if [ -n "${ID:-}" ]; then
-	case "$kernel_name" in
-	    (SunOS)
-		printf "%s\n" "$ID" | tr '[:upper:]' '[:lower:]'
-		;;
-	    (*)
-		printf "%s\n" "$ID"
-		;;
-	esac
+	printf "%s\n" "$ID"
     fi
 }
 
@@ -63,42 +75,66 @@ print_version_id() {
 }
 
 usage() {
-    printf "Usage: %s: [-h|-i|-k|-n|-p|-r]\n" $(basename "$0")
+    printf "Usage: %s: [-a|-b|-h|-i|-k|-n|-p|-r]\n" $(basename "$0")
 }
 
-sys_info=$(uname -sr)
-kernel_name=${sys_info% *}
-kernel_release=${sys_info#* }
+input=$(uname -sr)
+kernel_name=${input% *}
+kernel_release=${input#* }
 
 case "$kernel_name" in
     (Linux)
 	. $OS_FILE
 	;;
+
     (SunOS)
-	data=$(awk 'NR == 1 {printf("%s %s:%s\n", $1, $2, $3)}' $FILE)
-	name=${data%:*}
-	version_id=${data#*:}
-	ID=${name% *}
-	NAME=$name
-	PRETTY_NAME="$name $version_id"
-	VERSION_ID=$version_id
+	input=$(awk 'NR == 1 {printf("%s %s:%s\n", $1, $2, $3)}' $FILE)
+	os_name=${input%:*}
+	os_version_id=${input#*:}
+
+	ID=$(printf "%s\n" "${os_name% *}" | tr '[:upper:]' '[:lower:]')
 	;;
+
+    (Darwin)
+	os_name=$(sw_vers -productName)
+	os_version_id=$(sw_vers -productVersion)
+
+	ID=macos
+	VERSION_ID=$darwin_version_id
+	;;
+
+    (CYGWIN_NT-*)
+	kernel_release=$(printf "%s\n" "$kernel_release" | sed -e 's/(.*)//')
+	os_name="Microsoft Windows"
+	os_version_id=${kernel_name#*-}
+
+	ID=ms-windows
+	;;
+
     (*)
-	ID=
+	ID=$kernel_name
 	NAME=$kernel_name
-	PRETTY_NAME=$sys_info
+	PRETTY_NAME=$input
 	VERSION_ID=$kernel_release
 	;;
+
 esac
 
+: ${NAME:=$os_name}
+: ${PRETTY_NAME:="$os_name $os_version_id"}
+: ${VERSION_ID:=$os_version_id}
+
 if [ $# -eq 0 ]; then
-    print_id
+    print_pretty_name
     exit 0
 fi
 
-while getopts hiknprv opt
+while getopts Xhiknprvx opt
 do
      case $opt in
+	 (X)
+	     export_all
+	     ;;
 	 (h)
 	     usage
 	     ;;
@@ -119,6 +155,9 @@ do
 	     ;;
 	 (v)
 	     print_version_id
+	     ;;
+	 (x)
+	     export_basic
 	     ;;
 	 (?)
 	     usage
