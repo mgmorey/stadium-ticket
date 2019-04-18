@@ -43,8 +43,7 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-kernel_name=$(sh -eu $script_dir/get-os-release.sh -k)
-pretty_name=$(sh -eu $script_dir/get-os-release.sh -p)
+eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
     (Darwin)

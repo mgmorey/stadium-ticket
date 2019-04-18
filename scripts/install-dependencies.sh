@@ -41,9 +41,7 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-distro_name=$(sh -eu $script_dir/get-os-release.sh -i)
-kernel_name=$(sh -eu $script_dir/get-os-release.sh -k)
-pretty_name=$(sh -eu $script_dir/get-os-release.sh -p)
+eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 installer=$(sh -eu $script_dir/get-package-manager.sh)
 install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
