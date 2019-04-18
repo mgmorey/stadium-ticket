@@ -19,69 +19,21 @@
 FILE=/etc/release
 OS_FILE=/etc/os-release
 
-export_all() {
-    export_basic
-    export_extended
-}
-
-export_basic() {
-    printf "ID=%s\n" "$ID"
-    printf "NAME=\"%s\"\n" "$NAME"
-    printf "PRETTY_NAME=\"%s\"\n" "$PRETTY_NAME"
-    printf "VERSION_ID=%s\n" "$VERSION_ID"
-}
-
-export_extended() {
-    printf "distro_name=%s\n" "$ID"
-    printf "kernel_name=%s\n" "$kernel_name"
-    printf "kernel_release=%s\n" "$kernel_release"
-    printf "pretty_name=\"%s\"\n" "$PRETTY_NAME"
-    printf "release_name=%s\n" "$VERSION_ID"
-}
-
-print_id() {
-    if [ -n "${ID:-}" ]; then
-	printf "%s\n" "$ID"
-    fi
-}
-
-print_name() {
-    if [ -n "${NAME:-}" ]; then
-	printf "%s\n" "$NAME"
-    fi
-}
-
-print_kernel_name() {
-    if [ -n "${kernel_name:-}" ]; then
-	printf "%s\n" "$kernel_name"
-    fi
-}
-
-print_kernel_release() {
-    if [ -n "${kernel_release:-}" ]; then
-	printf "%s\n" "$kernel_release"
-    fi
-}
-
-print_pretty_name() {
-    if [ -n "${PRETTY_NAME:-}" ]; then
-	printf "%s\n" "$PRETTY_NAME"
-    fi
-}
-
-print_version_id() {
-    if [ -n "${VERSION_ID:-}" ]; then
-	printf "%s\n" "$VERSION_ID"
-    fi
-}
+SHELL_FORMAT=false
+USAGE="Usage: $(basename "$0"): [-a|-b|-h|-i|-k|-n|-p|-r]"
+VARS_STANDARD="ID NAME PRETTY_NAME VERSION VERSION_ID"
+VARS_EXTENDED="distro_name kernel_name kernel_release pretty_name release_name"
 
 usage() {
-    printf "Usage: %s: [-a|-b|-h|-i|-k|-n|-p|-r]\n" $(basename "$0")
+    printf "%s\n" "$USAGE"
+    exit 2
 }
 
 input=$(uname -sr)
 kernel_name=${input% *}
 kernel_release=${input#* }
+shell_format=$SHELL_FORMAT
+vars=
 
 case "$kernel_name" in
     (Linux)
@@ -90,79 +42,93 @@ case "$kernel_name" in
 
     (SunOS)
 	input=$(awk 'NR == 1 {printf("%s %s:%s\n", $1, $2, $3)}' $FILE)
-	os_name=${input%:*}
-	os_version_id=${input#*:}
-
-	ID=$(printf "%s\n" "${os_name% *}" | tr '[:upper:]' '[:lower:]')
+	NAME=${input%:*}
+	VERSION=${input#*:}
+	ID=$(printf "%s\n" "${NAME% *}" | tr '[:upper:]' '[:lower:]')
 	;;
 
     (Darwin)
-	os_name=$(sw_vers -productName)
-	os_version_id=$(sw_vers -productVersion)
-
+	NAME=$(sw_vers -productName)
+	VERSION=$(sw_vers -productVersion)
 	ID=macos
-	VERSION_ID=$os_version_id
 	;;
 
     (CYGWIN_NT-*)
 	kernel_release=$(printf "%s\n" "$kernel_release" | sed -e 's/(.*)//')
-	os_name="Microsoft Windows"
-	os_version_id=${kernel_name#*-}
-
+	NAME="Microsoft Windows"
+	VERSION=${kernel_name#*-}
 	ID=ms-windows
+	VERSION_ID=$VERSION
 	;;
 
     (*)
-	ID=$kernel_name
 	NAME=$kernel_name
-	PRETTY_NAME=$input
+	VERSION=$kernel_release
+	ID=$kernel_name
 	VERSION_ID=$kernel_release
+	PRETTY_NAME=$input
 	;;
 
 esac
 
-: ${NAME:=$os_name}
-: ${PRETTY_NAME:="$os_name $os_version_id"}
-: ${VERSION_ID:=$os_version_id}
-
-if [ $# -eq 0 ]; then
-    print_pretty_name
-    exit 0
+if [ -z "${VERSION_ID-}" ]; then
+    VERSION_ID="$VERSION"
 fi
+
+if [ -z "${PRETTY_NAME-}" ]; then
+    PRETTY_NAME="$NAME $VERSION"
+fi
+
+distro_name=$ID
+pretty_name=$PRETTY_NAME
+
+release_name=$kernel_release
 
 while getopts Xhiknprvx opt
 do
      case $opt in
 	 (X)
-	     export_all
+	     shell_format=true
+	     vars="$VARS_STANDARD $VARS_EXTENDED"
 	     ;;
 	 (h)
-	     usage
+	     shell_format=false
+	     vars="USAGE"
 	     ;;
 	 (i)
-	     print_id
+	     vars="${vars}${vars:+ }ID"
 	     ;;
 	 (k)
-	     print_kernel_name
+	     vars="${vars}${vars:+ }kernel_name"
 	     ;;
 	 (n)
-	     print_name
+	     vars="${vars}${vars:+ }NAME"
 	     ;;
 	 (p)
-	     print_pretty_name
+	     vars="${vars}${vars:+ }PRETTY_NAME"
 	     ;;
 	 (r)
-	     print_kernel_release
+	     vars="${vars}${vars:+ }kernel_release"
 	     ;;
 	 (v)
-	     print_version_id
+	     vars="${vars}${vars:+ }VERSION_ID"
 	     ;;
 	 (x)
-	     export_basic
+	     shell_format=true
+	     vars="$VARS_STANDARD"
 	     ;;
 	 (?)
 	     usage
-	     exit 2
 	     ;;
      esac
+done
+
+for var in ${vars:-PRETTY_NAME}; do
+    eval val="\$$var"
+
+    if [ "$shell_format" = true ]; then
+	printf "%s=\"%s\"\n" "$var" "$val"
+    else
+	printf "%s\n" "$val"
+    fi
 done
