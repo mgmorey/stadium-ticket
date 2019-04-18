@@ -26,7 +26,8 @@ add_variable() {
     if [ $is_shell_format = false ]; then
 	vars="${vars}${vars:+ }$1"
     else
-	wrong_usage "%s: conflicting arguments\n" "$0"
+	usage "%s: conflicting arguments\n" "$0"
+	exit 2
     fi
 }
 
@@ -35,24 +36,23 @@ set_variables() {
 	is_shell_format=true
 	vars="$*"
     else
-	wrong_usage "%s: conflicting arguments\n" "$0"
+	usage "%s: conflicting arguments\n" "$0"
+	exit 2
     fi
 }
 
 usage() {
+    if [ $# -gt 0 ]; then
+	printf "$@" >&2
+	printf "%s\n" ""
+    fi
+
     cat <<- EOM
 	Usage: $0: [-i|-k|-n|-p|-r|-v]
 	       $0: -x
 	       $0: -X
 	       $0: -h
 	EOM
-}
-
-wrong_usage() {
-    printf "$@" >&2
-    printf "%s\n" ""
-    usage
-    exit 2
 }
 
 is_shell_format=$IS_SHELL_FORMAT
