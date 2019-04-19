@@ -94,7 +94,6 @@ process_data() {
 	    NAME="Microsoft Windows"
 	    VERSION=${kernel_name#*-}
 	    ID=ms-windows
-	    VERSION_ID=$VERSION
 	    ;;
 
 	(*)
@@ -116,7 +115,7 @@ process_data() {
 
     distro_name=$ID
     pretty_name=$PRETTY_NAME
-    release_name=$VERSION_ID
+    release_name=$VERSION
 
     for var in ${vars:-PRETTY_NAME}; do
 	eval val="\$$var"
