@@ -265,7 +265,7 @@ case "$kernel_name" in
     (Linux)
 	case "$distro_name" in
 	    (debian)
-		case "$release_name" in
+		case "$VERSION_ID" in
 		    (10)
 			configure_debian
 			;;
@@ -275,7 +275,7 @@ case "$kernel_name" in
 		esac
 		;;
 	    (ubuntu)
-		case "$release_name" in
+		case "$VERSION_ID" in
 		    (18.*|19.04)
 			configure_debian
 			;;
@@ -285,7 +285,7 @@ case "$kernel_name" in
 		esac
 		;;
 	    (opensuse-tumbleweed)
-		case "$release_name" in
+		case "$VERSION_ID" in
 		    (2019*)
 			configure_opensuse
 			;;

@@ -21,7 +21,7 @@ FILE_OS=/etc/os-release
 IS_SHELL_FORMAT=false
 LOWERCASE="tr '[:upper:]' '[:lower:]'"
 VARS_STANDARD="ID NAME PRETTY_NAME VERSION VERSION_ID"
-VARS_EXTENDED="distro_name kernel_name kernel_release pretty_name release_name"
+VARS_EXTENDED="distro_name kernel_name kernel_release pretty_name"
 
 parse_arguments() {
     is_shell_format=$IS_SHELL_FORMAT
@@ -115,7 +115,6 @@ process_data() {
 
     distro_name=$ID
     pretty_name=$PRETTY_NAME
-    release_name=$VERSION
 
     for var in ${vars:-PRETTY_NAME}; do
 	eval val="\$$var"
