@@ -18,7 +18,8 @@
 
 DARWIN_PKG="mariadb"
 
-DEBIAN_PKG="mariadb-client-10.1"
+DEBIAN_9_PKG="mariadb-client-10.1"
+DEBIAN_10_PKG="mariadb-client-10.3"
 DEBIAN_PKGS="%s-pymysql %s-sqlalchemy"
 
 FEDORA_PKG="mariadb"
@@ -72,7 +73,14 @@ case "$kernel_name" in
     (Linux)
 	case "$ID" in
 	    (debian)
-		packages="${package:-$DEBIAN_PKG} $DEBIAN_PKGS"
+		case "$VERSION_ID" in
+		    (9)
+			packages="${package:-$DEBIAN_9_PKG} $DEBIAN_PKGS"
+			;;
+		    (10)
+			packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
+			;;
+		esac
 		;;
 	    (fedora)
 		packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
