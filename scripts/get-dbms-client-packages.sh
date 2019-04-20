@@ -69,7 +69,7 @@ package=$(sh -eu $script_dir/get-dbms-client-package.sh)
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian)
 		packages="${package:-$DEBIAN_PKG} $DEBIAN_PKGS"
 		;;

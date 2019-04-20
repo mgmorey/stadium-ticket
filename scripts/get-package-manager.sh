@@ -49,7 +49,7 @@ eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian|ubuntu)
 		printf apt-get
 		;;

@@ -56,7 +56,7 @@ pattern=$(sh -eu $script_dir/get-devel-pattern.sh)
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian|ubuntu|fedora|opensuse-*)
 		;;
 	    (*)

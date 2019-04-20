@@ -21,7 +21,7 @@ FILE_OS=/etc/os-release
 IS_SHELL_FORMAT=false
 LOWERCASE="tr '[:upper:]' '[:lower:]'"
 VARS_STANDARD="ID NAME PRETTY_NAME VERSION VERSION_ID"
-VARS_EXTENDED="distro_name kernel_name kernel_release"
+VARS_EXTENDED="kernel_name kernel_release"
 
 parse_arguments() {
     is_shell_format=$IS_SHELL_FORMAT
@@ -116,8 +116,6 @@ process_data() {
     if [ -z "${PRETTY_NAME-}" ]; then
 	PRETTY_NAME="$NAME $VERSION"
     fi
-
-    distro_name=$ID
 
     if [ -z "${vars-}" ]; then
 	vars=PRETTY_NAME

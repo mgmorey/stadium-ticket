@@ -53,7 +53,7 @@ packages=$(sh -eu $script_dir/get-extra-packages.sh)
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian|ubuntu|fedora|opensuse-*)
 		;;
 	    (*)

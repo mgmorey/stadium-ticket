@@ -267,7 +267,7 @@ configure_common
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian)
 		case "$VERSION_ID" in
 		    (10)
