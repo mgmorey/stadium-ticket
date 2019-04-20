@@ -35,7 +35,8 @@ REDHAT_PKG="mariadb"
 SUNOS_PKG="mariadb-101/client"
 SUNOS_PKGS="sqlalchemy-%s"
 
-UBUNTU_PKG="mariadb-client-10.1"
+UBUNTU_18_04_PKG="mariadb-client-10.1"
+UBUNTU_19_04_PKG="mariadb-client-10.3"
 UBUNTU_PKGS="%s-pymysql %s-sqlalchemy"
 
 abort() {
@@ -83,7 +84,14 @@ case "$kernel_name" in
 		packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
 		;;
 	    (ubuntu)
-		packages="${package:-$UBUNTU_PKG} $UBUNTU_PKGS"
+		case "$VERSION_ID" in
+		    (18.04)
+			packages="${package:-$UBUNTU_18_04_PKG} $UBUNTU_PKGS"
+			;;
+		    (19.04)
+			packages="${package:-$UBUNTU_19_04_PKG} $UBUNTU_PKGS"
+			;;
+		esac
 		;;
 	esac
 	;;

@@ -30,7 +30,8 @@ REDHAT_PKG="mariadb-server"
 
 SUNOS_PKG="mariadb-101"
 
-UBUNTU_PKG="mariadb-server-10.1"
+UBUNTU_18_04_PKG="mariadb-server-10.1"
+UBUNTU_19_04_PKG="mariadb-server-10.3"
 
 abort() {
     printf "$@" >&2
@@ -77,7 +78,14 @@ case "$kernel_name" in
 		packages="${package:-$OPENSUSE_PKG}"
 		;;
 	    (ubuntu)
-		packages="${package:-$UBUNTU_PKG}"
+		case "$VERSION_ID" in
+		    (18.04)
+			packages="${package:-$UBUNTU_18_04_PKG}"
+			;;
+		    (19.04)
+			packages="${package:-$UBUNTU_19_04_PKG}"
+			;;
+		esac
 		;;
 	esac
 	;;
