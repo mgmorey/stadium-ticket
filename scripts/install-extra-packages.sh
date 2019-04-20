@@ -21,6 +21,10 @@ abort() {
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$pretty_name" "$*"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -45,7 +49,6 @@ eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 installer=$(sh -eu $script_dir/get-package-manager.sh)
 install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
-
 packages=$(sh -eu $script_dir/get-extra-packages.sh)
 
 case "$kernel_name" in
@@ -54,7 +57,7 @@ case "$kernel_name" in
 	    (debian|ubuntu|fedora|opensuse-*)
 		;;
 	    (*)
-		abort "%s: Distro not supported\n" "$pretty_name"
+		abort_not_supported Distro
 		;;
 	esac
 	;;
@@ -64,7 +67,7 @@ case "$kernel_name" in
     (FreeBSD|SunOS)
 	;;
     (*)
-	abort "%s: Operating system not supported\n" "$pretty_name"
+	abort_not_supported "Operating system"
 	;;
 esac
 

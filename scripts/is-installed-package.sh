@@ -21,6 +21,10 @@ abort() {
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$pretty_name" "$*"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -58,6 +62,7 @@ case "$kernel_name" in
 		rpm --query $1 >/dev/null 2>&1
 		;;
 	    (*)
+		abort_not_supported Distro
 		abort "%s: Distro not supported\n" "$pretty_name"
 		;;
 	esac
@@ -69,6 +74,6 @@ case "$kernel_name" in
     # (SunOS)
     # 	;;
     (*)
-	abort "%s: Operating system not supported\n" "$pretty_name"
+	abort_not_supported "Operating system"
 	;;
 esac

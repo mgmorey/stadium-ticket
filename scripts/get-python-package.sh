@@ -35,6 +35,10 @@ abort() {
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$pretty_name" "$*"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -73,7 +77,7 @@ case "$kernel_name" in
 		printf "%s %s\n" $UBUNTU_INFO
 		;;
 	    (*)
-		abort "%s: Distro not supported\n" "$pretty_name"
+		abort_not_supported Distro
 		;;
 	esac
 	;;
@@ -87,6 +91,6 @@ case "$kernel_name" in
 	printf "%s %s\n" $SUNOS_INFO
 	;;
     (*)
-	abort "%s: Operating system not supported\n" "$pretty_name"
+	abort_not_supported "Operating system"
 	;;
 esac
