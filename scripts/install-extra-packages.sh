@@ -47,10 +47,6 @@ script_dir=$(realpath "$(dirname "$0")")
 
 eval $(sh -eu $script_dir/get-os-release.sh -X)
 
-installer=$(sh -eu $script_dir/get-package-manager.sh)
-install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
-packages=$(sh -eu $script_dir/get-extra-packages.sh)
-
 case "$kernel_name" in
     (Linux)
 	case "$ID" in
@@ -70,6 +66,10 @@ case "$kernel_name" in
 	abort_not_supported "Operating system"
 	;;
 esac
+
+installer=$(sh -eu $script_dir/get-package-manager.sh)
+install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
+packages=$(sh -eu $script_dir/get-extra-packages.sh)
 
 if [ -n "$packages" ]; then
     $installer install $install_opts $packages

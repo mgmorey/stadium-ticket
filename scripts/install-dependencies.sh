@@ -47,10 +47,6 @@ script_dir=$(realpath "$(dirname "$0")")
 
 eval $(sh -eu $script_dir/get-os-release.sh -X)
 
-installer=$(sh -eu $script_dir/get-package-manager.sh)
-install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
-pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
-
 packages=$(sh -eu $script_dir/get-dependencies.sh)
 pattern=$(sh -eu $script_dir/get-devel-pattern.sh)
 
@@ -73,6 +69,10 @@ case "$kernel_name" in
 	abort_not_supported "Operating system"
 	;;
 esac
+
+installer=$(sh -eu $script_dir/get-package-manager.sh)
+install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
+pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
 
 if [ -n "$pattern" ]; then
     $installer install $install_opts $pattern_opts $pattern
