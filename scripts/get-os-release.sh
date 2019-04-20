@@ -120,15 +120,21 @@ process_data() {
     distro_name=$ID
     pretty_name=$PRETTY_NAME
 
-    for var in ${vars:-PRETTY_NAME}; do
-	eval val="\$$var"
+    if [ -z "${vars-}" ]; then
+	vars=PRETTY_NAME
+    fi
 
-	if [ "$is_shell_format" = true ]; then
+    if [ "$is_shell_format" = true ]; then
+	for var in $vars; do
+	    eval val="\$$var"
 	    printf "%s=\"%s\"\n" "$var" "$val"
-	else
+	done
+    else
+	for var in $vars; do
+	    eval val="\$$var"
 	    printf "%s\n" "$val"
-	fi
-    done
+	done
+    fi
 }
 
 queue_variables() {
@@ -153,10 +159,10 @@ queue_variables() {
 usage() {
     if [ $# -gt 0 ]; then
 	printf "$@" >&2
-	printf "%s\n" ""
+	printf "%s\n" "" >&2
     fi
 
-    cat <<- EOM
+    cat <<- EOM >&2
 	Usage: $0: [-i] [-k] [-n] [-p] [-r] [-v]
 	       $0: -x
 	       $0: -X
