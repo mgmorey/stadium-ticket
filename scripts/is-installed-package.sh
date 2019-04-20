@@ -22,7 +22,7 @@ abort() {
 }
 
 abort_not_supported() {
-    abort "%s: %s: %s not supported\n" "$0" "$pretty_name" "$*"
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
 
 assert() {
@@ -63,7 +63,6 @@ case "$kernel_name" in
 		;;
 	    (*)
 		abort_not_supported Distro
-		abort "%s: Distro not supported\n" "$pretty_name"
 		;;
 	esac
 	;;

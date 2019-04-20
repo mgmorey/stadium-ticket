@@ -36,7 +36,7 @@ abort() {
 }
 
 abort_not_supported() {
-    abort "%s: %s: %s not supported\n" "$0" "$pretty_name" "$*"
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
 
 assert() {
