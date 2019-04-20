@@ -53,23 +53,4 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-eval $(sh -eu $script_dir/get-os-release.sh -X)
-
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian|ubuntu|fedora|opensuse-*)
-		;;
-	    (*)
-		abort_not_supported Distro
-		;;
-	esac
-	;;
-    (Darwin|FreeBSD|SunOS)
-	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
-
 get_packages | sort -u
