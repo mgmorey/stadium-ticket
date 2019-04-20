@@ -18,7 +18,8 @@
 
 DARWIN_PKG="mariadb"
 
-DEBIAN_PKG="mariadb-server-10.1"
+DEBIAN_9_PKG="mariadb-server-10.1"
+DEBIAN_10_PKG="mariadb-server-10.3"
 
 FEDORA_PKG="mariadb-server"
 
@@ -66,7 +67,14 @@ case "$kernel_name" in
     (Linux)
 	case "$ID" in
 	    (debian)
-		packages="${package:-$DEBIAN_PKG}"
+		case "$VERSION_ID" in
+		    (9)
+			packages="${package:-$DEBIAN_9_PKG}"
+			;;
+		    (10)
+			packages="${package:-$DEBIAN_10_PKG}"
+			;;
+		esac
 		;;
 	    (fedora)
 		packages="${package:-$FEDORA_PKG}"
@@ -100,4 +108,6 @@ case "$kernel_name" in
 	;;
 esac
 
-printf "%s\n" $packages
+if [ -n "${packages-}" ]; then
+    printf "%s\n" $packages
+fi
