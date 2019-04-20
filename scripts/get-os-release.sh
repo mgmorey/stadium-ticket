@@ -23,50 +23,17 @@ LOWERCASE="tr '[:upper:]' '[:lower:]'"
 VARS_STANDARD="ID NAME PRETTY_NAME VERSION VERSION_ID"
 VARS_EXTENDED="kernel_name kernel_release"
 
-parse_arguments() {
-    is_shell_format=$IS_SHELL_FORMAT
-    vars=
-
-    while getopts Xhiknprvx opt; do
-	case $opt in
-	    (i)
-		queue_variables ID
-		;;
-	    (k)
-		queue_variables kernel_name
-		;;
-	    (n)
-		queue_variables NAME
-		;;
-	    (p)
-		queue_variables PRETTY_NAME
-		;;
-	    (r)
-		queue_variables kernel_release
-		;;
-	    (v)
-		queue_variables VERSION_ID
-		;;
-	    (x)
-		queue_variables $VARS_STANDARD
-		;;
-	    (X)
-		queue_variables $VARS_STANDARD $VARS_EXTENDED
-		;;
-	    (h)
-		usage
-		exit 0
-		;;
-	    (\?)
-		printf "%s\n" ""
-		usage
-		exit 2
-		;;
-	esac
-    done
+abort_conflicting_option() {
+    usage "%s: conflicting option -- %s\n" "$0" "$1"
+    exit 2
 }
 
-process_data() {
+abort_extra_arguments() {
+    usage "%s: extra arguments -- %s\n" "$0" "$*"
+    exit 2
+}
+
+collect_data() {
     input=$(uname -sr)
     kernel_name=${input% *}
     kernel_release=${input#* }
@@ -90,7 +57,7 @@ process_data() {
 	    ;;
 
 	(CYGWIN_NT-*)
-	    kernel_release=$(printf "%s\n" "$kernel_release" | sed -e 's/(.*)//')
+	    kernel_release=$(printf "%s\n" "${input#* }" | sed -e 's/(.*)//')
 	    NAME="Microsoft Windows"
 	    VERSION=${kernel_name#*-}
 	    ID=ms-windows
@@ -116,7 +83,9 @@ process_data() {
     if [ -z "${PRETTY_NAME-}" ]; then
 	PRETTY_NAME="$NAME $VERSION"
     fi
+}
 
+output_data() {
     if [ -z "${vars-}" ]; then
 	vars=PRETTY_NAME
     fi
@@ -134,21 +103,68 @@ process_data() {
     fi
 }
 
-queue_variables() {
+parse_arguments() {
+    is_shell_format=$IS_SHELL_FORMAT
+    vars=
+
+    while getopts Xhiknprvx opt; do
+	case $opt in
+	    (i)
+		queue_vars ID
+		;;
+	    (k)
+		queue_vars kernel_name
+		;;
+	    (n)
+		queue_vars NAME
+		;;
+	    (p)
+		queue_vars PRETTY_NAME
+		;;
+	    (r)
+		queue_vars kernel_release
+		;;
+	    (v)
+		queue_vars VERSION_ID
+		;;
+	    (x)
+		queue_vars $VARS_STANDARD
+		;;
+	    (X)
+		queue_vars $VARS_STANDARD $VARS_EXTENDED
+		;;
+	    (h)
+		usage
+		exit 0
+		;;
+	    (\?)
+		printf "%s\n" "" >&2
+		usage
+		exit 2
+		;;
+	esac
+    done
+
+    shift $(($OPTIND - 1))
+
+    if [ $# -gt 0 ]; then
+	abort_extra_arguments "$@"
+    fi
+}
+
+queue_vars() {
     if [ $# -gt 1 ]; then
 	if [ $is_shell_format = false -a -z "$vars" ]; then
 	    is_shell_format=true
 	    vars="$*"
 	else
-	    usage "%s: conflicting options\n" "$0"
-	    exit 2
+	    abort_conflicting_option $opt
 	fi
     elif [ $# -eq 1 ]; then
 	if [ $is_shell_format = false ]; then
 	    vars="${vars}${vars:+ }$1"
 	else
-	    usage "%s: conflicting options\n" "$0"
-	    exit 2
+	    abort_conflicting_option $opt
 	fi
     fi
 }
@@ -159,7 +175,7 @@ usage() {
 	printf "%s\n" "" >&2
     fi
 
-    cat <<- EOM >&2
+    cat >&2 <<-EOM
 	Usage: $0: [-i] [-k] [-n] [-p] [-r] [-v]
 	       $0: -x
 	       $0: -X
@@ -168,4 +184,5 @@ usage() {
 }
 
 parse_arguments "$@"
-process_data
+collect_data
+output_data
