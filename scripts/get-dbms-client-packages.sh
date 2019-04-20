@@ -67,6 +67,12 @@ script_dir=$(realpath "$(dirname "$0")")
 
 package=$(sh -eu $script_dir/get-dbms-client-package.sh)
 
+case "$package" in
+    (*-client-core-*)
+	package=$(printf "%s\n" $package | sed -e 's/-core-/-/')
+	;;
+esac
+
 eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
