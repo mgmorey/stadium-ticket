@@ -52,5 +52,4 @@ realpath() {
 }
 
 script_dir=$(realpath "$(dirname "$0")")
-
 get_packages | sort -u
