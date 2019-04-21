@@ -86,6 +86,7 @@ case "$kernel_name" in
 esac
 
 data=$(sh -eu $script_dir/get-python-package.sh)
+
 package_name=$(printf "%s" "$data" | awk '{print $1}')
 package_modifier=$(printf "%s" "$data" | awk '{print $2}')
 
