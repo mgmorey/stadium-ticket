@@ -21,6 +21,10 @@ abort() {
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -40,6 +44,27 @@ realpath() {
 }
 
 script_dir=$(realpath "$(dirname "$0")")
+
+eval $(sh -eu $script_dir/get-os-release.sh -X)
+
+case "$kernel_name" in
+    (Linux)
+	case "$ID" in
+	    (debian|fedora|opensuse-*|ubuntu)
+		:
+		;;
+	    (*)
+		abort_not_supported Distro
+		;;
+	esac
+	;;
+    (Darwin|FreeBSD|SunOS)
+	:
+	;;
+    (*)
+	abort_not_supported "Operating system"
+	;;
+esac
 
 data=$(sh -eu $script_dir/get-python-package.sh)
 
