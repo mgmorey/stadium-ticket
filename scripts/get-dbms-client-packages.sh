@@ -65,7 +65,7 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-package=$(sh -eu $script_dir/get-dbms-client-package.sh)
+package=$(sh -eu $script_dir/get-installed-dbms-package.sh client)
 
 case "$package" in
     (*-client-core-*)
