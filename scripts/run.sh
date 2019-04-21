@@ -78,10 +78,6 @@ if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
 
-if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "$0: Must be run as a non-privileged user"
-fi
-
 script_dir=$(realpath "$(dirname "$0")")
 
 source_dir=$script_dir/..
