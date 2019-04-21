@@ -35,6 +35,10 @@ abort() {
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -59,7 +63,7 @@ eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian)
 		printf "%s %s\n" $DEBIAN_INFO
 		;;
@@ -73,7 +77,7 @@ case "$kernel_name" in
 		printf "%s %s\n" $UBUNTU_INFO
 		;;
 	    (*)
-		abort "%s: Distro not supported\n" "$pretty_name"
+		abort_not_supported Distro
 		;;
 	esac
 	;;
@@ -87,6 +91,6 @@ case "$kernel_name" in
 	printf "%s %s\n" $SUNOS_INFO
 	;;
     (*)
-	abort "%s: Operating system not supported\n" "$pretty_name"
+	abort_not_supported "Operating system"
 	;;
 esac

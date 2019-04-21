@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-dbms-server-package: get database server package name
+# get-python-packages: get Python package package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,10 @@
 abort() {
     printf "$@" >&2
     exit 1
+}
+
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
 
 assert() {
@@ -41,10 +45,41 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-tmpfile=$(mktemp)
-trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
+eval $(sh -eu $script_dir/get-os-release.sh -X)
 
-sh -eu $script_dir/get-installed-packages.sh >$tmpfile
-sh -eu $script_dir/grep-dbms-package.sh server <$tmpfile || \
-    sh -eu $script_dir/grep-dbms-package.sh <$tmpfile || \
-    true
+case "$kernel_name" in
+    (Linux)
+	case "$ID" in
+	    (debian|fedora|opensuse-*|ubuntu)
+		:
+		;;
+	    (*)
+		abort_not_supported Distro
+		;;
+	esac
+	;;
+    (Darwin|FreeBSD|SunOS)
+	:
+	;;
+    (*)
+	abort_not_supported "Operating system"
+	;;
+esac
+
+data=$(sh -eu $script_dir/get-python-package.sh)
+
+package_name=$(printf "%s" "$data" | awk '{print $1}')
+package_modifier=$(printf "%s" "$data" | awk '{print $2}')
+
+printf "%s\n" $package_name
+
+for package in "$@"; do
+    case $package in
+	(*%s*)
+	    printf "$package\n" $package_modifier
+	    ;;
+	(*)
+	    printf "%s\n" $package
+	    ;;
+    esac
+done

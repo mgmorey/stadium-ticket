@@ -18,7 +18,8 @@
 
 DARWIN_PKG="mariadb"
 
-DEBIAN_PKG="mariadb-server-10.1"
+DEBIAN_9_PKG="mariadb-server-10.1"
+DEBIAN_10_PKG="mariadb-server-10.3"
 
 FEDORA_PKG="mariadb-server"
 
@@ -30,7 +31,8 @@ REDHAT_PKG="mariadb-server"
 
 SUNOS_PKG="mariadb-101"
 
-UBUNTU_PKG="mariadb-server-10.1"
+UBUNTU_18_04_PKG="mariadb-server-10.1"
+UBUNTU_19_04_PKG="mariadb-server-10.3"
 
 abort() {
     printf "$@" >&2
@@ -57,15 +59,28 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-eval $(sh -eu $script_dir/get-os-release.sh -X)
+package=$(sh -eu $script_dir/get-installed-dbms-package.sh server)
 
-package=$(sh -eu $script_dir/get-dbms-server-package.sh)
+case "$package" in
+    (*-server-core-*)
+	package=$(printf "%s\n" $package | sed -e 's/-core-/-/')
+	;;
+esac
+
+eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian)
-		packages="${package:-$DEBIAN_PKG}"
+		case "$VERSION_ID" in
+		    (9)
+			packages="${package:-$DEBIAN_9_PKG}"
+			;;
+		    (10)
+			packages="${package:-$DEBIAN_10_PKG}"
+			;;
+		esac
 		;;
 	    (fedora)
 		packages="${package:-$FEDORA_PKG}"
@@ -77,7 +92,14 @@ case "$kernel_name" in
 		packages="${package:-$OPENSUSE_PKG}"
 		;;
 	    (ubuntu)
-		packages="${package:-$UBUNTU_PKG}"
+		case "$VERSION_ID" in
+		    (18.04)
+			packages="${package:-$UBUNTU_18_04_PKG}"
+			;;
+		    (19.04)
+			packages="${package:-$UBUNTU_19_04_PKG}"
+			;;
+		esac
 		;;
 	esac
 	;;
@@ -92,4 +114,6 @@ case "$kernel_name" in
 	;;
 esac
 
-printf "%s\n" $packages
+if [ -n "${packages-}" ]; then
+    printf "%s\n" $packages
+fi

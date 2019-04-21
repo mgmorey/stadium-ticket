@@ -69,5 +69,5 @@ uninstall:
 .env-docker:	.env-template
 	$(script_dir)/configure-env.sh .env-docker
 
-.update:	Pipfile
+.update:	Pipfile Pipfile.lock
 	$(script_dir)/update-virtualenv.sh

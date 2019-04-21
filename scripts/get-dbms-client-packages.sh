@@ -18,7 +18,8 @@
 
 DARWIN_PKG="mariadb"
 
-DEBIAN_PKG="mariadb-client-10.1"
+DEBIAN_9_PKG="mariadb-client-10.1"
+DEBIAN_10_PKG="mariadb-client-10.3"
 DEBIAN_PKGS="%s-pymysql %s-sqlalchemy"
 
 FEDORA_PKG="mariadb"
@@ -35,7 +36,8 @@ REDHAT_PKG="mariadb"
 SUNOS_PKG="mariadb-101/client"
 SUNOS_PKGS="sqlalchemy-%s"
 
-UBUNTU_PKG="mariadb-client-10.1"
+UBUNTU_18_04_PKG="mariadb-client-10.1"
+UBUNTU_19_04_PKG="mariadb-client-10.3"
 UBUNTU_PKGS="%s-pymysql %s-sqlalchemy"
 
 abort() {
@@ -63,15 +65,28 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-eval $(sh -eu $script_dir/get-os-release.sh -X)
+package=$(sh -eu $script_dir/get-installed-dbms-package.sh client)
 
-package=$(sh -eu $script_dir/get-dbms-client-package.sh)
+case "$package" in
+    (*-client-core-*)
+	package=$(printf "%s\n" $package | sed -e 's/-core-/-/')
+	;;
+esac
+
+eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian)
-		packages="${package:-$DEBIAN_PKG} $DEBIAN_PKGS"
+		case "$VERSION_ID" in
+		    (9)
+			packages="${package:-$DEBIAN_9_PKG} $DEBIAN_PKGS"
+			;;
+		    (10)
+			packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
+			;;
+		esac
 		;;
 	    (fedora)
 		packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
@@ -83,7 +98,14 @@ case "$kernel_name" in
 		packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
 		;;
 	    (ubuntu)
-		packages="${package:-$UBUNTU_PKG} $UBUNTU_PKGS"
+		case "$VERSION_ID" in
+		    (18.04)
+			packages="${package:-$UBUNTU_18_04_PKG} $UBUNTU_PKGS"
+			;;
+		    (19.04)
+			packages="${package:-$UBUNTU_19_04_PKG} $UBUNTU_PKGS"
+			;;
+		esac
 		;;
 	esac
 	;;
@@ -98,19 +120,4 @@ case "$kernel_name" in
 	;;
 esac
 
-data=$(sh -eu $script_dir/get-python-package.sh)
-package_name=$(printf "%s" "$data" | awk '{print $1}')
-package_modifier=$(printf "%s" "$data" | awk '{print $2}')
-
-printf "%s\n" $package_name
-
-for package in ${packages:-}; do
-    case $package in
-	(*%s*)
-	    printf "$package\n" $package_modifier
-	    ;;
-	(*)
-	    printf "%s\n" $package
-	    ;;
-    esac
-done
+sh -eu $script_dir/get-python-packages.sh $packages

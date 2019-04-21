@@ -21,6 +21,10 @@ abort() {
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -41,39 +45,6 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-eval $(sh -eu $script_dir/get-os-release.sh -X)
-
-installer=$(sh -eu $script_dir/get-package-manager.sh)
-install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
-pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
-
 packages=$(sh -eu $script_dir/get-dependencies.sh)
 pattern=$(sh -eu $script_dir/get-devel-pattern.sh)
-
-case "$kernel_name" in
-    (Linux)
-	case "$distro_name" in
-	    (debian|ubuntu|fedora|opensuse-*)
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$pretty_name"
-		;;
-	esac
-	;;
-    (Darwin)
-	sh -eu $script_dir/install-homebrew.sh
-	;;
-    (FreeBSD|SunOS)
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$pretty_name"
-	;;
-esac
-
-if [ -n "$pattern" ]; then
-    $installer install $install_opts $pattern_opts $pattern
-fi
-
-if [ -n "$packages" ]; then
-    $installer install $install_opts $packages
-fi
+sh -eu $script_dir/install-packages.sh -p $pattern $packages

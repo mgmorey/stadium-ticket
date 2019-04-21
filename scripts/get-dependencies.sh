@@ -23,6 +23,10 @@ abort() {
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -48,24 +52,4 @@ realpath() {
 }
 
 script_dir=$(realpath "$(dirname "$0")")
-
-eval $(sh -eu $script_dir/get-os-release.sh -X)
-
-case "$kernel_name" in
-    (Linux)
-	case "$distro_name" in
-	    (debian|ubuntu|fedora|opensuse-*)
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$pretty_name"
-		;;
-	esac
-	;;
-    (Darwin|FreeBSD|SunOS)
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$pretty_name"
-	;;
-esac
-
 get_packages | sort -u

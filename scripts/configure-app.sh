@@ -30,6 +30,10 @@ EOF
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
+}
+
 check_permissions() {
     for file; do
 	if [ -e $file -a ! -w $file ]; then
@@ -263,14 +267,14 @@ configure_common
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian)
 		case "$VERSION_ID" in
 		    (10)
 			configure_debian
 			;;
 		    (*)
-			abort "%s: Release not supported\n" "$pretty_name"
+			abort_not_supported Release
 			;;
 		esac
 		;;
@@ -280,7 +284,7 @@ case "$kernel_name" in
 			configure_debian
 			;;
 		    (*)
-			abort "%s: Release not supported\n" "$pretty_name"
+			abort_not_supported Release
 			;;
 		esac
 		;;
@@ -290,12 +294,12 @@ case "$kernel_name" in
 			configure_opensuse
 			;;
 		    (*)
-			abort "%s: Release not supported\n" "$pretty_name"
+			abort_not_supported Release
 			;;
 		esac
 		;;
 	    (*)
-		abort "%s: Distro not supported\n" "$pretty_name"
+		abort_not_supported Distro
 		;;
 	esac
 	;;
@@ -309,6 +313,6 @@ case "$kernel_name" in
     #	configure_sunos
     #	;;
     (*)
-	abort "%s: Operating system not supported\n" "$pretty_name"
+	abort_not_supported "Operating system"
 	;;
 esac

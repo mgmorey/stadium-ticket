@@ -193,7 +193,7 @@ start_app() {
     else
 	case "$kernel_name" in
 	    (Linux)
-		case "$distro_name" in
+		case "$ID" in
 		    (debian|ubuntu)
 			restart_service=true
 			;;

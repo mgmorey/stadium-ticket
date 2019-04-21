@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-dbms-client-package: get database client package name
+# get-installed-dbms-package: get installed database package name
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -39,13 +39,20 @@ realpath() {
     fi
 }
 
+if [ $# -ne 1 ]; then
+    abort "%s: Invalid number of arguments\n" "$0"
+elif [ "$1" != client -a "$1" != server ]; then
+    abort "%s: Invalid argument -- %s\n" "$0" "$1"
+fi
+
+mode=$1
 script_dir=$(realpath "$(dirname "$0")")
 
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 sh -eu $script_dir/get-installed-packages.sh >$tmpfile
-sh -eu $script_dir/grep-dbms-package.sh client <$tmpfile || \
+sh -eu $script_dir/grep-dbms-package.sh $mode-core <$tmpfile || \
+    sh -eu $script_dir/grep-dbms-package.sh $mode <$tmpfile || \
     sh -eu $script_dir/grep-dbms-package.sh <$tmpfile || \
     true
-

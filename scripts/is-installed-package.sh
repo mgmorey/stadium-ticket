@@ -21,6 +21,10 @@ abort() {
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -49,16 +53,16 @@ eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (ubuntu)
-		status=$(dpkg-query -Wf '${Status}\n' $1)
+		status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
 		test "$status" = "install ok installed"
 	    	;;
 	    (opensuse-*)
 		rpm --query $1 >/dev/null 2>&1
 		;;
 	    (*)
-		abort "%s: Distro not supported\n" "$pretty_name"
+		abort_not_supported Distro
 		;;
 	esac
 	;;
@@ -69,6 +73,6 @@ case "$kernel_name" in
     # (SunOS)
     # 	;;
     (*)
-	abort "%s: Operating system not supported\n" "$pretty_name"
+	abort_not_supported "Operating system"
 	;;
 esac

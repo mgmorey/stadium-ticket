@@ -21,8 +21,50 @@ abort() {
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
+install_packages() {
+    if [ -n "$packages" ]; then
+	$installer install $install_opts $packages
+    fi
+}
+
+install_pattern() {
+    if [ -n "$pattern" ]; then
+	pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
+	$installer install $install_opts $pattern_opts $pattern
+    fi
+}
+
+parse_arguments() {
+    packages=
+    pattern=
+
+    while getopts hp: opt; do
+	case $opt in
+	    (p)
+		pattern=$OPTARG
+		;;
+	    (h)
+		usage
+		exit 0
+		;;
+	    (\?)
+		printf "%s\n" "" >&2
+		usage
+		exit 2
+		;;
+	esac
+    done
+
+    shift $(($OPTIND - 1))
+    packages="$@"
 }
 
 realpath() {
@@ -39,35 +81,47 @@ realpath() {
     fi
 }
 
-if [ $# -eq 0 ]; then
-    abort "%s\n" "$0: Not enough arguments"
-fi
+usage() {
+    if [ $# -gt 0 ]; then
+	printf "$@" >&2
+	printf "%s\n" "" >&2
+    fi
+
+    cat >&2 <<-EOM
+	Usage: $0: [-p PATTERN]
+	       $0: -h
+	EOM
+}
+
+parse_arguments "$@"
 
 script_dir=$(realpath "$(dirname "$0")")
 
 eval $(sh -eu $script_dir/get-os-release.sh -X)
 
-package_install_options=$(sh -eu $script_dir/get-package-install-options.sh)
-package_manager=$(sh -eu $script_dir/get-package-manager.sh)
+install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
+installer=$(sh -eu $script_dir/get-package-manager.sh)
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
+		install_pattern
+		install_packages
 		;;
 	    (*)
-		abort "%s: Distro not supported\n" "$pretty_name"
+		abort_not_supported Distro
 		;;
 	esac
 	;;
     (Darwin)
 	sh -eu $script_dir/install-homebrew.sh
+	install_packages
 	;;
     (FreeBSD|SunOS)
+	install_packages
 	;;
     (*)
-	abort "%s: Operating system not supported\n" "$pretty_name"
+	abort_not_supported "Operating system"
 	;;
 esac
-
-$package_manager install $package_install_options "$@"

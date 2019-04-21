@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# install-dependencies: install prerequisites for developing app
+# install-dependencies: install extra packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,10 @@
 abort() {
     printf "$@" >&2
     exit 1
+}
+
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
 
 assert() {
@@ -41,33 +45,5 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-eval $(sh -eu $script_dir/get-os-release.sh -X)
-
-installer=$(sh -eu $script_dir/get-package-manager.sh)
-install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
-
 packages=$(sh -eu $script_dir/get-extra-packages.sh)
-
-case "$kernel_name" in
-    (Linux)
-	case "$distro_name" in
-	    (debian|ubuntu|fedora|opensuse-*)
-		;;
-	    (*)
-		abort "%s: Distro not supported\n" "$pretty_name"
-		;;
-	esac
-	;;
-    (Darwin)
-	sh -eu $script_dir/install-homebrew.sh
-	;;
-    (FreeBSD|SunOS)
-	;;
-    (*)
-	abort "%s: Operating system not supported\n" "$pretty_name"
-	;;
-esac
-
-if [ -n "$packages" ]; then
-    $installer install $install_opts $packages
-fi
+sh -eu $script_dir/install-packages.sh $packages

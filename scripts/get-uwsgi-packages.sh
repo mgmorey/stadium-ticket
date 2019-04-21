@@ -18,7 +18,7 @@
 
 DARWIN_PKGS="uwsgi"
 
-DEBIAN_PKGS=" %s-venv rsync uwsgi uwsgi-plugin-%s"
+DEBIAN_PKGS="%s-venv rsync uwsgi uwsgi-plugin-%s"
 
 FEDORA_PKGS="uwsgi uwsgi-plugin-%s"
 
@@ -59,7 +59,7 @@ eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
     (Linux)
-	case "$distro_name" in
+	case "$ID" in
 	    (debian|ubuntu)
 		packages=$DEBIAN_PKGS
 		;;
@@ -85,19 +85,4 @@ case "$kernel_name" in
 	;;
 esac
 
-data=$(sh -eu $script_dir/get-python-package.sh)
-package_name=$(printf "%s" "$data" | awk '{print $1}')
-package_modifier=$(printf "%s" "$data" | awk '{print $2}')
-
-printf "%s\n" $package_name
-
-for package in $packages; do
-    case $package in
-	(*%s*)
-	    printf "$package\n" $package_modifier
-	    ;;
-	(*)
-	    printf "%s\n" $package
-	    ;;
-    esac
-done
+sh -eu $script_dir/get-python-packages.sh $packages
