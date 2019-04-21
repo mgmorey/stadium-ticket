@@ -83,7 +83,7 @@ case "$kernel_name" in
 	;;
 esac
 
-while getopts p: opt; do
+while getopts hp: opt; do
     case $opt in
 	(p)
 	    pattern=$OPTARG
