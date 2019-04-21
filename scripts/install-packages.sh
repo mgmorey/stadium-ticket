@@ -71,6 +71,6 @@ case "$kernel_name" in
 	;;
 esac
 
-installer=$(sh -eu $script_dir/get-package-manager.sh)
 install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
+installer=$(sh -eu $script_dir/get-package-manager.sh)
 $installer install $install_opts "$@"
