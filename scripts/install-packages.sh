@@ -30,12 +30,16 @@ assert() {
 }
 
 install_packages() {
-    $installer install $install_opts $packages
+    if [ -n "$packages" ]; then
+	$installer install $install_opts $packages
+    fi
 }
 
 install_pattern() {
-    pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
-    $installer install $install_opts $pattern_opts $pattern
+    if [ -n "$pattern" ]; then
+	pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
+	$installer install $install_opts $pattern_opts $pattern
+    fi
 }
 
 parse_arguments() {
