@@ -55,7 +55,7 @@ case "$kernel_name" in
     (Linux)
 	case "$ID" in
 	    (ubuntu)
-		status=$(dpkg-query -Wf '${Status}\n' $1)
+		status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
 		test "$status" = "install ok installed"
 	    	;;
 	    (opensuse-*)
