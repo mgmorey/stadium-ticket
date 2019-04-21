@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-dependencies: get list of prerequisites for developing app
+# get-extra-packages: get list of extra packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
