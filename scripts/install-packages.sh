@@ -43,6 +43,18 @@ realpath() {
     fi
 }
 
+usage() {
+    if [ $# -gt 0 ]; then
+	printf "$@" >&2
+	printf "%s\n" "" >&2
+    fi
+
+    cat >&2 <<-EOM
+	Usage: $0: [-p PATTERN]
+	       $0: -h
+	EOM
+}
+
 if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
@@ -71,6 +83,31 @@ case "$kernel_name" in
 	;;
 esac
 
+while getopts p: opt; do
+    case $opt in
+	(p)
+	    pattern=$OPTARG
+	    ;;
+	(h)
+	    usage
+	    exit 0
+	    ;;
+	(\?)
+	    printf "%s\n" "" >&2
+	    usage
+	    exit 2
+	    ;;
+    esac
+done
+
+shift $(($OPTIND - 1))
+
 install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
 installer=$(sh -eu $script_dir/get-package-manager.sh)
+
+if [ -n "${pattern-}" ]; then
+    pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
+    $installer install $install_opts $pattern_opts $pattern
+fi
+
 $installer install $install_opts "$@"

@@ -45,32 +45,5 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-eval $(sh -eu $script_dir/get-os-release.sh -X)
-
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian|ubuntu|fedora|opensuse-*)
-		;;
-	    (*)
-		abort_not_supported Distro
-		;;
-	esac
-	;;
-    (Darwin)
-	sh -eu $script_dir/install-homebrew.sh
-	;;
-    (FreeBSD|SunOS)
-	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
-
-installer=$(sh -eu $script_dir/get-package-manager.sh)
-install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
 packages=$(sh -eu $script_dir/get-extra-packages.sh)
-
-if [ -n "$packages" ]; then
-    $installer install $install_opts $packages
-fi
+sh -eu $script_dir/install-packages.sh $packages

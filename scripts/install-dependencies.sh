@@ -45,38 +45,6 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-eval $(sh -eu $script_dir/get-os-release.sh -X)
-
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian|ubuntu|fedora|opensuse-*)
-		;;
-	    (*)
-		abort_not_supported Distro
-		;;
-	esac
-	;;
-    (Darwin)
-	sh -eu $script_dir/install-homebrew.sh
-	;;
-    (FreeBSD|SunOS)
-	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
-
-install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
-installer=$(sh -eu $script_dir/get-package-manager.sh)
 packages=$(sh -eu $script_dir/get-dependencies.sh)
 pattern=$(sh -eu $script_dir/get-devel-pattern.sh)
-pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
-
-if [ -n "$pattern" ]; then
-    $installer install $install_opts $pattern_opts $pattern
-fi
-
-if [ -n "$packages" ]; then
-    $installer install $install_opts $packages
-fi
+sh -eu $script_dir/install-packages.sh -p $pattern $packages
