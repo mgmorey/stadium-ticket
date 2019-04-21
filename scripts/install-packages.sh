@@ -30,18 +30,18 @@ assert() {
 }
 
 install_packages() {
-    install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
-    installer=$(sh -eu $script_dir/get-package-manager.sh)
+    $installer install $install_opts $packages
+}
 
-    if [ -n "${pattern-}" ]; then
-	pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
-	$installer install $install_opts $pattern_opts $pattern
-    fi
-
-    $installer install $install_opts "$@"
+install_pattern() {
+    pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
+    $installer install $install_opts $pattern_opts $pattern
 }
 
 parse_arguments() {
+    packages=
+    pattern=
+
     while getopts hp: opt; do
 	case $opt in
 	    (p)
@@ -60,6 +60,7 @@ parse_arguments() {
     done
 
     shift $(($OPTIND - 1))
+    packages="$@"
 }
 
 realpath() {
@@ -88,16 +89,20 @@ usage() {
 	EOM
 }
 
-parse_arguments
+parse_arguments "$@"
 
 script_dir=$(realpath "$(dirname "$0")")
 
 eval $(sh -eu $script_dir/get-os-release.sh -X)
 
+install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
+installer=$(sh -eu $script_dir/get-package-manager.sh)
+
 case "$kernel_name" in
     (Linux)
 	case "$ID" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
+		install_pattern
 		install_packages
 		;;
 	    (*)
