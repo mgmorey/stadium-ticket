@@ -29,6 +29,39 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+install_packages() {
+    install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
+    installer=$(sh -eu $script_dir/get-package-manager.sh)
+
+    if [ -n "${pattern-}" ]; then
+	pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
+	$installer install $install_opts $pattern_opts $pattern
+    fi
+
+    $installer install $install_opts "$@"
+}
+
+parse_arguments() {
+    while getopts hp: opt; do
+	case $opt in
+	    (p)
+		pattern=$OPTARG
+		;;
+	    (h)
+		usage
+		exit 0
+		;;
+	    (\?)
+		printf "%s\n" "" >&2
+		usage
+		exit 2
+		;;
+	esac
+    done
+
+    shift $(($OPTIND - 1))
+}
+
 realpath() {
     assert [ -d "$1" ]
 
@@ -55,9 +88,7 @@ usage() {
 	EOM
 }
 
-if [ $# -eq 0 ]; then
-    abort "%s\n" "$0: Not enough arguments"
-fi
+parse_arguments
 
 script_dir=$(realpath "$(dirname "$0")")
 
@@ -67,6 +98,7 @@ case "$kernel_name" in
     (Linux)
 	case "$ID" in
 	    (debian|ubuntu|centos|fedora|readhat|opensuse-*)
+		install_packages
 		;;
 	    (*)
 		abort_not_supported Distro
@@ -75,39 +107,12 @@ case "$kernel_name" in
 	;;
     (Darwin)
 	sh -eu $script_dir/install-homebrew.sh
+	install_packages
 	;;
     (FreeBSD|SunOS)
+	install_packages
 	;;
     (*)
 	abort_not_supported "Operating system"
 	;;
 esac
-
-while getopts hp: opt; do
-    case $opt in
-	(p)
-	    pattern=$OPTARG
-	    ;;
-	(h)
-	    usage
-	    exit 0
-	    ;;
-	(\?)
-	    printf "%s\n" "" >&2
-	    usage
-	    exit 2
-	    ;;
-    esac
-done
-
-shift $(($OPTIND - 1))
-
-install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
-installer=$(sh -eu $script_dir/get-package-manager.sh)
-
-if [ -n "${pattern-}" ]; then
-    pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
-    $installer install $install_opts $pattern_opts $pattern
-fi
-
-$installer install $install_opts "$@"
