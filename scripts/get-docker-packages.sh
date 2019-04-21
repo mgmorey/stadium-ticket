@@ -32,7 +32,7 @@ FREEBSD_PKGS="docker-compose-%s"
 OPENSUSE_PKG="docker"
 OPENSUSE_PKGS="%s-docker-compose"
 
-REDHAT_PKG="docker-client"
+REDHAT_PKG="docker"
 REDHAT_PKGS="docker-compose"
 
 SUNOS_PKG=""
@@ -66,7 +66,7 @@ realpath() {
 
 script_dir=$(realpath "$(dirname "$0")")
 
-package=$(sh -eu $script_dir/get-docker-client-package.sh)
+package=$(sh -eu $script_dir/get-docker-package.sh)
 
 eval $(sh -eu $script_dir/get-os-release.sh -X)
 

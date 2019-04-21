@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-docker-client-package: get Docker client package name
+# get-docker-package: get Docker package name
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
