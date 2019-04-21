@@ -19,7 +19,8 @@
 DARWIN_PKG="docker"
 DARWIN_PKGS="docker-compose"
 
-DEBIAN_PKG="docker"
+DEBIAN_9_PKG="docker"
+DEBIAN_10_PKG="docker.io"
 DEBIAN_PKGS="docker-compose"
 
 FEDORA_PKG="docker"
@@ -38,7 +39,7 @@ SUNOS_PKG=""
 SUNOS_PKGS=""
 
 UBUNTU_PKG="docker.io"
-UBUNTU_PKGS="docker-compose docker-doc"
+UBUNTU_PKGS="docker-compose"
 
 abort() {
     printf "$@" >&2
@@ -73,7 +74,14 @@ case "$kernel_name" in
     (Linux)
 	case "$ID" in
 	    (debian)
-		packages="${package:-$DEBIAN_PKG} $DEBIAN_PKGS"
+		case "$VERSION_ID" in
+		    (9)
+			packages="${package:-$DEBIAN_9_PKG} $DEBIAN_PKGS"
+			;;
+		    (10)
+			packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
+			;;
+		esac
 		;;
 	    (fedora)
 		packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
@@ -100,4 +108,6 @@ case "$kernel_name" in
 	;;
 esac
 
-sh -eu $script_dir/get-python-packages.sh $packages
+if [ -n "${packages-}" ]; then
+    sh -eu $script_dir/get-python-packages.sh $packages
+fi
