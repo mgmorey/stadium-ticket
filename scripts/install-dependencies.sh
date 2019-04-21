@@ -47,9 +47,6 @@ script_dir=$(realpath "$(dirname "$0")")
 
 eval $(sh -eu $script_dir/get-os-release.sh -X)
 
-packages=$(sh -eu $script_dir/get-dependencies.sh)
-pattern=$(sh -eu $script_dir/get-devel-pattern.sh)
-
 case "$kernel_name" in
     (Linux)
 	case "$ID" in
@@ -70,8 +67,10 @@ case "$kernel_name" in
 	;;
 esac
 
-installer=$(sh -eu $script_dir/get-package-manager.sh)
 install_opts=$(sh -eu $script_dir/get-package-install-options.sh)
+installer=$(sh -eu $script_dir/get-package-manager.sh)
+packages=$(sh -eu $script_dir/get-dependencies.sh)
+pattern=$(sh -eu $script_dir/get-devel-pattern.sh)
 pattern_opts=$(sh -eu $script_dir/get-pattern-install-options.sh)
 
 if [ -n "$pattern" ]; then
