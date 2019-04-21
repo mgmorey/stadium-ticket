@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-docker-client-packages: get Docker client package names
+# get-docker-packages: get Docker package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ FREEBSD_PKG="docker"
 FREEBSD_PKGS="docker-compose-%s"
 
 OPENSUSE_PKG="docker"
-OPENSUSE_PKGS="docker-compose"
+OPENSUSE_PKGS="%s-docker-compose"
 
 REDHAT_PKG="docker-client"
 REDHAT_PKGS="docker-compose"
