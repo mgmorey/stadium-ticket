@@ -51,11 +51,17 @@ eval $(sh -eu $script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
     (Darwin)
-	if ! brew info >/dev/null 2>&1; then
-	    /usr/bin/ruby -e $expr "$(curl -fsSL $HOMEBREW_URL)"
-	fi
     	;;
     (*)
 	abort_not_supported "Operating system"
 	;;
 esac
+
+xcode-select --install 2>/dev/null || true
+
+if brew --version >/dev/null 2>&1; then
+    brew update
+    brew upgrade
+else
+    /usr/bin/ruby -e "$(curl -fsSL $HOMEBREW_URL)"
+fi
