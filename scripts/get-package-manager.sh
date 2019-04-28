@@ -51,16 +51,16 @@ case "$kernel_name" in
     (Linux)
 	case "$ID" in
 	    (debian|ubuntu)
-		printf apt-get
+		printf "%s\n" apt-get
 		;;
 	    (fedora)
-		printf dnf
+		printf "%s\n" dnf
 		;;
 	    (redhat|centos)
-		printf yum
+		printf "%s\n" yum
 		;;
 	    (opensuse-*)
-		printf zypper
+		printf "%s\n" zypper
 		;;
 	    (*)
 		abort_not_supported Distro
@@ -68,10 +68,10 @@ case "$kernel_name" in
 	esac
 	;;
     (Darwin)
-	printf brew
+	printf "%s\n" brew
 	;;
     (FreeBSD|SunOS)
-	printf pkg
+	printf "%s\n" pkg
 	;;
     (*)
 	abort_not_supported "Operating system"

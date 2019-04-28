@@ -82,4 +82,6 @@ case "$kernel_name" in
 	;;
 esac
 
-sh -eu $script_dir/get-python-packages.sh $packages
+if [ "${packages-}" ]; then
+    sh -eu $script_dir/get-python-packages.sh $packages
+fi
