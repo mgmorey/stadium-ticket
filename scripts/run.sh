@@ -92,5 +92,5 @@ if [ "$pipenv" != false ]; then
 elif [ "$pip" != false ]; then
     pip_run "$@"
 else
-    abort "$0: No pip nor pipenv in path"
+    abort "%s: No pip nor pipenv in path\n" "$0"
 fi
