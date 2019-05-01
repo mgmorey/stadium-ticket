@@ -27,17 +27,16 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-realpath() {
+get_path() {
     assert [ -d "$1" ]
+    command=$(which realpath)
 
-    if [ -x /usr/bin/realpath ]; then
-	/usr/bin/realpath "$1"
+    if [ -n "$command" ]; then
+	$command "$1"
+    elif expr "$1" : '/.*' >/dev/null; then
+	printf "%s\n" "$1"
     else
-	if expr "$1" : '/.*' >/dev/null; then
-	    printf "%s\n" "$1"
-	else
-	    printf "%s\n" "$PWD/${1#./}"
-	fi
+	printf "%s\n" "$PWD/${1#./}"
     fi
 }
 
@@ -56,7 +55,7 @@ if [ $(id -u) -eq 0 ]; then
     abort "%s\n" "$0: Must be run as a non-privileged user"
 fi
 
-script_dir=$(realpath "$(dirname "$0")")
+script_dir=$(get_path "$(dirname "$0")")
 
 source_dir=$script_dir/..
 
