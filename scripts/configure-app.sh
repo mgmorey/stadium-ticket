@@ -212,7 +212,7 @@ print_file_tail() {
 }
 
 signal_app() {
-    pid=$(sh -eu $script_dir/read-file.sh $APP_PIDFILE)
+    pid=$($script_dir/read-file.sh $APP_PIDFILE)
     result=1
 
     if [ -z "$pid" ]; then
@@ -261,7 +261,7 @@ tail_log_file() {
     fi
 }
 
-eval $(sh -eu $script_dir/get-os-release.sh -X)
+eval $($script_dir/get-os-release.sh -X)
 
 configure_common
 

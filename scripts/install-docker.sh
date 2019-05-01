@@ -44,5 +44,5 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
-packages=$(sh -eu $script_dir/get-docker-packages.sh)
-sh -eu $script_dir/install-packages.sh $packages
+packages=$($script_dir/get-docker-packages.sh)
+$script_dir/install-packages.sh $packages

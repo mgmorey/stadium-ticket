@@ -64,7 +64,7 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
-package=$(sh -eu $script_dir/get-installed-dbms-package.sh client)
+package=$($script_dir/get-installed-dbms-package.sh client)
 
 case "$package" in
     (*-client-core-*)
@@ -72,7 +72,7 @@ case "$package" in
 	;;
 esac
 
-eval $(sh -eu $script_dir/get-os-release.sh -X)
+eval $($script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
     (Linux)
@@ -119,4 +119,4 @@ case "$kernel_name" in
 	;;
 esac
 
-sh -eu $script_dir/get-python-packages.sh $packages
+$script_dir/get-python-packages.sh $packages

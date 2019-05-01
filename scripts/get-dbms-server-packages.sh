@@ -58,7 +58,7 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
-package=$(sh -eu $script_dir/get-installed-dbms-package.sh server)
+package=$($script_dir/get-installed-dbms-package.sh server)
 
 case "$package" in
     (*-server-core-*)
@@ -66,7 +66,7 @@ case "$package" in
 	;;
 esac
 
-eval $(sh -eu $script_dir/get-os-release.sh -X)
+eval $($script_dir/get-os-release.sh -X)
 
 case "$kernel_name" in
     (Linux)

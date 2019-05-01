@@ -246,9 +246,9 @@ trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 for dryrun in true false; do
     if [ $dryrun = false ]; then
-	if ! sh -eu $script_dir/is-installed-package.sh uwsgi; then
-	    packages=$(sh -eu $script_dir/get-uwsgi-packages.sh)
-	    sh -eu $script_dir/install-packages.sh $packages
+	if ! $script_dir/is-installed-package.sh uwsgi; then
+	    packages=$($script_dir/get-uwsgi-packages.sh)
+	    $script_dir/install-packages.sh $packages
 	    systemctl enable uwsgi
 	    systemctl start uwsgi
 	fi

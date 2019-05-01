@@ -103,10 +103,10 @@ trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 cd $source_dir
 
-pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
+pipenv=$($script_dir/get-python-command.sh pipenv)
 
 if [ "$pipenv" = false ]; then
-    pip=$(sh -eu $script_dir/get-python-command.sh pip)
+    pip=$($script_dir/get-python-command.sh pip)
 fi
 
 if [ "$pipenv" != false ]; then

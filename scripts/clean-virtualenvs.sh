@@ -40,7 +40,7 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
-pipenv=$(sh -eu $script_dir/get-python-command.sh pipenv)
+pipenv=$($script_dir/get-python-command.sh pipenv)
 
 if [ "$pipenv" != false ]; then
     if $pipenv --venv >/dev/null 2>&1; then
