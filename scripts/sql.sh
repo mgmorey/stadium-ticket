@@ -31,13 +31,13 @@ assert() {
 exec_sql_cli() {
     case "$DATABASE_DIALECT" in
 	(mysql)
-	    ${1-} "$DATABASE_DIALECT" \
-		-h"${DATABASE_HOST:-localhost}" \
-		-u"${DATABASE_USER:-$USER}" \
-		-p"${DATABASE_PASSWORD:-}"
+	    ${1+$1 }$DATABASE_DIALECT \
+		-h${DATABASE_HOST:-localhost} \
+		-u${DATABASE_USER:-$USER} \
+		-p${DATABASE_PASSWORD:-}
 	    ;;
 	(sqlite)
-	    ${1-} sqlite3 $DATABASE_FILENAME
+	    ${1+$1 }sqlite3 $DATABASE_FILENAME
 	    ;;
     esac
 }
@@ -47,7 +47,7 @@ get_path() {
     command=$(which realpath)
 
     if [ -n "$command" ]; then
-	$command "$1"
+	$command $1
     elif expr "$1" : '/.*' >/dev/null; then
 	printf "%s\n" "$1"
     else
@@ -58,11 +58,11 @@ get_path() {
 parse_arg() {
     case "$1" in
 	(*.sql)
-	    file="$1"
+	    file=$1
 	    ;;
 	(*.sqlite)
 	    if [ "$DATABASE_DIALECT" = sqlite ]; then
-		DATABASE_FILENAME="$1"
+		DATABASE_FILENAME=$1
 	    else
 		abort "Invalid SQL script name: %s\n" "$1"
 	    fi
