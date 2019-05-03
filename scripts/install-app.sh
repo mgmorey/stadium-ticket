@@ -160,6 +160,24 @@ install_source_files() {
     done
 }
 
+install_uwsgi() {
+    if ! $script_dir/is-installed-package.sh uwsgi; then
+	packages=$($script_dir/get-uwsgi-packages.sh)
+	$script_dir/install-packages.sh $packages
+
+	case "$kernel_name" in
+	    (Linux)
+		systemctl enable uwsgi
+		systemctl start uwsgi
+		;;
+	    (Darwin)
+		brew services start uwsgi
+		;;
+	esac
+    fi
+
+}
+
 get_path() {
     assert [ -d "$1" ]
     command=$(which realpath)
@@ -219,7 +237,16 @@ start_app() {
 
 start_service() {
     /bin/rm -f $APP_PIDFILE
-    service uwsgi restart
+
+    case "$kernel_name" in
+	(Linux)
+	    service uwsgi restart
+	    ;;
+	(Darwin)
+	    brew services restart uwsgi
+	    ;;
+    esac
+
     printf "%s\n" "Waiting for service and app to start"
     sleep $WAIT_INTERVAL
     i=0
@@ -246,21 +273,7 @@ trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 for dryrun in true false; do
     if [ $dryrun = false ]; then
-	if ! $script_dir/is-installed-package.sh uwsgi; then
-	    packages=$($script_dir/get-uwsgi-packages.sh)
-	    $script_dir/install-packages.sh $packages
-
-	    case "$kernel_name" in
-		(Linux)
-		    systemctl enable uwsgi
-		    systemctl start uwsgi
-		    ;;
-		(Darwin)
-		    brew services start uwsgi
-		    ;;
-	    esac
-	fi
-
+	install_uwsgi
 	stage_app
     fi
 
