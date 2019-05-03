@@ -18,6 +18,8 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
+PLUGINS="python27_plugin.so python36_plugin.so"
+PREFIX=/usr/local/opt/uwsgi
 POLL_COUNT=20
 WAIT_INTERVAL=2
 
@@ -28,6 +30,19 @@ abort() {
 
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
+build_uwsgi_binary() {
+    case $1 in
+	(python2*)
+	    python uwsgiconfig.py --plugin plugins/python core ${1#_*}
+	    ;;
+	(python3*)
+	    python3 uwsgiconfig.py --plugin plugins/python core ${1#_*}
+	    ;;
+	(uwsgi)
+	    python uwsgiconfig.py --plugin plugins/python core ${1#_*}
+    esac
 }
 
 change_ownership() {
@@ -164,18 +179,49 @@ install_uwsgi() {
     if ! $script_dir/is-installed-package.sh uwsgi; then
 	packages=$($script_dir/get-uwsgi-packages.sh)
 	$script_dir/install-packages.sh $packages
-
-	case "$kernel_name" in
-	    (Linux)
-		systemctl enable uwsgi
-		systemctl start uwsgi
-		;;
-	    (Darwin)
-		brew services start uwsgi
-		;;
-	esac
     fi
 
+    case "$kernel_name" in
+	(Darwin)
+	    install_uwsgi_binaries uwsgi $PLUGINS
+	    ;;
+    esac
+
+    start_uwsgi
+}
+
+install_uwsgi_binaries() {
+    (
+	if [ ! -d $HOME/git/uwsgi ]; then
+	    cd && mkdir -p git && cd git
+	    git clone https://github.com/unbit/uwsgi.git
+	fi
+
+	cd $HOME/git/uwsgi
+
+	for binary; do
+	    install_uwsgi_binary $binary
+	done
+    )
+}
+
+install_uwsgi_binary() {
+    if [ ! -x $1 ]; then
+	build_uwsgi_binary $1
+    fi
+
+    case $binary in
+	(*.so)
+	    if [ ! -x $PREFIX/libexec/uwsgi/$1 ]; then
+		install_file 755 $1 $PREFIX/libexec/uwsgi/$1
+	    fi
+	    ;;
+	(*)
+	    if [ ! -x $PREFIX/bin/$1 ]; then
+		install_file 755 $1 $PREFIX/bin/$1
+	    fi
+	    ;;
+    esac
 }
 
 get_path() {
@@ -262,6 +308,18 @@ start_service() {
     if [ $i -ge $POLL_COUNT ]; then
 	printf "%s\n" "App did not start in a timely fashion" >&2
     fi
+}
+
+start_uwsgi() {
+    case "$kernel_name" in
+	(Linux)
+	    systemctl enable uwsgi
+	    systemctl start uwsgi
+	    ;;
+	(Darwin)
+	    brew services start uwsgi
+	    ;;
+    esac
 }
 
 script_dir=$(get_path "$(dirname "$0")")
