@@ -36,10 +36,12 @@ abort_not_supported() {
 
 check_permissions() {
     for file; do
-	if [ -e $file -a ! -w $file ]; then
-	    abort_insufficient_permissions $file
+	if [ -e $file -a -w $file ]; then
+	    :
 	elif [ $file != . -a $file != / ]; then
 	    check_permissions $(dirname $file)
+	else
+	    abort_insufficient_permissions $file
 	fi
     done
 }
@@ -49,19 +51,20 @@ configure_common() {
     APP_DIR=/opt/$APP_NAME
     APP_ETCDIR=/etc/opt/$APP_NAME
     APP_VARDIR=/var/opt/$APP_NAME
-
-    # Set additional parameters from directory variables
-    APP_CONFIG=$APP_ETCDIR/app.ini
-    APP_DATABASE=/tmp/stadium-tickets.sqlite
 }
 
 configure_darwin() {
+    # Set application directory names from name variable
+    APP_DIR=/usr/local/opt/$APP_NAME
+    APP_ETCDIR=/usr/local/etc/opt/$APP_NAME
+    APP_VARDIR=/usr/local/var/opt/$APP_NAME
+
     # Set application group and user identification
     APP_GID=wheel
     APP_UID=root
 
     # Set uWSGI-specific directories
-    UWSGI_ETCDIR=/etc/uwsgi
+    UWSGI_ETCDIR=/usr/local/etc/uwsgi
     UWSGI_LOGDIR=
     UWSGI_RUNDIR=
 
@@ -182,7 +185,9 @@ configure_sunos() {
 }
 
 remove_database() {
-    remove_files "$APP_DATABASE"
+    if [ -n "${DATABASE_FILENAME-}" ]; then
+	remove_files $DATABASE_FILENAME
+    fi
 }
 
 remove_files() {
@@ -303,9 +308,9 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
-    # (Darwin)
-    #	configure_darwin
-    #	;;
+    (Darwin)
+    	configure_darwin
+    	;;
     # (FreeBSD)
     #	configure_freebsd
     #	;;
@@ -316,3 +321,6 @@ case "$kernel_name" in
 	abort_not_supported "Operating system"
 	;;
 esac
+
+# Set additional parameters from directory variables
+APP_CONFIG=$APP_ETCDIR/app.ini
