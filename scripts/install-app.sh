@@ -36,7 +36,7 @@ change_ownership() {
     if [ "$(id -un)" != "$APP_UID"  -o "$(id -gn)" != "$APP_GID" ]; then
 	check_permissions "$@"
 
-	if [ "$dryrun" = false ]; then
+	if [ "$dryrun" = false -a $(id -u) -eq 0 ]; then
 	    printf "Changing ownership of directory %s\n" "$@"
 	    chown -R $APP_UID:$APP_GID "$@"
 	fi
@@ -249,8 +249,16 @@ for dryrun in true false; do
 	if ! $script_dir/is-installed-package.sh uwsgi; then
 	    packages=$($script_dir/get-uwsgi-packages.sh)
 	    $script_dir/install-packages.sh $packages
-	    systemctl enable uwsgi
-	    systemctl start uwsgi
+
+	    case "$kernel_name" in
+		(Linux)
+		    systemctl enable uwsgi
+		    systemctl start uwsgi
+		    ;;
+		(Darwin)
+		    brew services start uwsgi
+		    ;;
+	    esac
 	fi
 
 	stage_app

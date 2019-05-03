@@ -36,7 +36,7 @@ get_path() {
 }
 
 remove_app() {
-    remove_files $APP_RUNDIR $APP_DIR $APP_VARDIR $APP_LOGFILE $APP_DATABASE
+    remove_files $APP_RUNDIR $APP_DIR $APP_VARDIR $APP_LOGFILE ${DATABASE_FILENAME-}
 }
 
 remove_config() {
