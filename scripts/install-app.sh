@@ -219,6 +219,9 @@ start_app() {
 			;;
 		esac
 		;;
+	    (Darwin)
+		restart_service=true
+		;;
 	    (*)
 		restart_service=false
 		;;
