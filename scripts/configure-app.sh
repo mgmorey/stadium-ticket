@@ -76,7 +76,7 @@ configure_darwin() {
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    UWSGI_APPDIRS=
+    UWSGI_APPDIRS="apps-available apps-enabled"
 }
 
 configure_debian() {
