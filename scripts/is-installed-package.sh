@@ -65,8 +65,9 @@ case "$kernel_name" in
 		;;
 	esac
 	;;
-    # (Darwin)
-    # 	;;
+    (Darwin)
+	brew list $1 >/dev/null 2>&1
+    	;;
     # (FreeBSD)
     # 	;;
     # (SunOS)
