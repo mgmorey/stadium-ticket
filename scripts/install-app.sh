@@ -18,8 +18,9 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
-PLUGINS="python27_plugin.so python36_plugin.so"
-PREFIX=/usr/local/opt/uwsgi
+PLUGINS="python2_plugin.so python3_plugin.so"
+BINARY_PREFIX=/usr/local/bin
+OBJECT_PREFIX=/usr/local/bin
 POLL_COUNT=20
 WAIT_INTERVAL=2
 
@@ -33,15 +34,19 @@ assert() {
 }
 
 build_uwsgi_binary() {
+    if [ -x $1 ]; then
+	return
+    fi
+
     case $1 in
 	(python2*)
-	    python uwsgiconfig.py --plugin plugins/python core ${1#_*}
+	    python uwsgiconfig.py --plugin plugins/python core ${1%_*}
 	    ;;
 	(python3*)
-	    python3 uwsgiconfig.py --plugin plugins/python core ${1#_*}
+	    python3 uwsgiconfig.py --plugin plugins/python core ${1%_*}
 	    ;;
 	(uwsgi)
-	    python uwsgiconfig.py --plugin plugins/python core ${1#_*}
+	    python uwsgiconfig.py --build core
     esac
 }
 
@@ -176,18 +181,14 @@ install_source_files() {
 }
 
 install_uwsgi() {
-    if ! $script_dir/is-installed-package.sh uwsgi; then
-	packages=$($script_dir/get-uwsgi-packages.sh)
-	$script_dir/install-packages.sh $packages
+    if [ $is_darwin = true ]; then
+	install_uwsgi_binaries uwsgi $PLUGINS
+    else
+	if ! $script_dir/is-installed-package.sh uwsgi; then
+	    packages=$($script_dir/get-uwsgi-packages.sh)
+	    $script_dir/install-packages.sh $packages
+	fi
     fi
-
-    case "$kernel_name" in
-	(Darwin)
-	    install_uwsgi_binaries uwsgi $PLUGINS
-	    ;;
-    esac
-
-    start_uwsgi
 }
 
 install_uwsgi_binaries() {
@@ -200,25 +201,27 @@ install_uwsgi_binaries() {
 	cd $HOME/git/uwsgi
 
 	for binary; do
+	    build_uwsgi_binary $binary
+	done
+
+	python3 setup.py install
+
+	for binary; do
 	    install_uwsgi_binary $binary
 	done
     )
 }
 
 install_uwsgi_binary() {
-    if [ ! -x $1 ]; then
-	build_uwsgi_binary $1
-    fi
-
     case $binary in
-	(*.so)
-	    if [ ! -x $PREFIX/libexec/uwsgi/$1 ]; then
-		install_file 755 $1 $PREFIX/libexec/uwsgi/$1
+	(*_plugin.so)
+	    if [ ! -x $OBJECT_PREFIX/$1 ]; then
+		install_file 755 $1 $OBJECT_PREFIX/$1
 	    fi
 	    ;;
-	(*)
-	    if [ ! -x $PREFIX/bin/$1 ]; then
-		install_file 755 $1 $PREFIX/bin/$1
+	(uwsgi)
+	    if [ ! -x $BINARY_PREFIX/$1 ]; then
+		install_file 755 $1 $BINARY_PREFIX/$1
 	    fi
 	    ;;
     esac
@@ -287,14 +290,11 @@ start_app() {
 start_service() {
     /bin/rm -f $APP_PIDFILE
 
-    case "$kernel_name" in
-	(Linux)
-	    service uwsgi restart
-	    ;;
-	(Darwin)
-	    brew services restart uwsgi
-	    ;;
-    esac
+    if [ $is_darwin = true ]; then
+	: # brew services restart uwsgi
+    else
+	service uwsgi restart
+    fi
 
     printf "%s\n" "Waiting for service and app to start"
     sleep $WAIT_INTERVAL
@@ -311,15 +311,12 @@ start_service() {
 }
 
 start_uwsgi() {
-    case "$kernel_name" in
-	(Linux)
-	    systemctl enable uwsgi
-	    systemctl start uwsgi
-	    ;;
-	(Darwin)
-	    brew services start uwsgi
-	    ;;
-    esac
+    if [ $is_darwin = true ]; then
+	: # brew services start uwsgi
+    else
+	systemctl enable uwsgi
+	systemctl start uwsgi
+    fi
 }
 
 script_dir=$(get_path "$(dirname "$0")")
@@ -327,6 +324,15 @@ script_dir=$(get_path "$(dirname "$0")")
 source_dir=$script_dir/..
 
 . $script_dir/configure-app.sh
+
+case "$kernel_name" in
+    (Darwin)
+	is_darwin=true
+	;;
+    (*)
+	is_darwin=false
+	;;
+esac
 
 cd $source_dir
 tmpfile=$(mktemp)
