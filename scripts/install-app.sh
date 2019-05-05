@@ -151,7 +151,7 @@ install_dir() {
 	assert [ -r "$source_dir" ]
 	printf "Installing files in %s\n" "$target_dir"
 	mkdir -p $target_dir
-	rsync -a $source_dir/* $target_dir
+	rsync -a "$source_dir"/* $target_dir
     fi
 }
 

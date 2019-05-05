@@ -78,7 +78,7 @@ script_dir=$(get_path "$(dirname "$0")")
 source_dir=$script_dir/..
 
 printf "%s\n" "Loading .env environment variables"
-. $source_dir/.env
+. "$source_dir/.env"
 
 host=${FLASK_HOST-localhost}
 port=${FLASK_PORT-5000}
