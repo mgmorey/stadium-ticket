@@ -20,6 +20,7 @@ export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 PIPENV_OPTS=--three
+PYTHON=python3
 VENV_FILENAME=.venv
 VENV_REQUIREMENTS="requirements-dev.txt requirements.txt"
 
@@ -64,7 +65,8 @@ pipenv_lock() {
 pipenv_update() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	if pyenv --version >/dev/null 2>&1; then
-	    pipenv --python $(pyenv which python)
+	    python=$(pyenv which $PYTHON)
+	    pipenv --python $python
 	else
 	    pipenv $PIPENV_OPTS
 	fi
