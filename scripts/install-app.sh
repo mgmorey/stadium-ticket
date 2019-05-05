@@ -18,14 +18,16 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
-PLUGINS="python3_plugin.so"
+PREFIX=/usr/local/opt/uwsgi
 
-BINARY_PREFIX=/usr/local/bin
-OBJECT_PREFIX=/usr/local/bin
+BINARY_DIR=$PREFIX/bin
+OBJECT_DIR=$PREFIX/lib/plugin
+
+PLUGIN=python3_plugin.so
 PYTHON=python3
 
-POLL_COUNT=20
-WAIT_INTERVAL=2
+WAIT_INITIAL_PERIOD=2
+WAIT_POLLING_COUNT=20
 
 abort() {
     printf "$@" >&2
@@ -181,18 +183,13 @@ install_source_files() {
 }
 
 install_uwsgi() {
-    for binary in /usr/local/bin/uwsgi /usr/bin/uwsgi; do
-	if [ -x $binary ]; then
-	    return
-	fi
-    done
-
     if [ $is_darwin = true ]; then
-	install_uwsgi_binaries uwsgi $PLUGINS
+	install_uwsgi_binaries uwsgi $PLUGIN
     else
 	if ! $script_dir/is-installed-package.sh uwsgi; then
 	    packages=$($script_dir/get-uwsgi-packages.sh)
 	    $script_dir/install-packages.sh $packages
+	    start_uwsgi
 	fi
     fi
 }
@@ -219,13 +216,20 @@ install_uwsgi_binaries() {
 install_uwsgi_binary() {
     case $binary in
 	(*_plugin.so)
-	    if [ ! -x $OBJECT_PREFIX/$1 ]; then
-		install_file 755 $1 $OBJECT_PREFIX/$1
+	    if [ ! -x $OBJECT_DIR/$1 ]; then
+		install_file 755 $1 $OBJECT_DIR/$1
 	    fi
 	    ;;
 	(uwsgi)
-	    if [ ! -x $BINARY_PREFIX/$1 ]; then
-		install_file 755 $1 $BINARY_PREFIX/$1
+	    if [ ! -x $BINARY_DIR/$1 ]; then
+		install_file 755 $1 $BINARY_DIR/$1
+
+		if [ $BINARY_DIR != /usr/local/bin ]; then
+		    if [ ! -x /usr/local/bin/$1 ]; then
+			printf "Creating link %s\n" "/usr/local/bin/$1"
+			/bin/ln -sf $BINARY_DIR/$1 /usr/local/bin/$1
+		    fi
+		fi
 	    fi
 	    ;;
     esac
@@ -272,9 +276,6 @@ start_app() {
 			;;
 		esac
 		;;
-	    (Darwin)
-		restart_service=true
-		;;
 	    (*)
 		restart_service=false
 		;;
@@ -286,18 +287,15 @@ start_app() {
     if [ $restart_service = true ]; then
 	start_service
     elif [ $signal_received = false ]; then
-	printf "%s\n" "Waiting for app to restart automatically"
+	printf "Waiting for app %s to restart automatically\n" "$APP_NAME"
 	sleep $KILL_INTERVAL
     fi
 }
 
 start_service() {
     /bin/rm -f $APP_PIDFILE
-
-    if [ $is_darwin = false ]; then
-	service uwsgi restart
-	wait_for_service
-    fi
+    service uwsgi restart
+    wait_for_service
 }
 
 start_uwsgi() {
@@ -309,15 +307,15 @@ start_uwsgi() {
 
 wait_for_service() {
     printf "%s\n" "Waiting for service and app to start"
-    sleep $WAIT_INTERVAL
+    sleep $WAIT_INITIAL_PERIOD
     i=0
 
-    while [ ! -e $APP_PIDFILE -a $i -lt $POLL_COUNT ]; do
+    while [ ! -e $APP_PIDFILE -a $i -lt $WAIT_POLLING_COUNT ]; do
 	sleep 1
 	i=$((i + 1))
     done
 
-    if [ $i -ge $POLL_COUNT ]; then
+    if [ $i -ge $WAIT_POLLING_COUNT ]; then
 	printf "%s\n" "App did not start in a timely fashion" >&2
     fi
 }
@@ -352,8 +350,10 @@ for dryrun in true false; do
 done
 
 start_app
-tail_log_file
 
 if [ -e $APP_PIDFILE ]; then
-    printf "App %s installed and started successfully\n" $APP_NAME
+    tail_log_file
+    printf "App %s installed and started successfully\n" "$APP_NAME"
+else
+    printf "App %s installed successfully\n" "$APP_NAME"
 fi
