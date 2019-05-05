@@ -18,9 +18,12 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
-PLUGINS="python2_plugin.so python3_plugin.so"
+PLUGINS="python3_plugin.so"
+
 BINARY_PREFIX=/usr/local/bin
 OBJECT_PREFIX=/usr/local/bin
+PYTHON=python3
+
 POLL_COUNT=20
 WAIT_INTERVAL=2
 
@@ -39,14 +42,11 @@ build_uwsgi_binary() {
     fi
 
     case $1 in
-	(python2*)
-	    python uwsgiconfig.py --plugin plugins/python core ${1%_*}
-	    ;;
 	(python3*)
-	    python3 uwsgiconfig.py --plugin plugins/python core ${1%_*}
+	    $PYTHON uwsgiconfig.py --plugin plugins/python core ${1%_*}
 	    ;;
 	(uwsgi)
-	    python uwsgiconfig.py --build core
+	    $PYTHON uwsgiconfig.py --build core
     esac
 }
 
@@ -181,6 +181,12 @@ install_source_files() {
 }
 
 install_uwsgi() {
+    for binary in /usr/local/bin/uwsgi /usr/bin/uwsgi; do
+	if [ -x $binary ]; then
+	    return
+	fi
+    done
+
     if [ $is_darwin = true ]; then
 	install_uwsgi_binaries uwsgi $PLUGINS
     else
@@ -203,8 +209,6 @@ install_uwsgi_binaries() {
 	for binary; do
 	    build_uwsgi_binary $binary
 	done
-
-	python3 setup.py install
 
 	for binary; do
 	    install_uwsgi_binary $binary
@@ -290,12 +294,20 @@ start_app() {
 start_service() {
     /bin/rm -f $APP_PIDFILE
 
-    if [ $is_darwin = true ]; then
-	: # brew services restart uwsgi
-    else
+    if [ $is_darwin = false ]; then
 	service uwsgi restart
+	wait_for_service
     fi
+}
 
+start_uwsgi() {
+    if [ $is_darwin = false ]; then
+	systemctl enable uwsgi
+	systemctl start uwsgi
+    fi
+}
+
+wait_for_service() {
     printf "%s\n" "Waiting for service and app to start"
     sleep $WAIT_INTERVAL
     i=0
@@ -307,15 +319,6 @@ start_service() {
 
     if [ $i -ge $POLL_COUNT ]; then
 	printf "%s\n" "App did not start in a timely fashion" >&2
-    fi
-}
-
-start_uwsgi() {
-    if [ $is_darwin = true ]; then
-	: # brew services start uwsgi
-    else
-	systemctl enable uwsgi
-	systemctl start uwsgi
     fi
 }
 
