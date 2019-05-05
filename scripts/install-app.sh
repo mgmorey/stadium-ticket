@@ -58,7 +58,7 @@ change_ownership() {
     if [ "$(id -un)" != "$APP_UID"  -o "$(id -gn)" != "$APP_GID" ]; then
 	check_permissions "$@"
 
-	if [ "$dryrun" = false -a $(id -u) -eq 0 ]; then
+	if [ $dryrun = false -a $(id -u) -eq 0 ]; then
 	    printf "Changing ownership of directory %s\n" "$@"
 	    chown -R $APP_UID:$APP_GID "$@"
 	fi
@@ -69,19 +69,19 @@ create_app_dirs() {
     assert [ $# -ge 1 ]
     check_permissions "$@"
 
-    if [ "$dryrun" = false ]; then
+    if [ $dryrun = false ]; then
 	printf "Creating directory %s\n" "$@"
 	mkdir -p "$@"
     fi
 }
 
 create_app_ini() {
-    assert [ $# -eq 2 ] && [ -n "$1" ] && [ -r "$1" ]
-    source="$1"
-    target="$2"
+    assert [ $# -eq 2 ] && [ -n "$1" ] && [ -r "$1" ] && [ -n "$2" ]
+    source=$1
+    target=$2
     check_permissions "$target"
 
-    if [ "$dryrun" = false ]; then
+    if [ $dryrun = false ]; then
 	assert [ -r "$source" ]
 	printf "Generating file %s\n" "$target"
 	mkdir -p "$(dirname "$target")"
@@ -91,7 +91,7 @@ create_app_ini() {
 
 enable_app() {
     assert [ $# -ge 1 ] && [ -n "$1" ]
-    create_app_ini app.ini "$1"
+    create_app_ini app.ini $1
     source=$1
     shift
 
@@ -99,7 +99,7 @@ enable_app() {
 	target=$UWSGI_ETCDIR/$name/$APP_NAME.ini
 	check_permissions "$target"
 
-	if [ "$dryrun" = false ]; then
+	if [ $dryrun = false ]; then
 	    assert [ -r "$source" ]
 	    printf "Creating link %s\n" "$target"
 	    mkdir -p "$(dirname "$target")"
@@ -135,40 +135,37 @@ install_dir() {
     target_dir="$2"
     check_permissions "$target_dir"
 
-    if [ "$dryrun" = false ]; then
+    if [ $dryrun = false ]; then
 	assert [ -r "$source_dir" ]
 	printf "Installing files in %s\n" "$target_dir"
-	mkdir -p "$target_dir"
-	rsync -a "$source_dir"/* "$target_dir"
+	mkdir -p $target_dir
+	rsync -a $source_dir/* $target_dir
     fi
 }
 
 install_file() {
-    assert [ $# -eq 3 ] && [ -n "$1" ] && [ -n "$2" ] && [ -r "$2" ]
-    mode="$1"
-    source="$2"
-    target="$3"
-    check_permissions "$target"
+    assert [ $# -eq 3 ] && [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
+    mode=$1
+    source=$2
+    target=$3
+    check_permissions $target
 
-    if [ "$dryrun" = false ]; then
-	assert [ -r "$source" ]
+    if [ $dryrun = false ]; then
 	printf "Installing file %s as %s\n" "$source" "$target"
 	install -d -m 755 "$(dirname "$target")"
-	install -C -m "$mode" "$source" "$target"
+	install -C -m $mode $source $target
     fi
 }
 
 install_source_files() {
-    assert [ $# -eq 3 ] && [ -n "$1" ] && [ -n "$2" ] && [ -r "$2" ]
-    mode="$1"
-    source_dir="$2"
-    target_dir="$3"
-    check_permissions "$target_dir"
+    assert [ $# -eq 3 ] && [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
+    mode=$1
+    source_dir=$2
+    target_dir=$3
+    check_permissions $target_dir
 
-    for source in $(find "$source_dir" -type f -name '*.py' -print | sort); do
-	assert [ -r "$source" ]
-
-	case "$source" in
+    for source in $(find $source_dir -type f -name '*.py' -print | sort); do
+	case $source in
 	    (*/tests/*)
 		: # Omit tests folder
 		;;
@@ -176,7 +173,7 @@ install_source_files() {
 		: # Omit test modules
 		;;
 	    (*)
-		install_file "$mode" "$source" "$target_dir/$source"
+		install_file $mode $source $target_dir/$source
 		;;
 	esac
     done
@@ -226,18 +223,22 @@ install_uwsgi_binary() {
 	(uwsgi)
 	    if [ ! -x $BINARY_DIR/$1 ]; then
 		install_file 755 $1 $BINARY_DIR/$1
-		source=$BINARY_DIR/$1
-		target=/usr/local/bin/$1
-
-		if [ $source != $target ]; then
-		    if [ ! -x $target ]; then
-			printf "Creating link %s\n" "$target"
-			/bin/ln -sf $source $target
-		    fi
-		fi
 	    fi
+
+	    install_uwsgi_symlink $BINARY_DIR/$1 /usr/local/bin/$1
 	    ;;
     esac
+}
+
+install_uwsgi_symlink() {
+    assert [ $# -eq 2 ] && [ -n "$1" -a -r "$1" ]
+    source=$1
+    target=$2
+
+    if [ $source != $target -a ! -x $target ]; then
+	printf "Creating link %s\n" "$target"
+	/bin/ln -sf $source $target
+    fi
 }
 
 get_path() {
