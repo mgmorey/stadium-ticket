@@ -183,15 +183,18 @@ install_source_files() {
 }
 
 install_uwsgi() {
-    if [ $is_darwin = true ]; then
-	install_uwsgi_binaries uwsgi $PLUGIN
-    else
-	if ! $script_dir/is-installed-package.sh uwsgi; then
-	    packages=$($script_dir/get-uwsgi-packages.sh)
-	    $script_dir/install-packages.sh $packages
-	    start_uwsgi
-	fi
-    fi
+    case "$kernel_name" in
+	(Darwin)
+	    install_uwsgi_binaries uwsgi $PLUGIN
+	    ;;
+	(*)
+	    if ! $script_dir/is-installed-package.sh uwsgi; then
+		packages=$($script_dir/get-uwsgi-packages.sh)
+		$script_dir/install-packages.sh $packages
+		start_uwsgi
+	    fi
+	    ;;
+    esac
 }
 
 install_uwsgi_binaries() {
@@ -323,15 +326,6 @@ script_dir=$(get_path "$(dirname "$0")")
 source_dir=$script_dir/..
 
 . $script_dir/configure-app.sh
-
-case "$kernel_name" in
-    (Darwin)
-	is_darwin=true
-	;;
-    (*)
-	is_darwin=false
-	;;
-esac
 
 cd $source_dir
 tmpfile=$(mktemp)
