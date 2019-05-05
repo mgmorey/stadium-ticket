@@ -26,6 +26,8 @@ FREEBSD_INFO="python3 py36"
 
 OPENSUSE_INFO="python3 python3"
 
+REDHAT_INFO="python36 python3"
+
 SUNOS_INFO="python-34 34"
 
 UBUNTU_INFO="python3 python3"
@@ -66,14 +68,17 @@ case "$kernel_name" in
 	    (debian)
 		printf "%s %s\n" $DEBIAN_INFO
 		;;
-	    (fedora)
-		printf "%s %s\n" $FEDORA_INFO
+	    (ubuntu)
+		printf "%s %s\n" $UBUNTU_INFO
 		;;
 	    (opensuse-*)
 		printf "%s %s\n" $OPENSUSE_INFO
 		;;
-	    (ubuntu)
-		printf "%s %s\n" $UBUNTU_INFO
+	    (fedora)
+		printf "%s %s\n" $FEDORA_INFO
+		;;
+	    (redhat|centos)
+		printf "%s %s\n" $REDHAT_INFO
 		;;
 	    (*)
 		abort_not_supported Distro

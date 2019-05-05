@@ -81,15 +81,6 @@ case "$kernel_name" in
 			;;
 		esac
 		;;
-	    (fedora)
-		packages="${package:-$FEDORA_PKG}"
-		;;
-	    (redhat|centos)
-		packages="${package:-$REDHAT_PKG}"
-		;;
-	    (opensuse-*)
-		packages="${package:-$OPENSUSE_PKG}"
-		;;
 	    (ubuntu)
 		case "$VERSION_ID" in
 		    (18.04)
@@ -99,6 +90,15 @@ case "$kernel_name" in
 			packages="${package:-$UBUNTU_19_04_PKG}"
 			;;
 		esac
+		;;
+	    (opensuse-*)
+		packages="${package:-$OPENSUSE_PKG}"
+		;;
+	    (fedora)
+		packages="${package:-$FEDORA_PKG}"
+		;;
+	    (redhat|centos)
+		packages="${package:-$REDHAT_PKG}"
 		;;
 	esac
 	;;

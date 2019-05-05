@@ -20,11 +20,13 @@ DARWIN_PKGS=""
 
 DEBIAN_PKGS="make %s-pip %s-venv %s-virtualenv"
 
-FEDORA_PKGS="gcc make"
+FEDORA_PKGS="gcc make %s-pip %s-virtualenv"
 
 FREEBSD_PKGS="bash gmake %s-pip %s-virtualenv"
 
 OPENSUSE_PKGS="gcc make %s-pip %s-virtualenv"
+
+REDHAT_PKGS="%s-pip %s-virtualenv"
 
 SUNOS_PKGS="pip-%s"
 
@@ -60,14 +62,14 @@ case "$kernel_name" in
 	    (debian|ubuntu)
 		packages=$DEBIAN_PKGS
 		;;
+	    (opensuse-*)
+		packages=$OPENSUSE_PKGS
+		;;
 	    (fedora)
 		packages=$FEDORA_PKGS
 		;;
 	    (redhat|centos)
-		packages=
-		;;
-	    (opensuse-*)
-		packages=$OPENSUSE_PKGS
+		packages=$REDHAT_PKGS
 		;;
 	esac
 	;;

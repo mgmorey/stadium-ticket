@@ -44,6 +44,18 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
+eval $("$script_dir/get-os-release.sh" -X)
+
+case "$kernel_name" in
+    (Linux)
+	case "$ID" in
+	    (redhat|centos)
+		"$script_dir/install-packages.sh" epel-release
+		;;
+	esac
+	;;
+esac
+
 packages=$("$script_dir/get-dependencies.sh")
 pattern=$("$script_dir/get-devel-pattern.sh")
 "$script_dir/install-packages.sh" -p $pattern $packages

@@ -62,11 +62,11 @@ case "$kernel_name" in
 	    (debian|ubuntu)
 		dpkg-query -Wf '${Package}\n'
 		;;
-	    (redhat|centos|fedora)
-		yum list installed | awk '{print $1}' | awk -F. '{print $1}'
-		;;
 	    (opensuse-*)
 		zypper -q search -i -t package | awk 'NR > 3 {print $3}'
+		;;
+	    (redhat|centos|fedora)
+		yum list installed | awk '{print $1}' | awk -F. '{print $1}'
 		;;
 	esac
 	;;

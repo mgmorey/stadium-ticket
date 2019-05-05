@@ -53,7 +53,7 @@ eval $("$script_dir/get-os-release.sh" -X)
 case "$kernel_name" in
     (Linux)
 	case "$ID" in
-	    (ubuntu)
+	    (debian|ubuntu)
 		status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
 		test "$status" = "install ok installed"
 	    	;;

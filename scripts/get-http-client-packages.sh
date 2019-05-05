@@ -60,14 +60,14 @@ case "$kernel_name" in
 	    (debian)
 		packages="$DEBIAN_PKGS"
 		;;
-	    (fedora|redhat|centos)
-		packages="$REDHAT_PKGS"
+	    (ubuntu)
+		packages="$UBUNTU_PKGS"
 		;;
 	    (opensuse-*)
 		packages="$OPENSUSE_PKGS"
 		;;
-	    (ubuntu)
-		packages="$UBUNTU_PKGS"
+	    (fedora|redhat|centos)
+		packages="$REDHAT_PKGS"
 		;;
 	esac
 	;;

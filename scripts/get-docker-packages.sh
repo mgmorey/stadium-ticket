@@ -82,17 +82,17 @@ case "$kernel_name" in
 			;;
 		esac
 		;;
+	    (ubuntu)
+		packages="${package:-$UBUNTU_PKG} $UBUNTU_PKGS"
+		;;
+	    (opensuse-*)
+		packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
+		;;
 	    (fedora)
 		packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
 		;;
 	    (redhat|centos)
 		packages="${package:-$REDHAT_PKG} $REDHAT_PKGS"
-		;;
-	    (opensuse-*)
-		packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
-		;;
-	    (ubuntu)
-		packages="${package:-$UBUNTU_PKG} $UBUNTU_PKGS"
 		;;
 	esac
 	;;
