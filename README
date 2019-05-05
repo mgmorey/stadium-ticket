@@ -5,7 +5,8 @@ This project has been tested with the following versions of Python:
 
 This project has been tested on the following platforms:  Debian 10,
 Ubuntu 18.04 LTS, Ubuntu 19.04, openSUSE Tumbleweed 20190419, Fedora 29,
-macOS 10.14, FreeBSD 11.2, FreeBSD 12.0 and OpenIndiana Hipster 2018.10.
+macOS 10.14, FreeBSD 11.2, FreeBSD 12.0, OpenIndiana Hipster 2018.10 and
+CentOS 7 1810.
 
 NOTE: Local installation is only supported on Ubuntu and openSUSE.
 
@@ -44,4 +45,3 @@ NOTE: Local installation is only supported on Ubuntu and openSUSE.
 9. To uninstall the app (may require sudo):
 
    scripts/uninstall-app.sh (or "make uninstall")
-
