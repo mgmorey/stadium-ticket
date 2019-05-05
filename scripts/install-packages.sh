@@ -104,7 +104,7 @@ installer=$("$script_dir/get-package-manager.sh")
 case "$kernel_name" in
     (Linux)
 	case "$ID" in
-	    (debian|ubuntu|opensuse-*|fedora|redhat|centos|)
+	    (debian|ubuntu|opensuse-*|fedora|redhat|centos)
 		install_pattern
 		install_packages
 		;;
