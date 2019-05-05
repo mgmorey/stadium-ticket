@@ -226,11 +226,13 @@ install_uwsgi_binary() {
 	(uwsgi)
 	    if [ ! -x $BINARY_DIR/$1 ]; then
 		install_file 755 $1 $BINARY_DIR/$1
+		source=$BINARY_DIR/$1
+		target=/usr/local/bin/$1
 
-		if [ $BINARY_DIR != /usr/local/bin ]; then
-		    if [ ! -x /usr/local/bin/$1 ]; then
-			printf "Creating link %s\n" "/usr/local/bin/$1"
-			/bin/ln -sf $BINARY_DIR/$1 /usr/local/bin/$1
+		if [ $source != $target ]; then
+		    if [ ! -x $target ]; then
+			printf "Creating link %s\n" "$target"
+			/bin/ln -sf $source $target
 		    fi
 		fi
 	    fi
