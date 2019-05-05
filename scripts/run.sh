@@ -81,7 +81,7 @@ script_dir=$(get_path "$(dirname "$0")")
 
 source_dir=$script_dir/..
 
-cd $source_dir
+cd "$source_dir"
 
 pip=$("$script_dir/get-python-command.sh" pip)
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
