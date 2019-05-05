@@ -299,10 +299,8 @@ start_service() {
 }
 
 start_uwsgi() {
-    if [ $is_darwin = false ]; then
-	systemctl enable uwsgi
-	systemctl start uwsgi
-    fi
+    systemctl enable uwsgi
+    systemctl start uwsgi
 }
 
 wait_for_service() {
