@@ -33,7 +33,7 @@ assert() {
 
 get_packages() {
     for category in $CATEGORIES; do
-	$script_dir/get-$category-packages.sh
+	"$script_dir/get-$category-packages.sh"
     done
 }
 

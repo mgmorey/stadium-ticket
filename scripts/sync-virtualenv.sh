@@ -30,10 +30,10 @@ activate_venv() {
 create_venv() {
     assert [ -n "$1" ]
     printf "%s\n" "Creating virtual environment"
-    virtualenv=$($script_dir/get-python-command.sh virtualenv)
+    virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
     if [ "$virtualenv" = false ]; then
-	pyvenv=$($script_dir/get-python-command.sh pyvenv)
+	pyvenv=$("$script_dir/get-python-command.sh" pyvenv)
     fi
 
     if [ "$virtualenv" != false ]; then
@@ -89,7 +89,7 @@ sync_venv() {
 }
 
 upgrade_pip_and_virtualenv() {
-    pip=$($script_dir/get-python-command.sh pip)
+    pip=$("$script_dir/get-python-command.sh" pip)
 
     if [ "$(id -u)" -eq 0 ]; then
 	sh="su $SUDO_USER"

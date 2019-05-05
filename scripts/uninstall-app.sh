@@ -45,7 +45,7 @@ remove_config() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
-. $script_dir/configure-app.sh
+. "$script_dir/configure-app.sh"
 
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM

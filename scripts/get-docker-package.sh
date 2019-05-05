@@ -43,6 +43,6 @@ script_dir=$(get_path "$(dirname "$0")")
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
-$script_dir/get-installed-packages.sh >$tmpfile
-$script_dir/grep-docker-package.sh <$tmpfile || \
+"$script_dir/get-installed-packages.sh" >$tmpfile
+"$script_dir/grep-docker-package.sh" <$tmpfile || \
     true

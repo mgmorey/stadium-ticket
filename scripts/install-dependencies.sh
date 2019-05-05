@@ -44,6 +44,6 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
-packages=$($script_dir/get-dependencies.sh)
-pattern=$($script_dir/get-devel-pattern.sh)
-$script_dir/install-packages.sh -p $pattern $packages
+packages=$("$script_dir/get-dependencies.sh")
+pattern=$("$script_dir/get-devel-pattern.sh")
+"$script_dir/install-packages.sh" -p $pattern $packages

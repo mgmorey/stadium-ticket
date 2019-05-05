@@ -37,7 +37,7 @@ assert() {
 pip_run() {
     venv_filename=$VENV_FILENAME
     venv_requirements=$VENV_REQUIREMENTS
-    . $script_dir/sync-virtualenv.sh
+    . "$script_dir/sync-virtualenv.sh"
     printf "%s\n" "Loading .env environment variables"
     . ./.env
 
@@ -83,8 +83,8 @@ source_dir=$script_dir/..
 
 cd $source_dir
 
-pip=$($script_dir/get-python-command.sh pip)
-pipenv=$($script_dir/get-python-command.sh pipenv)
+pip=$("$script_dir/get-python-command.sh" pip)
+pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
 if [ "$pipenv" != false ]; then
     pipenv_run "$@"

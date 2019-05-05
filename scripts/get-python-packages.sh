@@ -44,7 +44,7 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
-eval $($script_dir/get-os-release.sh -X)
+eval $("$script_dir/get-os-release.sh" -X)
 
 case "$kernel_name" in
     (Linux)
@@ -65,7 +65,7 @@ case "$kernel_name" in
 	;;
 esac
 
-data=$($script_dir/get-python-package.sh)
+data=$("$script_dir/get-python-package.sh")
 
 package_name=$(printf "%s" "$data" | awk '{print $1}')
 package_modifier=$(printf "%s" "$data" | awk '{print $2}')

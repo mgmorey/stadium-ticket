@@ -37,7 +37,7 @@ install_packages() {
 
 install_pattern() {
     if [ -n "$pattern" ]; then
-	pattern_opts=$($script_dir/get-pattern-install-options.sh)
+	pattern_opts=$("$script_dir/get-pattern-install-options.sh")
 	$installer install $install_opts $pattern_opts $pattern
     fi
 }
@@ -96,10 +96,10 @@ parse_arguments "$@"
 
 script_dir=$(get_path "$(dirname "$0")")
 
-eval $($script_dir/get-os-release.sh -X)
+eval $("$script_dir/get-os-release.sh" -X)
 
-install_opts=$($script_dir/get-package-install-options.sh)
-installer=$($script_dir/get-package-manager.sh)
+install_opts=$("$script_dir/get-package-install-options.sh")
+installer=$("$script_dir/get-package-manager.sh")
 
 case "$kernel_name" in
     (Linux)
@@ -114,7 +114,7 @@ case "$kernel_name" in
 	esac
 	;;
     (Darwin)
-	$script_dir/install-homebrew.sh
+	"$script_dir/install-homebrew.sh"
 	install_packages
 	;;
     (FreeBSD|SunOS)

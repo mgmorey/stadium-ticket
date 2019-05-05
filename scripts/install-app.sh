@@ -199,9 +199,9 @@ install_uwsgi() {
 	    install_uwsgi_binaries uwsgi $PLUGIN
 	    ;;
 	(*)
-	    if ! $script_dir/is-installed-package.sh uwsgi; then
-		packages=$($script_dir/get-uwsgi-packages.sh)
-		$script_dir/install-packages.sh $packages
+	    if ! "$script_dir/is-installed-package.sh" uwsgi; then
+		packages=$("$script_dir/get-uwsgi-packages.sh")
+		"$script_dir/install-packages.sh" $packages
 		start_uwsgi
 	    fi
 	    ;;
@@ -264,7 +264,7 @@ stage_app() {
 	sh="sh -eu"
     fi
 
-    if ! $sh -c "$script_dir/stage-app.sh .venv-$APP_NAME"; then
+    if ! $sh "$script_dir/stage-app.sh" .venv-$APP_NAME; then
 	abort "%s: Unable to stage virtual environment\n" "$0"
     fi
 }
@@ -331,9 +331,9 @@ script_dir=$(get_path "$(dirname "$0")")
 
 source_dir=$script_dir/..
 
-. $script_dir/configure-app.sh
+. "$script_dir/configure-app.sh"
 
-cd $source_dir
+cd "$source_dir"
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 

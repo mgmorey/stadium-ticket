@@ -70,7 +70,7 @@ pip_update() {
     venv_filename=$1
     venv_force_sync=true
     venv_requirements=$VENV_REQUIREMENTS
-    . $script_dir/sync-virtualenv.sh
+    . "$script_dir/sync-virtualenv.sh"
 }
 
 get_path() {
@@ -103,10 +103,10 @@ trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 cd $source_dir
 
-pipenv=$($script_dir/get-python-command.sh pipenv)
+pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
 if [ "$pipenv" = false ]; then
-    pip=$($script_dir/get-python-command.sh pip)
+    pip=$("$script_dir/get-python-command.sh" pip)
 fi
 
 if [ "$pipenv" != false ]; then

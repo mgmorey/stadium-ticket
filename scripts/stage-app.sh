@@ -44,7 +44,7 @@ stage_app() {
     assert [ -n "$1" ]
     venv_filename=$1
     venv_requirements=$VENV_REQUIREMENTS
-    . $script_dir/sync-virtualenv.sh
+    . "$script_dir/sync-virtualenv.sh"
 }
 
 if [ $# -eq 0 ]; then
@@ -59,9 +59,9 @@ script_dir=$(get_path "$(dirname "$0")")
 
 source_dir=$script_dir/..
 
-cd $source_dir
+cd "$source_dir"
 
-pip=$($script_dir/get-python-command.sh pip)
-pipenv=$($script_dir/get-python-command.sh pipenv)
+pip=$("$script_dir/get-python-command.sh" pip)
+pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
 stage_app $1

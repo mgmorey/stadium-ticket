@@ -65,9 +65,9 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
-package=$($script_dir/get-docker-package.sh)
+package=$("$script_dir/get-docker-package.sh")
 
-eval $($script_dir/get-os-release.sh -X)
+eval $("$script_dir/get-os-release.sh" -X)
 
 case "$kernel_name" in
     (Linux)
@@ -108,5 +108,5 @@ case "$kernel_name" in
 esac
 
 if [ -n "${packages-}" ]; then
-    $script_dir/get-python-packages.sh $packages
+    "$script_dir/get-python-packages.sh" $packages
 fi
