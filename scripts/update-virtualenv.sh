@@ -101,7 +101,7 @@ source_dir=$script_dir/..
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
-cd $source_dir
+cd "$source_dir"
 
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
