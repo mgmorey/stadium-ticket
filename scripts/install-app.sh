@@ -76,40 +76,51 @@ create_app_dirs() {
 }
 
 create_app_ini() {
-    assert [ $# -eq 2 ] && [ -n "$1" ] && [ -r "$1" ] && [ -n "$2" ]
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" -a -r "$1" -a -n "$2" ]
     source=$1
     target=$2
     check_permissions "$target"
 
     if [ $dryrun = false ]; then
-	assert [ -r "$source" ]
 	printf "Generating file %s\n" "$target"
 	mkdir -p "$(dirname "$target")"
 	generate_ini "$source" | sh | cat >"$target"
     fi
 }
 
+create_symlink() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    source=$1
+    target=$2
+    check_permissions "$target"
+
+    if [ $dryrun = false ]; then
+	assert [ -r "$1" ]
+
+	if [ -a $source != $target -a ! -x $target ]; then
+	    printf "Creating link %s\n" "$target"
+	    /bin/ln -sf $source $target
+	fi
+    fi
+}
+
 enable_app() {
-    assert [ $# -ge 1 ] && [ -n "$1" ]
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
     create_app_ini app.ini $1
     source=$1
     shift
 
     for name; do
-	target=$UWSGI_ETCDIR/$name/$APP_NAME.ini
-	check_permissions "$target"
-
-	if [ $dryrun = false ]; then
-	    assert [ -r "$source" ]
-	    printf "Creating link %s\n" "$target"
-	    mkdir -p "$(dirname "$target")"
-	    /bin/ln -sf "$source" "$target"
-	fi
+	create_symlink $source $UWSGI_ETCDIR/$name/$APP_NAME.ini
     done
 }
 
 generate_ini() {
-    assert [ $# -eq 1 ] && [ -n "$1" ] && [ -r "$1" ]
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" -a -r "$1" ]
     printf "%s" "sed -e 's|^#<\\(.*\\)>$|\\1|g'"
 
     for var in $APP_VARS; do
@@ -117,7 +128,7 @@ generate_ini() {
 	printf " %s" "-e 's|\$($var)|$value|g'"
     done
 
-    printf " %s\n" "$*"
+    printf " %s\n" "$1"
 }
 
 install_app_and_config() {
@@ -130,7 +141,8 @@ install_app_and_config() {
 }
 
 install_dir() {
-    assert [ $# -eq 2 ] && [ -n "$1" ]
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
     source_dir="$1"
     target_dir="$2"
     check_permissions "$target_dir"
@@ -144,7 +156,8 @@ install_dir() {
 }
 
 install_file() {
-    assert [ $# -eq 3 ] && [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
+    assert [ $# -eq 3 ]
+    assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
     mode=$1
     source=$2
     target=$3
@@ -158,7 +171,8 @@ install_file() {
 }
 
 install_source_files() {
-    assert [ $# -eq 3 ] && [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
+    assert [ $# -eq 3 ]
+    assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
     mode=$1
     source_dir=$2
     target_dir=$3
@@ -225,20 +239,9 @@ install_uwsgi_binary() {
 		install_file 755 $1 $BINARY_DIR/$1
 	    fi
 
-	    install_uwsgi_symlink $BINARY_DIR/$1 /usr/local/bin/$1
+	    create_symlink $BINARY_DIR/$1 /usr/local/bin/$1
 	    ;;
     esac
-}
-
-install_uwsgi_symlink() {
-    assert [ $# -eq 2 ] && [ -n "$1" -a -r "$1" ]
-    source=$1
-    target=$2
-
-    if [ $source != $target -a ! -x $target ]; then
-	printf "Creating link %s\n" "$target"
-	/bin/ln -sf $source $target
-    fi
 }
 
 get_path() {
