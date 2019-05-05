@@ -26,7 +26,7 @@ FREEBSD_INFO="python3 py36"
 
 OPENSUSE_INFO="python3 python3"
 
-REDHAT_INFO="python36 python3"
+REDHAT_INFO="python36 python36"
 
 SUNOS_INFO="python-34 34"
 
