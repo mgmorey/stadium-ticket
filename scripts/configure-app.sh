@@ -257,7 +257,7 @@ signal_app() {
 }
 
 tail_log_file() {
-    assert [ -n "$APP_LOGFILE" ] && [ -n "$tmpfile" ]
+    assert [ -n "$APP_LOGFILE" -a -n "$tmpfile" ]
 
     if [ -r $APP_LOGFILE ]; then
 	print_file_tail $APP_LOGFILE

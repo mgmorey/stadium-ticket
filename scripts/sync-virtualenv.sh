@@ -20,7 +20,7 @@ PIP_SUDO_OPTS="--no-cache-dir"
 PYTHON=python3
 
 activate_venv() {
-    assert [ -n "$1" ] && [ -d $1/bin ] && [ -r $1/bin/activate ]
+    assert [ -n "$1" -a -d $1/bin -a -r $1/bin/activate ]
     printf "%s\n" "Activating virtual environment"
     set +u
     . "$1/bin/activate"
