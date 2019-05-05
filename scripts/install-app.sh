@@ -99,7 +99,7 @@ create_symlink() {
     if [ $dryrun = false ]; then
 	assert [ -r "$1" ]
 
-	if [ -a $source != $target -a ! -x $target ]; then
+	if [ $source != $target -a ! -x $target ]; then
 	    printf "Creating link %s\n" "$target"
 	    /bin/ln -sf $source $target
 	fi
