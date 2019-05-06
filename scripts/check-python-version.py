@@ -35,7 +35,7 @@ def compute_scalar_version(s):
 
     for i in range(3):
         result = result * 1000
-        result = result + int(v[i] if i < len(v) else 0)
+        result = result + (int(v[i]) if i < len(v) else 0)
 
     return result
 
