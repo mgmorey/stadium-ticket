@@ -82,8 +82,10 @@ def main():
         exit(2)
 
     try:
-        actual = parse_version(sys.argv[1])
-        difference = compare_versions(actual, get_minimum_version())
+        arg = sys.argv[1]
+        actual = parse_version(arg)
+        minimum = get_minimum_version()
+        difference = compare_versions(actual, minimum)
     except ValueError as e:
         s = "{}: {}".format(sys.argv[0], e)
         print(s, file=sys.stderr)
@@ -96,7 +98,8 @@ def main():
         elif difference < 0:
             s = 'does not meet'
 
-        print('Python version {} {} the minimum requirement'.format(actual, s))
+        print("Python version {} {} the "
+              "minimum version requirement ({})".format(actual, s, minimum))
         status = 0 if difference >= 0 else 1
         exit(status)
 
