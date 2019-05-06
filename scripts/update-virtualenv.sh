@@ -77,7 +77,7 @@ pipenv_lock() {
 		pipenv_opts=-r
 		;;
 	    (*)
-		abort "%s: Invalid filename\n" $file
+		abort "%s: %s: Invalid filename\n" "$0" "$file"
 		;;
 	esac
 
@@ -86,7 +86,7 @@ pipenv_lock() {
 	if $pipenv lock $pipenv_opts >$tmpfile; then
 	    /bin/mv -f $tmpfile $file
 	else
-	    abort "Unable to update %s\n" $file
+	    abort "%s: Unable to update %s\n" "$0" "$file"
 	fi
     done
 
@@ -108,11 +108,11 @@ pip_update() {
 }
 
 if [ -n "${VIRTUAL_ENV:-}" ]; then
-    abort "%s\n" "$0: Must not be run within a virtual environment"
+    abort "%s: Must not be run within a virtual environment\n" "$0"
 fi
 
 if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "$0: Must be run as a non-privileged user"
+    abort "%s: Must be run as a non-privileged user\n" "$0"
 fi
 
 script_dir=$(get_path "$(dirname "$0")")
