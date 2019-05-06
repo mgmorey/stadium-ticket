@@ -59,15 +59,18 @@ done
 
 if [ "$python" != false ]; then
     if pyenv --version >/dev/null 2>&1; then
-	python=$(pyenv which $python)
+	which="pyenv which"
     else
-	python=$(which $python)
+	which=which
     fi
+
+    python=$($which $python)
 
     if [ -z "$python" ]; then
 	abort_no_python
     fi
 
+    printf "Python interpreter %s found via '%s'\n" "$python" "$which"
     check_python_version $python
 else
     abort_no_python
