@@ -119,13 +119,13 @@ script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/sync-virtualenv.sh"
 
-source_dir=$script_dir/..
-
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
 if [ "$pipenv" = false ]; then
     pip=$("$script_dir/get-python-command.sh" pip)
 fi
+
+source_dir=$script_dir/..
 
 cd "$source_dir"
 
