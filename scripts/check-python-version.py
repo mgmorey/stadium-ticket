@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # check-python-version: determine if Python version meets requirements
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -16,10 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import configparser
+from __future__ import print_function
 import os
 import re
 import sys
+
+try:
+    from configparser import ConfigParser, NoOptionError, NoSectionError
+except ImportError:
+    from ConfigParser import ConfigParser, NoOptionError, NoSectionError
 
 CONFIG = ['requires', 'python_version']
 FILE = 'Pipfile'
@@ -28,7 +33,7 @@ QUOTED_RE = r'^"([^"]+)"$'
 VERSION_RE = r'^(\d{1,3}(\.\d{1,3}){0,2})$'
 
 
-class VersionParseError(Exception):
+class ParseError(Exception):
     pass
 
 
@@ -48,26 +53,17 @@ def compute_scalar_version(s):
 
 
 def get_minimum_version():
-    config = configparser.ConfigParser()
-    path = get_pipfile_path()
+    config = ConfigParser()
+    path = get_pipfile()
+    config.read(path)
 
     try:
-        config.read(path)
-        version = None
-
-        if CONFIG[0] in config:
-            requires = config[CONFIG[0]]
-
-            if CONFIG[1] in requires:
-                return parse_version(unquote(requires[CONFIG[1]]))
-
-        raise VersionParseError("No python version found")
-    except (KeyError, VersionParseError) as e:
-        s = "{}: Unable to parse file: {}".format(path, e)
-        raise VersionParseError(s)
+        return parse_version(unquote(config.get(CONFIG[0], CONFIG[1])))
+    except (NoOptionError, NoSectionError, ParseError) as e:
+        raise ParseError("{}: Unable to parse: {}".format(path, e))
 
 
-def get_pipfile_path():
+def get_pipfile():
     script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
     source_dir = os.path.dirname(script_dir)
     return os.path.join(source_dir, FILE)
@@ -77,14 +73,14 @@ def parse_version(s):
     try:
         return re.search(VERSION_RE, s).group(1)
     except AttributeError as e:
-        raise VersionParseError("Invalid version string '{}'".format(s))
+        raise ParseError("Invalid version string '{}'".format(s))
 
 
 def unquote(s):
     try:
         return re.search(QUOTED_RE, s).group(1)
     except AttributeError as e:
-        raise VersionParseError("Invalid quoted string '{}'".format(s))
+        raise ParseError("Invalid quoted string '{}'".format(s))
 
 
 def main():
@@ -96,7 +92,7 @@ def main():
     try:
         actual = parse_version(sys.argv[1])
         minimum = get_minimum_version()
-    except VersionParseError as e:
+    except ParseError as e:
         s = "{}: {}".format(sys.argv[0], e)
         print(s, file=sys.stderr)
         exit(2)
