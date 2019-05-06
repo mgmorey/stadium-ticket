@@ -22,7 +22,8 @@ import re
 import sys
 
 PIPFILE = 'Pipfile'
-VERSION_RE = r'^"?(\d{1,3}(\.\d{1,3}){0,2})"?$'
+QUOTED_RE = r'^"([^"]+)"$'
+VERSION_RE = r'^(\d{1,3}(\.\d{1,3}){0,2})$'
 
 
 def compare_versions(s1, s2):
@@ -58,9 +59,7 @@ def get_minimum_version():
             requires = config['requires']
 
             if 'python_version' in requires:
-                s = requires['python_version']
-                version = parse_version(s)
-                return version
+                return parse_version(unquote(requires['python_version']))
 
         raise ValueError("No python version found")
     except (KeyError, ValueError) as e:
@@ -73,6 +72,13 @@ def parse_version(s):
         return re.search(VERSION_RE, s).group(1)
     except AttributeError as e:
         raise ValueError("Invalid version string '{}'".format(s))
+
+
+def unquote(s):
+    try:
+        return re.search(QUOTED_RE, s).group(1)
+    except AttributeError as e:
+        raise ValueError("Invalid quoted string '{}'".format(s))
 
 
 def main():
