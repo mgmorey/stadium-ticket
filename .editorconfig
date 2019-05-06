@@ -1,11 +1,9 @@
 [*]
 
-indent_style = space
 indent_size = 4
 tab_width = 8
 end_of_line = lf
 charset = utf-8
-trim_trailing_whitespace = true
 insert_final_newline = true
 
 [Makefile]
@@ -14,7 +12,12 @@ indent_style = tab
 indent_size = 8
 tab_width = 8
 
+[*.py]
+
+indent_style = space
+trim_trailing_whitespace = true
+
 [*.sh]
 
 indent_style = tab
-indent_size = 4
+trim_trailing_whitespace = true
