@@ -91,15 +91,13 @@ def main():
         print(s, file=sys.stderr)
         exit(2)
     else:
-        if difference == 0:
+        if difference >= 0:
             s = 'meets'
-        elif difference > 0:
-            s = 'exceeds'
-        elif difference < 0:
+        else:
             s = 'does not meet'
 
-        print("Python version {} {} the "
-              "minimum version requirement ({})".format(actual, s, minimum))
+        print("Python {} {} the minimum "
+              "version requirement ({})".format(actual, s, minimum))
         status = 0 if difference >= 0 else 1
         exit(status)
 
