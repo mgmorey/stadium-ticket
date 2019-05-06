@@ -21,7 +21,8 @@ import os
 import re
 import sys
 
-PIPFILE = 'Pipfile'
+CONFIG = ['requires', 'python_version']
+FILE = 'Pipfile'
 QUOTED_RE = r'^"([^"]+)"$'
 VERSION_RE = r'^(\d{1,3}(\.\d{1,3}){0,2})$'
 
@@ -53,11 +54,11 @@ def get_minimum_version():
         config.read(path)
         version = None
 
-        if 'requires' in config:
-            requires = config['requires']
+        if CONFIG[0] in config:
+            requires = config[CONFIG[0]]
 
-            if 'python_version' in requires:
-                return parse_version(unquote(requires['python_version']))
+            if CONFIG[1] in requires:
+                return parse_version(unquote(requires[CONFIG[1]]))
 
         raise VersionParseError("No python version found")
     except (KeyError, VersionParseError) as e:
@@ -68,7 +69,7 @@ def get_minimum_version():
 def get_pipfile_path():
     script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
     source_dir = os.path.dirname(script_dir)
-    return os.path.join(source_dir, PIPFILE)
+    return os.path.join(source_dir, FILE)
 
 
 def parse_version(s):
