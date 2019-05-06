@@ -46,7 +46,7 @@ pipenv_init() {
 
 pipenv_lock() {
     pipenv_init
-    $pipenv lock
+    $pipenv lock -d
 
     for file; do
 	case $file in
@@ -58,6 +58,7 @@ pipenv_lock() {
 		;;
 	    (*)
 		abort "%s: Invalid filename\n" $file
+		;;
 	esac
 
 	printf "Generating %s\n" $file
