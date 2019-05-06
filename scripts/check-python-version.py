@@ -26,6 +26,10 @@ QUOTED_RE = r'^"([^"]+)"$'
 VERSION_RE = r'^(\d{1,3}(\.\d{1,3}){0,2})$'
 
 
+class VersionParseError(Exception):
+    pass
+
+
 def compare_versions(s1, s2):
     return compute_scalar_version(s1) - compute_scalar_version(s2)
 
@@ -39,12 +43,6 @@ def compute_scalar_version(s):
         result += int(v[i]) if i < len(v) else 0
 
     return result
-
-
-def get_pipfile_path():
-    script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-    source_dir = os.path.dirname(script_dir)
-    return os.path.join(source_dir, PIPFILE)
 
 
 def get_minimum_version():
@@ -61,24 +59,30 @@ def get_minimum_version():
             if 'python_version' in requires:
                 return parse_version(unquote(requires['python_version']))
 
-        raise ValueError("No python version found")
-    except (KeyError, ValueError) as e:
+        raise VersionParseError("No python version found")
+    except (KeyError, VersionParseError) as e:
         s = "{}: Unable to parse file: {}".format(path, e)
-        raise ValueError(s)
+        raise VersionParseError(s)
+
+
+def get_pipfile_path():
+    script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+    source_dir = os.path.dirname(script_dir)
+    return os.path.join(source_dir, PIPFILE)
 
 
 def parse_version(s):
     try:
         return re.search(VERSION_RE, s).group(1)
     except AttributeError as e:
-        raise ValueError("Invalid version string '{}'".format(s))
+        raise VersionParseError("Invalid version string '{}'".format(s))
 
 
 def unquote(s):
     try:
         return re.search(QUOTED_RE, s).group(1)
     except AttributeError as e:
-        raise ValueError("Invalid quoted string '{}'".format(s))
+        raise VersionParseError("Invalid quoted string '{}'".format(s))
 
 
 def main():
@@ -92,7 +96,7 @@ def main():
         actual = parse_version(arg)
         minimum = get_minimum_version()
         difference = compare_versions(actual, minimum)
-    except ValueError as e:
+    except VersionParseError as e:
         s = "{}: {}".format(sys.argv[0], e)
         print(s, file=sys.stderr)
         exit(2)
