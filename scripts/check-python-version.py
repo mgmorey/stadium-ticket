@@ -93,8 +93,7 @@ def main():
         actual = parse_version(sys.argv[1])
         minimum = get_minimum_version()
     except ParseError as e:
-        s = "{}: {}".format(sys.argv[0], e)
-        print(s, file=sys.stderr)
+        print("{}: {}".format(sys.argv[0], e), file=sys.stderr)
         exit(2)
     else:
         difference = compare_versions(actual, minimum)
