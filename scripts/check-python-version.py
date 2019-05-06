@@ -93,12 +93,13 @@ def main():
     else:
         if difference >= 0:
             s = 'meets'
+            status = 0
         else:
             s = 'does not meet'
+            status = 1
 
         print("Python {} {} the minimum "
               "version requirement ({})".format(actual, s, minimum))
-        status = 0 if difference >= 0 else 1
         exit(status)
 
 
