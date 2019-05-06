@@ -55,9 +55,9 @@ pipenv_init() {
 	    fi
 
 	    check_python_version $python
-	    pipenv --python $python
+	    $pipenv --python $python
 	else
-	    pipenv $PIPENV_OPTS
+	    $pipenv $PIPENV_OPTS
 	fi
     fi
 }
@@ -135,7 +135,7 @@ if [ "$pipenv" != false ]; then
 elif [ "$pip" != false ]; then
     pip_update $VENV_FILENAME
 else
-    abort "%s: No pip nor pipenv in PATH\n" "$0"
+    abort "%s: No pip nor pipenv command found in PATH\n" "$0"
 fi
 
 touch .update
