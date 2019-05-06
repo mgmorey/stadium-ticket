@@ -102,5 +102,3 @@ upgrade_pip_and_virtualenv() {
 	$sh -c "$pip_install --upgrade --user pip virtualenv"
     fi
 }
-
-sync_venv $venv_filename

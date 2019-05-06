@@ -44,7 +44,7 @@ stage_app() {
     assert [ -n "$1" ]
     venv_filename=$1
     venv_requirements=$VENV_REQUIREMENTS
-    . "$script_dir/sync-virtualenv.sh"
+    sync_venv $venv_filename
 }
 
 if [ $# -eq 0 ]; then
@@ -56,6 +56,8 @@ if [ $(id -u) -eq 0 ]; then
 fi
 
 script_dir=$(get_path "$(dirname "$0")")
+
+. "$script_dir/sync-virtualenv.sh"
 
 source_dir=$script_dir/..
 

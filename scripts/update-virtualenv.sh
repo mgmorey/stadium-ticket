@@ -116,7 +116,7 @@ pip_update() {
     venv_filename=$1
     venv_force_sync=true
     venv_requirements=$VENV_REQUIREMENTS
-    . "$script_dir/sync-virtualenv.sh"
+    sync_venv $venv_filename
 }
 
 if [ -n "${VIRTUAL_ENV:-}" ]; then
@@ -128,6 +128,8 @@ if [ $(id -u) -eq 0 ]; then
 fi
 
 script_dir=$(get_path "$(dirname "$0")")
+
+. "$script_dir/sync-virtualenv.sh"
 
 source_dir=$script_dir/..
 
