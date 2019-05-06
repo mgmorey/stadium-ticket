@@ -23,6 +23,7 @@ import sys
 
 CONFIG = ['requires', 'python_version']
 FILE = 'Pipfile'
+LENGTH = 3
 QUOTED_RE = r'^"([^"]+)"$'
 VERSION_RE = r'^(\d{1,3}(\.\d{1,3}){0,2})$'
 
@@ -39,7 +40,7 @@ def compute_scalar_version(s):
     result = 0
     v = s.split('.')
 
-    for i in range(3):
+    for i in range(LENGTH):
         result *= 1000
         result += int(v[i]) if i < len(v) else 0
 
