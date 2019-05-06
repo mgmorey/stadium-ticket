@@ -65,6 +65,8 @@ pipenv_init() {
 pipenv_lock() {
     pipenv_init
     $pipenv lock -d
+    tmpfile=$(mktemp)
+    trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
     for file; do
 	case $file in
@@ -119,16 +121,13 @@ script_dir=$(get_path "$(dirname "$0")")
 
 source_dir=$script_dir/..
 
-tmpfile=$(mktemp)
-trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
-
-cd "$source_dir"
-
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
 if [ "$pipenv" = false ]; then
     pip=$("$script_dir/get-python-command.sh" pip)
 fi
+
+cd "$source_dir"
 
 if [ "$pipenv" != false ]; then
     pipenv_update
