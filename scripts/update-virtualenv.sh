@@ -33,8 +33,19 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+pipenv_init() {
+    if ! $pipenv --venv >/dev/null 2>&1; then
+	if pyenv --version >/dev/null 2>&1; then
+	    python=$(pyenv which $PYTHON)
+	    pipenv --python $python
+	else
+	    pipenv $PIPENV_OPTS
+	fi
+    fi
+}
+
 pipenv_lock() {
-    assert [ "$pipenv" != false ]
+    pipenv_init
     $pipenv lock
 
     for file; do
@@ -63,15 +74,6 @@ pipenv_lock() {
 }
 
 pipenv_update() {
-    if ! $pipenv --venv >/dev/null 2>&1; then
-	if pyenv --version >/dev/null 2>&1; then
-	    python=$(pyenv which $PYTHON)
-	    pipenv --python $python
-	else
-	    pipenv $PIPENV_OPTS
-	fi
-    fi
-
     pipenv_lock $VENV_REQUIREMENTS
     $pipenv sync -d
 }
