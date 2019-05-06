@@ -105,8 +105,7 @@ def main():
             s = 'does not meet'
             status = 1
 
-        print("Python {} {} the minimum version requirement of {} "
-              "specified in {}".format(actual, s, minimum, FILE))
+        print("Python {} {} the requirements in {}".format(actual, s, FILE))
         exit(status)
 
 
