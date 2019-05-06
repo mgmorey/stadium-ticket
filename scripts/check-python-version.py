@@ -105,7 +105,7 @@ def main():
             s = 'does not meet'
             status = 1
 
-        print("Python {} {} the requirements in {}".format(actual, s, FILE))
+        print("Python {} {} {} requirements".format(actual, s, FILE))
         exit(status)
 
 
