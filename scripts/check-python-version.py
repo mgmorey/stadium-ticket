@@ -42,9 +42,7 @@ def compute_scalar_version(s):
 
 def get_pipfile_path():
     script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-    print("script_dir = {}".format(script_dir))
     source_dir = os.path.dirname(script_dir)
-    print("source_dir = {}".format(source_dir))
     return os.path.join(source_dir, PIPFILE)
 
 
