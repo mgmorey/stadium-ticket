@@ -50,6 +50,13 @@ pipenv_init() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	if pyenv --version >/dev/null 2>&1; then
 	    python=$(pyenv which $PYTHON)
+	    python_version_info=$($python --version)
+	    python_version="${python_version_info#Python }"
+
+	    if ! $script_dir/check-python-version.py "$python_version"; then
+		abort "%s: No suitable Python interpreter found\n" "$0"
+	    fi
+
 	    pipenv --python $python
 	else
 	    pipenv $PIPENV_OPTS
