@@ -21,6 +21,7 @@ import os
 import re
 import sys
 
+PIPFILE = 'Pipfile'
 VERSION_RE = r'(\d+(.\d+){0,2})'
 
 
@@ -40,9 +41,11 @@ def compute_scalar_version(s):
 
 
 def get_pipfile_path():
-    script_dir = os.path.dirname(sys.argv[0])
-    source_dir = os.path.join(os.path.dirname(script_dir), '..')
-    return os.path.join(source_dir, 'Pipfile1')
+    script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+    print("script_dir = {}".format(script_dir))
+    source_dir = os.path.dirname(script_dir)
+    print("source_dir = {}".format(source_dir))
+    return os.path.join(source_dir, PIPFILE)
 
 
 def get_minimum_version():
