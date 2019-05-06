@@ -33,14 +33,6 @@ activate_venv() {
 
 create_venv() {
     assert [ -n "$1" ]
-    python=$(which $PYTHON)
-
-    if [ -z "$python" ]; then
-	abort_no_python
-    fi
-
-    check_python_version $python
-    printf "%s\n" "Creating virtual environment"
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
     if [ "$virtualenv" = false ]; then
@@ -48,11 +40,27 @@ create_venv() {
     fi
 
     if [ "$virtualenv" != false ]; then
-	$virtualenv -p $PYTHON $1
+	if pyenv --version >/dev/null 2>&1; then
+	    python=$(pyenv which $PYTHON)
+	else
+	    python=$(which $PYTHON)
+	fi
+
+	if [ -z "$python" ]; then
+	    abort_no_python
+	fi
+
+	check_python_version $python
+    fi
+
+    printf "%s\n" "Creating virtual environment"
+
+    if [ "$virtualenv" != false ]; then
+	$virtualenv -p $python $1
     elif [ "$pyvenv" != false ]; then
 	$pyvenv $1
     else
-	abort "%s: No virtualenv nor pyenv in PATH\n" "$0"
+	abort "%s: No virtualenv nor pyenv/venv command found\n" "$0"
     fi
 }
 
