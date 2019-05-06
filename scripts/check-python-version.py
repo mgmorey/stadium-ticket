@@ -92,15 +92,15 @@ def main():
         exit(2)
 
     try:
-        arg = sys.argv[1]
-        actual = parse_version(arg)
+        actual = parse_version(sys.argv[1])
         minimum = get_minimum_version()
-        difference = compare_versions(actual, minimum)
     except VersionParseError as e:
         s = "{}: {}".format(sys.argv[0], e)
         print(s, file=sys.stderr)
         exit(2)
     else:
+        difference = compare_versions(actual, minimum)
+
         if difference >= 0:
             s = 'meets'
             status = 0
