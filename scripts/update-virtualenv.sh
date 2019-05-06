@@ -37,6 +37,15 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+check_python_version() {
+    python_output=$($1 --version)
+    python_version="${python_output#Python }"
+
+    if ! $script_dir/check-python-version.py "$python_version"; then
+	abort_no_python
+    fi
+}
+
 get_path() {
     assert [ -d "$1" ]
     command=$(which realpath)
@@ -59,13 +68,7 @@ pipenv_init() {
 		abort_no_python
 	    fi
 
-	    python_output=$($python --version)
-	    python_version="${python_output#Python }"
-
-	    if ! $script_dir/check-python-version.py "$python_version"; then
-		abort_no_python
-	    fi
-
+	    check_python_version $python
 	    pipenv --python $python
 	else
 	    pipenv $PIPENV_OPTS
