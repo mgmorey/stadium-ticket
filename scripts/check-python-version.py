@@ -22,7 +22,7 @@ import re
 import sys
 
 PIPFILE = 'Pipfile'
-VERSION_RE = r'^"?(\d{1,3}([.]\d{1,3}){0,2})"?$'
+VERSION_RE = r'^"?(\d{1,3}(\.\d{1,3}){0,2})"?$'
 
 
 def compare_versions(s1, s2):
