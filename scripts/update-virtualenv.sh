@@ -29,6 +29,10 @@ abort() {
     exit 1
 }
 
+abort_no_python() {
+    abort "%s: No suitable Python interpreter found\n" "$0"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -50,11 +54,16 @@ pipenv_init() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	if pyenv --version >/dev/null 2>&1; then
 	    python=$(pyenv which $PYTHON)
+
+	    if [ -z "$python" ]; then
+		abort_no_python
+	    fi
+
 	    python_version_info=$($python --version)
 	    python_version="${python_version_info#Python }"
 
 	    if ! $script_dir/check-python-version.py "$python_version"; then
-		abort "%s: No suitable Python interpreter found\n" "$0"
+		abort_no_python
 	    fi
 
 	    pipenv --python $python
