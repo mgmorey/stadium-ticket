@@ -45,6 +45,15 @@ create_venv() {
     fi
 }
 
+check_python_version() {
+    python_output=$($1 --version)
+    python_version="${python_output#Python }"
+
+    if ! $script_dir/check-python-version.py "$python_version"; then
+	abort_no_python
+    fi
+}
+
 sync_requirements() {
     assert [ "$pip" != false ]
     printf "%s\n" "Upgrading pip"

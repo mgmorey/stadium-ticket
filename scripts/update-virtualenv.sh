@@ -20,7 +20,6 @@ export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 PIPENV_OPTS=--three
-PYTHON=python3
 VENV_FILENAME=.venv
 VENV_REQUIREMENTS="requirements-dev.txt requirements.txt"
 
@@ -35,15 +34,6 @@ abort_no_python() {
 
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
-}
-
-check_python_version() {
-    python_output=$($1 --version)
-    python_version="${python_output#Python }"
-
-    if ! $script_dir/check-python-version.py "$python_version"; then
-	abort_no_python
-    fi
 }
 
 get_path() {
