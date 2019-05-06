@@ -33,6 +33,19 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_path() {
+    assert [ -d "$1" ]
+    command=$(which realpath)
+
+    if [ -n "$command" ]; then
+	$command "$1"
+    elif expr "$1" : '/.*' >/dev/null; then
+	printf "%s\n" "$1"
+    else
+	printf "%s\n" "$PWD/${1#./}"
+    fi
+}
+
 pipenv_init() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	if pyenv --version >/dev/null 2>&1; then
@@ -85,19 +98,6 @@ pip_update() {
     venv_force_sync=true
     venv_requirements=$VENV_REQUIREMENTS
     . "$script_dir/sync-virtualenv.sh"
-}
-
-get_path() {
-    assert [ -d "$1" ]
-    command=$(which realpath)
-
-    if [ -n "$command" ]; then
-	$command "$1"
-    elif expr "$1" : '/.*' >/dev/null; then
-	printf "%s\n" "$1"
-    else
-	printf "%s\n" "$PWD/${1#./}"
-    fi
 }
 
 if [ -n "${VIRTUAL_ENV:-}" ]; then
