@@ -136,5 +136,3 @@ elif [ "$pip" != false ]; then
 else
     abort "%s: No pip nor pipenv command found in PATH\n" "$0"
 fi
-
-touch .update
