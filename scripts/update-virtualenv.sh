@@ -28,10 +28,6 @@ abort() {
     exit 1
 }
 
-abort_no_python() {
-    abort "%s: No suitable Python interpreter found\n" "$0"
-}
-
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -139,7 +135,7 @@ if [ "$pipenv" != false ]; then
 elif [ "$pip" != false ]; then
     pip_update $VENV_FILENAME
 else
-    abort "%s: No pip nor pipenv in path\n" "$0"
+    abort "%s: No pip nor pipenv in PATH\n" "$0"
 fi
 
 touch .update

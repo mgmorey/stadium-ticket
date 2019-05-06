@@ -19,6 +19,10 @@
 PIP_SUDO_OPTS="--no-cache-dir"
 PYTHON=python3
 
+abort_no_python() {
+    abort "%s: No suitable Python interpreter found\n" "$0"
+}
+
 activate_venv() {
     assert [ -n "$1" -a -d $1/bin -a -r $1/bin/activate ]
     printf "%s\n" "Activating virtual environment"
@@ -29,6 +33,13 @@ activate_venv() {
 
 create_venv() {
     assert [ -n "$1" ]
+    python=$(which $PYTHON)
+
+    if [ -z "$python" ]; then
+	abort_no_python
+    fi
+
+    check_python_version $python
     printf "%s\n" "Creating virtual environment"
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
@@ -41,7 +52,7 @@ create_venv() {
     elif [ "$pyvenv" != false ]; then
 	$pyvenv $1
     else
-	abort "%s: Unable to create virtual environment\n" "$0"
+	abort "%s: No virtualenv nor pyenv in PATH\n" "$0"
     fi
 }
 
