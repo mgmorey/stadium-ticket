@@ -34,8 +34,8 @@ def compute_scalar_version(s):
     v = s.split('.')
 
     for i in range(3):
-        result = result * 1000
-        result = result + (int(v[i]) if i < len(v) else 0)
+        result *= 1000
+        result += int(v[i]) if i < len(v) else 0
 
     return result
 
