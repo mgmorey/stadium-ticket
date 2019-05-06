@@ -59,8 +59,8 @@ pipenv_init() {
 		abort_no_python
 	    fi
 
-	    python_version_info=$($python --version)
-	    python_version="${python_version_info#Python }"
+	    python_output=$($python --version)
+	    python_version="${python_output#Python }"
 
 	    if ! $script_dir/check-python-version.py "$python_version"; then
 		abort_no_python
