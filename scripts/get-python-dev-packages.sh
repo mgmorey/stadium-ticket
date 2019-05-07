@@ -24,7 +24,7 @@ FEDORA_PKGS="gcc make %s-pip %s-virtualenv"
 
 FREEBSD_PKGS="bash gmake %s-pip %s-virtualenv"
 
-OPENSUSE_PKGS="gcc make %s-pip %s-virtualenv"
+OPENSUSE_PKGS="make %s-pip %s-virtualenv"
 
 REDHAT_PKGS="%s-pip %s-virtualenv"
 
