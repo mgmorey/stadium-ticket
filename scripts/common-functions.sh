@@ -134,7 +134,7 @@ sync_venv() {
 	sync=false
     else
 	upgrade_pip_and_virtualenv
-	create_venv $1 ${2-}
+	create_venv "$@"
 	sync=true
     fi
 
