@@ -68,7 +68,9 @@ case $venv_filename in
 	;;
     ($VENV_FILENAME-$APP_NAME)
 	for python in /usr/local/bin/$PYTHON /usr/bin/$PYTHON ""; do
-	    if [ -n "$python" ] && $python --version >/dev/null 2>&1; then
+	    if [ -z "$python" ]; then
+		break
+	    elif $python --version >/dev/null 2>&1; then
 		break
 	    fi
 	done
