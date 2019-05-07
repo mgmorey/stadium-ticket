@@ -13,18 +13,41 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-APP_NAME=stadium-ticket
 PREFIX=/usr/local/opt/uwsgi
 
-APP_ETCDIR=/usr/local/etc/opt/$APP_NAME
 OBJECT_DIR=$PREFIX/lib/plugin
-
 PLUGIN=python3_plugin.so
+
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
+get_path() {
+    assert [ -d "$1" ]
+    command=$(which realpath)
+
+    if [ -n "$command" ]; then
+	$command "$1"
+    elif expr "$1" : '/.*' >/dev/null; then
+	printf "%s\n" "$1"
+    else
+	printf "%s\n" "$PWD/${1#./}"
+    fi
+}
+
+script_dir=$(get_path "$(dirname "$0")")
+
+. "$script_dir/configure-app.sh"
 
 if uwsgi --version >/dev/null 2>&1; then
     if [ -x $OBJECT_DIR/$PLUGIN ]; then
 	if cd $OBJECT_DIR; then
-	    uwsgi $APP_ETCDIR/app.ini
+	    uwsgi $APP_CONFIG
 	fi
     fi
 fi

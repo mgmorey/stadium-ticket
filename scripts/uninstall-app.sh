@@ -45,6 +45,7 @@ remove_config() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
+. "$script_dir/common-functions.sh"
 . "$script_dir/configure-app.sh"
 
 tmpfile=$(mktemp)

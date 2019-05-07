@@ -331,6 +331,7 @@ script_dir=$(get_path "$(dirname "$0")")
 
 source_dir=$script_dir/..
 
+. "$script_dir/common-functions.sh"
 . "$script_dir/configure-app.sh"
 
 cd "$source_dir"
