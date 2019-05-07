@@ -19,6 +19,10 @@
 PIP_SUDO_OPTS="--no-cache-dir"
 PYTHON=python3
 
+abort_no_python() {
+    abort "%s\n" "No suitable Python interpreter found"
+}
+
 activate_venv() {
     assert [ -n "$1" -a -d $1/bin -a -r $1/bin/activate ]
     printf "%s\n" "Activating virtual environment"
@@ -29,7 +33,6 @@ activate_venv() {
 
 create_venv() {
     assert [ -n "$1" ]
-    printf "%s\n" "Creating virtual environment"
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
     if [ "$virtualenv" = false ]; then
@@ -37,11 +40,36 @@ create_venv() {
     fi
 
     if [ "$virtualenv" != false ]; then
-	$virtualenv -p $PYTHON $1
+	if pyenv --version >/dev/null 2>&1; then
+	    python=$(pyenv which $PYTHON)
+	else
+	    python=$(which $PYTHON)
+	fi
+
+	if [ -z "$python" ]; then
+	    abort_no_python
+	fi
+
+	check_python_version $python
+    fi
+
+    printf "%s\n" "Creating virtual environment"
+
+    if [ "$virtualenv" != false ]; then
+	$virtualenv -p $python $1
     elif [ "$pyvenv" != false ]; then
 	$pyvenv $1
     else
-	abort "%s: Unable to create virtual environment\n" "$0"
+	abort "%s: No virtualenv nor pyenv/venv command found\n" "$0"
+    fi
+}
+
+check_python_version() {
+    python_output=$($1 --version)
+    python_version="${python_output#Python }"
+
+    if ! $script_dir/check-python-version.py "$python_version"; then
+	abort_no_python
     fi
 }
 
@@ -102,5 +130,3 @@ upgrade_pip_and_virtualenv() {
 	$sh -c "$pip_install --upgrade --user pip virtualenv"
     fi
 }
-
-sync_venv $venv_filename

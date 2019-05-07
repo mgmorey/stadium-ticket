@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# stage-app.sh: stage uWSGI application
+# check-environment: check environment for required toolchain
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,30 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-VENV_REQUIREMENTS="requirements.txt"
+PYTHONS="python3 python false"
 
 abort() {
     printf "$@" >&2
     exit 1
 }
 
+abort_no_python() {
+    abort "%s\n" "No suitable Python interpreter found"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
+check_python_version() {
+    python_output=$($1 --version)
+    python_version="${python_output#Python }"
+    printf "Python interpreter %s " "$python"
+    printf "is version %s\n" "$python_version"
+
+    if ! $script_dir/check-python-version.py "$python_version"; then
+	abort_no_python
+    fi
 }
 
 get_path() {
@@ -40,30 +55,28 @@ get_path() {
     fi
 }
 
-stage_app() {
-    assert [ -n "$1" ]
-    venv_filename=$1
-    venv_requirements=$VENV_REQUIREMENTS
-    sync_venv $venv_filename
-}
-
-if [ $# -eq 0 ]; then
-    abort "%s\n" "$0: Not enough arguments"
-fi
-
-if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "$0: Must be run as a non-privileged user"
-fi
-
 script_dir=$(get_path "$(dirname "$0")")
 
-. "$script_dir/sync-virtualenv.sh"
+for python in $PYTHONS; do
+    if $python --version >/dev/null 2>&1; then
+	break
+    fi
+done
 
-source_dir=$script_dir/..
+if [ "$python" != false ]; then
+    if pyenv --version >/dev/null 2>&1; then
+	which="pyenv which"
+    else
+	which=which
+    fi
 
-cd "$source_dir"
+    python=$($which $python)
 
-pip=$("$script_dir/get-python-command.sh" pip)
-pipenv=$("$script_dir/get-python-command.sh" pipenv)
+    if [ -z "$python" ]; then
+	abort_no_python
+    fi
 
-stage_app $1
+    check_python_version $python
+else
+    abort_no_python
+fi

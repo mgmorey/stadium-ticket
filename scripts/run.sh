@@ -37,7 +37,7 @@ assert() {
 pip_run() {
     venv_filename=$VENV_FILENAME
     venv_requirements=$VENV_REQUIREMENTS
-    . "$script_dir/sync-virtualenv.sh"
+    sync_venv $venv_filename
     printf "%s\n" "Loading .env environment variables"
     . ./.env
 
@@ -78,6 +78,8 @@ if [ $# -eq 0 ]; then
 fi
 
 script_dir=$(get_path "$(dirname "$0")")
+
+. "$script_dir/sync-virtualenv.sh"
 
 source_dir=$script_dir/..
 

@@ -20,7 +20,6 @@ export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 PIPENV_OPTS=--three
-PYTHON=python3
 VENV_FILENAME=.venv
 VENV_REQUIREMENTS="requirements-dev.txt requirements.txt"
 
@@ -31,57 +30,6 @@ abort() {
 
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
-}
-
-pipenv_lock() {
-    assert [ "$pipenv" != false ]
-    $pipenv lock
-
-    for file; do
-	case $file in
-	    (requirements-dev*.txt)
-		pipenv_opts=-dr
-		;;
-	    (requirements.txt)
-		pipenv_opts=-r
-		;;
-	    (*)
-		abort "%s: Invalid filename\n" $file
-	esac
-
-	printf "Generating %s\n" $file
-
-	if $pipenv lock $pipenv_opts >$tmpfile; then
-	    /bin/mv -f $tmpfile $file
-	else
-	    abort "Unable to update %s\n" $file
-	fi
-    done
-
-    chgrp $(id -g) "$@"
-    chmod a+r "$@"
-}
-
-pipenv_update() {
-    if ! $pipenv --venv >/dev/null 2>&1; then
-	if pyenv --version >/dev/null 2>&1; then
-	    python=$(pyenv which $PYTHON)
-	    pipenv --python $python
-	else
-	    pipenv $PIPENV_OPTS
-	fi
-    fi
-
-    pipenv_lock $VENV_REQUIREMENTS
-    $pipenv sync -d
-}
-
-pip_update() {
-    assert [ -n "$1" ]
-    venv_filename=$1
-    venv_force_sync=true
-    venv_requirements=$VENV_REQUIREMENTS
-    . "$script_dir/sync-virtualenv.sh"
 }
 
 get_path() {
@@ -97,22 +45,79 @@ get_path() {
     fi
 }
 
+pipenv_init() {
+    if ! $pipenv --venv >/dev/null 2>&1; then
+	if pyenv --version >/dev/null 2>&1; then
+	    python=$(pyenv which $PYTHON)
+
+	    if [ -z "$python" ]; then
+		abort_no_python
+	    fi
+
+	    check_python_version $python
+	    $pipenv --python $python
+	else
+	    $pipenv $PIPENV_OPTS
+	fi
+    fi
+}
+
+pipenv_lock() {
+    pipenv_init
+    $pipenv lock -d
+    tmpfile=$(mktemp)
+    trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
+
+    for file; do
+	case $file in
+	    (requirements-dev*.txt)
+		pipenv_opts=-dr
+		;;
+	    (requirements.txt)
+		pipenv_opts=-r
+		;;
+	    (*)
+		abort "%s: %s: Invalid filename\n" "$0" "$file"
+		;;
+	esac
+
+	printf "Generating %s\n" $file
+
+	if $pipenv lock $pipenv_opts >$tmpfile; then
+	    /bin/mv -f $tmpfile $file
+	else
+	    abort "%s: Unable to update %s\n" "$0" "$file"
+	fi
+    done
+
+    chgrp $(id -g) "$@"
+    chmod a+r "$@"
+}
+
+pipenv_update() {
+    pipenv_lock $VENV_REQUIREMENTS
+    $pipenv sync -d
+}
+
+pip_update() {
+    assert [ -n "$1" ]
+    venv_filename=$1
+    venv_force_sync=true
+    venv_requirements=$VENV_REQUIREMENTS
+    sync_venv $venv_filename
+}
+
 if [ -n "${VIRTUAL_ENV:-}" ]; then
-    abort "%s\n" "$0: Must not be run within a virtual environment"
+    abort "%s: Must not be run within a virtual environment\n" "$0"
 fi
 
 if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "$0: Must be run as a non-privileged user"
+    abort "%s: Must be run as a non-privileged user\n" "$0"
 fi
 
 script_dir=$(get_path "$(dirname "$0")")
 
-source_dir=$script_dir/..
-
-tmpfile=$(mktemp)
-trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
-
-cd "$source_dir"
+. "$script_dir/sync-virtualenv.sh"
 
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
@@ -120,12 +125,14 @@ if [ "$pipenv" = false ]; then
     pip=$("$script_dir/get-python-command.sh" pip)
 fi
 
+source_dir=$script_dir/..
+
+cd "$source_dir"
+
 if [ "$pipenv" != false ]; then
     pipenv_update
 elif [ "$pip" != false ]; then
     pip_update $VENV_FILENAME
 else
-    abort "%s: No pip nor pipenv in path\n" "$0"
+    abort "%s: No pip nor pipenv command found in PATH\n" "$0"
 fi
-
-touch .update

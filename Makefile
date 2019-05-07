@@ -70,4 +70,4 @@ uninstall:
 	$(script_dir)/configure-env.sh .env-docker
 
 .update:	Pipfile Pipfile.lock
-	$(script_dir)/update-virtualenv.sh
+	$(script_dir)/update-virtualenv.sh && touch .update

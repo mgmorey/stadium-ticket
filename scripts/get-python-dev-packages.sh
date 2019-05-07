@@ -22,13 +22,13 @@ DEBIAN_PKGS="make %s-pip %s-venv %s-virtualenv"
 
 FEDORA_PKGS="gcc make %s-pip %s-virtualenv"
 
-FREEBSD_PKGS="bash gmake %s-pip %s-virtualenv"
+FREEBSD_PKGS="gmake %s-pip %s-virtualenv"
 
-OPENSUSE_PKGS="gcc make %s-pip %s-virtualenv"
+OPENSUSE_PKGS="make %s-pip %s-virtualenv"
 
 REDHAT_PKGS="gcc make %s-pip %s-virtualenv"
 
-SUNOS_PKGS="pip-%s"
+SUNOS_PKGS="make pip-%s"
 
 abort() {
     printf "$@" >&2
