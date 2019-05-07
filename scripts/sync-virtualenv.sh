@@ -20,7 +20,7 @@ PIP_SUDO_OPTS="--no-cache-dir"
 PYTHON=python3
 
 abort_no_python() {
-    abort "%s: No suitable Python interpreter found\n" "$0"
+    abort "%s\n" "No suitable Python interpreter found"
 }
 
 activate_venv() {

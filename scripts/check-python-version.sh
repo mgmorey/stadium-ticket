@@ -23,6 +23,10 @@ abort() {
     exit 1
 }
 
+abort_no_python() {
+    abort "%s\n" "No suitable Python interpreter found"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
