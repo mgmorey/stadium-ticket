@@ -37,8 +37,8 @@ configure_darwin() {
     # Set uWSGI-specific directories
     UWSGI_PREFIX=/usr/local/opt/uwsgi
     UWSGI_ETCDIR=/usr/local/etc/uwsgi
-    UWSGI_LOGDIR=
-    UWSGI_RUNDIR=
+    UWSGI_LOGDIR=/usr/local/var/log
+    UWSGI_RUNDIR=/usr/local/var/run
 
     # Set application directory names from name variable
     APP_LOGDIR=$APP_VARDIR
