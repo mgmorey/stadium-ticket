@@ -40,13 +40,6 @@ get_path() {
     fi
 }
 
-stage_app() {
-    assert [ -n "$1" ]
-    venv_filename=$1
-    venv_requirements=$VENV_REQUIREMENTS
-    sync_venv $venv_filename
-}
-
 if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
@@ -67,4 +60,7 @@ cd "$source_dir"
 pip=$("$script_dir/get-python-command.sh" pip)
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
-stage_app $1
+assert [ -n "$1" ]
+venv_filename=$1
+venv_requirements=$VENV_REQUIREMENTS
+sync_venv $venv_filename

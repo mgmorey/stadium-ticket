@@ -252,18 +252,6 @@ get_path() {
     fi
 }
 
-stage_app() {
-    if [ "$(id -u)" -eq 0 ]; then
-	sh="su $SUDO_USER"
-    else
-	sh="sh -eu"
-    fi
-
-    if ! $sh "$script_dir/stage-app.sh" .venv-$APP_NAME; then
-	abort "%s: Unable to stage virtual environment\n" "$0"
-    fi
-}
-
 start_app() {
     if signal_app HUP; then
 	restart_service=false
@@ -336,6 +324,12 @@ plugin_dir=$UWSGI_PREFIX/lib/plugin
 binary=$binary_dir/$UWSGI_BINARY_NAME
 plugin=$plugin_dir/$UWSGI_PLUGIN_NAME
 
+if [ "$(id -u)" -eq 0 ]; then
+    sh="su $SUDO_USER"
+else
+    sh="sh -eu"
+fi
+
 cd "$source_dir"
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
@@ -343,7 +337,10 @@ trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 for dryrun in true false; do
     if [ $dryrun = false ]; then
 	install_uwsgi
-	stage_app
+
+	if ! $sh "$script_dir/stage-app.sh" .venv-$APP_NAME; then
+	    abort "%s: Unable to stage virtual environment\n" "$0"
+	fi
     fi
 
     remove_database
