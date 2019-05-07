@@ -26,7 +26,7 @@ FREEBSD_PKGS="bash gmake %s-pip %s-virtualenv"
 
 OPENSUSE_PKGS="gcc make %s-pip %s-virtualenv"
 
-REDHAT_PKGS="%s-pip %s-virtualenv"
+REDHAT_PKGS="gcc make %s-pip %s-virtualenv"
 
 SUNOS_PKGS="pip-%s"
 
