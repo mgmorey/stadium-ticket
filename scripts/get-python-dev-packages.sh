@@ -20,13 +20,13 @@ DARWIN_PKGS=""
 
 DEBIAN_PKGS="make %s-pip %s-venv %s-virtualenv"
 
-FEDORA_PKGS="gcc make %s-pip %s-virtualenv"
+FEDORA_PKGS="make %s-pip %s-virtualenv"
 
 FREEBSD_PKGS="gmake %s-pip %s-virtualenv"
 
 OPENSUSE_PKGS="make %s-pip %s-virtualenv"
 
-REDHAT_PKGS="gcc make %s-pip %s-virtualenv"
+REDHAT_PKGS="make %s-pip %s-virtualenv"
 
 SUNOS_PKGS="make pip-%s"
 
