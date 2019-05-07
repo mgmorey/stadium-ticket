@@ -36,7 +36,8 @@ abort_no_python() {
 
 activate_venv() {
     assert [ $# -eq 1 ]
-    assert [ -n "$1" -a -d $1/bin -a -r $1/bin/activate ]
+    assert [ -n "$1" ]
+    assert [ -d $1/bin -a -r $1/bin/activate ]
     printf "%s\n" "Activating virtual environment"
     set +u
     . "$1/bin/activate"
@@ -57,7 +58,8 @@ check_permissions() {
 
 check_python_version() {
     assert [ $# -eq 1 ]
-    assert [ -x "$1" ]
+    assert [ -n "$1" ]
+    assert [ -x $1 ]
     python_output=$($1 --version)
     python_version="${python_output#Python }"
     printf "Python interpreter %s " "$1"
