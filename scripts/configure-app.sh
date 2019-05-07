@@ -31,8 +31,8 @@ configure_darwin() {
     APP_VARDIR=/usr/local/var/opt/$APP_NAME
 
     # Set application group and user identification
-    APP_GID=wheel
-    APP_UID=root
+    APP_GID=_www
+    APP_UID=_www
 
     # Set uWSGI-specific directories
     UWSGI_PREFIX=/usr/local/opt/uwsgi
