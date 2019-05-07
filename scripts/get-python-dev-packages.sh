@@ -28,7 +28,7 @@ OPENSUSE_PKGS="make %s-pip %s-virtualenv"
 
 REDHAT_PKGS="%s-pip %s-virtualenv"
 
-SUNOS_PKGS="pip-%s"
+SUNOS_PKGS="make pip-%s"
 
 abort() {
     printf "$@" >&2
