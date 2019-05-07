@@ -19,3 +19,7 @@
 PYTHON=python3
 
 PYTHONS="$PYTHON python false"
+
+# Application-specific parameters
+APP_NAME=stadium-ticket
+APP_PORT=5000

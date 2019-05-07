@@ -13,11 +13,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-PREFIX=/usr/local/opt/uwsgi
-
-OBJECT_DIR=$PREFIX/lib/plugin
-PLUGIN=python3_plugin.so
-
 abort() {
     printf "$@" >&2
     exit 1
@@ -42,12 +37,24 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
+. "$script_dir/common-parameters.sh"
 . "$script_dir/configure-app.sh"
 
-if uwsgi --version >/dev/null 2>&1; then
-    if [ -x $OBJECT_DIR/$PLUGIN ]; then
-	if cd $OBJECT_DIR; then
-	    uwsgi $APP_CONFIG
+binary_dir=$UWSGI_PREFIX/bin
+plugin_dir=$UWSGI_PREFIX/lib/plugin
+
+binary=$binary_dir/$UWSGI_BINARY_NAME
+plugin=$plugin_dir/$UWSGI_PLUGIN_NAME
+
+if [ -e $APP_PIDFILE ]; then
+    pid=$("$script_dir/read-file.sh" $APP_PIDFILE)
+    abort "%s: Process already running as PID %s\n" "$0" "$pid"
+fi
+
+if $binary --version >/dev/null 2>&1; then
+    if [ -x $plugin ]; then
+	if cd $plugin_dir; then
+	    $binary $APP_CONFIG
 	fi
     fi
 fi

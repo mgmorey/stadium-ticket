@@ -13,15 +13,15 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-# Application-specific parameters
-APP_NAME=stadium-ticket
-APP_PORT=5000
-
 configure_common() {
     # Set application directory names from name variable
     APP_DIR=/opt/$APP_NAME
     APP_ETCDIR=/etc/opt/$APP_NAME
     APP_VARDIR=/var/opt/$APP_NAME
+
+    # Set uWSGI parameters
+    UWSGI_BINARY_NAME=uwsgi
+    UWSGI_PLUGIN_NAME=python3_plugin.so
 }
 
 configure_darwin() {
@@ -35,6 +35,7 @@ configure_darwin() {
     APP_UID=root
 
     # Set uWSGI-specific directories
+    UWSGI_PREFIX=/usr/local/opt/uwsgi
     UWSGI_ETCDIR=/usr/local/etc/uwsgi
     UWSGI_LOGDIR=
     UWSGI_RUNDIR=

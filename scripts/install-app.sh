@@ -18,10 +18,6 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
-PREFIX=/usr/local/opt/uwsgi
-
-BINARY_DIR=$PREFIX/bin
-OBJECT_DIR=$PREFIX/lib/plugin
 
 WAIT_INITIAL_PERIOD=2
 WAIT_POLLING_COUNT=20
@@ -229,16 +225,16 @@ install_uwsgi_binaries() {
 install_uwsgi_binary() {
     case $binary in
 	(*_plugin.so)
-	    if [ ! -x $OBJECT_DIR/$1 ]; then
-		install_file 755 $1 $OBJECT_DIR/$1
+	    if [ ! -x $plugin_dir/$1 ]; then
+		install_file 755 $1 $plugin_dir/$1
 	    fi
 	    ;;
 	(uwsgi)
-	    if [ ! -x $BINARY_DIR/$1 ]; then
-		install_file 755 $1 $BINARY_DIR/$1
+	    if [ ! -x $binary_dir/$1 ]; then
+		install_file 755 $1 $binary_dir/$1
 	    fi
 
-	    create_symlink $BINARY_DIR/$1 /usr/local/bin/$1
+	    create_symlink $binary_dir/$1 /usr/local/bin/$1
 	    ;;
     esac
 }
@@ -333,6 +329,12 @@ source_dir=$script_dir/..
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/configure-app.sh"
+
+binary_dir=$UWSGI_PREFIX/bin
+plugin_dir=$UWSGI_PREFIX/lib/plugin
+
+binary=$binary_dir/$UWSGI_BINARY_NAME
+plugin=$plugin_dir/$UWSGI_PLUGIN_NAME
 
 cd "$source_dir"
 tmpfile=$(mktemp)
