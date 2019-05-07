@@ -74,7 +74,7 @@ create_venv() {
 
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
-    if [ "$virtualenv" == false ]; then
+    if [ "$virtualenv" = false ]; then
 	pyvenv=$("$script_dir/get-python-command.sh" pyvenv)
     fi
 
