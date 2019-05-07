@@ -16,30 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-PYTHONS="python3 python false"
-
 abort() {
     printf "$@" >&2
     exit 1
 }
 
-abort_no_python() {
-    abort "%s\n" "No suitable Python interpreter found"
-}
-
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
-}
-
-check_python_version() {
-    python_output=$($1 --version)
-    python_version="${python_output#Python }"
-    printf "Python interpreter %s " "$python"
-    printf "is version %s\n" "$python_version"
-
-    if ! $script_dir/check-python-version.py "$python_version"; then
-	abort_no_python
-    fi
 }
 
 get_path() {
@@ -56,6 +39,9 @@ get_path() {
 }
 
 script_dir=$(get_path "$(dirname "$0")")
+
+. "$script_dir/common-parameters.sh"
+. "$script_dir/common-functions.sh"
 
 for python in $PYTHONS; do
     if $python --version >/dev/null 2>&1; then

@@ -30,6 +30,18 @@ abort_not_supported() {
     abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
 
+abort_no_python() {
+    abort "%s\n" "No suitable Python interpreter found"
+}
+
+activate_venv() {
+    assert [ -n "$1" -a -d $1/bin -a -r $1/bin/activate ]
+    printf "%s\n" "Activating virtual environment"
+    set +u
+    . "$1/bin/activate"
+    set -u
+}
+
 check_permissions() {
     for file; do
 	if [ -e $file -a -w $file ]; then
@@ -40,6 +52,94 @@ check_permissions() {
 	    abort_insufficient_permissions $file
 	fi
     done
+}
+
+check_python_version() {
+    assert [ -x "$1" ]
+    python_output=$($1 --version)
+    python_version="${python_output#Python }"
+    printf "Python interpreter %s " "$1"
+    printf "is version %s\n" "$python_version"
+
+    if ! $script_dir/check-python-version.py "$python_version"; then
+	abort_no_python
+    fi
+}
+
+create_venv() {
+    assert [ -n "$1" ]
+    virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
+
+    if [ "$virtualenv" = false ]; then
+	pyvenv=$("$script_dir/get-python-command.sh" pyvenv)
+    fi
+
+    if [ "$virtualenv" != false ]; then
+	if pyenv --version >/dev/null 2>&1; then
+	    python=$(pyenv which $PYTHON)
+	else
+	    python=$(which $PYTHON)
+	fi
+
+	if [ -z "$python" ]; then
+	    abort_no_python
+	fi
+
+	check_python_version $python
+    fi
+
+    printf "%s\n" "Creating virtual environment"
+
+    if [ "$virtualenv" != false ]; then
+	$virtualenv -p $python $1
+    elif [ "$pyvenv" != false ]; then
+	$pyvenv $1
+    else
+	abort "%s: No virtualenv nor pyenv/venv command found\n" "$0"
+    fi
+}
+
+sync_requirements() {
+    assert [ "$pip" != false ]
+    printf "%s\n" "Upgrading pip"
+    pip_install="$pip install ${SUDO_USER:+--no-cache-dir}"
+    $pip_install --upgrade pip
+    printf "%s\n" "Installing required packages"
+    $pip_install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
+}
+
+sync_venv() {
+    assert [ -n "$1" ]
+
+    if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
+	stats_1="$(stat -Lf "%d %i" "$VIRTUAL_ENV")"
+	stats_2="$(stat -Lf "%d %i" "$1")"
+
+	if [ "$stats_1" = "$stats_2" ]; then
+	    abort "%s: Must not be run within the virtual environment\n" "$0"
+	fi
+    fi
+
+    if [ -d $1 ]; then
+	sync=false
+    else
+	upgrade_pip_and_virtualenv
+	create_venv $1
+	sync=true
+    fi
+
+    if [ -r $1/bin/activate ]; then
+	activate_venv $1
+	assert [ -n "${VIRTUAL_ENV:-}" ]
+
+	if [ "${venv_force_sync:-$sync}" = true ]; then
+	    sync_requirements
+	fi
+    elif [ -d $1 ]; then
+	abort "%s: Unable to activate environment\n" "$0"
+    else
+	abort "%s: No virtual environment\n" "$0"
+    fi
 }
 
 remove_database() {
@@ -121,5 +221,20 @@ tail_log_file() {
 	print_file_tail $APP_LOGFILE
     elif [ -e $APP_LOGFILE ]; then
 	printf "No permission to read log file: %s\n" $APP_LOGFILE >&2
+    fi
+}
+
+upgrade_pip_and_virtualenv() {
+    pip=$("$script_dir/get-python-command.sh" pip)
+
+    if [ "$(id -u)" -eq 0 ]; then
+	sh="su $SUDO_USER"
+    else
+	sh="sh -eu"
+    fi
+
+    if [ "$pip" != false ]; then
+	pip_install="$pip install ${SUDO_USER:+$PIP_SUDO_OPTS}"
+	$sh -c "$pip_install --upgrade --user pip virtualenv"
     fi
 }

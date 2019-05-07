@@ -23,9 +23,6 @@ PREFIX=/usr/local/opt/uwsgi
 BINARY_DIR=$PREFIX/bin
 OBJECT_DIR=$PREFIX/lib/plugin
 
-PLUGIN=python3_plugin.so
-PYTHON=python3
-
 WAIT_INITIAL_PERIOD=2
 WAIT_POLLING_COUNT=20
 
@@ -198,7 +195,7 @@ install_source_files() {
 install_uwsgi() {
     case "$kernel_name" in
 	(Darwin)
-	    install_uwsgi_binaries uwsgi $PLUGIN
+	    install_uwsgi_binaries uwsgi ${PYTHON}_plugin.so
 	    ;;
 	(*)
 	    if ! "$script_dir/is-installed-package.sh" uwsgi; then
@@ -333,6 +330,7 @@ script_dir=$(get_path "$(dirname "$0")")
 
 source_dir=$script_dir/..
 
+. "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/configure-app.sh"
 

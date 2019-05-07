@@ -57,7 +57,8 @@ fi
 
 script_dir=$(get_path "$(dirname "$0")")
 
-. "$script_dir/sync-virtualenv.sh"
+. "$script_dir/common-parameters.sh"
+. "$script_dir/common-functions.sh"
 
 source_dir=$script_dir/..
 
