@@ -39,6 +39,8 @@ assert() {
 }
 
 build_uwsgi_binary() {
+    assert [ $# -eq 1 ]
+
     if [ -x $1 ]; then
 	return
     fi
