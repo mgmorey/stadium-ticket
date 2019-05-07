@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-VENV_REQUIREMENTS="requirements.txt"
-
 abort() {
     printf "$@" >&2
     exit 1
@@ -60,7 +58,7 @@ cd "$source_dir"
 pip=$("$script_dir/get-python-command.sh" pip)
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 venv_filename=$1
-venv_requirements=$VENV_REQUIREMENTS
+venv_requirements=requirements.txt
 
 case $venv_filename in
     ($VENV_FILENAME)
