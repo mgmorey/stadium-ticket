@@ -40,11 +40,16 @@ script_dir=$(get_path "$(dirname "$0")")
 . "$script_dir/common-parameters.sh"
 . "$script_dir/configure-app.sh"
 
+app_prefix=$APP_DIR/.venv
+
 binary_dir=$UWSGI_PREFIX/bin
 plugin_dir=$UWSGI_PREFIX/lib/plugin
 
 binary=$binary_dir/$UWSGI_BINARY_NAME
 plugin=$plugin_dir/$UWSGI_PLUGIN_NAME
+
+export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
+export PYTHONPATH=$app_prefix/lib
 
 if [ -e $APP_PIDFILE ]; then
     pid=$("$script_dir/read-file.sh" $APP_PIDFILE)
