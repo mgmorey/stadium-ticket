@@ -48,6 +48,7 @@ script_dir=$(get_path "$(dirname "$0")")
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/configure-app.sh"
+configure_app
 
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM

@@ -156,61 +156,63 @@ configure_sunos() {
     UWSGI_APPDIRS=
 }
 
-eval $("$script_dir/get-os-release.sh" -X)
+configure_app() {
+    eval $("$script_dir/get-os-release.sh" -X)
 
-configure_common
+    configure_common
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian)
-		case "$VERSION_ID" in
-		    (10)
-			configure_debian
-			;;
-		    (*)
-			abort_not_supported Release
-			;;
-		esac
-		;;
-	    (ubuntu)
-		case "$VERSION_ID" in
-		    (18.*|19.04)
-			configure_debian
-			;;
-		    (*)
-			abort_not_supported Release
-			;;
-		esac
-		;;
-	    (opensuse-tumbleweed)
-		case "$VERSION_ID" in
-		    (2019*)
-			configure_opensuse
-			;;
-		    (*)
-			abort_not_supported Release
-			;;
-		esac
-		;;
-	    (*)
-		abort_not_supported Distro
-		;;
-	esac
-	;;
-    (Darwin)
-    	configure_darwin
-    	;;
-    # (FreeBSD)
-    #	configure_freebsd
-    #	;;
-    # (SunOS)
-    #	configure_sunos
-    #	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian)
+		    case "$VERSION_ID" in
+			(10)
+			    configure_debian
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(ubuntu)
+		    case "$VERSION_ID" in
+			(18.*|19.04)
+			    configure_debian
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(opensuse-tumbleweed)
+		    case "$VERSION_ID" in
+			(2019*)
+			    configure_opensuse
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+    	    configure_darwin
+    	    ;;
+	# (FreeBSD)
+	#	configure_freebsd
+	#	;;
+	# (SunOS)
+	#	configure_sunos
+	#	;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
 
-# Set additional parameters from directory variables
-APP_CONFIG=$APP_ETCDIR/app.ini
+    # Set additional parameters from directory variables
+    APP_CONFIG=$APP_ETCDIR/app.ini
+}

@@ -317,6 +317,7 @@ source_dir=$script_dir/..
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/configure-app.sh"
+configure_app
 
 binary_dir=$UWSGI_PREFIX/bin
 plugin_dir=$UWSGI_PREFIX/lib/plugin
