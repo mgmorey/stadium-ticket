@@ -35,7 +35,7 @@ pip_run() {
     printf "%s\n" "Loading .env environment variables"
     . ./.env
 
-    for var in $APP_VARS; do
+    for var in $APP_ENV_VARS; do
 	export $var
     done
 

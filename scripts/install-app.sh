@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
-APP_RUNDIR APP_UID APP_VARDIR"
-
 WAIT_INITIAL_PERIOD=2
 WAIT_POLLING_COUNT=20
 
@@ -118,7 +115,7 @@ generate_ini() {
     assert [ -n "$1" -a -r "$1" ]
     printf "%s" "sed -e 's|^#<\\(.*\\)>$|\\1|g'"
 
-    for var in $APP_VARS; do
+    for var in $APP_INI_VARS; do
 	eval value=\$$var
 	printf " %s" "-e 's|\$($var)|$value|g'"
     done
