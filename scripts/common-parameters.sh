@@ -16,9 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+PIPENV_OPTS=--three
 PYTHON=python3
 
 PYTHONS="$PYTHON python false"
+
+VENV_FILENAME=.venv
+VENV_REQUIREMENTS="requirements-dev.txt requirements.txt"
 
 # Application-specific parameters
 APP_NAME=stadium-ticket

@@ -35,6 +35,7 @@ abort_no_python() {
 }
 
 activate_venv() {
+    assert [ $# -eq 1 ]
     assert [ -n "$1" -a -d $1/bin -a -r $1/bin/activate ]
     printf "%s\n" "Activating virtual environment"
     set +u
@@ -55,6 +56,7 @@ check_permissions() {
 }
 
 check_python_version() {
+    assert [ $# -eq 1 ]
     assert [ -x "$1" ]
     python_output=$($1 --version)
     python_version="${python_output#Python }"
@@ -67,27 +69,34 @@ check_python_version() {
 }
 
 create_venv() {
+    assert [ $# -ge 1 ]
     assert [ -n "$1" ]
+
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
-    if [ "$virtualenv" = false ]; then
+    if [ "$virtualenv" == false ]; then
 	pyvenv=$("$script_dir/get-python-command.sh" pyvenv)
     fi
 
     if [ "$virtualenv" != false ]; then
-	if pyenv --version >/dev/null 2>&1; then
-	    python=$(pyenv which $PYTHON)
-	else
-	    python=$(which $PYTHON)
-	fi
+	python="${2-}"
 
 	if [ -z "$python" ]; then
-	    abort_no_python
-	fi
+	    if pyenv --version >/dev/null 2>&1; then
+		which="pyenv which"
+	    else
+		which=which
+	    fi
 
-	check_python_version $python
+	    python=$($which $PYTHON)
+
+	    if [ -z "$python" ]; then
+		abort_no_python
+	    fi
+	fi
     fi
 
+    check_python_version $python
     printf "%s\n" "Creating virtual environment"
 
     if [ "$virtualenv" != false ]; then
@@ -109,6 +118,7 @@ sync_requirements() {
 }
 
 sync_venv() {
+    assert [ $# -ge 1 ]
     assert [ -n "$1" ]
 
     if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
@@ -124,7 +134,7 @@ sync_venv() {
 	sync=false
     else
 	upgrade_pip_and_virtualenv
-	create_venv $1
+	create_venv $1 ${2-}
 	sync=true
     fi
 
@@ -158,6 +168,7 @@ remove_files() {
 }
 
 print_file_tail() {
+    assert [ $# -eq 1 ]
     assert [ -n "$1" -a -n "$tmpfile" ]
     tail $1 >$tmpfile
 
@@ -189,7 +200,7 @@ signal_app() {
 
 	if [ $signal = HUP ]; then
 	    if kill -s $signal $pid; then
-	        printf "Waiting for process to handle SIG%s\n" "$signal"
+		printf "Waiting for process to handle SIG%s\n" "$signal"
 		sleep $KILL_INTERVAL
 		result=0
 	    else

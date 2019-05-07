@@ -19,10 +19,6 @@
 export LANG=${LANG:-en_US.UTF-8}
 export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
-PIPENV_OPTS=--three
-VENV_FILENAME=.venv
-VENV_REQUIREMENTS="requirements-dev.txt requirements.txt"
-
 abort() {
     printf "$@" >&2
     exit 1

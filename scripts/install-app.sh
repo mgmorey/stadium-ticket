@@ -130,7 +130,7 @@ install_app_and_config() {
     create_app_dirs "$APP_DIR" "$APP_ETCDIR" "$APP_VARDIR"
     install_source_files 644 app "$APP_DIR"
     install_file "$@" 600 .env "$APP_DIR/.env"
-    install_dir .venv-$APP_NAME "$APP_DIR/.venv"
+    install_dir $VENV_FILENAME-$APP_NAME "$APP_DIR/$VENV_FILENAME"
     change_ownership "$APP_DIR" "$APP_VARDIR"
     enable_app "$APP_CONFIG" $UWSGI_APPDIRS
 }
@@ -338,7 +338,7 @@ for dryrun in true false; do
     if [ $dryrun = false ]; then
 	install_uwsgi
 
-	if ! $sh "$script_dir/stage-app.sh" .venv-$APP_NAME; then
+	if ! $sh "$script_dir/stage-app.sh" $VENV_FILENAME-$APP_NAME; then
 	    abort "%s: Unable to stage virtual environment\n" "$0"
 	fi
     fi

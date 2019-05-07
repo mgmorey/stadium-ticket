@@ -59,8 +59,20 @@ cd "$source_dir"
 
 pip=$("$script_dir/get-python-command.sh" pip)
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
-
-assert [ -n "$1" ]
 venv_filename=$1
 venv_requirements=$VENV_REQUIREMENTS
-sync_venv $venv_filename
+
+case $venv_filename in
+    ($VENV_FILENAME)
+	python=
+	;;
+    ($VENV_FILENAME-$APP_NAME)
+	for python in /usr/local/bin/$PYTHON /usr/bin/$PYTHON ""; do
+	    if [ -n "$python" ] && $python --version >/dev/null 2>&1; then
+		break
+	    fi
+	done
+	;;
+esac
+
+sync_venv $venv_filename ${python-}

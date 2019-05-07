@@ -40,6 +40,8 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
+. "$script_dir/common-parameters.sh"
+
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
 if [ "$pipenv" != false ]; then
@@ -48,4 +50,4 @@ if [ "$pipenv" != false ]; then
     fi
 fi
 
-/bin/rm -rf .venv*
+/bin/rm -rf ${VENV_FILENAME}*
