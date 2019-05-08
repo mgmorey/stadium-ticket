@@ -127,5 +127,5 @@ if [ "$pipenv" != false ]; then
 elif [ "$pip" != false ]; then
     pip_update $VENV_FILENAME
 else
-    abort "%s: No pip nor pipenv command found in PATH\n" "$0"
+    abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
 fi

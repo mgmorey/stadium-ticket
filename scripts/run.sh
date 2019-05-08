@@ -81,13 +81,16 @@ source_dir=$script_dir/..
 
 cd "$source_dir"
 
-pip=$("$script_dir/get-python-command.sh" pip)
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
+
+if [ "$pipenv" = false ]; then
+    pip=$("$script_dir/get-python-command.sh" pip)
+fi
 
 if [ "$pipenv" != false ]; then
     pipenv_run "$@"
 elif [ "$pip" != false ]; then
     pip_run "$@"
 else
-    abort "%s: No pip nor pipenv in path\n" "$0"
+    abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
 fi
