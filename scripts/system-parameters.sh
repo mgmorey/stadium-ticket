@@ -77,12 +77,9 @@ configure_debian() {
     APP_SOCKET=$APP_RUNDIR/socket
     UWSGI_APPDIRS="apps-available apps-enabled"
 
-    # Set uWSGI top-level directories
-    UWSGI_PREFIX=/usr
-
-    # Set uWSGI directories from UWSGI_PREFIX
-    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/plugin
+    # Set uWSGI directories
+    UWSGI_BINARY_DIR=/usr/bin
+    UWSGI_PLUGIN_DIR=/usr/lib/uwsgi/plugins
 }
 
 configure_freebsd() {
