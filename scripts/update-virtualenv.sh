@@ -110,6 +110,7 @@ script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
+. "$script_dir/venv-functions.sh"
 
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
