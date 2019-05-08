@@ -35,12 +35,14 @@ build_uwsgi_binary() {
 	return
     fi
 
+    find_system_python
+
     case $1 in
 	(python3*)
-	    $PYTHON uwsgiconfig.py --plugin plugins/python core ${1%_*}
+	    $python uwsgiconfig.py --plugin plugins/python core ${1%_*}
 	    ;;
 	(uwsgi)
-	    $PYTHON uwsgiconfig.py --build core
+	    $python uwsgiconfig.py --build core
     esac
 }
 

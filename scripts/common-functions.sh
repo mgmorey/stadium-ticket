@@ -56,7 +56,7 @@ check_permissions() {
     done
 }
 
-check_python_version() {
+check_python() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     assert [ -x $1 ]
@@ -64,7 +64,7 @@ check_python_version() {
     python_version="${python_output#Python }"
     printf "Python %s interpreter found: %s\n" "$python_version" "$1"
 
-    if ! $script_dir/check-python-version.py "$python_version"; then
+    if ! $script_dir/check-python.py "$python_version"; then
 	abort_no_python
     fi
 }
@@ -83,21 +83,11 @@ create_venv() {
 	python="${2-}"
 
 	if [ -z "$python" ]; then
-	    if pyenv --version >/dev/null 2>&1; then
-		which="pyenv which"
-	    else
-		which=which
-	    fi
-
-	    python=$($which $PYTHON)
-
-	    if [ -z "$python" ]; then
-		abort_no_python
-	    fi
+	    find_python
 	fi
     fi
 
-    check_python_version $python
+    check_python $python
     printf "%s\n" "Creating virtual environment"
 
     if [ "$virtualenv" != false ]; then
@@ -107,6 +97,45 @@ create_venv() {
     else
 	abort "%s: No virtualenv nor pyenv/venv command found\n" "$0"
     fi
+}
+
+find_python()
+{
+    if pyenv --version >/dev/null 2>&1; then
+	which="pyenv which"
+    else
+	which=which
+    fi
+
+    for python in $PYTHONS; do
+	python=$($which $python)
+
+	if [ -z "$python" ]; then
+	    abort_no_python
+	elif [ $python = false ]; then
+	    abort_no_python
+	elif $python --version >/dev/null 2>&1; then
+	    break
+	fi
+    done
+}
+
+find_system_python () {
+    for prefix in /usr/local /usr; do
+	bindir=$prefix/bin
+
+	if [ -d $bindir ]; then
+	    for binary in $PYTHONS; do
+		python=$bindir/$binary
+
+		if [ -x $python ]; then
+		    if $python --version >/dev/null 2>&1; then
+			return
+		    fi
+		fi
+	    done
+	fi
+    done
 }
 
 sync_requirements() {

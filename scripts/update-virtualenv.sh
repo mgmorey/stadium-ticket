@@ -44,13 +44,8 @@ get_path() {
 pipenv_init() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	if pyenv --version >/dev/null 2>&1; then
-	    python=$(pyenv which $PYTHON)
-
-	    if [ -z "$python" ]; then
-		abort_no_python
-	    fi
-
-	    check_python_version $python
+	    find_python
+	    check_python $python
 	    $pipenv --python $python
 	else
 	    $pipenv $PIPENV_OPTS

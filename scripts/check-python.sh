@@ -43,26 +43,5 @@ script_dir=$(get_path "$(dirname "$0")")
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 
-for python in $PYTHONS; do
-    if $python --version >/dev/null 2>&1; then
-	break
-    fi
-done
-
-if [ "$python" != false ]; then
-    if pyenv --version >/dev/null 2>&1; then
-	which="pyenv which"
-    else
-	which=which
-    fi
-
-    python=$($which $python)
-
-    if [ -z "$python" ]; then
-	abort_no_python
-    fi
-
-    check_python_version $python
-else
-    abort_no_python
-fi
+find_python
+check_python $python
