@@ -188,10 +188,10 @@ install_source_files() {
 install_uwsgi() {
     case "$kernel_name" in
 	(Darwin)
-	    install_uwsgi_binaries uwsgi ${PYTHON}_plugin.so
+	    install_uwsgi_binaries $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	    ;;
 	(*)
-	    if ! "$script_dir/is-installed-package.sh" uwsgi; then
+	    if ! "$script_dir/is-installed-package.sh" $UWSGI_BINARY_NAME; then
 		packages=$("$script_dir/get-uwsgi-packages.sh")
 		"$script_dir/install-packages.sh" $packages
 		start_uwsgi
@@ -222,16 +222,16 @@ install_uwsgi_binaries() {
 install_uwsgi_binary() {
     case $binary in
 	(*_plugin.so)
-	    if [ ! -x $plugin_dir/$1 ]; then
-		install_file 755 $1 $plugin_dir/$1
+	    if [ ! -x $UWSGI_PLUGIN_DIR/$1 ]; then
+		install_file 755 $1 $UWSGI_PLUGIN_DIR/$1
 	    fi
 	    ;;
 	(uwsgi)
-	    if [ ! -x $binary_dir/$1 ]; then
-		install_file 755 $1 $binary_dir/$1
+	    if [ ! -x $UWSGI_BINARY_DIR/$1 ]; then
+		install_file 755 $1 $UWSGI_BINARY_DIR/$1
 	    fi
 
-	    create_symlink $binary_dir/$1 /usr/local/bin/$1
+	    create_symlink $UWSGI_BINARY_DIR/$1 /usr/local/bin/$1
 	    ;;
     esac
 }
@@ -315,12 +315,6 @@ source_dir=$script_dir/..
 . "$script_dir/common-functions.sh"
 . "$script_dir/configure-app.sh"
 configure_app
-
-binary_dir=$UWSGI_PREFIX/bin
-plugin_dir=$UWSGI_PREFIX/lib/plugin
-
-binary=$binary_dir/$UWSGI_BINARY_NAME
-plugin=$plugin_dir/$UWSGI_PLUGIN_NAME
 
 if [ "$(id -u)" -eq 0 ]; then
     sh="su $SUDO_USER"

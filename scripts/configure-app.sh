@@ -14,7 +14,7 @@
 # GNU General Public License for more details.
 
 configure_common() {
-    # Set application directory names from name variable
+    # Set application directory names from APP_NAME
     APP_DIR=/opt/$APP_NAME
     APP_ETCDIR=/etc/opt/$APP_NAME
     APP_VARDIR=/var/opt/$APP_NAME
@@ -25,38 +25,42 @@ configure_common() {
 }
 
 configure_darwin() {
-    # Set application directory names from name variable
+    # Set application directory names from APP_NAME
     APP_DIR=/usr/local/opt/$APP_NAME
     APP_ETCDIR=/usr/local/etc/opt/$APP_NAME
     APP_VARDIR=/usr/local/var/opt/$APP_NAME
 
-    # Set application group and user identification
+    # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
 
-    # Set uWSGI-specific directories
+    # Set application directory names from APP_VARDIR
+    APP_LOGDIR=$APP_VARDIR
+    APP_RUNDIR=$APP_VARDIR
+
+    # Set additional parameters from app directories
+    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
+    UWSGI_APPDIRS="apps-available apps-enabled"
+
+    # Set uWSGI top-level directories
     UWSGI_PREFIX=/usr/local/opt/uwsgi
     UWSGI_ETCDIR=/usr/local/etc/uwsgi
     UWSGI_LOGDIR=/usr/local/var/log
     UWSGI_RUNDIR=/usr/local/var/run
 
-    # Set application directory names from name variable
-    APP_LOGDIR=$APP_VARDIR
-    APP_RUNDIR=$APP_VARDIR
-
-    # Set additional parameters from directory variables
-    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    UWSGI_APPDIRS="apps-available apps-enabled"
+    # Set uWSGI directories from UWSGI_PREFIX
+    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
+    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/plugin
 }
 
 configure_debian() {
-    # Set application group and user identification
+    # Set application group and user accounts
     APP_GID=www-data
     APP_UID=www-data
 
-    # Set uWSGI-specific directories
+    # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc/uwsgi
     UWSGI_LOGDIR=/var/log/uwsgi/app
     UWSGI_RUNDIR=/var/run/uwsgi/app/$APP_NAME
@@ -65,7 +69,7 @@ configure_debian() {
     APP_LOGDIR=$UWSGI_LOGDIR
     APP_RUNDIR=$UWSGI_RUNDIR
 
-    # Set additional parameters from directory variables
+    # Set additional parameters from app directories
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/socket
@@ -73,87 +77,86 @@ configure_debian() {
 }
 
 configure_freebsd() {
-    # Set application group and user identification
+    # Set application group and user accounts
     APP_GID=wheel
     APP_UID=root
 
-    # Set uWSGI-specific directories
-    UWSGI_ETCDIR=/etc/uwsgi
-    UWSGI_LOGDIR=
-    UWSGI_RUNDIR=
-
-    # Set application directory names from name variable
+    # Set application directory names from APP_NAME
     APP_LOGDIR=$APP_VARDIR
     APP_RUNDIR=$APP_VARDIR
 
-    # Set additional parameters from directory variables
+    # Set additional parameters from app directories
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS=
+
+    # Set uWSGI top-level directories
+    UWSGI_ETCDIR=/etc/uwsgi
+    UWSGI_LOGDIR=
+    UWSGI_RUNDIR=
 }
 
 configure_nt() {
-    # Set application group and user identification
+    # Set application group and user accounts
     APP_GID="$(id -gn)"
     APP_UID="$(id -un)"
-
-    # Set uWSGI-specific directories
-    UWSGI_ETCDIR=/etc/uwsgi
-    UWSGI_LOGDIR=
-    UWSGI_RUNDIR=
-
-    # Set application directory names from name variable
+    # Set application directory names from APP_NAME
     APP_LOGDIR=$APP_VARDIR
     APP_RUNDIR=$APP_VARDIR
 
-    # Set additional parameters from directory variables
+    # Set additional parameters from app directories
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS="vassals"
+
+    # Set uWSGI top-level directories
+    UWSGI_ETCDIR=/etc/uwsgi
+    UWSGI_LOGDIR=
+    UWSGI_RUNDIR=
 }
 
 configure_opensuse() {
-    # Set application group and user identification
+    # Set application group and user accounts
     APP_GID=nogroup
     APP_UID=nobody
 
-    # Set uWSGI-specific directories
-    UWSGI_ETCDIR=/etc/uwsgi
-    UWSGI_LOGDIR=
-    UWSGI_RUNDIR=
-
-    # Set application directory names from name variable
+    # Set application directory names from APP_NAME
     APP_LOGDIR=$APP_VARDIR
     APP_RUNDIR=$APP_VARDIR
 
-    # Set additional parameters from directory variables
+    # Set additional parameters from app directories
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS="vassals"
-}
 
-configure_sunos() {
-    # Set application group and user identification
-    APP_GID=sys
-    APP_UID=root
-
-    # Set uWSGI-specific directories
+    # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc/uwsgi
     UWSGI_LOGDIR=
     UWSGI_RUNDIR=
+}
 
-    # Set application directory names from name variable
+configure_sunos() {
+    # Set application group and user accounts
+    APP_GID=sys
+    APP_UID=root
+
+    # Set application directory names from APP_NAME
     APP_LOGDIR=$APP_VARDIR
     APP_RUNDIR=$APP_VARDIR
 
-    # Set additional parameters from directory variables
+    # Set additional parameters from app directories
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     UWSGI_APPDIRS=
+
+    # Set uWSGI top-level directories
+    UWSGI_ETCDIR=/etc/uwsgi
+    UWSGI_LOGDIR=
+    UWSGI_RUNDIR=
 }
 
 configure_app() {
@@ -213,6 +216,6 @@ configure_app() {
 	    ;;
     esac
 
-    # Set additional parameters from directory variables
+    # Set additional common parameters from app directories
     APP_CONFIG=$APP_ETCDIR/app.ini
 }
