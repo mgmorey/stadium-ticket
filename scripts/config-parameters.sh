@@ -1,6 +1,6 @@
 # -*- Mode: Shell-script -*-
 
-# configure-app.sh: configure uWSGI application parameters
+# config-parameters.sh: application configuration parameters
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
