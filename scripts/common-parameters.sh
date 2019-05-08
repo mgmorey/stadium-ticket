@@ -25,7 +25,7 @@ APP_INI_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR UWSGI_PLUGIN_DIR"
 
 PIPENV_OPTS=--three
-PIP_SUDO_OPTS=--no-cache-dir
+PIP_SUDO_OPTS="--no-cache-dir --no-warn-script-location"
 PYTHONS="python3.6 python3 python"
 
 VENV_FILENAME=.venv
