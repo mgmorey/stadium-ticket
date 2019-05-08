@@ -20,7 +20,9 @@ configure_common() {
     APP_VARDIR=/var/opt/$APP_NAME
 
     # Set uWSGI parameters
+    UWSGI_BINARY_DIR=
     UWSGI_BINARY_NAME=uwsgi
+    UWSGI_PLUGIN_DIR=
     UWSGI_PLUGIN_NAME=python3_plugin.so
 }
 
@@ -74,6 +76,10 @@ configure_debian() {
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/socket
     UWSGI_APPDIRS="apps-available apps-enabled"
+
+    # Set uWSGI directories
+    UWSGI_BINARY_DIR=/usr/bin
+    UWSGI_PLUGIN_DIR=/usr/lib/uwsgi/plugins
 }
 
 configure_freebsd() {
@@ -136,6 +142,9 @@ configure_opensuse() {
     UWSGI_ETCDIR=/etc/uwsgi
     UWSGI_LOGDIR=
     UWSGI_RUNDIR=
+
+    # Set uWSGI directories
+    UWSGI_PLUGIN_DIR=.
 }
 
 configure_sunos() {
@@ -203,8 +212,8 @@ configure_system() {
 	    esac
 	    ;;
 	(Darwin)
-    	    configure_darwin
-    	    ;;
+	    configure_darwin
+	    ;;
 	# (FreeBSD)
 	#	configure_freebsd
 	#	;;
