@@ -38,8 +38,8 @@ get_path() {
 script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
-. "$script_dir/config-parameters.sh"
-configure_app
+. "$script_dir/system-parameters.sh"
+configure_system
 
 app_prefix=$APP_DIR/$VENV_FILENAME
 

@@ -313,8 +313,8 @@ source_dir=$script_dir/..
 
 . "$script_dir/common-functions.sh"
 . "$script_dir/common-parameters.sh"
-. "$script_dir/config-parameters.sh"
-configure_app
+. "$script_dir/system-parameters.sh"
+configure_system
 
 if [ "$(id -u)" -eq 0 ]; then
     sh="su $SUDO_USER"

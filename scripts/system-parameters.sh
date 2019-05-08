@@ -1,6 +1,6 @@
 # -*- Mode: Shell-script -*-
 
-# config-parameters.sh: application configuration parameters
+# system-parameters.sh: application configuration parameters
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -159,7 +159,7 @@ configure_sunos() {
     UWSGI_RUNDIR=
 }
 
-configure_app() {
+configure_system() {
     eval $("$script_dir/get-os-release.sh" -X)
 
     configure_common
