@@ -108,10 +108,10 @@ find_python()
     fi
 
     for python in $PYTHONS; do
-	python=$($which $python)
+	python=$($which $python 2>/dev/null)
 
 	if [ -z "$python" ]; then
-	    abort_no_python
+	    :
 	elif [ $python = false ]; then
 	    abort_no_python
 	elif $python --version >/dev/null 2>&1; then
