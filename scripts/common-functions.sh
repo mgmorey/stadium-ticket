@@ -108,7 +108,7 @@ find_python()
     fi
 
     for python in $PYTHONS; do
-	python=$($which $python 2>/dev/null)
+	python=$($which $python 2>/dev/null || true)
 
 	if [ -z "$python" ]; then
 	    :
