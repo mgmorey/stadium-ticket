@@ -42,12 +42,8 @@ script_dir=$(get_path "$(dirname "$0")")
 configure_system
 
 app_prefix=$APP_DIR/$VENV_FILENAME
-
-binary_dir=$UWSGI_PREFIX/bin
-plugin_dir=$UWSGI_PREFIX/lib/plugin
-
-binary=$binary_dir/$UWSGI_BINARY_NAME
-plugin=$plugin_dir/$UWSGI_PLUGIN_NAME
+binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
 
 export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PYTHONPATH=$app_prefix/lib
@@ -59,8 +55,6 @@ fi
 
 if $binary --version >/dev/null 2>&1; then
     if [ -x $plugin ]; then
-	if cd $plugin_dir; then
-	    $binary $APP_CONFIG
-	fi
+	$binary --plugin-dir $UWSGI_PLUGIN_DIR $APP_CONFIG
     fi
 fi
