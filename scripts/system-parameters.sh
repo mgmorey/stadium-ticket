@@ -142,6 +142,9 @@ configure_opensuse() {
     UWSGI_ETCDIR=/etc/uwsgi
     UWSGI_LOGDIR=
     UWSGI_RUNDIR=
+
+    # Set uWSGI directories
+    UWSGI_PLUGIN_DIR=.
 }
 
 configure_sunos() {
