@@ -72,7 +72,7 @@ check_python() {
 create_venv() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-
+    upgrade_pip_and_virtualenv
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
     if [ "$virtualenv" = false ]; then
@@ -80,9 +80,7 @@ create_venv() {
     fi
 
     if [ "$virtualenv" != false ]; then
-	python="${2-}"
-
-	if [ -z "$python" ]; then
+	if [ -z "${python-${2-}}" ]; then
 	    find_python
 	fi
     fi
@@ -138,65 +136,6 @@ find_system_python () {
     done
 }
 
-sync_requirements() {
-    assert [ "$pip" != false ]
-    printf "%s\n" "Upgrading pip"
-    pip_install="$pip install ${SUDO_USER:+--no-cache-dir}"
-    $pip_install --upgrade pip
-    printf "%s\n" "Installing required packages"
-    $pip_install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
-}
-
-sync_venv() {
-    assert [ $# -ge 1 ]
-    assert [ -n "$1" ]
-
-    if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
-	stats_1="$(stat -Lf "%d %i" "$VIRTUAL_ENV")"
-	stats_2="$(stat -Lf "%d %i" "$1")"
-
-	if [ "$stats_1" = "$stats_2" ]; then
-	    abort "%s: Must not be run within the virtual environment\n" "$0"
-	fi
-    fi
-
-    if [ -d $1 ]; then
-	sync=false
-    else
-	upgrade_pip_and_virtualenv
-	create_venv "$@"
-	sync=true
-    fi
-
-    if [ -r $1/bin/activate ]; then
-	activate_venv $1
-	assert [ -n "${VIRTUAL_ENV:-}" ]
-
-	if [ "${venv_force_sync:-$sync}" = true ]; then
-	    sync_requirements
-	fi
-    elif [ -d $1 ]; then
-	abort "%s: Unable to activate environment\n" "$0"
-    else
-	abort "%s: No virtual environment\n" "$0"
-    fi
-}
-
-remove_database() {
-    if [ -n "${DATABASE_FILENAME-}" ]; then
-	remove_files $DATABASE_FILENAME
-    fi
-}
-
-remove_files() {
-    check_permissions "$@"
-
-    if [ "$dryrun" = false ]; then
-	printf "Removing %s\n" "$@" | sort -u
-	/bin/rm -rf "$@"
-    fi
-}
-
 print_file_tail() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" -a -n "$tmpfile" ]
@@ -213,6 +152,21 @@ print_file_tail() {
     cat $tmpfile
     printf "%s\n" $SINGLE
     printf "%s\n" ""
+}
+
+remove_database() {
+    if [ -n "${DATABASE_FILENAME-}" ]; then
+	remove_files $DATABASE_FILENAME
+    fi
+}
+
+remove_files() {
+    check_permissions "$@"
+
+    if [ "$dryrun" = false ]; then
+	printf "Removing %s\n" "$@" | sort -u
+	/bin/rm -rf "$@"
+    fi
 }
 
 signal_app() {
@@ -255,6 +209,46 @@ signal_app() {
     return $result
 }
 
+sync_requirements() {
+    assert [ "$pip" != false ]
+    printf "%s\n" "Installing required packages"
+    $pip_install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
+}
+
+sync_venv() {
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+
+    if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
+	stats_1="$(stat -Lf "%d %i" "$VIRTUAL_ENV")"
+	stats_2="$(stat -Lf "%d %i" "$1")"
+
+	if [ "$stats_1" = "$stats_2" ]; then
+	    abort "%s: Must not be run within the virtual environment\n" "$0"
+	fi
+    fi
+
+    if [ -d $1 ]; then
+	sync=false
+    else
+	create_venv "$@"
+	sync=true
+    fi
+
+    if [ -r $1/bin/activate ]; then
+	activate_venv $1
+	assert [ -n "${VIRTUAL_ENV:-}" ]
+
+	if [ "${venv_force_sync:-$sync}" = true ]; then
+	    sync_requirements
+	fi
+    elif [ -d $1 ]; then
+	abort "%s: Unable to activate environment\n" "$0"
+    else
+	abort "%s: No virtual environment\n" "$0"
+    fi
+}
+
 tail_log_file() {
     assert [ -n "$APP_LOGFILE" -a -n "$tmpfile" ]
 
@@ -268,14 +262,17 @@ tail_log_file() {
 upgrade_pip_and_virtualenv() {
     pip=$("$script_dir/get-python-command.sh" pip)
 
+    if [ "$pip" = false ]; then
+	return
+    fi
+
     if [ "$(id -u)" -eq 0 ]; then
 	sh="su $SUDO_USER"
     else
 	sh="sh -eu"
     fi
 
-    if [ "$pip" != false ]; then
-	pip_install="$pip install ${SUDO_USER:+$PIP_SUDO_OPTS}"
-	$sh -c "$pip_install --upgrade --user pip virtualenv"
-    fi
+    printf "%s\n" "Upgrading pip and virtualenv"
+    pip_install="$pip install${SUDO_USER:+ $PIP_SUDO_OPTS}"
+    $sh -c "$pip_install --upgrade --user pip virtualenv"
 }
