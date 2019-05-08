@@ -62,8 +62,7 @@ check_python_version() {
     assert [ -x $1 ]
     python_output=$($1 --version)
     python_version="${python_output#Python }"
-    printf "Python interpreter %s " "$1"
-    printf "is version %s\n" "$python_version"
+    printf "Python %s interpreter found: %s\n" "$python_version" "$1"
 
     if ! $script_dir/check-python-version.py "$python_version"; then
 	abort_no_python

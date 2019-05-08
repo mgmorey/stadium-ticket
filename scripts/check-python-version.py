@@ -99,13 +99,15 @@ def main():
         difference = compare_versions(actual, minimum)
 
         if difference >= 0:
-            print("Python {} meets {} requirements".format(actual, FILE))
+            message = "Python {} interpreter meets {} requirements"
+            output=sys.stdout
             status = 0
         else:
-            print("Python {} does not meet {} "
-                  "requirements".format(actual, FILE), file=sys.stderr)
+            message = "Python {} interpreter does not meet {} requirements"
+            output=sys.sterr
             status = 1
 
+        print(message.format(actual, FILE), file=output)
         exit(status)
 
 
