@@ -26,7 +26,7 @@ activate_venv() {
 create_venv() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-    upgrade_pip_and_virtualenv
+    upgrade_venv_tools
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
     if [ "$virtualenv" = false ]; then
@@ -92,7 +92,7 @@ sync_venv() {
     fi
 }
 
-upgrade_pip_and_virtualenv() {
+upgrade_venv_tools() {
     pip=$("$script_dir/get-python-command.sh" pip)
 
     if [ "$pip" = false ]; then
