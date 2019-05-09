@@ -98,35 +98,31 @@ create_symlinks() {
 }
 
 create_uwsgi_ini() {
-    assert [ $# -gt 2 ]
+    assert [ $# -ge 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" ]
-    ini_file=$1
-    shift
-    check_permissions $ini_file
+    target=$1
+    source=$2
+    shift 2
+    check_permissions $target
 
     if [ $dryrun = false ]; then
-	printf "Generating configuration file %s\n" "$ini_file"
-	mkdir -p "$(dirname $ini_file)"
-	eval $(generate_commands "$@") >$ini_file
+	printf "Generating configuration file %s\n" "$target"
+	mkdir -p "$(dirname $target)"
+	generate_sed_program "$@" >$tmpfile
+	sed -f $tmpfile $source >$target
     fi
 }
 
-generate_commands() {
-    assert [ $# -gt 1 ]
-    assert [ -n "$1" -a -r "$1" ]
-    file=$1
-    shift
-    printf "%s" "sed"
+generate_sed_program() {
+    assert [ $# -ge 1 ]
 
     for var; do
 	eval value=\$$var
 	pattern="\(.*\) = \(.*\)\$($var)\(.*\)"
 	replace="\\1 = \\2$value\\3"
-	printf " -e 's;^#<%s>$;%s;g'" "$pattern" "$replace"
-	printf " -e 's;^%s$;%s;g'" "$pattern" "$replace"
+	printf 's|^#<%s>$|%s|g\n' "$pattern" "$replace"
+	printf 's|^%s$|%s|g\n' "$pattern" "$replace"
     done
-
-    printf " %s\n" "$file"
 }
 
 install_app_and_config() {
