@@ -105,7 +105,6 @@ enable_app() {
     assert [ -n "$1" ]
     file=$1
     shift
-    create_app_ini $file app.ini $APP_INI_VARS
 
     for name; do
 	create_symlink $file $UWSGI_ETCDIR/$name/$APP_NAME.ini
@@ -131,12 +130,13 @@ generate_ini() {
 }
 
 install_app_and_config() {
-    create_app_dirs "$APP_DIR" "$APP_ETCDIR" "$APP_VARDIR"
-    install_source_files 644 app "$APP_DIR"
-    install_file "$@" 600 .env "$APP_DIR/.env"
-    install_dir $VENV_FILENAME-$APP_NAME "$APP_DIR/$VENV_FILENAME"
-    change_ownership "$APP_DIR" "$APP_VARDIR"
-    enable_app "$APP_CONFIG" $UWSGI_APPDIRS
+    create_app_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
+    install_source_files 644 app $APP_DIR
+    install_file 600 .env $APP_DIR/.env
+    install_dir $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
+    change_ownership $APP_DIR $APP_VARDIR
+    create_app_ini $APP_CONFIG app.ini $APP_INI_VARS
+    enable_app $APP_CONFIG $UWSGI_APPDIRS
 }
 
 install_dir() {
