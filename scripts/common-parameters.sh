@@ -27,4 +27,4 @@ PIP_SUDO_OPTS="--no-cache-dir --no-warn-script-location"
 PYTHONS="python3.6 python3 python"
 
 VENV_FILENAME=.venv
-VENV_REQUIREMENTS="requirements-dev.txt requirements.txt"
+VENV_REQUIREMENTS=requirements*.txt
