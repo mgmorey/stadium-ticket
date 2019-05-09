@@ -54,6 +54,7 @@ create_venv() {
 sync_requirements() {
     assert [ "$pip" != false ]
     printf "%s\n" "Installing required packages"
+    pip_install="$pip install${SUDO_USER:+ $PIP_SUDO_OPTS}"
     $pip_install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
 }
 
