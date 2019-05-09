@@ -40,7 +40,7 @@ remove_app() {
 }
 
 remove_config() {
-    remove_files $UWSGI_ETCDIR/*/$APP_NAME.ini $APP_ETCDIR
+    remove_files $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print) $APP_ETCDIR
 }
 
 script_dir=$(get_path "$(dirname "$0")")
