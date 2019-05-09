@@ -57,12 +57,18 @@ case "$kernel_name" in
 	if [ $dryrun = true ]; then
 	    :
 	else
+	    is_installed=true
+
 	    for package in $("$script_dir/get-uwsgi-packages.sh"); do
 		if ! "$script_dir/is-installed-package.sh" $package; then
-		    "$script_dir/install-packages.sh" $packages
+		    is_installed=false
 		    break
 		fi
 	    done
+
+	    if [ $is_installed = false ]; then
+		"$script_dir/install-packages.sh" $packages
+	    fi
 
 	    start_uwsgi
 	fi
