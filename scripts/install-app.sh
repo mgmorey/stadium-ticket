@@ -79,7 +79,7 @@ create_app_ini() {
     if [ $dryrun = false ]; then
 	printf "Generating file %s\n" "$target"
 	mkdir -p "$(dirname "$target")"
-	generate_ini "$source" | sh -x | cat >"$target"
+	generate_ini "$source" | sh | cat >"$target"
     fi
 }
 
