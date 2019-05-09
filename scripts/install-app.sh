@@ -70,16 +70,16 @@ create_app_dirs() {
 }
 
 create_app_ini() {
-    assert [ $# -eq 2 ]
-    assert [ -n "$1" -a -r "$1" -a -n "$2" ]
-    source=$1
-    target=$2
-    check_permissions "$target"
+    assert [ $# -gt 2 ]
+    assert [ -n "$1" -a -n "$2" -a -r "$2" ]
+    file=$1
+    shift
+    check_permissions "$file"
 
     if [ $dryrun = false ]; then
-	printf "Generating file %s\n" "$target"
-	mkdir -p "$(dirname "$target")"
-	eval $(generate_ini "$source") >"$target"
+	printf "Generating file %s\n" "$file"
+	mkdir -p "$(dirname "$file")"
+	eval $(generate_ini "$@") >"$file"
     fi
 }
 
@@ -103,21 +103,23 @@ create_symlink() {
 enable_app() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-    create_app_ini app.ini $1
-    source=$1
+    file=$1
     shift
+    create_app_ini $file app.ini $APP_INI_VARS
 
     for name; do
-	create_symlink $source $UWSGI_ETCDIR/$name/$APP_NAME.ini
+	create_symlink $file $UWSGI_ETCDIR/$name/$APP_NAME.ini
     done
 }
 
 generate_ini() {
-    assert [ $# -eq 1 ]
+    assert [ $# -gt 1 ]
     assert [ -n "$1" -a -r "$1" ]
+    source=$1
+    shift
     printf "%s" "sed"
 
-    for var in $APP_INI_VARS; do
+    for var; do
 	eval value=\$$var
 	left="\(.*\) = \(.*\)\$($var)\(.*\)"
 	right="\\1 = \\2$value\\3"
@@ -125,7 +127,7 @@ generate_ini() {
 	printf " -e 's;^%s$;%s;g'" "$left" "$right"
     done
 
-    printf " %s\n" "$1"
+    printf " %s\n" "$source"
 }
 
 install_app_and_config() {
