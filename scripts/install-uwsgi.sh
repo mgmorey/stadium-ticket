@@ -42,6 +42,7 @@ if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi
 
+dryrun=${1-false}
 script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
@@ -51,10 +52,12 @@ eval $("$script_dir/get-os-release.sh" -X)
 
 case "$kernel_name" in
     (Darwin)
-	"$script_dir/install-uwsgi-from-source.sh" ${1-false}
+	"$script_dir/install-uwsgi-from-source.sh" $dryrun
 	;;
     (*)
-	if ! "$script_dir/is-installed-package.sh" $UWSGI_BINARY_NAME; then
+	if [ $dryrun = true ]; then
+	    :
+	elif ! "$script_dir/is-installed-package.sh" $UWSGI_BINARY_NAME; then
 	    packages=$("$script_dir/get-uwsgi-packages.sh")
 	    "$script_dir/install-packages.sh" $packages
 	    start_uwsgi
