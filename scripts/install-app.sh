@@ -69,20 +69,6 @@ create_app_dirs() {
     fi
 }
 
-create_uwsgi_ini() {
-    assert [ $# -gt 2 ]
-    assert [ -n "$1" -a -n "$2" -a -r "$2" ]
-    ini_file=$1
-    shift
-    check_permissions $ini_file
-
-    if [ $dryrun = false ]; then
-	printf "Generating configuration file %s\n" "$ini_file"
-	mkdir -p "$(dirname $ini_file)"
-	eval $(generate_commands "$@") >$ini_file
-    fi
-}
-
 create_symlink() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
@@ -109,6 +95,20 @@ create_symlinks() {
     for dir; do
 	create_symlink $file $UWSGI_ETCDIR/$dir/$APP_NAME.ini
     done
+}
+
+create_uwsgi_ini() {
+    assert [ $# -gt 2 ]
+    assert [ -n "$1" -a -n "$2" -a -r "$2" ]
+    ini_file=$1
+    shift
+    check_permissions $ini_file
+
+    if [ $dryrun = false ]; then
+	printf "Generating configuration file %s\n" "$ini_file"
+	mkdir -p "$(dirname $ini_file)"
+	eval $(generate_commands "$@") >$ini_file
+    fi
 }
 
 generate_commands() {
