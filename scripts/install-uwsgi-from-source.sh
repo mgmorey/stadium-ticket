@@ -25,14 +25,13 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-build_uwsgi_binary() {
+build_binary() {
     assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
 
     if [ -x $1 ]; then
 	return
     fi
-
-    find_system_python
 
     case $1 in
 	(python3*)
@@ -43,12 +42,10 @@ build_uwsgi_binary() {
     esac
 }
 
-fetch_uwsgi_source() {
-    if [ $dryrun = false ]; then
-	if [ ! -d $HOME/git/uwsgi ]; then
-	    cd && mkdir -p git && cd git
-	    git clone https://github.com/unbit/uwsgi.git
-	fi
+fetch_source() {
+    if [ ! -d $HOME/git/uwsgi ]; then
+	cd && mkdir -p git && cd git
+	git clone https://github.com/unbit/uwsgi.git
     fi
 }
 
@@ -65,24 +62,11 @@ get_path() {
     fi
 }
 
-install_uwsgi_binaries() {
-    (
-	cd $HOME/git/uwsgi
+install_binary() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
 
-	if [ $dryrun = false ]; then
-	    for binary; do
-		build_uwsgi_binary $binary
-	    done
-	fi
-
-	for binary; do
-	    install_uwsgi_binary $binary
-	done
-    )
-}
-
-install_uwsgi_binary() {
-    case $binary in
+    case $1 in
 	(*_plugin.so)
 	    install_file 755 $1 $UWSGI_PLUGIN_DIR/$1
 	    ;;
@@ -93,6 +77,21 @@ install_uwsgi_binary() {
     esac
 }
 
+install_uwsgi() {
+    (
+	cd $HOME/git/uwsgi
+	find_system_python
+
+	for binary; do
+	    build_binary $binary
+	done
+
+	for binary; do
+	    install_binary $binary
+	done
+    )
+}
+
 dryrun=${1-false}
 script_dir=$(get_path "$(dirname "$0")")
 
@@ -101,5 +100,5 @@ script_dir=$(get_path "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 
 configure_system
-fetch_uwsgi_source
-install_uwsgi_binaries $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
+fetch_source
+install_uwsgi $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
