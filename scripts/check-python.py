@@ -26,11 +26,13 @@ try:
 except ImportError:
     from ConfigParser import ConfigParser, NoOptionError, NoSectionError
 
-CONFIG = ['requires', 'python_version']
-FILE = 'Pipfile'
-LENGTH = 3
+INPUT = 'Pipfile'
+
+PYTHON_VERSION_LEN = 3
+PYTHON_VERSION_PATH = ['requires', 'python_version']
+PYTHON_VERSION_REGEX = r'^(\d{1,3}(\.\d{1,3}){0,2})$'
+
 QUOTED_RE = r'^"([^"]+)"$'
-VERSION_RE = r'^(\d{1,3}(\.\d{1,3}){0,2})$'
 
 
 class ParseError(Exception):
@@ -45,7 +47,7 @@ def compute_scalar_version(s):
     result = 0
     v = s.split('.')
 
-    for i in range(LENGTH):
+    for i in range(PYTHON_VERSION_LEN):
         result *= 1000
         result += int(v[i]) if i < len(v) else 0
 
@@ -58,7 +60,8 @@ def get_minimum_version():
     config.read(path)
 
     try:
-        return parse_version(unquote(config.get(CONFIG[0], CONFIG[1])))
+        return parse_version(unquote(config.get(PYTHON_VERSION_PATH[0],
+                                                PYTHON_VERSION_PATH[1])))
     except (NoOptionError, NoSectionError, ParseError) as e:
         raise ParseError("{}: Unable to parse: {}".format(path, e))
 
@@ -66,12 +69,12 @@ def get_minimum_version():
 def get_pipfile():
     script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
     source_dir = os.path.dirname(script_dir)
-    return os.path.join(source_dir, FILE)
+    return os.path.join(source_dir, INPUT)
 
 
 def parse_version(s):
     try:
-        return re.search(VERSION_RE, s).group(1)
+        return re.search(PYTHON_VERSION_REGEX, s).group(1)
     except AttributeError as e:
         raise ParseError("Invalid version string '{}'".format(s))
 
@@ -107,7 +110,7 @@ def main():
             output=sys.sterr
             status = 1
 
-        print(message.format(actual, FILE), file=output)
+        print(message.format(actual, INPUT), file=output)
         exit(status)
 
 
