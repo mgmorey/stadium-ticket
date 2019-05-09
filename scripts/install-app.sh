@@ -72,14 +72,14 @@ create_app_dirs() {
 create_app_ini() {
     assert [ $# -gt 2 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" ]
-    file=$1
+    ini_file=$1
     shift
-    check_permissions "$file"
+    check_permissions $ini_file
 
     if [ $dryrun = false ]; then
-	printf "Generating file %s\n" "$file"
-	mkdir -p "$(dirname "$file")"
-	eval $(generate_ini "$@") >"$file"
+	printf "Generating configuration file %s\n" "$ini_file"
+	mkdir -p "$(dirname $ini_file)"
+	eval $(generate_ini "$@") >$ini_file
     fi
 }
 
@@ -91,9 +91,9 @@ create_symlink() {
     check_permissions "$target"
 
     if [ $dryrun = false ]; then
-	assert [ -r "$1" ]
+	assert [ -r "$source" ]
 
-	if [ $source != $target -a ! -x $target ]; then
+	if [ $source != $target ]; then
 	    printf "Creating link %s\n" "$target"
 	    /bin/ln -sf $source $target
 	fi
@@ -103,11 +103,11 @@ create_symlink() {
 enable_app() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-    file=$1
+    source=$1
     shift
 
     for name; do
-	create_symlink $file $UWSGI_ETCDIR/$name/$APP_NAME.ini
+	create_symlink $source $UWSGI_ETCDIR/$name/$APP_NAME.ini
     done
 }
 
