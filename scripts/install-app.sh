@@ -79,7 +79,7 @@ create_uwsgi_ini() {
     if [ $dryrun = false ]; then
 	printf "Generating configuration file %s\n" "$ini_file"
 	mkdir -p "$(dirname $ini_file)"
-	eval $(generate_ini "$@") >$ini_file
+	eval $(generate_commands "$@") >$ini_file
     fi
 }
 
@@ -100,7 +100,7 @@ create_symlink() {
     fi
 }
 
-enable_app() {
+create_symlinks() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     file=$1
@@ -111,7 +111,7 @@ enable_app() {
     done
 }
 
-generate_ini() {
+generate_commands() {
     assert [ $# -gt 1 ]
     assert [ -n "$1" -a -r "$1" ]
     file=$1
@@ -136,7 +136,7 @@ install_app_and_config() {
     install_dir $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
     change_ownership $APP_DIR $APP_VARDIR
     create_uwsgi_ini $APP_CONFIG app.ini $UWSGI_VARS
-    enable_app $APP_CONFIG $UWSGI_APPDIRS
+    create_symlinks $APP_CONFIG $UWSGI_APPDIRS
 }
 
 install_dir() {
