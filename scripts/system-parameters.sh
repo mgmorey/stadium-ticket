@@ -14,19 +14,16 @@
 # GNU General Public License for more details.
 
 configure_common() {
-    APP_INI_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
-APP_RUNDIR APP_UID APP_VARDIR"
-
     # Set application directory names from APP_NAME
     APP_DIR=/opt/$APP_NAME
     APP_ETCDIR=/etc/opt/$APP_NAME
     APP_VARDIR=/var/opt/$APP_NAME
 
     # Set uWSGI parameters
-    UWSGI_BINARY_DIR=
     UWSGI_BINARY_NAME=uwsgi
-    UWSGI_PLUGIN_DIR=
     UWSGI_PLUGIN_NAME=python3_plugin.so
+    UWSGI_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
+APP_RUNDIR APP_UID APP_VARDIR"
 }
 
 configure_darwin() {
@@ -98,12 +95,9 @@ configure_freebsd() {
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    UWSGI_APPDIRS=
 
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc/uwsgi
-    UWSGI_LOGDIR=
-    UWSGI_RUNDIR=
 }
 
 configure_nt() {
@@ -122,8 +116,6 @@ configure_nt() {
 
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc/uwsgi
-    UWSGI_LOGDIR=
-    UWSGI_RUNDIR=
 }
 
 configure_opensuse() {
@@ -143,8 +135,6 @@ configure_opensuse() {
 
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc/uwsgi
-    UWSGI_LOGDIR=
-    UWSGI_RUNDIR=
 
     # Set uWSGI directories
     UWSGI_PLUGIN_DIR=.
@@ -163,12 +153,9 @@ configure_sunos() {
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    UWSGI_APPDIRS=
 
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc/uwsgi
-    UWSGI_LOGDIR=
-    UWSGI_RUNDIR=
 }
 
 configure_system() {

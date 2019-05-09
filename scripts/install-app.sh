@@ -69,7 +69,7 @@ create_app_dirs() {
     fi
 }
 
-create_app_ini() {
+create_uwsgi_ini() {
     assert [ $# -gt 2 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" ]
     ini_file=$1
@@ -103,30 +103,30 @@ create_symlink() {
 enable_app() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-    source=$1
+    file=$1
     shift
 
-    for name; do
-	create_symlink $source $UWSGI_ETCDIR/$name/$APP_NAME.ini
+    for dir; do
+	create_symlink $file $UWSGI_ETCDIR/$dir/$APP_NAME.ini
     done
 }
 
 generate_ini() {
     assert [ $# -gt 1 ]
     assert [ -n "$1" -a -r "$1" ]
-    source=$1
+    file=$1
     shift
     printf "%s" "sed"
 
     for var; do
 	eval value=\$$var
-	left="\(.*\) = \(.*\)\$($var)\(.*\)"
-	right="\\1 = \\2$value\\3"
-	printf " -e 's;^#<%s>$;%s;g'" "$left" "$right"
-	printf " -e 's;^%s$;%s;g'" "$left" "$right"
+	pattern="\(.*\) = \(.*\)\$($var)\(.*\)"
+	replace="\\1 = \\2$value\\3"
+	printf " -e 's;^#<%s>$;%s;g'" "$pattern" "$replace"
+	printf " -e 's;^%s$;%s;g'" "$pattern" "$replace"
     done
 
-    printf " %s\n" "$source"
+    printf " %s\n" "$file"
 }
 
 install_app_and_config() {
@@ -135,7 +135,7 @@ install_app_and_config() {
     install_file 600 .env $APP_DIR/.env
     install_dir $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
     change_ownership $APP_DIR $APP_VARDIR
-    create_app_ini $APP_CONFIG app.ini $APP_INI_VARS
+    create_uwsgi_ini $APP_CONFIG app.ini $UWSGI_VARS
     enable_app $APP_CONFIG $UWSGI_APPDIRS
 }
 
