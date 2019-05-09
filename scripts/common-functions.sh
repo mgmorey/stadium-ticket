@@ -55,43 +55,53 @@ check_python() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     assert [ -x $1 ]
-    python_output=$($1 --version)
-    python_version="${python_output#Python }"
-    printf "Python %s interpreter found: %s\n" "$python_version" "$1"
+    python=$1
+    python_output="$($python --version || true)"
 
-    if ! $script_dir/check-python.py "$python_version"; then
+    if [ -z "$python_output" ]; then
+	abort_no_python
+    fi
+
+    version="${python_output#Python }"
+    printf "Python %s interpreter found: %s\n" "$version" "$1"
+
+    if ! $script_dir/check-python.py "$version"; then
 	abort_no_python
     fi
 }
 
 find_python()
 {
+    python=
+
     if pyenv --version >/dev/null 2>&1; then
 	which="pyenv which"
     else
 	which=which
     fi
 
-    for python in $PYTHONS; do
-	python=$($which $python 2>/dev/null || true)
+    for version in $PYTHON_VERSIONS ""; do
+	python=$($which python$version 2>/dev/null || true)
 
 	if [ -z "$python" ]; then
 	    :
 	elif [ $python = false ]; then
 	    abort_no_python
 	elif $python --version >/dev/null 2>&1; then
-	    break
+	    return
 	fi
     done
 }
 
 find_system_python () {
-    for prefix in /usr/local /usr; do
-	bindir=$prefix/bin
+    python=
 
-	if [ -d $bindir ]; then
-	    for binary in $PYTHONS; do
-		python=$bindir/$binary
+    for prefix in /usr/local /usr; do
+	python_dir=$prefix/bin
+
+	if [ -d $python_dir ]; then
+	    for python_version in $PYTHON_VERSIONS ""; do
+		python=$python_dir/python$python_version
 
 		if [ -x $python ]; then
 		    if $python --version >/dev/null 2>&1; then
