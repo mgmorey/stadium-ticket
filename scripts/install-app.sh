@@ -120,9 +120,8 @@ generate_ini() {
     for var in $APP_INI_VARS; do
 	eval value=\$$var
 	left="\(.*\) = \(.*\)\$($var)\(.*\)"
-	right="\\1 = \\2$value\\3"
-	printf " -e 's|^#<%s>$|%s|g'" "$left" "$right"
-	printf " -e 's|^%s$|%s|g'" "$left" "$right"
+	right="\\1\\4 = \\2\\5$value\\3\\6"
+	printf " -e 's;^#<%s>$\|^%s$;%s;g'" "$left" "$left" "$right"
     done
 
     printf " %s\n" "$1"
