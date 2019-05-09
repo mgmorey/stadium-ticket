@@ -66,7 +66,7 @@ case "$kernel_name" in
 	esac
 	;;
     (Darwin)
-	test -x /usr/bin/uwsgi -o -x /usr/local/bin/uwsgi
+	brew list | grep -E '^'"$1"'$'
     	;;
     # (FreeBSD)
     # 	;;

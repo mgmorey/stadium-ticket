@@ -151,21 +151,6 @@ install_source_files() {
     done
 }
 
-install_uwsgi() {
-    case "$kernel_name" in
-	(Darwin)
-	    "$script_dir/install-uwsgi-from-source.sh" $dryrun
-	    ;;
-	(*)
-	    if ! "$script_dir/is-installed-package.sh" $UWSGI_BINARY_NAME; then
-		packages=$("$script_dir/get-uwsgi-packages.sh")
-		"$script_dir/install-packages.sh" $packages
-		start_uwsgi
-	    fi
-	    ;;
-    esac
-}
-
 start_app() {
     if signal_app HUP; then
 	restart_service=false
@@ -239,9 +224,9 @@ trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 venv_filename=$VENV_FILENAME-$APP_NAME
 
 for dryrun in true false; do
-    if [ $dryrun = false ]; then
-	install_uwsgi
+    "$script_dir/install-uwsgi.sh" $dryrun
 
+    if [ $dryrun = false ]; then
 	if ! "$script_dir/create-virtualenv.sh" $venv_filename; then
 	    abort "%s: Unable to create virtual environment\n" "$0"
 	fi
