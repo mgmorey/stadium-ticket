@@ -13,8 +13,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-DOUBLE="======================================================================"
-SINGLE="----------------------------------------------------------------------"
+DASHES="----------------------------------------------------------------------"
+EQUALS="======================================================================"
+
 KILL_COUNT=20
 KILL_INTERVAL=5
 
@@ -108,11 +109,11 @@ print_file_tail() {
     fi
 
     printf "%s\n" ""
-    printf "%s\n" $DOUBLE
+    printf "%s\n" $DASHES
     printf "%s\n" "Contents of $APP_LOGFILE (last 10 lines)"
-    printf "%s\n" $SINGLE
+    printf "%s\n" $EQUALS
     cat $tmpfile
-    printf "%s\n" $SINGLE
+    printf "%s\n" $EQUALS
     printf "%s\n" ""
 }
 
