@@ -14,6 +14,9 @@
 # GNU General Public License for more details.
 
 configure_common() {
+    APP_INI_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
+APP_RUNDIR APP_UID APP_VARDIR"
+
     # Set application directory names from APP_NAME
     APP_DIR=/opt/$APP_NAME
     APP_ETCDIR=/etc/opt/$APP_NAME

@@ -330,14 +330,16 @@ else
 fi
 
 cd "$source_dir"
+
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
+venv_filename=$VENV_FILENAME-$APP_NAME
 
 for dryrun in true false; do
     if [ $dryrun = false ]; then
 	install_uwsgi
 
-	if ! $sh "$script_dir/stage-app.sh" $VENV_FILENAME-$APP_NAME; then
+	if ! $sh "$script_dir/stage-virtualenv.sh" $venv_filename; then
 	    abort "%s: Unable to stage virtual environment\n" "$0"
 	fi
     fi
