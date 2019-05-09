@@ -119,8 +119,10 @@ generate_ini() {
 
     for var in $APP_INI_VARS; do
 	eval value=\$$var
-	printf " -e 's|^#<\\(.*\\) = \\(.*\\)\$(%s)\\(.*\\)>$|\\\\1 = \\\\2%s\\\\3|g'" "$var" "$value"
-	printf " -e 's|^\\(.*\\) = \\(.*\\)\$(%s)\\(.*\\)$|\\\\1 = \\\\2%s\\\\3|g'" "$var" "$value"
+	printf " -e 's|^#<\\(.*\\) = \\(.*\\)\$(%s)\\(.*\\)>$|" "$var"
+	printf "\\\\1 = \\\\2%s\\\\3|g'" "$value"
+	printf " -e 's|^\\(.*\\) = \\(.*\\)\$(%s)\\(.*\\)$|" "$var"
+	printf "\\\\1 = \\\\2%s\\\\3|g'" "$value"
     done
 
     printf " %s\n" "$1"
