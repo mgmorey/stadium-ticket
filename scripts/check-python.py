@@ -32,7 +32,7 @@ PYTHON_VERSION_LEN = 3
 PYTHON_VERSION_PATH = ['requires', 'python_version']
 PYTHON_VERSION_REGEX = r'^(\d{1,3}(\.\d{1,3}){0,2})$'
 
-QUOTED_RE = r'^"([^"]+)"$'
+QUOTED_REGEX = r'^"([^"]+)"$'
 
 
 class ParseError(Exception):
@@ -81,37 +81,36 @@ def parse_version(s):
 
 def unquote(s):
     try:
-        return re.search(QUOTED_RE, s).group(1)
+        return re.search(QUOTED_REGEX, s).group(1)
     except AttributeError as e:
         raise ParseError("Invalid quoted string '{}'".format(s))
 
 
 def main():
-    if len(sys.argv) != 2:
-        s = "{}: Invalid number of arguments".format(sys.argv[0])
-        print(s, file=sys.stderr)
-        exit(2)
-
     try:
-        actual = parse_version(sys.argv[1])
+        actual = parse_version(sys.argv[1]) if len(sys.argv) > 1 else None
         minimum = get_minimum_version()
     except ParseError as e:
         print("{}: {}".format(sys.argv[0], e), file=sys.stderr)
         exit(2)
     else:
-        difference = compare_versions(actual, minimum)
+        if actual:
+            difference = compare_versions(actual, minimum)
 
-        if difference >= 0:
-            message = "Python {} interpreter meets {} requirements"
-            output=sys.stdout
-            status = 0
+            if difference >= 0:
+                message = "Python {} interpreter meets {} requirements"
+                output=sys.stdout
+                status = 0
+            else:
+                message = "Python {} interpreter does not meet {} requirements"
+                output=sys.sterr
+                status = 1
+
+            print(message.format(actual, INPUT), file=output)
+            exit(status)
         else:
-            message = "Python {} interpreter does not meet {} requirements"
-            output=sys.sterr
-            status = 1
-
-        print(message.format(actual, INPUT), file=output)
-        exit(status)
+            print(minimum)
+            exit(0)
 
 
 if __name__ == '__main__':
