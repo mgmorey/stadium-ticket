@@ -73,6 +73,8 @@ check_python() {
 find_python()
 {
     python=
+    python_versions=
+    get_python_versions
 
     if pyenv --version >/dev/null 2>&1; then
 	which="pyenv which"
@@ -80,7 +82,7 @@ find_python()
 	which=which
     fi
 
-    for version in $PYTHON_VERSIONS ""; do
+    for version in ${python_versions-$PYTHON_VERSIONS} ""; do
 	python=$($which python$version 2>/dev/null || true)
 
 	if [ -z "$python" ]; then
@@ -95,13 +97,15 @@ find_python()
 
 find_system_python () {
     python=
+    python_versions=
+    get_python_versions
 
     for prefix in /usr/local /usr; do
 	python_dir=$prefix/bin
 
 	if [ -d $python_dir ]; then
-	    for python_version in $PYTHON_VERSIONS ""; do
-		python=$python_dir/python$python_version
+	    for version in ${python_versions-$PYTHON_VERSIONS} ""; do
+		python=$python_dir/python$version
 
 		if [ -x $python ]; then
 		    if $python --version >/dev/null 2>&1; then
@@ -111,6 +115,10 @@ find_system_python () {
 	    done
 	fi
     done
+}
+
+get_python_versions() {
+    python_versions=$("$script_dir/check-python.py")
 }
 
 print_file_tail() {

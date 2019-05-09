@@ -114,7 +114,16 @@ def main():
             print(message.format(actual, INPUT), file=output)
             exit(status)
         else:
-            print(minimum)
+            components = minimum.split('.')
+            versions=''
+
+            for n in range(len(components), 0, -1):
+                versions += '.'.join(components[:n])
+
+                if n > 1:
+                    versions += ' '
+
+            print(versions)
             exit(0)
 
 
