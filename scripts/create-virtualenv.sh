@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# stage-virtualenv.sh: stage application virtual environment
+# create-virtualenv.sh: create application virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify

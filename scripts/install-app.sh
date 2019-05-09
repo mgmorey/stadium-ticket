@@ -335,8 +335,8 @@ for dryrun in true false; do
     if [ $dryrun = false ]; then
 	install_uwsgi
 
-	if ! $sh "$script_dir/stage-virtualenv.sh" $venv_filename; then
-	    abort "%s: Unable to stage virtual environment\n" "$0"
+	if ! "$script_dir/create-virtualenv.sh" $venv_filename; then
+	    abort "%s: Unable to create virtual environment\n" "$0"
 	fi
     fi
 
