@@ -46,7 +46,6 @@ dryrun=${1-false}
 script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
-. "$script_dir/system-parameters.sh"
 
 eval $("$script_dir/get-os-release.sh" -X)
 
@@ -57,7 +56,7 @@ case "$kernel_name" in
     (*)
 	if [ $dryrun = true ]; then
 	    :
-	elif ! "$script_dir/is-installed-package.sh" $UWSGI_BINARY_NAME; then
+	elif ! "$script_dir/is-installed-package.sh" uwsgi; then
 	    packages=$("$script_dir/get-uwsgi-packages.sh")
 	    "$script_dir/install-packages.sh" $packages
 	    start_uwsgi
