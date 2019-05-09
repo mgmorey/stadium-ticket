@@ -90,6 +90,19 @@ generate_sed_program() {
     done
 }
 
+get_path() {
+    assert [ -d "$1" ]
+    command=$(which realpath)
+
+    if [ -n "$command" ]; then
+	$command "$1"
+    elif expr "$1" : '/.*' >/dev/null; then
+	printf "%s\n" "$1"
+    else
+	printf "%s\n" "$PWD/${1#./}"
+    fi
+}
+
 install_app_and_config() {
     create_app_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
     install_source_files 644 app $APP_DIR
@@ -136,19 +149,6 @@ install_source_files() {
 		;;
 	esac
     done
-}
-
-get_path() {
-    assert [ -d "$1" ]
-    command=$(which realpath)
-
-    if [ -n "$command" ]; then
-	$command "$1"
-    elif expr "$1" : '/.*' >/dev/null; then
-	printf "%s\n" "$1"
-    else
-	printf "%s\n" "$PWD/${1#./}"
-    fi
 }
 
 install_uwsgi() {
