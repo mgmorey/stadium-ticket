@@ -50,7 +50,7 @@ script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
-. "$script_dir/venv-functions.sh"
+. "$script_dir/virtualenv-functions.sh"
 
 source_dir=$script_dir/..
 
