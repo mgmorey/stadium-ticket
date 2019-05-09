@@ -87,6 +87,11 @@ def unquote(s):
 
 
 def main():
+    if len(sys.argv) > 2:
+        s = "{}: Invalid number of arguments".format(sys.argv[0])
+        print(s, file=sys.stderr)
+        exit(2)
+
     try:
         actual = parse_version(sys.argv[1]) if len(sys.argv) > 1 else None
         minimum = get_minimum_version()
