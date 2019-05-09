@@ -79,7 +79,7 @@ create_app_ini() {
     if [ $dryrun = false ]; then
 	printf "Generating file %s\n" "$target"
 	mkdir -p "$(dirname "$target")"
-	generate_ini "$source" | sh | cat >"$target"
+	generate_ini "$source" | sh -x | cat >"$target"
     fi
 }
 
@@ -115,11 +115,11 @@ enable_app() {
 generate_ini() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" -a -r "$1" ]
-    printf "%s" "sed -e 's|^#<\\(.*\\)>$|\\1|g'"
+    printf "%s" "sed"
 
     for var in $APP_INI_VARS; do
 	eval value=\$$var
-	printf " %s" "-e 's|\$($var)|$value|g'"
+	printf " -e 's|^#<\\(.*\\) = \$(%s)>$|\\\\1 = %s|g'" "$var" "$value"
     done
 
     printf " %s\n" "$1"
