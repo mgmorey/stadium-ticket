@@ -39,8 +39,8 @@ script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/system-parameters.sh"
-configure_system
 
+configure_system
 app_prefix=$APP_DIR/$VENV_FILENAME
 binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME

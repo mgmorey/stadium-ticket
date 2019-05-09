@@ -28,24 +28,6 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-build_uwsgi_binary() {
-    assert [ $# -eq 1 ]
-
-    if [ -x $1 ]; then
-	return
-    fi
-
-    find_system_python
-
-    case $1 in
-	(python3*)
-	    $python uwsgiconfig.py --plugin plugins/python core ${1%_*}
-	    ;;
-	(uwsgi)
-	    $python uwsgiconfig.py --build core
-    esac
-}
-
 change_ownership() {
     assert [ $# -ge 1 ]
 
@@ -66,23 +48,6 @@ create_app_dirs() {
     if [ $dryrun = false ]; then
 	printf "Creating directory %s\n" "$@"
 	mkdir -p "$@"
-    fi
-}
-
-create_symlink() {
-    assert [ $# -eq 2 ]
-    assert [ -n "$1" ]
-    source=$1
-    target=$2
-    check_permissions "$target"
-
-    if [ $dryrun = false ]; then
-	assert [ -r "$source" ]
-
-	if [ $source != $target ]; then
-	    printf "Creating link %s\n" "$target"
-	    /bin/ln -sf $source $target
-	fi
     fi
 }
 
@@ -150,21 +115,6 @@ install_dir() {
     fi
 }
 
-install_file() {
-    assert [ $# -eq 3 ]
-    assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
-    mode=$1
-    source=$2
-    target=$3
-    check_permissions $target
-
-    if [ $dryrun = false ]; then
-	printf "Installing file %s as %s\n" "$source" "$target"
-	install -d -m 755 "$(dirname "$target")"
-	install -C -m $mode $source $target
-    fi
-}
-
 install_source_files() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
@@ -188,57 +138,6 @@ install_source_files() {
     done
 }
 
-install_uwsgi() {
-    case "$kernel_name" in
-	(Darwin)
-	    install_uwsgi_binaries $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
-	    ;;
-	(*)
-	    if ! "$script_dir/is-installed-package.sh" $UWSGI_BINARY_NAME; then
-		packages=$("$script_dir/get-uwsgi-packages.sh")
-		"$script_dir/install-packages.sh" $packages
-		start_uwsgi
-	    fi
-	    ;;
-    esac
-}
-
-install_uwsgi_binaries() {
-    (
-	if [ ! -d $HOME/git/uwsgi ]; then
-	    cd && mkdir -p git && cd git
-	    git clone https://github.com/unbit/uwsgi.git
-	fi
-
-	cd $HOME/git/uwsgi
-
-	for binary; do
-	    build_uwsgi_binary $binary
-	done
-
-	for binary; do
-	    install_uwsgi_binary $binary
-	done
-    )
-}
-
-install_uwsgi_binary() {
-    case $binary in
-	(*_plugin.so)
-	    if [ ! -x $UWSGI_PLUGIN_DIR/$1 ]; then
-		install_file 755 $1 $UWSGI_PLUGIN_DIR/$1
-	    fi
-	    ;;
-	(uwsgi)
-	    if [ ! -x $UWSGI_BINARY_DIR/$1 ]; then
-		install_file 755 $1 $UWSGI_BINARY_DIR/$1
-	    fi
-
-	    create_symlink $UWSGI_BINARY_DIR/$1 /usr/local/bin/$1
-	    ;;
-    esac
-}
-
 get_path() {
     assert [ -d "$1" ]
     command=$(which realpath)
@@ -250,6 +149,21 @@ get_path() {
     else
 	printf "%s\n" "$PWD/${1#./}"
     fi
+}
+
+install_uwsgi() {
+    case "$kernel_name" in
+	(Darwin)
+	    "$script_dir/install-uwsgi-from-source.sh" $dryrun
+	    ;;
+	(*)
+	    if ! "$script_dir/is-installed-package.sh" $UWSGI_BINARY_NAME; then
+		packages=$("$script_dir/get-uwsgi-packages.sh")
+		"$script_dir/install-packages.sh" $packages
+		start_uwsgi
+	    fi
+	    ;;
+    esac
 }
 
 start_app() {
@@ -317,16 +231,9 @@ source_dir=$script_dir/..
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
+
 configure_system
-
-if [ "$(id -u)" -eq 0 ]; then
-    sh="su $SUDO_USER"
-else
-    sh="sh -eu"
-fi
-
 cd "$source_dir"
-
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 venv_filename=$VENV_FILENAME-$APP_NAME

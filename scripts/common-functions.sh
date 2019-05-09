@@ -70,6 +70,23 @@ check_python() {
     fi
 }
 
+create_symlink() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    source=$1
+    target=$2
+    check_permissions "$target"
+
+    if [ $dryrun = false ]; then
+	assert [ -r "$source" ]
+
+	if [ $source != $target ]; then
+	    printf "Creating link %s\n" "$target"
+	    /bin/ln -sf $source $target
+	fi
+    fi
+}
+
 find_python()
 {
     python=
@@ -119,6 +136,21 @@ find_system_python () {
 
 get_python_versions() {
     python_versions=$("$script_dir/check-python.py")
+}
+
+install_file() {
+    assert [ $# -eq 3 ]
+    assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
+    mode=$1
+    source=$2
+    target=$3
+    check_permissions $target
+
+    if [ $dryrun = false ]; then
+	printf "Installing file %s as %s\n" "$source" "$target"
+	install -d -m 755 "$(dirname "$target")"
+	install -C -m $mode $source $target
+    fi
 }
 
 print_file_tail() {
