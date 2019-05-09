@@ -51,7 +51,7 @@ eval $("$script_dir/get-os-release.sh" -X)
 
 case "$kernel_name" in
     (Darwin)
-	"$script_dir/install-uwsgi-from-source.sh" ${dryrun-false}
+	"$script_dir/install-uwsgi-from-source.sh" ${1-false}
 	;;
     (*)
 	if ! "$script_dir/is-installed-package.sh" $UWSGI_BINARY_NAME; then

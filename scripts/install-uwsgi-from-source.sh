@@ -93,7 +93,7 @@ install_uwsgi_binary() {
     esac
 }
 
-: ${dryrun=false}
+dryrun=${1-false}
 script_dir=$(get_path "$(dirname "$0")")
 
 source_dir=$script_dir/..
