@@ -39,10 +39,14 @@ check_permissions() {
     for file; do
 	if [ -e $file -a -w $file ]; then
 	    :
-	elif [ $file != . -a $file != / ]; then
-	    check_permissions $(dirname $file)
 	else
-	    abort_insufficient_permissions $file
+	    dir=$(dirname $file)
+
+	    if [ $dir != . -a $dir != / ]; then
+		check_permissions $dir
+	    else
+		abort_insufficient_permissions $file
+	    fi
 	fi
     done
 }
