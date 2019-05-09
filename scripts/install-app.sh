@@ -79,7 +79,7 @@ create_app_ini() {
     if [ $dryrun = false ]; then
 	printf "Generating file %s\n" "$target"
 	mkdir -p "$(dirname "$target")"
-	generate_ini "$source" | sh -x | cat >"$target"
+	generate_ini "$source" | sh | cat >"$target"
     fi
 }
 
@@ -119,7 +119,8 @@ generate_ini() {
 
     for var in $APP_INI_VARS; do
 	eval value=\$$var
-	printf " -e 's|^#<\\(.*\\) = \$(%s)>$|\\\\1 = %s|g'" "$var" "$value"
+	printf " -e 's|^#<\\(.*\\) = \\(.*\\)\$(%s)\\(.*\\)>$|\\\\1 = \\\\2%s\\\\3|g'" "$var" "$value"
+	printf " -e 's|^\\(.*\\) = \\(.*\\)\$(%s)\\(.*\\)$|\\\\1 = \\\\2%s\\\\3|g'" "$var" "$value"
     done
 
     printf " %s\n" "$1"
