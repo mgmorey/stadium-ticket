@@ -44,7 +44,6 @@ configure_darwin() {
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    UWSGI_APPDIRS="apps-available apps-enabled"
 
     # Set uWSGI top-level directories
     UWSGI_PREFIX=/usr/local/opt/uwsgi
@@ -53,7 +52,6 @@ configure_darwin() {
     UWSGI_RUNDIR=/usr/local/var/run
 
     # Set uWSGI directories from UWSGI_PREFIX
-    UWSGI_APPDIRS="apps-available apps-enabled"
     UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
     UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/plugin
 }
