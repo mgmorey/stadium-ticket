@@ -117,7 +117,7 @@ install_flask_app() (
     done
 )
 
-install_virtualenv() (
+install_virtualenv() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" -a -n "$2" ]
     check_permissions "$2"
@@ -128,7 +128,7 @@ install_virtualenv() (
 	mkdir -p $2
 	rsync -a "$1"/* $2
     fi
-)
+}
 
 install_service() {
     create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
