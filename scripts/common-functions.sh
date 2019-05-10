@@ -75,21 +75,25 @@ check_python() (
 control_launch_agent() (
     assert [ -n "$1" ]
     assert [ $1 = load -o $1 = unload ]
-    agent_source=$source_dir/macos/local.uwsgi.plist
-    agent_target=$HOME/Library/LaunchAgents/local.uwsgi.plist
+    agent_name=local.uwsgi
+    agent_source=macos/$agent_name.plist
+    agent_target=$HOME/Library/LaunchAgents/$agent_name.plist
 
     case $1 in
 	(load)
+	    cd $source_dir
 	    install_file 644 $agent_source $agent_target
 
 	    if [ $dryrun = false ]; then
-		launchctl $1 $agent_target
+		launchctl load $agent_target
+		launchctl start $agent_name
 	    fi
 	    ;;
 	(unload)
 	    if [ -e $agent_target ]; then
 		if [ $dryrun = false ]; then
-		    launchctl $1 $agent_target
+		    launchctl stop $agent_name
+		    launchctl unload $agent_target
 		fi
 	    fi
 

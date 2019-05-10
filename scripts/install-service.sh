@@ -155,34 +155,29 @@ install_service() (
 )
 
 start_service() (
+    restart_service=false
+
     if signal_service HUP; then
-	restart_service=false
 	signal_received=true
     else
+	signal_received=false
+    fi
+
+    # Initialize database by invoking app module
+    $sh $script_dir/run.sh python3  -m app init-db
+
+    if [ $signal_received = true ]; then
 	case "$kernel_name" in
 	    (Linux)
 		case "$ID" in
 		    (debian|ubuntu)
 			restart_service=true
 			;;
-		    (*)
-			restart_service=false
-			;;
 		esac
 
 		if [ $restart_service = true ]; then
 		    service uwsgi restart
 		fi
-		;;
-	    (Darwin)
-		restart_service=false
-
-		if [ $restart_service = true ]; then
-		    launchctl kill SIGHUP local.uwsgi
-		fi
-		;;
-	    (*)
-		restart_service=false
 		;;
 	esac
 
