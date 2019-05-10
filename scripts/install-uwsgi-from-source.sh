@@ -77,20 +77,19 @@ install_binary() {
     esac
 }
 
-install_uwsgi() {
-    (
-	cd $HOME/git/uwsgi
-	find_system_python
+install_uwsgi() (
+    cd $HOME/git/uwsgi
+    find_system_python
 
-	for binary; do
-	    build_binary $binary
-	done
+    for binary; do
+	build_binary $binary
+    done
 
-	for binary; do
-	    install_binary $binary
-	done
-    )
-}
+    for binary; do
+	install_binary $binary
+    done
+)
+
 
 dryrun=${1-false}
 script_dir=$(get_path "$(dirname "$0")")
