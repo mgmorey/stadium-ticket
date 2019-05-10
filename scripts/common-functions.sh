@@ -19,7 +19,7 @@ EQUALS="======================================================================"
 KILL_COUNT=20
 KILL_INTERVAL=5
 
-function abort_insufficient_permissions() {
+abort_insufficient_permissions() {
     cat >&2 <<EOF
 $0: You need write permissions for $1
 $0: Please retry with root privileges
@@ -27,15 +27,15 @@ EOF
     exit 1
 }
 
-function abort_not_supported() {
+abort_not_supported() {
     abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
 
-function abort_no_python() {
+abort_no_python() {
     abort "%s\n" "No suitable Python interpreter found"
 }
 
-function check_permissions() {
+check_permissions() {
     for file; do
 	if [ -e $file -a -w $file ]; then
 	    :
@@ -51,7 +51,7 @@ function check_permissions() {
     done
 }
 
-function check_python() {
+check_python() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     assert [ -x $1 ]
@@ -70,7 +70,7 @@ function check_python() {
     fi
 }
 
-function create_symlink() {
+create_symlink() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     source=$1
@@ -87,7 +87,7 @@ function create_symlink() {
     fi
 }
 
-function find_python() {
+find_python() {
     python_versions=$($script_dir/check-python.py)
 
     if pyenv --version >/dev/null 2>&1; then
@@ -110,7 +110,7 @@ function find_python() {
     done
 }
 
-function find_system_python () {
+find_system_python () {
     python_versions=$($script_dir/check-python.py)
 
     for prefix in /usr/local /usr; do
@@ -131,7 +131,7 @@ function find_system_python () {
     done
 }
 
-function install_file() {
+install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
     mode=$1
@@ -146,7 +146,7 @@ function install_file() {
     fi
 }
 
-function print_file_tail() {
+print_file_tail() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" -a -n "$tmpfile" ]
     tail $1 >$tmpfile
@@ -164,13 +164,13 @@ function print_file_tail() {
     printf "%s\n" ""
 }
 
-function remove_database() {
+remove_database() {
     if [ -n "${DATABASE_FILENAME-}" ]; then
 	remove_files $DATABASE_FILENAME
     fi
 }
 
-function remove_files() {
+remove_files() {
     check_permissions "$@"
 
     if [ "$dryrun" = false ]; then
@@ -179,7 +179,7 @@ function remove_files() {
     fi
 }
 
-function signal_app() {
+signal_app() {
     pid=$("$script_dir/read-file.sh" $APP_PIDFILE)
     result=1
 
@@ -219,7 +219,7 @@ function signal_app() {
     return $result
 }
 
-function tail_log_file() {
+tail_log_file() {
     assert [ -n "$APP_LOGFILE" -a -n "$tmpfile" ]
 
     if [ -r $APP_LOGFILE ]; then
