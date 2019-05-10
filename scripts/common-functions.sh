@@ -13,14 +13,14 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-SINGLE_LINE="----------------------------------------"
-DOUBLE_LINE="========================================"
-
 KILL_COUNT=20
 KILL_INTERVAL=10
 
 WAIT_INITIAL_PERIOD=2
 WAIT_POLLING_COUNT=20
+
+SINGLE_LINE="----------------------------------------"
+DOUBLE_LINE="========================================"
 
 abort_insufficient_permissions() {
     cat >&2 <<EOF
