@@ -13,9 +13,10 @@
         <string>/usr/local/opt/uwsgi/bin/uwsgi</string>
         <string>--plugin-dir</string>
         <string>/usr/local/opt/uwsgi/lib/plugin</string>
+        <string>--ini</string>
         <string>/usr/local/etc/opt/stadium-ticket/app.ini</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>/usr/local/opt/uwsgi/lib/plugin</string>
+    <string>/usr/local/var/opt/stadium-ticket</string>
   </dict>
 </plist>
