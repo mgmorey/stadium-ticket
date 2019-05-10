@@ -19,7 +19,7 @@ EQUALS="======================================================================"
 KILL_COUNT=20
 KILL_INTERVAL=5
 
-abort_insufficient_permissions() {
+function abort_insufficient_permissions() {
     cat >&2 <<EOF
 $0: You need write permissions for $1
 $0: Please retry with root privileges
@@ -27,17 +27,15 @@ EOF
     exit 1
 }
 
-abort_not_supported() {
+function abort_not_supported() {
     abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
 
-abort_no_python() {
+function abort_no_python() {
     abort "%s\n" "No suitable Python interpreter found"
 }
 
-check_permissions() {
-    local file
-
+function check_permissions() {
     for file; do
 	if [ -e $file -a -w $file ]; then
 	    :
@@ -53,7 +51,7 @@ check_permissions() {
     done
 }
 
-check_python() {
+function check_python() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     assert [ -x $1 ]
@@ -64,7 +62,7 @@ check_python() {
 	abort_no_python
     fi
 
-    local version="${python_output#Python }"
+    version="${python_output#Python }"
     printf "Python %s interpreter found: %s\n" "$version" "$1"
 
     if ! $script_dir/check-python.py "$version"; then
@@ -72,11 +70,11 @@ check_python() {
     fi
 }
 
-create_symlink() {
+function create_symlink() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
-    local source=$1
-    local target=$2
+    source=$1
+    target=$2
     check_permissions "$target"
 
     if [ $dryrun = false ]; then
@@ -89,13 +87,8 @@ create_symlink() {
     fi
 }
 
-find_python()
-{
-    python=
-    python_versions=
-    get_python_versions
-    local version
-    local which
+function find_python() {
+    python_versions=$($script_dir/check-python.py)
 
     if pyenv --version >/dev/null 2>&1; then
 	which="pyenv which"
@@ -111,19 +104,17 @@ find_python()
 	elif [ $python = false ]; then
 	    abort_no_python
 	elif $python --version >/dev/null 2>&1; then
+	    printf "%s\n" "$python"
 	    return
 	fi
     done
 }
 
-find_system_python () {
-    python=
-    python_versions=
-    get_python_versions
-    local prefix
+function find_system_python () {
+    python_versions=$($script_dir/check-python.py)
 
     for prefix in /usr/local /usr; do
-	local python_dir=$prefix/bin
+	python_dir=$prefix/bin
 
 	if [ -d $python_dir ]; then
 	    for version in ${python_versions-$PYTHON_VERSIONS} ""; do
@@ -131,6 +122,7 @@ find_system_python () {
 
 		if [ -x $python ]; then
 		    if $python --version >/dev/null 2>&1; then
+			printf "%s\n" "$python"
 			return
 		    fi
 		fi
@@ -139,16 +131,12 @@ find_system_python () {
     done
 }
 
-get_python_versions() {
-    python_versions=$("$script_dir/check-python.py")
-}
-
-install_file() {
+function install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
-    local mode=$1
-    local source=$2
-    local target=$3
+    mode=$1
+    source=$2
+    target=$3
     check_permissions $target
 
     if [ $dryrun = false ]; then
@@ -158,7 +146,7 @@ install_file() {
     fi
 }
 
-print_file_tail() {
+function print_file_tail() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" -a -n "$tmpfile" ]
     tail $1 >$tmpfile
@@ -176,13 +164,13 @@ print_file_tail() {
     printf "%s\n" ""
 }
 
-remove_database() {
+function remove_database() {
     if [ -n "${DATABASE_FILENAME-}" ]; then
 	remove_files $DATABASE_FILENAME
     fi
 }
 
-remove_files() {
+function remove_files() {
     check_permissions "$@"
 
     if [ "$dryrun" = false ]; then
@@ -231,7 +219,7 @@ function signal_app() {
     return $result
 }
 
-tail_log_file() {
+function tail_log_file() {
     assert [ -n "$APP_LOGFILE" -a -n "$tmpfile" ]
 
     if [ -r $APP_LOGFILE ]; then

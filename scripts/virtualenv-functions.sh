@@ -35,7 +35,7 @@ create_venv() {
 
     if [ "$virtualenv" != false ]; then
 	if [ -z "${python-${2-}}" ]; then
-	    find_python
+	    python=$(find_python)
 	fi
     fi
 

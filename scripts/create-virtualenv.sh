@@ -66,7 +66,7 @@ case $venv_filename in
     ($VENV_FILENAME)
 	;;
     ($VENV_FILENAME-$APP_NAME)
-	find_system_python
+	python=$(find_system_python)
 	;;
 esac
 
