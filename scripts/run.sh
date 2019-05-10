@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export LANG=${LANG:-en_US.UTF-8}
-export LC_ALL=${LC_ALL:-en_US.UTF-8}
-
 abort() {
     printf "$@" >&2
     exit 1
@@ -29,9 +26,8 @@ assert() {
 }
 
 pip_run() {
-    venv_filename=$VENV_FILENAME
     venv_requirements=$VENV_REQUIREMENTS
-    sync_venv $venv_filename
+    sync_venv $VENV_FILENAME
     printf "%s\n" "Loading .env environment variables"
     . ./.env
     "$@"
@@ -77,6 +73,8 @@ source_dir=$script_dir/..
 cd "$source_dir"
 
 export $APP_ENV_VARS
+export LANG=${LANG:-en_US.UTF-8}
+export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 

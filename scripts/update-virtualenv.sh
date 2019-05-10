@@ -92,10 +92,9 @@ pipenv_update() {
 
 pip_update() {
     assert [ -n "$1" ]
-    venv_filename=$1
     venv_force_sync=true
     venv_requirements=$VENV_REQUIREMENTS
-    sync_venv $venv_filename
+    sync_venv $1
 }
 
 if [ -n "${VIRTUAL_ENV:-}" ]; then
