@@ -169,11 +169,11 @@ start_service() {
 		;;
 	esac
 
+	/bin/rm -f $APP_PIDFILE
 	signal_received=false
     fi
 
     if [ $restart_service = true ]; then
-	/bin/rm -f $APP_PIDFILE
 	service uwsgi restart
 	wait_for_service
     elif [ $signal_received = false ]; then
