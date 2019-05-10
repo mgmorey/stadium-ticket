@@ -218,7 +218,7 @@ done
 start_service
 
 if [ -e $APP_PIDFILE ]; then
-    tail_log_file
+    tail_file $APP_LOGFILE
     printf "Service %s installed and started successfully\n" "$APP_NAME"
 else
     printf "Service %s installed successfully\n" "$APP_NAME"

@@ -222,13 +222,13 @@ signal_service() {
     return $result
 }
 
-tail_log_file() {
-    assert [ -n "$APP_LOGFILE" -a -n "$tmpfile" ]
+tail_file() {
+    assert [ -n "$1" -a -n "$tmpfile" ]
 
-    if [ -r $APP_LOGFILE ]; then
-	print_file_tail $APP_LOGFILE
-    elif [ -e $APP_LOGFILE ]; then
-	printf "No permission to read log file: %s\n" $APP_LOGFILE >&2
+    if [ -r $1 ]; then
+	print_file_tail $1
+    elif [ -e $1 ]; then
+	printf "%s: No permission to read file\n" "$1" >&2
     fi
 }
 

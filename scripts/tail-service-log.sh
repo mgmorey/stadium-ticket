@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# uninstall-app.sh: uninstall uWSGI application
+# tail-service-log.sh: print last few lines of service log file
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -35,14 +35,6 @@ get_path() {
     fi
 }
 
-remove_config() {
-    remove_files $APP_ETCDIR $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print)
-}
-
-remove_service() {
-    remove_files $APP_RUNDIR $APP_DIR $APP_VARDIR $APP_LOGFILE ${DATABASE_FILENAME-}
-}
-
 script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
@@ -53,15 +45,4 @@ configure_system
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
-for dryrun in true false; do
-    remove_config
-
-    if [ $dryrun = false ]; then
-	signal_service INT INT TERM KILL || true
-	tail_file $APP_LOGFILE
-    fi
-
-    remove_service
-done
-
-printf "Service %s uninstalled successfully\n" $APP_NAME
+tail_file $APP_LOGFILE
