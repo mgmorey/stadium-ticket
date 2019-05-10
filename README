@@ -38,10 +38,10 @@ NOTE: Local installation is only supported on Ubuntu and openSUSE.
 
     scripts/run.sh docker-compose up --build (or "make build")
 
-8. To install the app locally (may require sudo):
+8. To install the app as a service (may require sudo):
 
-   scripts/install-app.sh (or "make install")
+   scripts/install-service.sh (or "make install")
 
-9. To uninstall the app (may require sudo):
+9. To uninstall the app as a service (may require sudo):
 
-   scripts/uninstall-app.sh (or "make uninstall")
+   scripts/uninstall-service.sh (or "make uninstall")
