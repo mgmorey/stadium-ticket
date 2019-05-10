@@ -13,11 +13,11 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-DASHES="----------------------------------------------------------------------"
-EQUALS="======================================================================"
+DASHES="----------------------------------------"
+EQUALS="========================================"
 
 KILL_COUNT=20
-KILL_INTERVAL=5
+KILL_INTERVAL=10
 
 WAIT_INITIAL_PERIOD=2
 WAIT_POLLING_COUNT=20
@@ -181,11 +181,11 @@ print_file_tail() {
     fi
 
     printf "%s\n" ""
-    printf "%s\n" $DASHES
+    printf "%s\n" $DASHES$DASHES
     printf "%s\n" "Contents of $1 (last 10 lines)"
-    printf "%s\n" $EQUALS
+    printf "%s\n" $EQUALS$EQUALS
     cat $tmpfile
-    printf "%s\n" $EQUALS
+    printf "%s\n" $DASHES$DASHES
     printf "%s\n" ""
 }
 
