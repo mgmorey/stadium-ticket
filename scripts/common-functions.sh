@@ -182,7 +182,7 @@ remove_files() {
     fi
 }
 
-signal_app() {
+signal_service() {
     pid=$("$script_dir/read-file.sh" $APP_PIDFILE)
     result=1
 

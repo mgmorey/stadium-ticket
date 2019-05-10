@@ -25,7 +25,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-change_ownership() {
+change_owner() {
     assert [ $# -ge 1 ]
 
     if [ "$(id -un)" != "$APP_UID"  -o "$(id -gn)" != "$APP_GID" ]; then
@@ -38,7 +38,7 @@ change_ownership() {
     fi
 }
 
-create_app_dirs() {
+create_dirs() {
     assert [ $# -ge 1 ]
     check_permissions "$@"
 
@@ -100,7 +100,7 @@ get_path() {
     fi
 }
 
-install_app() {
+install_flask_app() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
     mode=$1
@@ -123,7 +123,7 @@ install_app() {
     done
 }
 
-install_dir() {
+install_virtualenv() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     source_dir="$1"
@@ -139,17 +139,17 @@ install_dir() {
 }
 
 install_service() {
-    create_app_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
-    install_app 644 app $APP_DIR
+    create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
     install_file 600 .env $APP_DIR/.env
-    install_dir $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
-    change_ownership $APP_DIR $APP_VARDIR
+    install_flask_app 644 app $APP_DIR
+    install_virtualenv $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
+    change_owner $APP_DIR $APP_VARDIR
     create_uwsgi_ini $APP_CONFIG app.ini $UWSGI_VARS
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
 }
 
 start_service() {
-    if signal_app HUP; then
+    if signal_service HUP; then
 	restart_service=false
 	signal_received=true
     else
@@ -177,7 +177,7 @@ start_service() {
 	service uwsgi restart
 	wait_for_service
     elif [ $signal_received = false ]; then
-	printf "Waiting for app %s to restart automatically\n" "$APP_NAME"
+	printf "Waiting for service %s to restart automatically\n" "$APP_NAME"
 	sleep $KILL_INTERVAL
     fi
 }

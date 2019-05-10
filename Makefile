@@ -40,7 +40,7 @@ init-db:
 	$(script_dir)/run.sh python3 -m app init-db
 
 install:	.env .update
-	$(script_dir)/install-app.sh
+	$(script_dir)/install-service.sh
 
 pycode:	.update
 	$(script_dir)/run.sh pycodestyle app tests
@@ -58,7 +58,7 @@ stress:
 	$(script_dir)/load-test.sh
 
 uninstall:
-	$(script_dir)/uninstall-app.sh
+	$(script_dir)/uninstall-service.sh
 
 .PHONY: all build clean clean-venvs client client-debug debug init-db install
 .PHONY: pycode pylint pytest init-db realclean stress uninstall

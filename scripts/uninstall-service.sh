@@ -35,12 +35,12 @@ get_path() {
     fi
 }
 
-remove_app() {
-    remove_files $APP_RUNDIR $APP_DIR $APP_VARDIR $APP_LOGFILE ${DATABASE_FILENAME-}
-}
-
 remove_config() {
     remove_files $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print) $APP_ETCDIR
+}
+
+remove_service() {
+    remove_files $APP_RUNDIR $APP_DIR $APP_VARDIR $APP_LOGFILE ${DATABASE_FILENAME-}
 }
 
 script_dir=$(get_path "$(dirname "$0")")
@@ -57,11 +57,11 @@ for dryrun in true false; do
     remove_config
 
     if [ $dryrun = false ]; then
-	signal_app INT INT TERM KILL || true
+	signal_service INT INT TERM KILL || true
 	tail_log_file
     fi
 
-    remove_app
+    remove_service
 done
 
 printf "App %s stopped and removed successfully\n" $APP_NAME

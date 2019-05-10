@@ -56,11 +56,11 @@ fi
 if [ ! -x $plugin ]; then
     abort "%s: %s: No such plugin file\n" "$0" "$plugin"
 fi
-    
+
 export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PYTHONPATH=$app_prefix/lib
 
-if ! signal_app HUP; then
+if ! signal_service HUP; then
     /bin/rm -f $APP_PIDFILE
     $binary --plugin-dir $UWSGI_PLUGIN_DIR $APP_CONFIG
 else
