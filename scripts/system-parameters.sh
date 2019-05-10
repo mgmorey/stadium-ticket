@@ -52,6 +52,7 @@ configure_darwin() {
     UWSGI_RUNDIR=/usr/local/var/run
 
     # Set uWSGI directories from UWSGI_PREFIX
+    UWSGI_APPDIRS=""
     UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
     UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/plugin
 }
