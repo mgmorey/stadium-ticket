@@ -178,7 +178,7 @@ start_service() (
     if [ $restart_service = true ]; then
 	wait_for_service
     elif [ $signal_received = false ]; then
-	printf "Waiting for service %s to restart\n" "$APP_NAME"
+	printf "Waiting for service %s to start\n" "$APP_NAME"
 	sleep $KILL_INTERVAL
     fi
 )
