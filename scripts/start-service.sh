@@ -64,5 +64,5 @@ if ! signal_app HUP; then
     /bin/rm -f $APP_PIDFILE
     $binary --plugin-dir $UWSGI_PLUGIN_DIR $APP_CONFIG
 else
-    abort "%s: %s: Service is running as PID %s\n" "$0" "$pid"
+    abort "Service is running as PID %s\n" "$pid"
 fi
