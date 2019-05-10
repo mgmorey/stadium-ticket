@@ -75,7 +75,7 @@ check_python() (
 control_launch_agent() (
     assert [ -n "$1" ]
     assert [ $1 = load -o $1 = unload ]
-    agent_name=local.uwsgi
+    agent_name=local.$APP_NAME
     agent_source=macos/$agent_name.plist
     agent_target=$HOME/Library/LaunchAgents/$agent_name.plist
 

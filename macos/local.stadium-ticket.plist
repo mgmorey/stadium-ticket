@@ -3,7 +3,7 @@
 <plist version="1.0">
   <dict>
     <key>Label</key>
-    <string>local.uwsgi</string>
+    <string>local.stadium-ticket</string>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
