@@ -160,7 +160,7 @@ print_file_tail() {
 
     printf "%s\n" ""
     printf "%s\n" $DASHES
-    printf "%s\n" "Contents of $APP_LOGFILE (last 10 lines)"
+    printf "%s\n" "Contents of $1 (last 10 lines)"
     printf "%s\n" $EQUALS
     cat $tmpfile
     printf "%s\n" $EQUALS
