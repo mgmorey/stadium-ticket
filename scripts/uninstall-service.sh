@@ -36,7 +36,7 @@ get_path() {
 }
 
 remove_config() {
-    remove_files $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print) $APP_ETCDIR
+    remove_files $APP_ETCDIR $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print)
 }
 
 remove_service() {
