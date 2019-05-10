@@ -67,7 +67,7 @@ check_python() (
     version="${python_output#Python }"
     printf "Python %s interpreter found: %s\n" "$version" "$1"
 
-    if ! $script_dir/check-python.py "$version"; then
+    if ! "$script_dir/check-python.py" "$version"; then
 	abort_no_python
     fi
 )
@@ -116,7 +116,7 @@ create_symlink() {
 }
 
 find_python() (
-    python_versions=$($script_dir/check-python.py)
+    python_versions=$("$script_dir/check-python.py")
 
     if pyenv --version >/dev/null 2>&1; then
 	which="pyenv which"
@@ -139,7 +139,7 @@ find_python() (
 )
 
 find_system_python () (
-    python_versions=$($script_dir/check-python.py)
+    python_versions=$("$script_dir/check-python.py")
 
     for prefix in /usr/local /usr; do
 	python_dir=$prefix/bin
