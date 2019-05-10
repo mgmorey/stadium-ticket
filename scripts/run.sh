@@ -34,11 +34,6 @@ pip_run() {
     sync_venv $venv_filename
     printf "%s\n" "Loading .env environment variables"
     . ./.env
-
-    for var in $APP_ENV_VARS; do
-	export $var
-    done
-
     "$@"
 }
 
@@ -80,6 +75,8 @@ script_dir=$(get_path "$(dirname "$0")")
 source_dir=$script_dir/..
 
 cd "$source_dir"
+
+export $APP_ENV_VARS
 
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
