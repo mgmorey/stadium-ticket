@@ -16,11 +16,8 @@
 KILL_COUNT=20
 KILL_INTERVAL=10
 
-WAIT_INITIAL_PERIOD=2
-WAIT_POLLING_COUNT=20
-
-SINGLE_LINE="----------------------------------------"
-DOUBLE_LINE="========================================"
+SEPARATOR_SINGLE="----------------------------------------"
+SEPARATOR_DOUBLE="========================================"
 
 abort_insufficient_permissions() {
     cat >&2 <<EOF
@@ -180,11 +177,11 @@ print_file_tail() {
 	return
     fi
 
-    printf "%s\n" $DOUBLE_LINE$DOUBLE_LINE
+    printf "%s\n" $SEPARATOR_DOUBLE$SEPARATOR_DOUBLE
     printf "%s\n" "Contents of $1 (last 10 lines)"
-    printf "%s\n" $SINGLE_LINE$SINGLE_LINE
+    printf "%s\n" $SEPARATOR_SINGLE$SEPARATOR_SINGLE
     cat $tmpfile
-    printf "%s\n" $DOUBLE_LINE$DOUBLE_LINE
+    printf "%s\n" $SEPARATOR_DOUBLE$SEPARATOR_DOUBLE
 }
 
 remove_database() {
@@ -249,20 +246,5 @@ tail_file() {
 	print_file_tail $1
     elif [ -e $1 ]; then
 	printf "%s: No permission to read file\n" "$1" >&2
-    fi
-}
-
-wait_for_service() {
-    printf "%s\n" "Waiting for service to start"
-    sleep $WAIT_INITIAL_PERIOD
-    i=0
-
-    while [ ! -e $APP_PIDFILE -a $i -lt $WAIT_POLLING_COUNT ]; do
-	sleep 1
-	i=$((i + 1))
-    done
-
-    if [ $i -ge $WAIT_POLLING_COUNT ]; then
-	printf "%s\n" "App did not start in a timely fashion" >&2
     fi
 }

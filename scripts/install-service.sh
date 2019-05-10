@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+WAIT_INITIAL_PERIOD=2
+WAIT_POLLING_COUNT=20
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -155,7 +158,7 @@ start_service() (
 	signal_received=false
     fi
 
-    if [ $signal_received = true ]; then
+    if [ $signal_received = false ]; then
 	/bin/rm -f $APP_PIDFILE
     fi
 
@@ -178,13 +181,28 @@ start_service() (
 	esac
     fi
 
+    printf "Waiting for service %s to start\n" "$APP_NAME"
+
     if [ $restart_service = true ]; then
-	wait_for_service
+	wait_for_pidfile $APP_PIDFILE $WAIT_INITIAL_PERIOD $WAIT_POLLING_COUNT
     elif [ $signal_received = false ]; then
-	printf "Waiting for service %s to start\n" "$APP_NAME"
 	sleep $KILL_INTERVAL
     fi
 )
+
+wait_for_pidfile() {
+    sleep $2
+    i=0
+
+    while [ ! -e $1 -a $i -lt $3 ]; do
+	sleep 1
+	i=$((i + 1))
+    done
+
+    if [ $i -ge $3 ]; then
+	printf "Timeout waiting for PID file %s\n" $1 >&2
+    fi
+}
 
 script_dir=$(get_path "$(dirname "$0")")
 
