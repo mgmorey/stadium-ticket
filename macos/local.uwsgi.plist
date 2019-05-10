@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>local.uwsgi</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/opt/uwsgi/bin/uwsgi</string>
+        <string>--uid</string>
+        <string>_www</string>
+        <string>--gid</string>
+        <string>_www</string>
+        <string>--master</string>
+        <string>--die-on-term</string>
+        <string>--autoload</string>
+        <string>--logto</string>
+        <string>/usr/local/var/log/uwsgi.log</string>
+        <string>--plugin-dir</string>
+        <string>/usr/local/opt/uwsgi/lib/plugin</string>
+        <string>--emperor</string>
+        <string>/usr/local/etc/uwsgi/apps-enabled</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/usr/local/opt/uwsgi/lib/plugin</string>
+  </dict>
+</plist>
