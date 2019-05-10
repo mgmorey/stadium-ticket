@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-WAIT_INITIAL_PERIOD=2
-WAIT_POLLING_COUNT=20
+WAIT_INITIAL=2
+WAIT_POLLING=20
 
 abort() {
     printf "$@" >&2
@@ -184,7 +184,7 @@ start_service() (
     printf "Waiting for service %s to start\n" "$APP_NAME"
 
     if [ $restart_service = true ]; then
-	wait_for_pidfile $APP_PIDFILE $WAIT_INITIAL_PERIOD $WAIT_POLLING_COUNT
+	wait_for_pidfile $APP_PIDFILE $WAIT_INITIAL $WAIT_POLLING
     elif [ $signal_received = false ]; then
 	sleep $KILL_INTERVAL
     fi
