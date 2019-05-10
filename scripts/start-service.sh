@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# start-uwsgi.sh: run Flask application using uWSGI
+# start-service.sh: run application as a service using uWSGI
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -41,17 +41,18 @@ script_dir=$(get_path "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 
 configure_system
+
+if [ -e $APP_PIDFILE ]; then
+    pid=$("$script_dir/read-file.sh" $APP_PIDFILE)
+    abort "%s: Process already running as PID %s\n" "$0" "$pid"
+fi
+
 app_prefix=$APP_DIR/$VENV_FILENAME
 binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
 
 export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PYTHONPATH=$app_prefix/lib
-
-if [ -e $APP_PIDFILE ]; then
-    pid=$("$script_dir/read-file.sh" $APP_PIDFILE)
-    abort "%s: Process already running as PID %s\n" "$0" "$pid"
-fi
 
 if $binary --version >/dev/null 2>&1; then
     if [ -x $plugin ]; then
