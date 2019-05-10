@@ -180,11 +180,11 @@ print_file_tail() {
 	return
     fi
 
-    printf "%s\n" $DASHES$DASHES
-    printf "%s\n" "Contents of $1 (last 10 lines)"
     printf "%s\n" $EQUALS$EQUALS
-    cat $tmpfile
+    printf "%s\n" "Contents of $1 (last 10 lines)"
     printf "%s\n" $DASHES$DASHES
+    cat $tmpfile
+    printf "%s\n" $EQUALS$EQUALS
 }
 
 remove_database() {
