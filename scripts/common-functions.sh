@@ -58,8 +58,7 @@ check_python() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     assert [ -x $1 ]
-    python=$1
-    python_output="$($python --version || true)"
+    python_output="$($1 --version || true)"
 
     if [ -z "$python_output" ]; then
 	abort_no_python
@@ -73,22 +72,46 @@ check_python() (
     fi
 )
 
-create_symlink() (
+control_launch_agent() (
+    assert [ -n "$1" ]
+    assert [ $1 = load -o $1 = unload ]
+    agent_source=$source_dir/macos/local.uwsgi.plist
+    agent_target=$HOME/Library/LaunchAgents/local.uwsgi.plist
+
+    case $1 in
+	(load)
+	    install_file 644 $agent_source $agent_target
+
+	    if [ $dryrun = false ]; then
+		launchctl $1 $agent_target
+	    fi
+	    ;;
+	(unload)
+	    if [ -e $agent_target ]; then
+		if [ $dryrun = false ]; then
+		    launchctl $1 $agent_target
+		fi
+	    fi
+
+	    remove_files $agent_target
+	    ;;
+    esac
+)
+
+create_symlink() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
-    source=$1
-    target=$2
-    check_permissions "$target"
+    check_permissions "$2"
 
     if [ $dryrun = false ]; then
-	assert [ -r "$source" ]
+	assert [ -r "$1" ]
 
-	if [ $source != $target ]; then
-	    printf "Creating link %s\n" "$target"
-	    /bin/ln -sf $source $target
+	if [ $1 != $2 ]; then
+	    printf "Creating link %s\n" "$2"
+	    /bin/ln -sf $1 $2
 	fi
     fi
-)
+}
 
 find_python() (
     python_versions=$($script_dir/check-python.py)
@@ -137,15 +160,12 @@ find_system_python () (
 install_file() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
-    mode=$1
-    source=$2
-    target=$3
-    check_permissions $target
+    check_permissions $3
 
     if [ $dryrun = false ]; then
-	printf "Installing file %s as %s\n" "$source" "$target"
-	install -d -m 755 "$(dirname "$target")"
-	install -C -m $mode $source $target
+	printf "Installing file %s as %s\n" "$2" "$3"
+	install -d -m 755 "$(dirname "$3")"
+	install -C -m $1 $2 $3
     fi
 )
 

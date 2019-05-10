@@ -53,6 +53,7 @@ configure_darwin() {
     UWSGI_RUNDIR=/usr/local/var/run
 
     # Set uWSGI directories from UWSGI_PREFIX
+    UWSGI_APPDIRS="apps-available apps-enabled"
     UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
     UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/plugin
 }
@@ -75,9 +76,9 @@ configure_debian() {
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/socket
-    UWSGI_APPDIRS="apps-available apps-enabled"
 
     # Set uWSGI directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
     UWSGI_BINARY_DIR=/usr/bin
     UWSGI_PLUGIN_DIR=/usr/lib/uwsgi/plugins
 }
@@ -112,10 +113,12 @@ configure_nt() {
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    UWSGI_APPDIRS="vassals"
 
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc/uwsgi
+
+    # Set uWSGI directories
+    UWSGI_APPDIRS="vassals"
 }
 
 configure_opensuse() {
@@ -131,12 +134,12 @@ configure_opensuse() {
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    UWSGI_APPDIRS="vassals"
 
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc/uwsgi
 
     # Set uWSGI directories
+    UWSGI_APPDIRS="vassals"
     UWSGI_PLUGIN_DIR=.
 }
 

@@ -48,7 +48,7 @@ create_dirs() {
     fi
 }
 
-create_symlinks() {
+create_symlinks() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     source=$1
@@ -57,9 +57,9 @@ create_symlinks() {
     for target_dir in "$@"; do
 	create_symlink $source $UWSGI_ETCDIR/$target_dir/$APP_NAME.ini
     done
-}
+)
 
-create_uwsgi_ini() {
+create_uwsgi_ini() (
     assert [ $# -ge 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" ]
     target=$1
@@ -73,9 +73,9 @@ create_uwsgi_ini() {
 	generate_sed_program "$@" >$tmpfile
 	sed -f $tmpfile $source >$target
     fi
-}
+)
 
-generate_sed_program() {
+generate_sed_program() (
     assert [ $# -ge 1 ]
 
     for var; do
@@ -85,7 +85,7 @@ generate_sed_program() {
 	printf 's|^#<%s>$|%s|g\n' "$pattern" "$replace"
 	printf 's|^%s$|%s|g\n' "$pattern" "$replace"
     done
-}
+)
 
 get_path() {
     assert [ -d "$1" ]
@@ -100,7 +100,7 @@ get_path() {
     fi
 }
 
-install_flask_app() {
+install_flask_app() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
     mode=$1
@@ -121,9 +121,9 @@ install_flask_app() {
 		;;
 	esac
     done
-}
+)
 
-install_virtualenv() {
+install_virtualenv() (
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     source_dir="$1"
@@ -136,9 +136,9 @@ install_virtualenv() {
 	mkdir -p $target_dir
 	rsync -a "$source_dir"/* $target_dir
     fi
-}
+)
 
-install_service() {
+install_service() (
     create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
     install_file 600 .env $APP_DIR/.env
     install_flask_app 644 app $APP_DIR
@@ -146,9 +146,15 @@ install_service() {
     change_owner $APP_DIR $APP_VARDIR
     create_uwsgi_ini $APP_CONFIG app.ini $UWSGI_VARS
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
-}
 
-start_service() {
+    case "$kernel_name" in
+	(Darwin)
+	    control_launch_agent load
+	    ;;
+    esac
+)
+
+start_service() (
     if signal_service HUP; then
 	restart_service=false
 	signal_received=true
@@ -163,24 +169,34 @@ start_service() {
 			restart_service=false
 			;;
 		esac
+
+		if [ $restart_service = true ]; then
+		    service uwsgi restart
+		fi
+		;;
+	    (Darwin)
+		restart_service=false
+
+		if [ $restart_service = true ]; then
+		    launchctl kill SIGHUP local.uwsgi
+		fi
 		;;
 	    (*)
 		restart_service=false
 		;;
 	esac
 
-	/bin/rm -f $APP_PIDFILE
 	signal_received=false
+	/bin/rm -f $APP_PIDFILE
     fi
 
     if [ $restart_service = true ]; then
-	service uwsgi restart
 	wait_for_service
     elif [ $signal_received = false ]; then
 	printf "Waiting for service %s to restart automatically\n" "$APP_NAME"
 	sleep $KILL_INTERVAL
     fi
-}
+)
 
 script_dir=$(get_path "$(dirname "$0")")
 

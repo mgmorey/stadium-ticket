@@ -45,6 +45,8 @@ remove_service() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
+source_dir=$script_dir/..
+
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
@@ -54,14 +56,21 @@ tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 for dryrun in true false; do
-    remove_config
-
     if [ $dryrun = false ]; then
-	signal_service INT INT TERM KILL || true
+
+	case "$kernel_name" in
+	    (Linux)
+		signal_service INT INT TERM KILL || true
+		;;
+	    (Darwin)
+		control_launch_agent unload
+		;;
+	esac
 	tail_file $APP_LOGFILE
     fi
 
     remove_service
+    remove_config
 done
 
 printf "Service %s uninstalled successfully\n" $APP_NAME
