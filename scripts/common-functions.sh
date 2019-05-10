@@ -161,7 +161,7 @@ find_system_python () (
     done
 )
 
-install_file() (
+install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
     check_permissions $3
@@ -171,7 +171,7 @@ install_file() (
 	install -d -m 755 "$(dirname "$3")"
 	install -C -m $1 $2 $3
     fi
-)
+}
 
 print_file_tail() {
     assert [ $# -eq 1 ]
