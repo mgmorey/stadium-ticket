@@ -35,6 +35,10 @@ get_path() {
     fi
 }
 
+if [ $(id -u) -eq 0 ]; then
+    abort "%s: Must be run as a non-privileged user\n" "$0"
+fi
+
 script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
