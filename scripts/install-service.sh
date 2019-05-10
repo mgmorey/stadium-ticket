@@ -153,6 +153,9 @@ start_service() (
 	signal_received=true
     else
 	signal_received=false
+    fi
+
+    if [ $signal_received = true ]; then
 	/bin/rm -f $APP_PIDFILE
     fi
 
