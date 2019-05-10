@@ -36,11 +36,13 @@ abort_no_python() {
 }
 
 check_permissions() {
+    local file
+
     for file; do
 	if [ -e $file -a -w $file ]; then
 	    :
 	else
-	    dir=$(dirname $file)
+	    local dir=$(dirname $file)
 
 	    if [ $dir != . -a $dir != / ]; then
 		check_permissions $dir
@@ -62,7 +64,7 @@ check_python() {
 	abort_no_python
     fi
 
-    version="${python_output#Python }"
+    local version="${python_output#Python }"
     printf "Python %s interpreter found: %s\n" "$version" "$1"
 
     if ! $script_dir/check-python.py "$version"; then
@@ -73,8 +75,8 @@ check_python() {
 create_symlink() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
-    source=$1
-    target=$2
+    local source=$1
+    local target=$2
     check_permissions "$target"
 
     if [ $dryrun = false ]; then
@@ -92,6 +94,8 @@ find_python()
     python=
     python_versions=
     get_python_versions
+    local version
+    local which
 
     if pyenv --version >/dev/null 2>&1; then
 	which="pyenv which"
@@ -116,9 +120,10 @@ find_system_python () {
     python=
     python_versions=
     get_python_versions
+    local prefix
 
     for prefix in /usr/local /usr; do
-	python_dir=$prefix/bin
+	local python_dir=$prefix/bin
 
 	if [ -d $python_dir ]; then
 	    for version in ${python_versions-$PYTHON_VERSIONS} ""; do
@@ -141,9 +146,9 @@ get_python_versions() {
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
-    mode=$1
-    source=$2
-    target=$3
+    local mode=$1
+    local source=$2
+    local target=$3
     check_permissions $target
 
     if [ $dryrun = false ]; then
@@ -189,6 +194,7 @@ remove_files() {
 signal_app() {
     pid=$("$script_dir/read-file.sh" $APP_PIDFILE)
     result=1
+    local signal
 
     if [ -z "$pid" ]; then
 	return $result
