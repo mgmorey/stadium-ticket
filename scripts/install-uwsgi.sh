@@ -38,6 +38,11 @@ get_path() {
     fi
 }
 
+start_uwsgi() {
+    systemctl enable uwsgi
+    systemctl start uwsgi
+}
+
 if [ $# -eq 0 ]; then
     abort "%s\n" "$0: Not enough arguments"
 fi

@@ -189,11 +189,6 @@ start_service() {
     wait_for_service
 }
 
-start_uwsgi() {
-    systemctl enable uwsgi
-    systemctl start uwsgi
-}
-
 wait_for_service() {
     printf "%s\n" "Waiting for service and app to start"
     sleep $WAIT_INITIAL_PERIOD
@@ -223,11 +218,17 @@ tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 venv_filename=$VENV_FILENAME-$APP_NAME
 
+if [ "$(id -u)" -eq 0 ]; then
+    sh="su $SUDO_USER"
+else
+    sh="sh -eu"
+fi
+
 for dryrun in true false; do
     "$script_dir/install-uwsgi.sh" $dryrun
 
     if [ $dryrun = false ]; then
-	if ! "$script_dir/create-virtualenv.sh" $venv_filename; then
+	if ! $sh $script_dir/create-virtualenv.sh $venv_filename; then
 	    abort "%s: Unable to create virtual environment\n" "$0"
 	fi
     fi
