@@ -64,4 +64,4 @@ for dryrun in true false; do
     remove_service
 done
 
-printf "App %s stopped and removed successfully\n" $APP_NAME
+printf "Service %s uninstalled successfully\n" $APP_NAME
