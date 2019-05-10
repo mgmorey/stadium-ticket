@@ -38,24 +38,31 @@ get_path() {
 script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
+. "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
 configure_system
-
-if [ -e $APP_PIDFILE ]; then
-    pid=$("$script_dir/read-file.sh" $APP_PIDFILE)
-    abort "%s: Process already running as PID %s\n" "$0" "$pid"
-fi
+tmpfile=$(mktemp)
+trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 app_prefix=$APP_DIR/$VENV_FILENAME
 binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
 
+if ! $binary --version >/dev/null 2>&1; then
+    abort "%s: %s: No such binary file\n" "$0" "$binary"
+fi
+
+if [ ! -x $plugin ]; then
+    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
+fi
+    
 export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PYTHONPATH=$app_prefix/lib
 
-if $binary --version >/dev/null 2>&1; then
-    if [ -x $plugin ]; then
-	$binary --plugin-dir $UWSGI_PLUGIN_DIR $APP_CONFIG
-    fi
+if ! signal_app HUP; then
+    /bin/rm -f $APP_PIDFILE
+    $binary --plugin-dir $UWSGI_PLUGIN_DIR $APP_CONFIG
+else
+    abort "%s: %s: Service is running as PID %s\n" "$0" "$pid"
 fi

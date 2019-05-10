@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-WAIT_INITIAL_PERIOD=2
-WAIT_POLLING_COUNT=20
-
 abort() {
     printf "$@" >&2
     exit 1
@@ -103,32 +100,7 @@ get_path() {
     fi
 }
 
-install_app_and_config() {
-    create_app_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
-    install_source_files 644 app $APP_DIR
-    install_file 600 .env $APP_DIR/.env
-    install_dir $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
-    change_ownership $APP_DIR $APP_VARDIR
-    create_uwsgi_ini $APP_CONFIG app.ini $UWSGI_VARS
-    create_symlinks $APP_CONFIG $UWSGI_APPDIRS
-}
-
-install_dir() {
-    assert [ $# -eq 2 ]
-    assert [ -n "$1" ]
-    source_dir="$1"
-    target_dir="$2"
-    check_permissions "$target_dir"
-
-    if [ $dryrun = false ]; then
-	assert [ -r "$source_dir" ]
-	printf "Installing files in %s\n" "$target_dir"
-	mkdir -p $target_dir
-	rsync -a "$source_dir"/* $target_dir
-    fi
-}
-
-install_source_files() {
+install_app() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
     mode=$1
@@ -151,7 +123,32 @@ install_source_files() {
     done
 }
 
-start_app() {
+install_dir() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    source_dir="$1"
+    target_dir="$2"
+    check_permissions "$target_dir"
+
+    if [ $dryrun = false ]; then
+	assert [ -r "$source_dir" ]
+	printf "Installing files in %s\n" "$target_dir"
+	mkdir -p $target_dir
+	rsync -a "$source_dir"/* $target_dir
+    fi
+}
+
+install_service() {
+    create_app_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
+    install_app 644 app $APP_DIR
+    install_file 600 .env $APP_DIR/.env
+    install_dir $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
+    change_ownership $APP_DIR $APP_VARDIR
+    create_uwsgi_ini $APP_CONFIG app.ini $UWSGI_VARS
+    create_symlinks $APP_CONFIG $UWSGI_APPDIRS
+}
+
+start_service() {
     if signal_app HUP; then
 	restart_service=false
 	signal_received=true
@@ -176,31 +173,12 @@ start_app() {
     fi
 
     if [ $restart_service = true ]; then
-	start_service
+	/bin/rm -f $APP_PIDFILE
+	service uwsgi restart
+	wait_for_service
     elif [ $signal_received = false ]; then
 	printf "Waiting for app %s to restart automatically\n" "$APP_NAME"
 	sleep $KILL_INTERVAL
-    fi
-}
-
-start_service() {
-    /bin/rm -f $APP_PIDFILE
-    service uwsgi restart
-    wait_for_service
-}
-
-wait_for_service() {
-    printf "%s\n" "Waiting for service and app to start"
-    sleep $WAIT_INITIAL_PERIOD
-    i=0
-
-    while [ ! -e $APP_PIDFILE -a $i -lt $WAIT_POLLING_COUNT ]; do
-	sleep 1
-	i=$((i + 1))
-    done
-
-    if [ $i -ge $WAIT_POLLING_COUNT ]; then
-	printf "%s\n" "App did not start in a timely fashion" >&2
     fi
 }
 
@@ -234,10 +212,10 @@ for dryrun in true false; do
     fi
 
     remove_database
-    install_app_and_config
+    install_service
 done
 
-start_app
+start_service
 
 if [ -e $APP_PIDFILE ]; then
     tail_log_file

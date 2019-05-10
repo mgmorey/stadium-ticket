@@ -19,6 +19,9 @@ EQUALS="======================================================================"
 KILL_COUNT=20
 KILL_INTERVAL=5
 
+WAIT_INITIAL_PERIOD=2
+WAIT_POLLING_COUNT=20
+
 abort_insufficient_permissions() {
     cat >&2 <<EOF
 $0: You need write permissions for $1
@@ -226,5 +229,20 @@ tail_log_file() {
 	print_file_tail $APP_LOGFILE
     elif [ -e $APP_LOGFILE ]; then
 	printf "No permission to read log file: %s\n" $APP_LOGFILE >&2
+    fi
+}
+
+wait_for_service() {
+    printf "%s\n" "Waiting for service to start"
+    sleep $WAIT_INITIAL_PERIOD
+    i=0
+
+    while [ ! -e $APP_PIDFILE -a $i -lt $WAIT_POLLING_COUNT ]; do
+	sleep 1
+	i=$((i + 1))
+    done
+
+    if [ $i -ge $WAIT_POLLING_COUNT ]; then
+	printf "%s\n" "App did not start in a timely fashion" >&2
     fi
 }
