@@ -13,8 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-DASHES="----------------------------------------"
-EQUALS="========================================"
+SINGLE_LINE="----------------------------------------"
+DOUBLE_LINE="========================================"
 
 KILL_COUNT=20
 KILL_INTERVAL=10
@@ -180,11 +180,11 @@ print_file_tail() {
 	return
     fi
 
-    printf "%s\n" $EQUALS$EQUALS
+    printf "%s\n" $DOUBLE_LINE$DOUBLE_LINE
     printf "%s\n" "Contents of $1 (last 10 lines)"
-    printf "%s\n" $DASHES$DASHES
+    printf "%s\n" $SINGLE_LINE$SINGLE_LINE
     cat $tmpfile
-    printf "%s\n" $EQUALS$EQUALS
+    printf "%s\n" $DOUBLE_LINE$DOUBLE_LINE
 }
 
 remove_database() {
