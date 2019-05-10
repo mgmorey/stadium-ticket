@@ -90,11 +90,9 @@ control_launch_agent() (
 	    fi
 	    ;;
 	(unload)
-	    if [ -e $agent_target ]; then
-		if [ $dryrun = false ]; then
-		    launchctl stop $agent_label
-		    launchctl unload $agent_target
-		fi
+	    if [ $dryrun = false -a -e $agent_target ]; then
+		launchctl stop $agent_label
+		launchctl unload $agent_target
 	    fi
 
 	    remove_files $agent_target
