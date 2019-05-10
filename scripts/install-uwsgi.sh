@@ -65,7 +65,7 @@ case "$kernel_name" in
 	    is_installed=true
 
 	    for package in $("$script_dir/get-uwsgi-packages.sh"); do
-		if ! "$script_dir/is-installed-package.sh" $package; then
+		if ! "$script_dir/is-installed.sh" $package; then
 		    is_installed=false
 		    break
 		fi
