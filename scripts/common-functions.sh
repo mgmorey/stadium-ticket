@@ -75,9 +75,9 @@ check_python() (
 control_launch_agent() (
     assert [ -n "$1" ]
     assert [ $1 = load -o $1 = unload ]
-    agent_name=local.$APP_NAME
-    agent_source=macos/$agent_name.plist
-    agent_target=$HOME/Library/LaunchAgents/$agent_name.plist
+    agent_label=local.$APP_NAME
+    agent_source=macos/$agent_label.plist
+    agent_target=$HOME/Library/LaunchAgents/$agent_label.plist
 
     case $1 in
 	(load)
@@ -86,13 +86,13 @@ control_launch_agent() (
 
 	    if [ $dryrun = false ]; then
 		launchctl load $agent_target
-		launchctl start $agent_name
+		launchctl start $agent_label
 	    fi
 	    ;;
 	(unload)
 	    if [ -e $agent_target ]; then
 		if [ $dryrun = false ]; then
-		    launchctl stop $agent_name
+		    launchctl stop $agent_label
 		    launchctl unload $agent_target
 		fi
 	    fi
