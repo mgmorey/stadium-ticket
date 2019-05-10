@@ -35,12 +35,12 @@ abort_no_python() {
     abort "%s\n" "No suitable Python interpreter found"
 }
 
-check_permissions() {
+check_permissions() (
     for file; do
 	if [ -e $file -a -w $file ]; then
 	    :
 	else
-	    local dir=$(dirname $file)
+	    dir=$(dirname $file)
 
 	    if [ $dir != . -a $dir != / ]; then
 		check_permissions $dir
@@ -49,9 +49,9 @@ check_permissions() {
 	    fi
 	fi
     done
-}
+)
 
-check_python() {
+check_python() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     assert [ -x $1 ]
@@ -68,9 +68,9 @@ check_python() {
     if ! $script_dir/check-python.py "$version"; then
 	abort_no_python
     fi
-}
+)
 
-create_symlink() {
+create_symlink() (
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     source=$1
@@ -85,9 +85,9 @@ create_symlink() {
 	    /bin/ln -sf $source $target
 	fi
     fi
-}
+)
 
-find_python() {
+find_python() (
     python_versions=$($script_dir/check-python.py)
 
     if pyenv --version >/dev/null 2>&1; then
@@ -108,9 +108,9 @@ find_python() {
 	    return
 	fi
     done
-}
+)
 
-find_system_python () {
+find_system_python () (
     python_versions=$($script_dir/check-python.py)
 
     for prefix in /usr/local /usr; do
@@ -129,9 +129,9 @@ find_system_python () {
 	    done
 	fi
     done
-}
+)
 
-install_file() {
+install_file() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
     mode=$1
@@ -144,7 +144,7 @@ install_file() {
 	install -d -m 755 "$(dirname "$target")"
 	install -C -m $mode $source $target
     fi
-}
+)
 
 print_file_tail() {
     assert [ $# -eq 1 ]
