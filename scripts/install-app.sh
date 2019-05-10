@@ -54,11 +54,11 @@ create_app_dirs() {
 create_symlinks() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-    file=$1
+    source=$1
     shift
 
-    for dir; do
-	create_symlink $file $UWSGI_ETCDIR/$dir/$APP_NAME.ini
+    for target_dir in "$@"; do
+	create_symlink $source $UWSGI_ETCDIR/$target_dir/$APP_NAME.ini
     done
 }
 
