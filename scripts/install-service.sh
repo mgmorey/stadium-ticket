@@ -153,6 +153,7 @@ start_service() (
 	signal_received=true
     else
 	signal_received=false
+	/bin/rm -f $APP_PIDFILE
     fi
 
     # Initialize database by invoking app module
@@ -172,15 +173,12 @@ start_service() (
 		fi
 		;;
 	esac
-
-	signal_received=false
-	/bin/rm -f $APP_PIDFILE
     fi
 
     if [ $restart_service = true ]; then
 	wait_for_service
     elif [ $signal_received = false ]; then
-	printf "Waiting for service %s to restart automatically\n" "$APP_NAME"
+	printf "Waiting for service %s to restart\n" "$APP_NAME"
 	sleep $KILL_INTERVAL
     fi
 )
