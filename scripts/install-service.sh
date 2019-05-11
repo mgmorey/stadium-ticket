@@ -256,12 +256,6 @@ tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 venv_filename=$VENV_FILENAME-$APP_NAME
 
-if [ "$(id -u)" -eq 0 ]; then
-    sh="su $SUDO_USER"
-else
-    sh="sh -eu"
-fi
-
 for dryrun in true false; do
     "$script_dir/install-uwsgi.sh" $dryrun
 

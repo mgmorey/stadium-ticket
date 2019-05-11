@@ -99,12 +99,6 @@ upgrade_venv_tools() {
 	return
     fi
 
-    if [ "$(id -u)" -eq 0 ]; then
-	sh="su $SUDO_USER"
-    else
-	sh="sh -eu"
-    fi
-
     printf "%s\n" "Upgrading pip and virtualenv"
     pip_install="$pip install${SUDO_USER:+ $PIP_SUDO_OPTS}"
     run_unprivileged $pip_install --upgrade --user pip virtualenv
