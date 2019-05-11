@@ -67,6 +67,7 @@ configure_debian() {
 
     # Set additional application directories
     APP_LOGDIR=$UWSGI_LOGDIR
+    APP_RUNDIR=$UWSGI_RUNDIR
 
     # Set additional parameters from app directories
     APP_PIDFILE=$APP_RUNDIR/pid
@@ -96,10 +97,6 @@ configure_sunos() {
     # Set application group and user accounts
     APP_GID=sys
     APP_UID=root
-
-    # Set additional application directories
-    APP_LOGDIR=$APP_VARDIR
-    APP_RUNDIR=$APP_VARDIR
 }
 
 configure_system_defaults() {
