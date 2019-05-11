@@ -26,7 +26,7 @@ activate_venv() {
 create_venv() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-    upgrade_venv_tools
+    upgrade_venv_tools pip virtualenv
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
     if [ "$virtualenv" = false ]; then
@@ -100,6 +100,8 @@ upgrade_venv_tools() {
     fi
 
     printf "%s\n" "Upgrading pip and virtualenv"
-    pip_install="$pip install${SUDO_USER:+ $PIP_SUDO_OPTS}"
-    run_unprivileged $pip_install --upgrade --user pip virtualenv
+    pip_opts="$PIP_OPTS${SUDO_USER:+ $PIP_SUDO_OPTS}"
+    pip_opts="$pip_opts --upgrade --user"
+    upgrade="$pip install $pip_opts"
+    run_unprivileged $upgrade "$@"
 }
