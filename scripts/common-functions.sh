@@ -72,13 +72,11 @@ check_python() (
 control_launch_agent() (
     assert [ -n "$1" ]
     agent_label=local.$APP_NAME
-    agent_source=macos/$agent_label.plist
     agent_target=$HOME/Library/LaunchAgents/$agent_label.plist
 
     case $1 in
 	(load)
-	    cd $source_dir
-	    install_file 644 $agent_source $agent_target
+	    generate_launch_agent_plist $agent_target
 
 	    if [ $dryrun = false ]; then
 		launchctl load $agent_target
@@ -162,6 +160,20 @@ find_system_python () (
 	    done
 	fi
     done
+)
+
+generate_launch_agent_plist() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    check_permissions $1
+    agent_source=macos/$agent_label.plist
+    cd $source_dir
+
+    if [ $dryrun = false ]; then
+	printf "Generating file %s\n" "$1"
+	install -d -m 755 $(dirname $1)
+	install -C -m 644 $agent_source $1
+    fi
 )
 
 install_file() {
