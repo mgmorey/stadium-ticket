@@ -247,7 +247,7 @@ run_unprivileged() (
     if [ "$(id -u)" -eq 0 -a -n "${SUDO_USER:-}" ]; then
 	gid=$(id -g $SUDO_USER)
 	uid=$(id -u $SUDO_USER)
-	sh="setpriv --clear-groups --rgid $gid --ruid $uid"
+	sh="setpriv --clear-groups --reset-env --rgid $gid --ruid $uid"
     else
 	sh=
     fi
