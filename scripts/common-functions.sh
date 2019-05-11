@@ -71,7 +71,6 @@ check_python() (
 
 control_launch_agent() (
     assert [ -n "$1" ]
-    assert [ $1 = load -o $1 = unload ]
     agent_label=local.$APP_NAME
     agent_source=macos/$agent_label.plist
     agent_target=$HOME/Library/LaunchAgents/$agent_label.plist
@@ -84,6 +83,16 @@ control_launch_agent() (
 	    if [ $dryrun = false ]; then
 		launchctl load $agent_target
 		launchctl start $agent_label
+	    fi
+	    ;;
+	(restart)
+	    if [ $dryrun = false ]; then
+		launchctl start $agent_label
+	    fi
+	    ;;
+	(restart|start|stop)
+	    if [ $dryrun = false ]; then
+		launchctl $1 $agent_label
 	    fi
 	    ;;
 	(unload)
