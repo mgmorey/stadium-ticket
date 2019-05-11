@@ -13,6 +13,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+PIP_OPTS="--no-warn-script-location"
+PIP_SUDO_OPTS="--no-cache-dir"
+
 activate_venv() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -100,7 +103,7 @@ upgrade_venv_tools() {
     fi
 
     printf "%s\n" "Upgrading pip and virtualenv"
-    pip_opts="$PIP_OPTS${SUDO_USER:+ $PIP_SUDO_OPTS}"
+    pip_opts="${SUDO_USER:+$PIP_SUDO_OPTS }$PIP_OPTS"
     pip_opts="$pip_opts --upgrade --user"
     upgrade="$pip install $pip_opts"
     run_unprivileged $upgrade "$@"
