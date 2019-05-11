@@ -18,8 +18,8 @@
 
 SLEEP_PERIOD=10
 
-WAIT_INITIAL=2
-WAIT_TIMEOUT=30
+WAIT_INITIAL=0
+WAIT_TIMEOUT=10
 
 abort() {
     printf "$@" >&2
@@ -234,11 +234,18 @@ start_service() (
     fi
 )
 
-wait_for_service() {
-    sleep $2
-    i=0
+wait_for_service() (
+    assert [ -n "$2" -a -n "$3" ]
+    assert [ $2 -ge 0 -a $3 -gt 0 -a $2 -lt $3 ]
 
-    while [ ! -e $1 -a $i -lt $3 ]; do
+    if [ $2 -gt 0 ]; then
+	sleep $2
+    fi
+
+    i=0
+    n=$(($3 - $2))
+
+    while [ ! -e $1 -a $i -lt $n ]; do
 	sleep 1
 	i=$((i + 1))
     done
@@ -246,7 +253,7 @@ wait_for_service() {
     if [ $i -ge $3 ]; then
 	printf "Service failed to start within %s seconds\n" $1 >&2
     fi
-}
+)
 
 script_dir=$(get_path "$(dirname "$0")")
 
