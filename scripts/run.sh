@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+: ${LANG:=en_US.UTF-8}
+: ${LC_ALL:=en_US.UTF-8}
+export LANG LC_ALL
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -73,8 +77,6 @@ source_dir=$script_dir/..
 cd "$source_dir"
 
 export $APP_ENV_VARS
-export LANG=${LANG:-en_US.UTF-8}
-export LC_ALL=${LC_ALL:-en_US.UTF-8}
 
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
