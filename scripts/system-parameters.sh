@@ -103,6 +103,45 @@ configure_sunos() {
     APP_RUNDIR=$APP_VARDIR
 }
 
+configure_system_defaults() {
+    # Set application directory prefix
+    if [ -z "${APP_PREFIX-}" ]; then
+	APP_PREFIX=""
+    fi
+
+    # Set application directory names from APP_NAME and APP_PREFIX
+    APP_DIR=$APP_PREFIX/opt/$APP_NAME
+    APP_ETCDIR=$APP_PREFIX/etc/opt/$APP_NAME
+    APP_VARDIR=$APP_PREFIX/var/opt/$APP_NAME
+
+    # Set additional file/directory parameters
+    APP_CONFIG=$APP_ETCDIR/app.ini
+
+    if [ -z "${APP_LOGDIR-}" ]; then
+	APP_LOGDIR=$APP_VARDIR
+    fi
+
+    if [ -z "${APP_RUNDIR-}" ]; then
+	APP_RUNDIR=$APP_VARDIR
+    fi
+
+    if [ -z "${APP_LOGFILE-}" ]; then
+        APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+    fi
+
+    if [ -z "${APP_PIDFILE-}" ]; then
+	APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    fi
+
+    if [ -z "${APP_SOCKET-}" ]; then
+        APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
+    fi
+
+    if [ -z "${UWSGI_ETCDIR-}" ]; then
+	UWSGI_ETCDIR=/etc/uwsgi
+    fi
+}
+
 configure_system() {
     eval $("$script_dir/get-os-release.sh" -X)
 
@@ -160,40 +199,5 @@ configure_system() {
 	    ;;
     esac
 
-    # Set application directory prefix
-    if [ -z "${APP_PREFIX-}" ]; then
-	APP_PREFIX=""
-    fi
-
-    # Set application directory names from APP_NAME and APP_PREFIX
-    APP_DIR=$APP_PREFIX/opt/$APP_NAME
-    APP_ETCDIR=$APP_PREFIX/etc/opt/$APP_NAME
-    APP_VARDIR=$APP_PREFIX/var/opt/$APP_NAME
-
-    # Set additional file/directory parameters
-    APP_CONFIG=$APP_ETCDIR/app.ini
-
-    if [ -z "${APP_LOGDIR-}" ]; then
-	APP_LOGDIR=$APP_VARDIR
-    fi
-
-    if [ -z "${APP_RUNDIR-}" ]; then
-	APP_RUNDIR=$APP_VARDIR
-    fi
-
-    if [ -z "${APP_LOGFILE-}" ]; then
-        APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    fi
-
-    if [ -z "${APP_PIDFILE-}" ]; then
-	APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    fi
-
-    if [ -z "${APP_SOCKET-}" ]; then
-        APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    fi
-
-    if [ -z "${UWSGI_ETCDIR-}" ]; then
-	UWSGI_ETCDIR=/etc/uwsgi
-    fi
+    configure_system_defaults
 }
