@@ -151,7 +151,7 @@ run_python_command() (
     else
 	dir=$source_dir
 	python=python3
-	sh="\"\$script_dir/run.sh\""
+	sh='"$script_dir/run.sh"'
     fi
 
     cd $dir
@@ -159,22 +159,6 @@ run_python_command() (
 )
 
 start_service() (
-    case "$kernel_name" in
-	(Linux)
-	    case "$ID" in
-		(debian|ubuntu)
-		    :
-		    ;;
-		(opensuse-*)
-		    :
-		    ;;
-	    esac
-	    ;;
-	(Darwin)
-	    control_launch_agent load
-	    ;;
-    esac
-
     if signal_service HUP; then
 	signal_received=true
     else
@@ -223,7 +207,8 @@ start_service() (
 		service uwsgi restart
 		;;
 	    (Darwin)
-		control_launch_agent restart
+		control_launch_agent load
+		control_launch_agent start
 		;;
 	esac
     fi
