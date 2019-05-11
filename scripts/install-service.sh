@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+SLEEP_PERIOD=10
+
 WAIT_INITIAL=2
-WAIT_POLLING=30
+WAIT_TIMEOUT=30
 
 abort() {
     printf "$@" >&2
@@ -149,7 +151,7 @@ install_service() {
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
 }
 
-run_python_in_venv() (
+run_python_unprivileged() (
     assert [ $# -ge 1 ]
 
     if [ "$(id -u)" -eq 0 ]; then
@@ -166,6 +168,18 @@ run_python_in_venv() (
     eval $sh $python "$@"
 )
 
+restart_service() {
+	case "$kernel_name" in
+	    (Linux)
+		service uwsgi restart
+		;;
+	    (Darwin)
+		control_launch_agent load
+		control_launch_agent start
+		;;
+	esac
+}
+
 start_service() (
     if signal_service HUP; then
 	signal_received=true
@@ -178,15 +192,15 @@ start_service() (
 	    (Linux)
 		case "$ID" in
 		    (debian|ubuntu)
-			restart_service=false
+			restart_pending=false
 			;;
 		    (opensuse-*)
-			restart_service=false
+			restart_pending=false
 			;;
 		esac
 		;;
 	    (Darwin)
-		restart_service=false
+		restart_pending=false
 		;;
 	esac
     else
@@ -194,37 +208,29 @@ start_service() (
 	    (Linux)
 		case "$ID" in
 		    (debian|ubuntu)
-			restart_service=true
+			restart_pending=true
 			;;
 		    (opensuse-*)
-			restart_service=false
+			restart_pending=false
 			;;
 		esac
 		;;
 	    (Darwin)
-		restart_service=true
+		restart_pending=true
 		;;
 	esac
     fi
 
-    if [ $restart_service = true ]; then
-	case "$kernel_name" in
-	    (Linux)
-		service uwsgi restart
-		;;
-	    (Darwin)
-		control_launch_agent load
-		control_launch_agent start
-		;;
-	esac
+    if [ $restart_pending = true ]; then
+	restart_service
     fi
 
     printf "Waiting for service %s to start\n" "$APP_NAME"
 
-    if [ $restart_service = true ]; then
-	wait_for_service $APP_PIDFILE $WAIT_INITIAL $WAIT_POLLING
+    if [ $restart_pending = true ]; then
+	wait_for_service $APP_PIDFILE $WAIT_INITIAL $WAIT_TIMEOUT
     elif [ $signal_received = false ]; then
-	wait_for_timeout $KILL_INTERVAL
+	sleep $SLEEP_PERIOD
     fi
 )
 
@@ -240,10 +246,6 @@ wait_for_service() {
     if [ $i -ge $3 ]; then
 	printf "Service failed to start within %s seconds\n" $1 >&2
     fi
-}
-
-wait_for_timeout() {
-    sleep $1
 }
 
 script_dir=$(get_path "$(dirname "$0")")
@@ -272,7 +274,7 @@ for dryrun in true false; do
 done
 
 start_service
-run_python_in_venv -m app init-db
+run_python_unprivileged -m app init-db
 
 if [ -e $APP_PIDFILE ]; then
     tail_file $APP_LOGFILE
