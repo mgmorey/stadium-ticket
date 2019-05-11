@@ -164,15 +164,37 @@ find_system_python () (
 
 generate_launch_agent_plist() (
     assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
+    assert [ -n "$1" -a -n "$tmpfile" ]
     check_permissions $1
-    agent_source=macos/$agent_label.plist
-    cd $source_dir
+    cat <<-EOF >$tmpfile
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+	<plist version="1.0">
+	  <dict>
+	    <key>Label</key>
+	    <string>local.$APP_NAME</string>
+	    <key>RunAtLoad</key>
+	    <true/>
+	    <key>KeepAlive</key>
+	    <true/>
+	    <key>ProgramArguments</key>
+	    <array>
+	        <string>$UWSGI_BINARY_DIR/uwsgi</string>
+	        <string>--plugin-dir</string>
+	        <string>$UWSGI_PLUGIN_DIR</string>
+	        <string>--ini</string>
+	        <string>$APP_CONFIG</string>
+	    </array>
+	    <key>WorkingDirectory</key>
+	    <string>$APP_VARDIR</string>
+	  </dict>
+	</plist>
+	EOF
 
     if [ $dryrun = false ]; then
 	printf "Generating file %s\n" "$1"
 	install -d -m 755 $(dirname $1)
-	install -C -m 644 $agent_source $1
+	install -C -m 644 $tmpfile $1
     fi
 )
 
