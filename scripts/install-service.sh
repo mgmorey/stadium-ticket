@@ -151,11 +151,11 @@ run_python() (
     else
 	dir=$source_dir
 	python=python3
-	sh=$script_dir/run.sh
+	sh=
     fi
 
     cd $dir
-    "$sh" $python "$@"
+    ${sh+$sh }$python "$@"
 )
 
 start_service() (
@@ -195,6 +195,22 @@ start_service() (
 		(Linux)
 		    case "$ID" in
 			(debian|ubuntu)
+			    restart_service=false
+			    ;;
+			(opensuse-*)
+			    restart_service=false
+			    ;;
+		    esac
+		    ;;
+		(Darwin)
+		    restart_service=false
+		    ;;
+	    esac
+	else
+	    case "$kernel_name" in
+		(Linux)
+		    case "$ID" in
+			(debian|ubuntu)
 			    restart_service=true
 			    ;;
 			(opensuse-*)
@@ -206,15 +222,30 @@ start_service() (
 		    restart_service=false
 		    ;;
 	    esac
-	else
-	    remove_files $APP_PIDFILE
-	    run_python -m app init-db
 	fi
     else
-	restart_service=false
+	case "$kernel_name" in
+	    (Linux)
+		case "$ID" in
+		    (debian|ubuntu)
+			restart_service=true
+			;;
+		    (opensuse-*)
+			restart_service=true
+			;;
+		esac
+		;;
+	    (Darwin)
+		restart_service=false
+		;;
+	esac
     fi
 
     if [ $restart_service = true ]; then
+	restart_service=false
+	remove_files $APP_PIDFILE
+	run_python -m app init-db
+
 	case "$kernel_name" in
 	    (Linux)
 		service uwsgi restart
