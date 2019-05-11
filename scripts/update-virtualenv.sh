@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export LANG=${LANG:-en_US.UTF-8}
-export LC_ALL=${LC_ALL:-en_US.UTF-8}
+export ${LANG:=en_US.UTF-8}
+export ${LC_ALL:=en_US.UTF-8}
 
 abort() {
     printf "$@" >&2
