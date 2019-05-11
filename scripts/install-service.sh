@@ -141,12 +141,6 @@ install_service() {
     change_owner $APP_DIR $APP_VARDIR
     generate_service_ini $APP_CONFIG app.ini "$UWSGI_VARS"
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
-
-    case "$kernel_name" in
-	(Darwin)
-	    control_launch_agent load
-	    ;;
-    esac
 }
 
 run_python() (
@@ -157,44 +151,75 @@ run_python() (
     else
 	dir=$source_dir
 	python=python3
-	sh=run.sh
+	sh=$script_dir/run.sh
     fi
 
     cd $dir
-    $sh $python "$@"
+    "$sh" $python "$@"
 )
 
 start_service() (
-    if signal_service HUP; then
-	signal_received=true
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian|ubuntu)
+		    service_started=false
+		    ;;
+		(opensuse-*)
+		    service_started=false
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    control_launch_agent load
+	    service_started=true
+	    ;;
+    esac
+
+    if [ $service_started = false ]; then
+	if signal_service HUP; then
+	    signal_received=true
+	else
+	    signal_received=false
+	fi
+
+	signal_sent=true
     else
+	signal_sent=false
 	signal_received=false
     fi
 
-    if [ $signal_received = true ]; then
-	case "$kernel_name" in
-	    (Linux)
-		case "$ID" in
-		    (debian|ubuntu)
-			restart_service=true
-			;;
-		esac
-		;;
-	    (*)
-		restart_service=false
-		;;
-	esac
+    if [ $signal_sent = true ]; then
+	if [ $signal_received = true ]; then
+	    case "$kernel_name" in
+		(Linux)
+		    case "$ID" in
+			(debian|ubuntu)
+			    restart_service=true
+			    ;;
+			(opensuse-*)
+			    restart_service=true
+			    ;;
+		    esac
+		    ;;
+		(Darwin)
+		    restart_service=false
+		    ;;
+	    esac
+	else
+	    remove_files $APP_PIDFILE
+	    run_python -m app init-db
+	fi
     else
-	restart_service=true
-    fi
-
-    if [ $signal_received = false ]; then
-	remove_files $APP_PIDFILE
-	run_python -m app init-db
+	restart_service=false
     fi
 
     if [ $restart_service = true ]; then
-	service uwsgi restart
+	case "$kernel_name" in
+	    (Linux)
+		service uwsgi restart
+		;;
+	esac
     fi
 
     printf "Waiting for service %s to start\n" "$APP_NAME"
