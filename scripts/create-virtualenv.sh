@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # create-virtualenv.sh: create application virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
