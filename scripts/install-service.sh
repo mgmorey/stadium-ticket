@@ -189,7 +189,7 @@ start_service() (
 			restart_service=true
 			;;
 		    (opensuse-*)
-			restart_service=true
+			restart_service=false
 			;;
 		esac
 		;;
