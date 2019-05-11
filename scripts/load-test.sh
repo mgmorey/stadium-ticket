@@ -74,7 +74,7 @@ while getopts h:p: opt; do
 	    port="$OPTARG"
 	    ;;
 	(\?)
-	    printf "Usage: %s: [-h <HOST>] [-p <PORT]\n" $(basename $0) >&2
+	    printf "Usage: %s: [-h <HOST>] [-p <PORT]\n" "$0" >&2
 	    exit 2
 	    ;;
     esac
