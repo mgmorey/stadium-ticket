@@ -277,7 +277,7 @@ signal_service() {
 		break
 	    fi
 	else
-	    printf "%s\n" "Waiting for process to die"
+	    printf "%s\n" "Waiting for process to exit"
 	    i=0
 
 	    while kill -s $signal $pid && [ $i -lt $KILL_COUNT ]; do
