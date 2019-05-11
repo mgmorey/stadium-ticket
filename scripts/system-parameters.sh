@@ -14,47 +14,38 @@
 # GNU General Public License for more details.
 
 configure_common() {
-    # Set application directory names from APP_NAME
-    APP_DIR=/opt/$APP_NAME
-    APP_ETCDIR=/etc/opt/$APP_NAME
-    APP_VARDIR=/var/opt/$APP_NAME
-
     # Set uWSGI parameters
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=python3_plugin.so
+
+    # Set uWSGI variables
     UWSGI_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
 APP_RUNDIR APP_UID APP_VARDIR"
 }
 
 configure_darwin() {
-    # Set application directory names from APP_NAME
-    APP_DIR=/usr/local/opt/$APP_NAME
-    APP_ETCDIR=/usr/local/etc/opt/$APP_NAME
-    APP_VARDIR=/usr/local/var/opt/$APP_NAME
-
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
 
-    # Set application directory names from APP_VARDIR
-    APP_LOGDIR=$APP_VARDIR
-    APP_RUNDIR=$APP_VARDIR
+    # Set application directory prefix
+    APP_PREFIX=/usr/local
 
-    # Set additional parameters from app directories
-    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-
-    # Set uWSGI top-level directories
-    UWSGI_PREFIX=/usr/local/opt/uwsgi
-    UWSGI_ETCDIR=/usr/local/etc/uwsgi
-    UWSGI_LOGDIR=/usr/local/var/log
-    UWSGI_RUNDIR=/usr/local/var/run
-
-    # Set uWSGI directories from UWSGI_PREFIX
+    # Set uWSGI configuration directories
     UWSGI_APPDIRS=""
-    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/plugin
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
+    # Set uWSGI directories
+    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
+    UWSGI_LOGDIR=$UWSGI_PREFIX/var/log
+    UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
+    UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
+
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
+    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/lib/plugin
 }
 
 configure_debian() {
@@ -62,24 +53,25 @@ configure_debian() {
     APP_GID=www-data
     APP_UID=www-data
 
+    # Set uWSGI configuration directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
+
     # Set uWSGI top-level directories
-    UWSGI_ETCDIR=/etc/uwsgi
+    UWSGI_PREFIX=/usr
     UWSGI_LOGDIR=/var/log/uwsgi/app
     UWSGI_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
+    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/uwsgi/plugins
+
     # Set application directory names
     APP_LOGDIR=$UWSGI_LOGDIR
-    APP_RUNDIR=$UWSGI_RUNDIR
 
     # Set additional parameters from app directories
     APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/socket
-
-    # Set uWSGI directories
-    UWSGI_APPDIRS="apps-available apps-enabled"
-    UWSGI_BINARY_DIR=/usr/bin
-    UWSGI_PLUGIN_DIR=/usr/lib/uwsgi/plugins
 }
 
 configure_freebsd() {
@@ -87,55 +79,14 @@ configure_freebsd() {
     APP_GID=wheel
     APP_UID=root
 
-    # Set application directory names from APP_NAME
-    APP_LOGDIR=$APP_VARDIR
-    APP_RUNDIR=$APP_VARDIR
-
-    # Set additional parameters from app directories
-    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-
-    # Set uWSGI top-level directories
-    UWSGI_ETCDIR=/etc/uwsgi
-}
-
-configure_nt() {
-    # Set application group and user accounts
-    APP_GID="$(id -gn)"
-    APP_UID="$(id -un)"
-    # Set application directory names from APP_NAME
-    APP_LOGDIR=$APP_VARDIR
-    APP_RUNDIR=$APP_VARDIR
-
-    # Set additional parameters from app directories
-    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-
-    # Set uWSGI top-level directories
-    UWSGI_ETCDIR=/etc/uwsgi
-
-    # Set uWSGI directories
-    UWSGI_APPDIRS="vassals"
+    # Set uWSGI configuration directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
 }
 
 configure_opensuse() {
     # Set application group and user accounts
     APP_GID=nogroup
     APP_UID=nobody
-
-    # Set application directory names from APP_NAME
-    APP_LOGDIR=$APP_VARDIR
-    APP_RUNDIR=$APP_VARDIR
-
-    # Set additional parameters from app directories
-    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-
-    # Set uWSGI top-level directories
-    UWSGI_ETCDIR=/etc/uwsgi
 
     # Set uWSGI directories
     UWSGI_APPDIRS="vassals"
@@ -150,14 +101,6 @@ configure_sunos() {
     # Set application directory names from APP_NAME
     APP_LOGDIR=$APP_VARDIR
     APP_RUNDIR=$APP_VARDIR
-
-    # Set additional parameters from app directories
-    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-
-    # Set uWSGI top-level directories
-    UWSGI_ETCDIR=/etc/uwsgi
 }
 
 configure_system() {
@@ -217,6 +160,40 @@ configure_system() {
 	    ;;
     esac
 
-    # Set additional common parameters from app directories
+    # Set application directory prefix
+    if [ -z "${APP_PREFIX-}" ]; then
+	APP_PREFIX=""
+    fi
+
+    # Set application directory names from APP_NAME and APP_PREFIX
+    APP_DIR=$APP_PREFIX/opt/$APP_NAME
+    APP_ETCDIR=$APP_PREFIX/etc/opt/$APP_NAME
+    APP_VARDIR=$APP_PREFIX/var/opt/$APP_NAME
+
+    # Set additional file/directory parameters
     APP_CONFIG=$APP_ETCDIR/app.ini
+
+    if [ -z "${APP_LOGDIR-}" ]; then
+	APP_LOGDIR=$APP_VARDIR
+    fi
+
+    if [ -z "${APP_RUNDIR-}" ]; then
+	APP_RUNDIR=$APP_VARDIR
+    fi
+
+    if [ -z "${APP_LOGFILE-}" ]; then
+        APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+    fi
+
+    if [ -z "${APP_PIDFILE-}" ]; then
+	APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    fi
+
+    if [ -z "${APP_SOCKET-}" ]; then
+        APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
+    fi
+
+    if [ -z "${UWSGI_ETCDIR-}" ]; then
+	UWSGI_ETCDIR=/etc/uwsgi
+    fi
 }
