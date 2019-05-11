@@ -200,8 +200,6 @@ start_service() (
     fi
 
     if [ $restart_service = true ]; then
-	run_python_command -m app init-db
-
 	case "$kernel_name" in
 	    (Linux)
 		service uwsgi restart
@@ -270,6 +268,7 @@ for dryrun in true false; do
 done
 
 start_service
+run_python_command -m app init-db
 
 if [ -e $APP_PIDFILE ]; then
     tail_file $APP_LOGFILE
