@@ -18,6 +18,11 @@ abort() {
     exit 1
 }
 
+abort_extra_arguments() {
+    usage "%s: extra arguments -- %s\n" "$0" "$*"
+    exit 2
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -35,12 +40,56 @@ get_path() {
     fi
 }
 
+parse_arguments() {
+    purge=false
+
+    while getopts 'hp' OPTION; do
+	case $OPTION in
+	    (p)
+		purge=true
+		;;
+	    (h)
+		usage
+		exit 0
+		;;
+	    (\?)
+		printf "%s\n" "" >&2
+		usage
+		exit 2
+		;;
+	esac
+    done
+
+    shift $(($OPTIND - 1))
+
+    if [ $# -gt 0 ]; then
+	abort_extra_arguments "$@"
+    fi
+}
+
 remove_config() {
     remove_files $APP_ETCDIR $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print)
 }
 
 remove_service() {
-    remove_files $APP_RUNDIR $APP_DIR $APP_VARDIR $APP_LOGFILE ${DATABASE_FILENAME-}
+    service_files="$APP_RUNDIR $APP_DIR $APP_VARDIR"
+
+    if [ $purge = true ]; then
+	service_files="$service_files $APP_LOGFILE ${DATABASE_FILENAME-}"
+    fi
+
+    remove_files $service_files
+}
+
+usage() {
+    if [ $# -gt 0 ]; then
+	printf "$@" >&2
+	printf "%s\n" "" >&2
+    fi
+
+    cat <<-EOM >&2
+	Usage: $0: [-h] [-p]
+	EOM
 }
 
 script_dir=$(get_path "$(dirname "$0")")
@@ -51,6 +100,7 @@ source_dir=$script_dir/..
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
+parse_arguments "$@"
 configure_system
 tmpfile=$(mktemp)
 trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
