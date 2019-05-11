@@ -65,7 +65,7 @@ configure_debian() {
     UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
     UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/uwsgi/plugins
 
-    # Set application directory names
+    # Set additional application directories
     APP_LOGDIR=$UWSGI_LOGDIR
 
     # Set additional parameters from app directories
@@ -97,7 +97,7 @@ configure_sunos() {
     APP_GID=sys
     APP_UID=root
 
-    # Set application directory names from APP_NAME
+    # Set additional application directories
     APP_LOGDIR=$APP_VARDIR
     APP_RUNDIR=$APP_VARDIR
 }
@@ -108,7 +108,7 @@ configure_system_defaults() {
 	APP_PREFIX=""
     fi
 
-    # Set application directory names from APP_NAME and APP_PREFIX
+    # Set application directories from APP_NAME and APP_PREFIX
     APP_DIR=$APP_PREFIX/opt/$APP_NAME
     APP_ETCDIR=$APP_PREFIX/etc/opt/$APP_NAME
     APP_VARDIR=$APP_PREFIX/var/opt/$APP_NAME
