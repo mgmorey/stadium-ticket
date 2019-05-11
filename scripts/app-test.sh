@@ -97,6 +97,7 @@ while getopts 'h:p:' OPTION; do
 	    ;;
     esac
 done
+
 shift $(($OPTIND - 1))
 
 base_url="http://${host}${port:+:}${port}"
