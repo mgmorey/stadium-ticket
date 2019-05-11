@@ -13,8 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-PIP_OPTS="--no-warn-script-location"
-PIP_SUDO_OPTS="--no-cache-dir"
+PIP_OPTS="--no-cache-dir --no-warn-script-location"
+PIP_SUDO_OPTS=""
 
 activate_venv() {
     assert [ $# -eq 1 ]

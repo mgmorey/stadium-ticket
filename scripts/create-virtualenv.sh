@@ -39,11 +39,20 @@ get_path() {
 }
 
 if [ $# -eq 0 ]; then
-    abort "%s\n" "$0: Not enough arguments"
+    abort "%s: Not enough arguments\n" "$0"
+fi
+
+if [ $# -gt 2 ]; then
+    abort "%s: Too many arguments\n" "$0"
 fi
 
 if [ $(id -u) -eq 0 ]; then
-    abort "%s\n" "$0: Must be run as a non-privileged user"
+    abort "%s: Must be run as a non-privileged user\n" "$0"
+fi
+
+if [ $# -ge 2 -a "$HOME" != "$2" ]; then
+    printf "Changing home directory from %s to %s\n" "$HOME" "$2"
+    export HOME="$2"
 fi
 
 script_dir=$(get_path "$(dirname "$0")")

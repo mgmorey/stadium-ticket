@@ -65,7 +65,7 @@ create_symlinks() (
 )
 
 create_virtualenv() {
-    if ! run_unprivileged '"$script_dir/create-virtualenv.sh"' $1; then
+    if ! run_unprivileged '"$script_dir/create-virtualenv.sh"' "$@"; then
 	abort "%s: Unable to create virtual environment\n" "$0"
     fi
 }
@@ -276,7 +276,7 @@ for dryrun in true false; do
     "$script_dir/install-uwsgi.sh" $dryrun
 
     if [ $dryrun = false ]; then
-	create_virtualenv $venv_filename
+	create_virtualenv $venv_filename $HOME
     fi
 
     install_service
