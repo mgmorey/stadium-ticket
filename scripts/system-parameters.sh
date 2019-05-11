@@ -69,7 +69,6 @@ configure_debian() {
     APP_LOGDIR=$UWSGI_LOGDIR
 
     # Set additional parameters from app directories
-    APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/socket
 }
