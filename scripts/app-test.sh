@@ -83,15 +83,15 @@ printf "%s\n" "Loading .env environment variables"
 host=${FLASK_HOST-localhost}
 port=${FLASK_PORT-5000}
 
-while getopts 'h:p:' OPTION; do
-    case $OPTION in
-	('h')
+while getopts h:p: opt; do
+    case $opt in
+	(h)
 	    host="$OPTARG"
 	    ;;
-	('p')
+	(p)
 	    port="$OPTARG"
 	    ;;
-	('?')
+	(\?)
 	    printf "Usage: %s: [-h <HOST>] [-p <PORT]\n" $(basename $0) >&2
 	    exit 2
 	    ;;

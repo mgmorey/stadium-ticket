@@ -43,8 +43,8 @@ get_path() {
 parse_arguments() {
     purge=false
 
-    while getopts 'hp' OPTION; do
-	case $OPTION in
+    while getopts hp opt; do
+	case $opt in
 	    (p)
 		purge=true
 		;;
