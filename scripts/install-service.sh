@@ -143,7 +143,7 @@ install_service() {
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
 }
 
-run_python() (
+run_python_command() (
     if [ "$(id -u)" -eq 0 ]; then
 	dir=$APP_DIR
 	python=$VENV_FILENAME/bin/python3
@@ -151,11 +151,11 @@ run_python() (
     else
 	dir=$source_dir
 	python=python3
-	sh=
+	sh="\"\$script_dir/run.sh\""
     fi
 
     cd $dir
-    ${sh+$sh }$python "$@"
+    eval $sh $python "$@"
 )
 
 start_service() (
@@ -163,66 +163,40 @@ start_service() (
 	(Linux)
 	    case "$ID" in
 		(debian|ubuntu)
-		    service_started=false
+		    :
 		    ;;
 		(opensuse-*)
-		    service_started=false
+		    :
 		    ;;
 	    esac
 	    ;;
 	(Darwin)
 	    control_launch_agent load
-	    service_started=true
 	    ;;
     esac
 
-    if [ $service_started = false ]; then
-	if signal_service HUP; then
-	    signal_received=true
-	else
-	    signal_received=false
-	fi
-
-	signal_sent=true
+    if signal_service HUP; then
+	signal_received=true
     else
-	signal_sent=false
 	signal_received=false
     fi
 
-    if [ $signal_sent = true ]; then
-	if [ $signal_received = true ]; then
-	    case "$kernel_name" in
-		(Linux)
-		    case "$ID" in
-			(debian|ubuntu)
-			    restart_service=false
-			    ;;
-			(opensuse-*)
-			    restart_service=false
-			    ;;
-		    esac
-		    ;;
-		(Darwin)
-		    restart_service=false
-		    ;;
-	    esac
-	else
-	    case "$kernel_name" in
-		(Linux)
-		    case "$ID" in
-			(debian|ubuntu)
-			    restart_service=true
-			    ;;
-			(opensuse-*)
-			    restart_service=true
-			    ;;
-		    esac
-		    ;;
-		(Darwin)
-		    restart_service=false
-		    ;;
-	    esac
-	fi
+    if [ $signal_received = true ]; then
+	case "$kernel_name" in
+	    (Linux)
+		case "$ID" in
+		    (debian|ubuntu)
+			restart_service=false
+			;;
+		    (opensuse-*)
+			restart_service=false
+			;;
+		esac
+		;;
+	    (Darwin)
+		restart_service=false
+		;;
+	esac
     else
 	case "$kernel_name" in
 	    (Linux)
@@ -236,19 +210,20 @@ start_service() (
 		esac
 		;;
 	    (Darwin)
-		restart_service=false
+		restart_service=true
 		;;
 	esac
     fi
 
     if [ $restart_service = true ]; then
-	restart_service=false
-	remove_files $APP_PIDFILE
-	run_python -m app init-db
+	run_python_command -m app init-db
 
 	case "$kernel_name" in
 	    (Linux)
 		service uwsgi restart
+		;;
+	    (Darwin)
+		control_launch_agent restart
 		;;
 	esac
     fi

@@ -63,6 +63,7 @@ for dryrun in true false; do
 		signal_service INT INT TERM KILL || true
 		;;
 	    (Darwin)
+		control_launch_agent stop
 		control_launch_agent unload
 		;;
 	esac

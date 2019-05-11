@@ -82,7 +82,6 @@ control_launch_agent() (
 
 	    if [ $dryrun = false ]; then
 		launchctl load $agent_target
-		launchctl start $agent_label
 	    fi
 	    ;;
 	(restart)
@@ -90,14 +89,13 @@ control_launch_agent() (
 		launchctl start $agent_label
 	    fi
 	    ;;
-	(restart|start|stop)
-	    if [ $dryrun = false ]; then
+	(start|stop)
+	    if [ $dryrun = false -a $1 = start -o -e $agent_target ]; then
 		launchctl $1 $agent_label
 	    fi
 	    ;;
 	(unload)
 	    if [ $dryrun = false -a -e $agent_target ]; then
-		launchctl stop $agent_label
 		launchctl unload $agent_target
 	    fi
 
