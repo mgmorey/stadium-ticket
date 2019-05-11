@@ -55,22 +55,22 @@ list_events() {
 }
 
 request_ticket() {
-    curl -H "$HEADER" -X PUT -d @- -i $url_ticket <<EOF
-{
-	"command": "request_ticket",
-	"event": "$1"
-}
-EOF
+    curl -H "$HEADER" -X PUT -d @- -i $url_ticket <<-EOF
+	{
+	    "command": "request_ticket",
+	    "event": "$1"
+	}
+	EOF
 }
 
 request_tickets() {
-    curl -H "$HEADER" -X PUT -d @- -i $url_tickets <<EOF
-{
-	"command": "request_ticket",
-	"event": "$1",
-	"count": $2
-}
-EOF
+    curl -H "$HEADER" -X PUT -d @- -i $url_tickets <<-EOF
+	{
+	    "command": "request_ticket",
+	    "event": "$1",
+	    "count": $2
+	}
+	EOF
 }
 
 script_dir=$(get_path "$(dirname "$0")")
