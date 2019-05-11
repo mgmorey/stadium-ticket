@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 WAIT_INITIAL=2
-WAIT_POLLING=20
+WAIT_POLLING=30
 
 abort() {
     printf "$@" >&2
@@ -222,13 +222,13 @@ start_service() (
     printf "Waiting for service %s to start\n" "$APP_NAME"
 
     if [ $restart_service = true ]; then
-	wait_for_pidfile $APP_PIDFILE $WAIT_INITIAL $WAIT_POLLING
+	wait_for_service $APP_PIDFILE $WAIT_INITIAL $WAIT_POLLING
     elif [ $signal_received = false ]; then
-	sleep $KILL_INTERVAL
+	wait_for_timeout $KILL_INTERVAL
     fi
 )
 
-wait_for_pidfile() {
+wait_for_service() {
     sleep $2
     i=0
 
@@ -238,8 +238,12 @@ wait_for_pidfile() {
     done
 
     if [ $i -ge $3 ]; then
-	printf "Timeout waiting for PID file %s\n" $1 >&2
+	printf "Service failed to start within %s seconds\n" $1 >&2
     fi
+}
+
+wait_for_timeout() {
+    sleep $1
 }
 
 script_dir=$(get_path "$(dirname "$0")")
