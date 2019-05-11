@@ -86,6 +86,7 @@ control_launch_agent() (
 	    ;;
 	(restart)
 	    if [ $dryrun = false ]; then
+		launchctl stop $agent_label
 		launchctl start $agent_label
 	    fi
 	    ;;
