@@ -68,16 +68,22 @@ parse_arguments() {
 }
 
 remove_service() {
-    config_files="$APP_ETCDIR $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print)"
-    service_files="$config_files $APP_DIR $APP_VARDIR $APP_RUNDIR"
+    config_files="$APP_ETCDIR"
+    service_files="$APP_DIR $APP_VARDIR $APP_RUNDIR"
 
-    if [ $purge = true ]; then
-	log_files="$APP_LOGFILE"
+    if [ -d "$UWSGI_ETCDIR" ]; then
+	config_files="$config_files $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print)"
     else
-	log_files=
+	config_files=
     fi
 
-    remove_files $service_files $log_files "${DATABASE_FILENAME-}"
+    if [ $purge = true ]; then
+	service_files="$service_files $APP_LOGFILE"
+    else
+	service_files=
+    fi
+
+    remove_files $config_files $service_files ${DATABASE_FILENAME-}
 }
 
 usage() {
