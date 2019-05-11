@@ -73,14 +73,10 @@ remove_service() {
 
     if [ -d "$UWSGI_ETCDIR" ]; then
 	config_files="$config_files $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print)"
-    else
-	config_files=
     fi
 
     if [ $purge = true ]; then
 	service_files="$service_files $APP_LOGFILE"
-    else
-	service_files=
     fi
 
     remove_files $config_files $service_files ${DATABASE_FILENAME-}

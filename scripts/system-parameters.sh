@@ -133,8 +133,10 @@ configure_system_defaults() {
         APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     fi
 
-    if [ -z "${DATABASE_FILENAME-}" -a "${DATABASE_DIALECT=sqlite}" ]; then
-        DATABASE_FILENAME=/tmp/${APP_NAME}s.${DATABASE_DIALECT}
+    if [ -z "${DATABASE_FILENAME-}" ]; then
+	if [ "${DATABASE_DIALECT=sqlite}" = sqlite ]; then
+            DATABASE_FILENAME=/tmp/${APP_NAME}s.${DATABASE_DIALECT}
+	fi
     fi
 
     if [ -z "${UWSGI_ETCDIR-}" ]; then
