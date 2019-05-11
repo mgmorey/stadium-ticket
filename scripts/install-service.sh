@@ -263,6 +263,9 @@ source_dir=$script_dir/..
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
+printf "%s\n" "Loading .env environment variables"
+. "$source_dir/.env"
+
 configure_system
 cd "$source_dir"
 tmpfile=$(mktemp)
@@ -276,7 +279,6 @@ for dryrun in true false; do
 	create_virtualenv $venv_filename
     fi
 
-    remove_database
     install_service
 done
 

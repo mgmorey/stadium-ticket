@@ -67,18 +67,17 @@ parse_arguments() {
     fi
 }
 
-remove_config() {
-    remove_files $APP_ETCDIR $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print)
-}
-
 remove_service() {
-    service_files="$APP_RUNDIR $APP_DIR $APP_VARDIR"
+    config_files="$APP_ETCDIR $(find $UWSGI_ETCDIR -name $APP_NAME.ini -print)"
+    service_files="$config_files $APP_DIR $APP_VARDIR $APP_RUNDIR"
 
     if [ $purge = true ]; then
-	service_files="$service_files $APP_LOGFILE ${DATABASE_FILENAME-}"
+	log_files="$APP_LOGFILE"
+    else
+	log_files=
     fi
 
-    remove_files $service_files
+    remove_files $service_files $log_files "${DATABASE_FILENAME-}"
 }
 
 usage() {
@@ -99,6 +98,9 @@ source_dir=$script_dir/..
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
+
+printf "%s\n" "Loading .env environment variables"
+. "$source_dir/.env"
 
 parse_arguments "$@"
 configure_system
@@ -121,7 +123,6 @@ for dryrun in true false; do
     fi
 
     remove_service
-    remove_config
 done
 
 printf "Service %s uninstalled successfully\n" $APP_NAME

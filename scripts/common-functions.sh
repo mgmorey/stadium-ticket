@@ -226,12 +226,6 @@ print_file_tail() {
     printf "%s\n" $SEPARATOR_DOUBLE$SEPARATOR_DOUBLE
 }
 
-remove_database() {
-    if [ -n "${DATABASE_FILENAME-}" ]; then
-	remove_files $DATABASE_FILENAME
-    fi
-}
-
 remove_files() {
     check_permissions "$@"
 
