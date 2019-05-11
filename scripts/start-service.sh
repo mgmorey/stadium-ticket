@@ -65,7 +65,6 @@ export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PYTHONPATH=$app_prefix/lib
 
 if ! signal_service HUP; then
-    /bin/rm -f $APP_PIDFILE
     $binary --plugin-dir $UWSGI_PLUGIN_DIR $APP_CONFIG
 else
     abort "Service is running as PID %s\n" "$pid"
