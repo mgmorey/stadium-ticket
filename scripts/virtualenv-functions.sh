@@ -107,5 +107,5 @@ upgrade_venv_tools() {
 
     printf "%s\n" "Upgrading pip and virtualenv"
     pip_install="$pip install${SUDO_USER:+ $PIP_SUDO_OPTS}"
-    $sh -c "$pip_install --upgrade --user pip virtualenv"
+    run_unprivileged $pip_install --upgrade --user pip virtualenv
 }

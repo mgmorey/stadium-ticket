@@ -241,6 +241,20 @@ remove_files() {
     fi
 }
 
+run_unprivileged() (
+    assert [ $# -ge 1 ]
+
+    if [ "$(id -u)" -eq 0 -a -n "${SUDO_USER:-}" ]; then
+	gid=$(id -g $SUDO_USER)
+	uid=$(id -u $SUDO_USER)
+	sh="setpriv --clear-groups --rgid $gid --ruid $uid"
+    else
+	sh=
+    fi
+
+    eval ${sh+$sh }"$@"
+)
+
 signal_service() {
     pid=$("$script_dir/read-file.sh" $APP_PIDFILE)
     result=1

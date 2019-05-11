@@ -62,6 +62,12 @@ create_symlinks() (
     done
 )
 
+create_virtualenv() {
+    if ! run_unprivileged '"$script_dir/create-virtualenv.sh"' $1; then
+	abort "%s: Unable to create virtual environment\n" "$0"
+    fi
+}
+
 generate_sed_program() (
     assert [ $# -ge 1 ]
 
@@ -143,7 +149,9 @@ install_service() {
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
 }
 
-run_python_command() (
+run_python_in_venv() (
+    assert [ $# -ge 1 ]
+
     if [ "$(id -u)" -eq 0 ]; then
 	dir=$APP_DIR
 	python=$VENV_FILENAME/bin/python3
@@ -154,7 +162,7 @@ run_python_command() (
 	sh='"$script_dir/run.sh"'
     fi
 
-    cd $dir
+    cd "$dir"
     eval $sh $python "$@"
 )
 
@@ -258,9 +266,7 @@ for dryrun in true false; do
     "$script_dir/install-uwsgi.sh" $dryrun
 
     if [ $dryrun = false ]; then
-	if ! $sh "$script_dir/create-virtualenv.sh" $venv_filename; then
-	    abort "%s: Unable to create virtual environment\n" "$0"
-	fi
+	create_virtualenv $venv_filename
     fi
 
     remove_database
@@ -268,7 +274,7 @@ for dryrun in true false; do
 done
 
 start_service
-run_python_command -m app init-db
+run_python_in_venv -m app init-db
 
 if [ -e $APP_PIDFILE ]; then
     tail_file $APP_LOGFILE
