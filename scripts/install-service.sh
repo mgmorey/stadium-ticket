@@ -149,21 +149,27 @@ install_service() {
     esac
 }
 
-start_service() (
-    restart_service=false
+run_python() (
+    if [ "$(id -u)" -eq 0 ]; then
+	dir=$APP_DIR
+	python=$VENV_FILENAME/bin/python3
+	sh="setpriv --clear-groups --egid $APP_GID --euid $APP_UID"
+    else
+	dir=$source_dir
+	python=python3
+	sh=run.sh
+    fi
 
+    cd $dir
+    $sh $python "$@"
+)
+
+start_service() (
     if signal_service HUP; then
 	signal_received=true
     else
 	signal_received=false
     fi
-
-    if [ $signal_received = false ]; then
-	/bin/rm -f $APP_PIDFILE
-    fi
-
-    # Initialize database by invoking app module
-    $sh "$script_dir/run.sh" python3  -m app init-db
 
     if [ $signal_received = true ]; then
 	case "$kernel_name" in
@@ -173,12 +179,22 @@ start_service() (
 			restart_service=true
 			;;
 		esac
-
-		if [ $restart_service = true ]; then
-		    service uwsgi restart
-		fi
+		;;
+	    (*)
+		restart_service=false
 		;;
 	esac
+    else
+	restart_service=true
+    fi
+
+    if [ $signal_received = false ]; then
+	remove_files $APP_PIDFILE
+	run_python -m app init-db
+    fi
+
+    if [ $restart_service = true ]; then
+	service uwsgi restart
     fi
 
     printf "Waiting for service %s to start\n" "$APP_NAME"
