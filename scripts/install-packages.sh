@@ -86,7 +86,7 @@ usage() {
 	printf "%s\n" "" >&2
     fi
 
-    cat >&2 <<-EOM
+    cat <<-EOM >&2
 	Usage: $0: [-p PATTERN]
 	       $0: -h
 	EOM

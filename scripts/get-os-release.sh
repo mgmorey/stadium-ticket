@@ -175,7 +175,7 @@ usage() {
 	printf "%s\n" "" >&2
     fi
 
-    cat >&2 <<-EOM
+    cat <<-EOM >&2
 	Usage: $0: [-i] [-k] [-n] [-p] [-r] [-v]
 	       $0: -x
 	       $0: -X
