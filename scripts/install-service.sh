@@ -110,7 +110,7 @@ get_path() {
     fi
 }
 
-install_dirs() {
+install_files() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" -a -n "$2" ]
     check_permissions "$2"
@@ -147,7 +147,7 @@ install_service() {
     create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
     install_file 600 .env $APP_DIR/.env
     install_flask_app 644 app $APP_DIR
-    install_dirs $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
+    install_files $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
     change_owner $APP_DIR $APP_VARDIR
     generate_service_ini $APP_CONFIG app.ini "$UWSGI_VARS"
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
