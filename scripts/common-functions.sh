@@ -198,6 +198,26 @@ generate_launch_agent_plist() (
     fi
 )
 
+get_setpriv_command() (
+    setpriv_opts="--clear-groups"
+    setpriv_version="$(setpriv --version 2>/dev/null)"
+
+    case "${setpriv_version##* }" in
+	(2.3[3456789].*|2.[456789]?.*|[3456789].*)
+	    setpriv_opts="$setpriv_opts --reset-env"
+	    ;;
+	(2.31.*)
+	    :
+	    ;;
+	(*)
+	    return 1
+	    ;;
+    esac
+
+    printf "setpriv %s %s\n" "$setpriv_opts" "$*"
+    return 0
+)
+
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
@@ -239,9 +259,10 @@ run_unprivileged() (
     assert [ $# -ge 1 ]
 
     if [ "$(id -u)" -eq 0 -a -n "${SUDO_USER:-}" ]; then
-	gid=$(id -g $SUDO_USER)
-	uid=$(id -u $SUDO_USER)
-	sh="setpriv --clear-groups --rgid $gid --ruid $uid"
+	gid="$(id -g $SUDO_USER)"
+	uid="$(id -u $SUDO_USER)"
+	setpriv_opts="--rgid $gid --ruid $uid"
+	sh="$(get_setpriv_command $setpriv_opts || echo su $SUDO_USER)"
     else
 	sh=
     fi

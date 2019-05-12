@@ -108,6 +108,10 @@ get_path() {
     fi
 }
 
+get_sudo_user_home() {
+    getent passwd $SUDO_USER | awk -F: '{print $6}'
+}
+
 install_flask_app() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
@@ -157,7 +161,8 @@ run_python_unprivileged() (
     if [ "$(id -u)" -eq 0 ]; then
 	dir=$APP_DIR
 	python=$VENV_FILENAME/bin/python3
-	sh="setpriv --clear-groups --egid $APP_GID --euid $APP_UID"
+	setpriv_opts="--egid $APP_GID --euid $APP_UID"
+	sh="$(get_setpriv_command $setpriv_opts || echo su $SUDO_USER)"
     else
 	dir=$source_dir
 	python=python3
@@ -276,7 +281,7 @@ for dryrun in true false; do
     "$script_dir/install-uwsgi.sh" $dryrun
 
     if [ $dryrun = false ]; then
-	create_virtualenv $venv_filename $HOME
+	create_virtualenv $venv_filename $(get_sudo_user_home)
     fi
 
     install_service
