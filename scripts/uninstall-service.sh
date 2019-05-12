@@ -79,7 +79,7 @@ remove_service() {
 	service_files="$service_files $APP_LOGFILE"
     fi
 
-    remove_files $config_files $service_files ${DATABASE_FILENAME-}
+    remove_files $config_files $service_files
 }
 
 usage() {

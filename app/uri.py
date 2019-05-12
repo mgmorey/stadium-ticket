@@ -19,7 +19,7 @@ URI = {
 USER = 'root'
 
 PATTERN = {
-    'DATABASE_FILENAME': re.compile(r'(/[\w\d\-][\w\d\-\.]*){1,}'),
+    'DATABASE_FILENAME': re.compile(r'([\w\d\-][\w\d\-\.]*){1,}'),
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
     'DATABASE_PASSWORD': re.compile(r'[\w\d\-\.!\#\$\^&\*\=\+]+'),
     'DATABASE_PORT': re.compile(r'([\d]+|[\w-]+)'),
@@ -48,7 +48,7 @@ def _get_filename(dialect: str, schema: str):
     if '{4}' not in _get_uri(dialect):
         return None
 
-    name = f"/tmp/{schema}.sqlite"
+    name = f"{schema}.sqlite"
     name = _get_string('DATABASE_FILENAME', default=name)
     return name
 

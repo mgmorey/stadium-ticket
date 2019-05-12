@@ -12,9 +12,15 @@ class TestUriMethods(unittest.TestCase):
         self.assertRaises(ValueError,
                           _validate,
                           'DATABASE_DIALECT',
-                          '$mysql')
+                          '.')
 
     def test_validate_dialect_fail_2(self):
+        self.assertRaises(ValueError,
+                          _validate,
+                          'DATABASE_DIALECT',
+                          '$mysql')
+
+    def test_validate_dialect_fail_3(self):
         self.assertRaises(ValueError,
                           _validate,
                           'DATABASE_DIALECT',
@@ -28,41 +34,17 @@ class TestUriMethods(unittest.TestCase):
         self.assertRaises(ValueError,
                           _validate,
                           'DATABASE_FILENAME',
-                          'foo')
+                          '.')
 
     def test_validate_filename_fail_2(self):
         self.assertRaises(ValueError,
                           _validate,
                           'DATABASE_FILENAME',
-                          '.')
-
-    def test_validate_filename_fail_3(self):
-        self.assertRaises(ValueError,
-                          _validate,
-                          'DATABASE_FILENAME',
-                          '/')
-
-    def test_validate_filename_fail_4(self):
-        self.assertRaises(ValueError,
-                          _validate,
-                          'DATABASE_FILENAME',
-                          '/.')
-
-    def test_validate_filename_fail_5(self):
-        self.assertRaises(ValueError,
-                          _validate,
-                          'DATABASE_FILENAME',
-                          '/tmp/..')
-
-    def test_validate_filename_fail_6(self):
-        self.assertRaises(ValueError,
-                          _validate,
-                          'DATABASE_FILENAME',
-                          '/tmp/foo.sqlite/')
+                          '.foo.sqlite')
 
     def test_validate_filename_pass(self):
-        value = _validate('DATABASE_FILENAME', '/tmp/foo.sqlite')
-        self.assertEqual(value, '/tmp/foo.sqlite')
+        value = _validate('DATABASE_FILENAME', 'foo.sqlite')
+        self.assertEqual(value, 'foo.sqlite')
 
     def test_validate_host_fail(self):
         self.assertRaises(ValueError,
