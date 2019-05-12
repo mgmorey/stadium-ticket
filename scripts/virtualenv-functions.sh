@@ -14,7 +14,6 @@
 # GNU General Public License for more details.
 
 PIP_OPTS="--no-cache-dir --no-warn-script-location"
-PIP_SUDO_OPTS=""
 
 activate_virtualenv() {
     assert [ $# -eq 1 ]
@@ -63,7 +62,7 @@ pip_upgrade() {
     fi
 
     printf "%s\n" "Upgrading user packages"
-    $pip install --upgrade --user "$@"
+    $pip install $PIP_OPTS --upgrade --user "$@"
 }
 
 sync_requirements() {
