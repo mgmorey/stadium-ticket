@@ -231,7 +231,12 @@ install_file() {
     check_permissions $3
 
     if [ $dryrun = false ]; then
-	printf "Installing file %s as %s\n" "$2" "$3"
+	if printf "%s\n" "${tmpfiles-}" | grep $2 >/dev/null 2>&1; then
+	    printf "Installing file %s\n" "$3"
+	else
+	    printf "Installing file %s as %s\n" "$2" "$3"
+	fi
+
 	install -d -m 755 "$(dirname "$3")"
 	install -C -m $1 $2 $3
     fi

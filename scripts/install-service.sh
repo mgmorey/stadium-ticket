@@ -90,11 +90,14 @@ generate_service_ini() {
     check_permissions $1
 
     if [ $dryrun = false ]; then
-	printf "Generating configuration file %s\n" "$1"
 	mkdir -p "$(dirname $1)"
 	create_tmpfile
-	generate_sed_program $3 >$tmpfile
-	sed -f $tmpfile $2 >$1
+	sedfile=$tmpfile
+	generate_sed_program $3 >$sedfile
+	create_tmpfile
+	inifile=$tmpfile
+	sed -f $sedfile $2 >$inifile
+	install_file 644 $inifile $1
     fi
 }
 
