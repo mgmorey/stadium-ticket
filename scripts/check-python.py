@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # check-python-version: determine if Python version meets requirements
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
