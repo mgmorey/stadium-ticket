@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 : ${DATABASE_DIALECT:=sqlite}
-: ${DATABASE_FILENAME:=${DATABASE_SCHEMA:+$HOME/$DATABASE_SCHEMA.sqlite}}
+: ${DATABASE_FILENAME:=}
 
 abort() {
     printf "$@" >&2
