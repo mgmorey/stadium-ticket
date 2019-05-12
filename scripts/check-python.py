@@ -103,11 +103,11 @@ def main():
             difference = compare_versions(actual, minimum)
 
             if difference >= 0:
-                message = "Python {} interpreter meets {} requirements"
+                message = "Python {} interpreter meets {} requirement"
                 output=sys.stdout
                 status = 0
             else:
-                message = "Python {} interpreter does not meet {} requirements"
+                message = "Python {} interpreter does not meet {} requirement"
                 output=sys.sterr
                 status = 1
 
