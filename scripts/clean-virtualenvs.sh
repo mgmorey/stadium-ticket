@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # clean-virtualenvs: remove Python 3 virtual environments
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
