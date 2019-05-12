@@ -115,7 +115,7 @@ if [ "$pipenv" != false ]; then
 elif [ "$pip" != false ]; then
     venv_force_sync=true
     venv_requirements=$VENV_REQUIREMENTS
-    sync_virtualenv $1
+    sync_virtualenv $VENV_FILENAME
 else
     abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
 fi
