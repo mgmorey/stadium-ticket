@@ -29,10 +29,8 @@ get_user_home() {
     getent passwd $SUDO_USER | awk -F: '{print $6}'
 }
 
-check_user_home() (
-    assert [ -w $HOME ]
+assert [ -w $HOME ]
 
-    if [ -n "$SUDO_USER-}" ]; then
-	assert [ "$(get_user_home)" = $HOME ]
-    fi
-)
+if [ -n "${SUDO_USER-}" ]; then
+    assert [ $HOME = "$(get_user_home)" ]
+fi
