@@ -232,7 +232,7 @@ install_file() {
     check_permissions $3
 
     if [ $dryrun = false ]; then
-	if printf "%s\n" "${tmpfiles-}" | grep $2 >/dev/null 2>&1; then
+	if is_tmpfile $2; then
 	    printf "Generating file %s\n" "$3"
 	else
 	    printf "Installing file %s as %s\n" "$2" "$3"
@@ -241,6 +241,10 @@ install_file() {
 	install -d -m 755 "$(dirname "$3")"
 	install -C -m $1 $2 $3
     fi
+}
+
+is_tmpfile() {
+    printf "%s\n" ${tmpfiles-} | grep $1 >/dev/null
 }
 
 print_file_tail() {
