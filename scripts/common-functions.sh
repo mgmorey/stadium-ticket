@@ -65,7 +65,7 @@ check_python() (
     version="${python_output#Python }"
     printf "Python %s interpreter found: %s\n" "$version" "$1"
 
-    if ! "$script_dir/check-python.py" "$version"; then
+    if ! $1 "$script_dir/check-python.py" "$version"; then
 	abort_no_python
     fi
 )
@@ -125,8 +125,23 @@ create_tmpfile() {
     trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
 }
 
-find_python() (
-    python_versions=$("$script_dir/check-python.py")
+find_bootstrap_python() (
+    for python in python3 python2 python false; do
+	if $python --version >/dev/null 2>&1; then
+	    break
+	fi
+    done
+
+    if [ $python = false ]; then
+	abort_no_python
+    fi
+
+    printf "%s\n" "$python"
+)
+
+find_suitable_python() (
+    python=$(find_bootstrap_python)
+    python_versions=$($python "$script_dir/check-python.py")
 
     if pyenv --version >/dev/null 2>&1; then
 	which="pyenv which"
@@ -149,7 +164,8 @@ find_python() (
 )
 
 find_system_python () (
-    python_versions=$("$script_dir/check-python.py")
+    python=$(find_bootstrap_python)
+    python_versions=$($python "$script_dir/check-python.py")
 
     for prefix in /usr/local /usr; do
 	python_dir=$prefix/bin
