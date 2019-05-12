@@ -30,6 +30,9 @@ REDHAT_PKGS="uwsgi uwsgi-plugin-%s"
 
 SUNOS_PKGS=""
 
+UBUNTU_18_04_PKGS="%s-venv rsync setpriv uwsgi uwsgi-plugin-%s"
+UBUNTU_19_04_PKGS="%s-venv rsync util-linux uwsgi uwsgi-plugin-%s"
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -59,8 +62,18 @@ eval $("$script_dir/get-os-release.sh" -X)
 case "$kernel_name" in
     (Linux)
 	case "$ID" in
-	    (debian|ubuntu)
+	    (debian)
 		packages=$DEBIAN_PKGS
+		;;
+	    (ubuntu)
+		case "$VERSION_ID" in
+		    (18.04)
+			packages=$UBUNTU_18_04_PKGS
+			;;
+		    (19.04)
+			packages=$UBUNTU_19_04_PKGS
+			;;
+		esac
 		;;
 	    (opensuse-*)
 		packages=$OPENSUSE_PKGS
