@@ -232,7 +232,7 @@ install_file() {
 
     if [ $dryrun = false ]; then
 	if printf "%s\n" "${tmpfiles-}" | grep $2 >/dev/null 2>&1; then
-	    printf "Installing file %s\n" "$3"
+	    printf "Generating file %s\n" "$3"
 	else
 	    printf "Installing file %s as %s\n" "$2" "$3"
 	fi
