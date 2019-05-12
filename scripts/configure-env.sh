@@ -21,14 +21,18 @@ abort() {
     exit 1
 }
 
+create_tmpfile() {
+    tmpfile=$(mktemp)
+    tmpfiles="${tmpfiles+$tmpfiles }$tmpfile ${tmpfile}~"
+    trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
+}
+
 if [ $# -eq 0 ]; then
-    abort "%s\n" "$0: Not enough arguments"
+    abort "%s: Not enough arguments\n" "$0"
 fi
 
-tmpfile=$(mktemp)
-trap "/bin/rm -f $tmpfile ${tmpfile}~" EXIT INT QUIT TERM
-
 file="$1"
+create_tmpfile
 
 if [ -r $file ]; then
     cp -f $file $tmpfile

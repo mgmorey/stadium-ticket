@@ -63,7 +63,7 @@ get_path() {
 }
 
 if [ $# -eq 0 ]; then
-    abort "%s\n" "$0: Not enough arguments"
+    abort "%s: Not enough arguments\n" "$0"
 fi
 
 script_dir=$(get_path "$(dirname "$0")")

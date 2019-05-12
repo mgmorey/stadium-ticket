@@ -106,8 +106,6 @@ printf "%s\n" "Loading .env environment variables"
 
 parse_arguments "$@"
 configure_system
-tmpfile=$(mktemp)
-trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
 
 for dryrun in true false; do
     if [ $dryrun = false ]; then

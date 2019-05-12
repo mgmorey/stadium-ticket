@@ -57,8 +57,7 @@ pipenv_init() {
 pipenv_lock() {
     pipenv_init
     $pipenv lock -d
-    tmpfile=$(mktemp)
-    trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
+    create_tmpfile
 
     for file; do
 	case $file in

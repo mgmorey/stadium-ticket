@@ -25,6 +25,12 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+create_tmpfile() {
+    tmpfile=$(mktemp)
+    tmpfiles="${tmpfiles+$tmpfiles }$tmpfile"
+    trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
+}
+
 get_path() {
     assert [ -d "$1" ]
     command=$(which realpath)
@@ -40,9 +46,7 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
-tmpfile=$(mktemp)
-trap "/bin/rm -f $tmpfile" EXIT INT QUIT TERM
-
+create_tmpfile
 "$script_dir/get-installed-packages.sh" >$tmpfile
 "$script_dir/grep-docker-package.sh" <$tmpfile || \
     true

@@ -44,7 +44,7 @@ start_uwsgi() {
 }
 
 if [ $# -eq 0 ]; then
-    abort "%s\n" "$0: Not enough arguments"
+    abort "%s: Not enough arguments\n" "$0"
 fi
 
 dryrun=${1-false}
