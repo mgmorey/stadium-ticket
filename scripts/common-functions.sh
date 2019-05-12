@@ -20,10 +20,11 @@ SEPARATOR_SINGLE="----------------------------------------"
 SEPARATOR_DOUBLE="========================================"
 
 abort_insufficient_permissions() {
-    cat >&2 <<EOF
-$0: You need write permissions for $1
-$0: Please retry with root privileges
-EOF
+    cat <<-EOF >&2
+	$0: Write access required to update file or directory: $1
+	$0: Insufficient access to complete the requested operation.
+	$0: Please try the operation again as a privileged user.
+	EOF
     exit 1
 }
 
