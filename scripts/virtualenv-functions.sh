@@ -16,7 +16,7 @@
 PIP_OPTS="--no-cache-dir --no-warn-script-location"
 PIP_SUDO_OPTS=""
 
-activate_venv() {
+activate_virtualenv() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     assert [ -d $1/bin -a -r $1/bin/activate ]
@@ -26,10 +26,10 @@ activate_venv() {
     set -u
 }
 
-create_venv() {
+create_virtualenv() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-    upgrade_venv_tools pip virtualenv
+    pip_upgrade pip virtualenv
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
     if [ "$virtualenv" = false ]; then
@@ -54,14 +54,25 @@ create_venv() {
     fi
 }
 
+pip_upgrade() {
+    pip=$("$script_dir/get-python-command.sh" pip)
+    pip_opts=
+
+    if [ "$pip" = false ]; then
+	return
+    fi
+
+    printf "%s\n" "Upgrading user packages"
+    $pip install --upgrade --user "$@"
+}
+
 sync_requirements() {
     assert [ "$pip" != false ]
     printf "%s\n" "Installing required packages"
-    pip_install="$pip install${SUDO_USER:+ $PIP_SUDO_OPTS}"
-    $pip_install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
+    $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
 }
 
-sync_venv() {
+sync_virtualenv() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
 
@@ -77,12 +88,12 @@ sync_venv() {
     if [ -d $1 ]; then
 	sync=false
     else
-	create_venv "$@"
+	create_virtualenv "$@"
 	sync=true
     fi
 
     if [ -r $1/bin/activate ]; then
-	activate_venv $1
+	activate_virtualenv $1
 	assert [ -n "${VIRTUAL_ENV:-}" ]
 
 	if [ "${venv_force_sync:-$sync}" = true ]; then
@@ -93,18 +104,4 @@ sync_venv() {
     else
 	abort "%s: No virtual environment\n" "$0"
     fi
-}
-
-upgrade_venv_tools() {
-    pip=$("$script_dir/get-python-command.sh" pip)
-
-    if [ "$pip" = false ]; then
-	return
-    fi
-
-    printf "%s\n" "Upgrading pip and virtualenv"
-    pip_opts="${SUDO_USER:+$PIP_SUDO_OPTS }$PIP_OPTS"
-    pip_opts="$pip_opts --upgrade --user"
-    upgrade="$pip install $pip_opts"
-    run_unprivileged $upgrade "$@"
 }

@@ -1,6 +1,6 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
-# clean-virtualenvs: remove Python 3 virtual environments
+# check-home: test home directory for write privileges
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-: ${LANG:=en_US.UTF-8}
-: ${LC_ALL:=en_US.UTF-8}
-export LANG LC_ALL
-
 abort() {
     printf "$@" >&2
     exit 1
@@ -29,29 +25,14 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_path() {
-    assert [ -d "$1" ]
-    command=$(which realpath)
-
-    if [ -n "$command" ]; then
-	$command "$1"
-    elif expr "$1" : '/.*' >/dev/null; then
-	printf "%s\n" "$1"
-    else
-	printf "%s\n" "$PWD/${1#./}"
-    fi
+get_user_home() {
+    getent passwd $SUDO_USER | awk -F: '{print $6}'
 }
 
-script_dir=$(get_path "$(dirname "$0")")
+check_user_home() (
+    assert [ -w $HOME ]
 
-. "$script_dir/common-parameters.sh"
-
-pipenv=$("$script_dir/get-python-command.sh" pipenv)
-
-if [ "$pipenv" != false ]; then
-    if $pipenv --venv >/dev/null 2>&1; then
-	$pipenv --rm
+    if [ -n "$SUDO_USER-}" ]; then
+	assert [ "$(get_user_home)" = $HOME ]
     fi
-fi
-
-/bin/rm -rf ${VENV_FILENAME}*
+)

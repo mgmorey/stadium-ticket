@@ -65,6 +65,8 @@ create_symlinks() (
 )
 
 create_virtualenv() {
+    run_unprivileged '"$script_dir/check-home.sh"'
+
     if ! run_unprivileged '"$script_dir/create-virtualenv.sh"' "$@"; then
 	abort "%s: Unable to create virtual environment\n" "$0"
     fi
@@ -108,8 +110,17 @@ get_path() {
     fi
 }
 
-get_sudo_user_home() {
-    getent passwd $SUDO_USER | awk -F: '{print $6}'
+install_dirs() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" -a -n "$2" ]
+    check_permissions "$2"
+
+    if [ $dryrun = false ]; then
+	assert [ -r "$1" ]
+	printf "Installing files in directory %s\n" "$2"
+	mkdir -p $2
+	rsync -a "$1"/* $2
+    fi
 }
 
 install_flask_app() (
@@ -132,24 +143,11 @@ install_flask_app() (
     done
 )
 
-install_virtualenv() {
-    assert [ $# -eq 2 ]
-    assert [ -n "$1" -a -n "$2" ]
-    check_permissions "$2"
-
-    if [ $dryrun = false ]; then
-	assert [ -r "$1" ]
-	printf "Installing files in %s\n" "$2"
-	mkdir -p $2
-	rsync -a "$1"/* $2
-    fi
-}
-
 install_service() {
     create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
     install_file 600 .env $APP_DIR/.env
     install_flask_app 644 app $APP_DIR
-    install_virtualenv $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
+    install_dirs $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
     change_owner $APP_DIR $APP_VARDIR
     generate_service_ini $APP_CONFIG app.ini "$UWSGI_VARS"
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
@@ -281,7 +279,7 @@ for dryrun in true false; do
     "$script_dir/install-uwsgi.sh" $dryrun
 
     if [ $dryrun = false ]; then
-	create_virtualenv $venv_filename $(get_sudo_user_home)
+	create_virtualenv $venv_filename
     fi
 
     install_service

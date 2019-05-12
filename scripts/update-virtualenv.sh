@@ -86,18 +86,6 @@ pipenv_lock() {
     chmod a+r "$@"
 }
 
-pipenv_update() {
-    pipenv_lock $VENV_REQUIREMENTS
-    $pipenv sync -d
-}
-
-pip_update() {
-    assert [ -n "$1" ]
-    venv_force_sync=true
-    venv_requirements=$VENV_REQUIREMENTS
-    sync_venv $1
-}
-
 if [ -n "${VIRTUAL_ENV:-}" ]; then
     abort "%s: Must not be run within a virtual environment\n" "$0"
 fi
@@ -123,9 +111,12 @@ source_dir=$script_dir/..
 cd "$source_dir"
 
 if [ "$pipenv" != false ]; then
-    pipenv_update
+    pipenv_lock $VENV_REQUIREMENTS
+    $pipenv sync -d
 elif [ "$pip" != false ]; then
-    pip_update $VENV_FILENAME
+    venv_force_sync=true
+    venv_requirements=$VENV_REQUIREMENTS
+    sync_virtualenv $1
 else
     abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
 fi
