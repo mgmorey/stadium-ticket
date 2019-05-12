@@ -119,7 +119,7 @@ install_dirs() {
 	assert [ -r "$1" ]
 	printf "Installing files in directory %s\n" "$2"
 	mkdir -p $2
-	rsync -a "$1"/* $2
+	rsync -a $1/* $2
     fi
 }
 
