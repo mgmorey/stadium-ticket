@@ -118,6 +118,12 @@ create_symlink() {
     fi
 }
 
+create_tmpfile() {
+    tmpfile=$(mktemp)
+    tmpfiles="${tmpfiles+$tmpfiles }$tmpfile"
+    trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
+}
+
 find_python() (
     python_versions=$("$script_dir/check-python.py")
 
@@ -164,8 +170,9 @@ find_system_python () (
 
 generate_launch_agent_plist() (
     assert [ $# -eq 1 ]
-    assert [ -n "$1" -a -n "$tmpfile" ]
+    assert [ -n "$1" ]
     check_permissions $1
+    create_tmpfile
     cat <<-EOF >$tmpfile
 	<?xml version="1.0" encoding="UTF-8"?>
 	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -232,7 +239,8 @@ install_file() {
 
 print_file_tail() {
     assert [ $# -eq 1 ]
-    assert [ -n "$1" -a -n "$tmpfile" ]
+    assert [ -n "$1" ]
+    create_tmpfile
     tail $1 >$tmpfile
 
     if [ ! -s "$tmpfile" ]; then
@@ -311,7 +319,7 @@ signal_service() {
 }
 
 tail_file() {
-    assert [ -n "$1" -a -n "$tmpfile" ]
+    assert [ -n "$1" ]
 
     if [ -r $1 ]; then
 	print_file_tail $1
