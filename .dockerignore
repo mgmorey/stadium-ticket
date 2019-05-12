@@ -8,6 +8,7 @@
 **/pylintrc
 **/test_*.py
 **/tests
+*/*.sqlite
 */.env
 */.env-template
 */.git
