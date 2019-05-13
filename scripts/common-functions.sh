@@ -172,8 +172,8 @@ find_development_python() (
     fi
 
     if [ -n "${pyenv_root-}" ]; then
-    	for version in ${python_versions-$PYTHON_VERSIONS} ""; do
-    	    for version_dir in $pyenv_root/versions/*; do
+    	for version_dir in $pyenv_root/versions/*; do
+    	    for version in ${python_versions-$PYTHON_VERSIONS}; do
 		case ${version_dir##*/} in
 		    ($version|$version.*)
     			python=$version_dir/bin/python$version
@@ -188,7 +188,7 @@ find_development_python() (
     	done
     fi
 
-    for version in ${python_versions-$PYTHON_VERSIONS} ""; do
+    for version in ${python_versions-$PYTHON_VERSIONS}; do
 	python=$($which python$version 2>/dev/null || true)
 
 	if [ -z "$python" ]; then
