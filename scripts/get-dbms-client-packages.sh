@@ -85,6 +85,16 @@ case "$kernel_name" in
 		    (10)
 			packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
 			;;
+		    ('')
+			case "$(cat /etc/debian_version)" in
+			    (buster/sid)
+				packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
+				;;
+			    (*)
+				abort_not_supported Release
+				;;
+			esac
+			;;
 		esac
 		;;
 	    (ubuntu)
