@@ -139,7 +139,29 @@ find_bootstrap_python() (
     printf "%s\n" "$python"
 )
 
-find_suitable_python() (
+find_container_python () (
+    python=$(find_bootstrap_python)
+    python_versions=$($python "$script_dir/check-python.py")
+
+    for prefix in /usr/local /usr; do
+	python_dir=$prefix/bin
+
+	if [ -d $python_dir ]; then
+	    for version in ${python_versions-$PYTHON_VERSIONS} ""; do
+		python=$python_dir/python$version
+
+		if [ -x $python ]; then
+		    if $python --version >/dev/null 2>&1; then
+			printf "%s\n" "$python"
+			return
+		    fi
+		fi
+	    done
+	fi
+    done
+)
+
+find_development_python() (
     python=$(find_bootstrap_python)
     python_versions=$($python "$script_dir/check-python.py")
 
@@ -178,28 +200,6 @@ find_suitable_python() (
 	elif $python --version >/dev/null 2>&1; then
 	    printf "%s\n" "$python"
 	    return
-	fi
-    done
-)
-
-find_system_python () (
-    python=$(find_bootstrap_python)
-    python_versions=$($python "$script_dir/check-python.py")
-
-    for prefix in /usr/local /usr; do
-	python_dir=$prefix/bin
-
-	if [ -d $python_dir ]; then
-	    for version in ${python_versions-$PYTHON_VERSIONS} ""; do
-		python=$python_dir/python$version
-
-		if [ -x $python ]; then
-		    if $python --version >/dev/null 2>&1; then
-			printf "%s\n" "$python"
-			return
-		    fi
-		fi
-	    done
 	fi
     done
 )

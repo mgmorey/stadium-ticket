@@ -70,7 +70,7 @@ case $venv_filename in
     ($VENV_FILENAME)
 	;;
     ($VENV_FILENAME-$APP_NAME)
-	python=$(find_system_python)
+	python=$(find_container_python)
 	;;
 esac
 

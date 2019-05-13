@@ -43,5 +43,5 @@ script_dir=$(get_path "$(dirname "$0")")
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 
-python=$(find_suitable_python)
+python=$(find_development_python)
 check_python $python
