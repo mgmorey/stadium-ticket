@@ -154,8 +154,6 @@ find_suitable_python() (
     if [ -n "${pyenv_root-}" ]; then
     	for version in ${python_versions-$PYTHON_VERSIONS} ""; do
     	    for version_dir in $pyenv_root/versions/*; do
-		printf "%s = %s\n" '${version_dir##*/}' "${version_dir##*/}" >&2
-		printf "%s = %s\n" '$version' "$version" >&2
 		case ${version_dir##*/} in
 		    ($version|$version.*)
     			python=$version_dir/bin/python$version
