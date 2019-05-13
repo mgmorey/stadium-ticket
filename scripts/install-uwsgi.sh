@@ -21,6 +21,10 @@ abort() {
     exit 1
 }
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
+}
+
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
@@ -43,10 +47,6 @@ start_uwsgi() {
     systemctl start uwsgi
 }
 
-if [ $# -eq 0 ]; then
-    abort "%s: Not enough arguments\n" "$0"
-fi
-
 dryrun=${1-false}
 script_dir=$(get_path "$(dirname "$0")")
 
@@ -55,10 +55,62 @@ script_dir=$(get_path "$(dirname "$0")")
 eval $("$script_dir/get-os-release.sh" -X)
 
 case "$kernel_name" in
-    (Darwin)
-	"$script_dir/install-uwsgi-from-source.sh" $dryrun
+    (Linux)
+	case "$ID" in
+	    (debian)
+		case "$VERSION_ID" in
+		    (9)
+			:
+			;;
+		    (10)
+			:
+			;;
+		    (*)
+			abort_not_supported Release
+			;;
+		esac
+		;;
+	    (ubuntu)
+		case "$VERSION_ID" in
+		    (18.*|19.04)
+			:
+			;;
+		    (*)
+			abort_not_supported Release
+			;;
+		esac
+		;;
+	    (opensuse-tumbleweed)
+		case "$VERSION_ID" in
+		    (2019*)
+			:
+			;;
+		    (*)
+			abort_not_supported Release
+			;;
+		esac
+		;;
+	    (*)
+		abort_not_supported Distro
+		;;
+	esac
 	;;
+    (Darwin)
+	:
+	;;
+    # (FreeBSD)
+    #	:
+    #	;;
+    # (SunOS)
+    #	:
+    #	;;
     (*)
+	abort_not_supported "Operating system"
+	;;
+esac
+
+case "$kernel_name" in
+    (Linux)
 	if [ $dryrun = true ]; then
 	    :
 	else
@@ -78,5 +130,8 @@ case "$kernel_name" in
 
 	    start_uwsgi
 	fi
+	;;
+    (Darwin)
+	"$script_dir/install-uwsgi-from-source.sh" $dryrun
 	;;
 esac
