@@ -16,8 +16,8 @@
 KILL_COUNT=20
 KILL_INTERVAL=10
 
-SEPARATOR_SINGLE="----------------------------------------"
-SEPARATOR_DOUBLE="========================================"
+LINE_SINGLE="----------------------------------------"
+LINE_DOUBLE="========================================"
 
 abort_insufficient_permissions() {
     cat <<-EOF >&2
@@ -290,11 +290,11 @@ print_file_tail() {
 	return
     fi
 
-    printf "%s\n" $SEPARATOR_DOUBLE$SEPARATOR_DOUBLE
+    printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE
     printf "%s\n" "Contents of $1 (last 10 lines)"
-    printf "%s\n" $SEPARATOR_SINGLE$SEPARATOR_SINGLE
+    printf "%s\n" $LINE_SINGLE$LINE_SINGLE
     cat $tmpfile
-    printf "%s\n" $SEPARATOR_DOUBLE$SEPARATOR_DOUBLE
+    printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE
 }
 
 remove_files() {
