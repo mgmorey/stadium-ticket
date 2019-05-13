@@ -62,7 +62,9 @@ fi
 export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PYTHONPATH=$app_prefix/lib
 
-if [ ! -d $(dirname $APP_CONFIG) ]; then
+if [ ! -d $UWSGI_PLUGIN_DIR ]; then
+    abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
+elif [ ! -d $(dirname $APP_CONFIG) ]; then
     abort "%s: %s: No such configuration directory\n" "$0" "$(dirname $APP_CONFIG)"
 elif [ ! -r $APP_CONFIG ]; then
     abort "%s: %s: No read permissions\n" "$0" "$APP_CONFIG"
