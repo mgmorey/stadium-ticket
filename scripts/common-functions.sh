@@ -145,7 +145,7 @@ find_container_python () (
 	python_dir=$prefix/bin
 
 	if [ -d $python_dir ]; then
-	    for version in ${python_versions-$PYTHON_VERSIONS} ""; do
+	    for version in ${python_versions-$PYTHON_VERSIONS}; do
 		python=$python_dir/python$version
 
 		if [ -x $python ]; then
