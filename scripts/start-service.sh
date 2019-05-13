@@ -62,16 +62,14 @@ fi
 export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PYTHONPATH=$app_prefix/lib
 
-if signal_service HUP; then
-    abort "Service is running as PID %s\n" "$pid"
-fi
-
 if [ ! -d $(dirname $APP_CONFIG) ]; then
-    abort "%s: No such configuration directory\n" "$(dirname $APP_CONFIG)"
+    abort "%s: %s: No such configuration directory\n" "$0" "$(dirname $APP_CONFIG)"
 elif [ ! -r $APP_CONFIG ]; then
-    abort "%s: No read permissions\n" "$APP_CONFIG"
+    abort "%s: %s: No read permissions\n" "$0" "$APP_CONFIG"
 elif [ ! -e $APP_CONFIG ]; then
-    abort "%s: No such configuration file\n" "$APP_CONFIG"
+    abort "%s: %s: No such configuration file\n" "$0" "$APP_CONFIG"
+elif signal_service HUP; then
+    abort "Service is running as PID %s\n" "$pid"
 else
     $binary --plugin-dir $UWSGI_PLUGIN_DIR --ini $APP_CONFIG
 fi
