@@ -36,7 +36,7 @@ NOTE: Local installation is only supported on Ubuntu and openSUSE.
 7.  To build and run a Docker container (may require sudo):
 
     scripts/install-docker.sh
-    scripts/run.sh docker-compose up --build (or "make build")
+    cd docker && docker-compose up --build (or "make build")
 
 8. To install the app as a service (may require sudo):
 
