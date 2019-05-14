@@ -79,8 +79,24 @@ configure_freebsd() {
     APP_GID=wheel
     APP_UID=root
 
+    # Set application directory prefix
+    APP_PREFIX=/usr/local
+
     # Set uWSGI configuration directories
-    UWSGI_APPDIRS="apps-available apps-enabled"
+    UWSGI_APPDIRS=""
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
+    # Set uWSGI directories
+    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
+    UWSGI_LOGDIR=$UWSGI_PREFIX/var/log
+    UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
+    UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
+
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
+    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/lib/plugin
 }
 
 configure_opensuse() {
@@ -185,8 +201,8 @@ configure_system() {
 	    configure_darwin
 	    ;;
 	# (FreeBSD)
-	#	configure_freebsd
-	#	;;
+	# 	configure_freebsd
+	# 	;;
 	# (SunOS)
 	#	configure_sunos
 	#	;;

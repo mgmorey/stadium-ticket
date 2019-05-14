@@ -72,7 +72,6 @@ install_binary() {
 	    ;;
 	(uwsgi)
 	    install_file 755 $1 $UWSGI_BINARY_DIR/$1
-	    create_symlink $UWSGI_BINARY_DIR/$1 /usr/local/bin/$1
 	    ;;
     esac
 }
