@@ -2,7 +2,7 @@
 *.sqlite
 *~
 .env
-.env-docker-*
+.env-mysql
 .python-version
 .update
 .venv*
