@@ -18,7 +18,8 @@
 
 DARWIN_PKGS="uwsgi"
 
-DEBIAN_PKGS="%s-venv rsync setpriv uwsgi uwsgi-plugin-%s"
+DEBIAN_9_PKGS="%s-venv rsync setpriv uwsgi uwsgi-plugin-%s"
+DEBIAN_10_PKGS="%s-venv rsync util-linux uwsgi uwsgi-plugin-%s"
 
 FEDORA_PKGS="uwsgi uwsgi-plugin-%s"
 
@@ -63,7 +64,27 @@ case "$kernel_name" in
     (Linux)
 	case "$ID" in
 	    (debian)
-		packages=$DEBIAN_PKGS
+		case "$VERSION_ID" in
+		    (9)
+			packages=$DEBIAN_9_PKGS
+			;;
+		    (10)
+			packages=$DEBIAN_10_PKGS
+			;;
+		    ('')
+			case "$(cat /etc/debian_version)" in
+			    (buster/sid)
+				packages=$DEBIAN_10_PKGS
+				;;
+			    (*)
+				abort_not_supported Release
+				;;
+			esac
+			;;
+		    (*)
+			abort_not_supported Release
+			;;
+		esac
 		;;
 	    (ubuntu)
 		case "$VERSION_ID" in
