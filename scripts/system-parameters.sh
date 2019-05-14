@@ -211,8 +211,8 @@ configure_system() {
 	    configure_darwin
 	    ;;
 	# (FreeBSD)
-	# 	configure_freebsd
-	# 	;;
+	#	configure_freebsd
+	#	;;
 	# (SunOS)
 	#	configure_sunos
 	#	;;

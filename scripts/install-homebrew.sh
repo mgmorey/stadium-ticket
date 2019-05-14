@@ -50,7 +50,7 @@ eval $("$script_dir/get-os-release.sh" -X)
 
 case "$kernel_name" in
     (Darwin)
-    	;;
+	;;
     (*)
 	abort_not_supported "Operating system"
 	;;
