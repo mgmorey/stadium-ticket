@@ -177,7 +177,7 @@ find_development_python() (
     	for version in ${python_versions-$PYTHON_VERSIONS}; do
 	    pythons="$(ls $dir/$version.*/bin/python 2>/dev/null | sort -Vr)"
 
-    	    for python in $pythons; do
+	    for python in $pythons; do
     		if $python --version >/dev/null 2>&1; then
     		    printf "%s\n" "$python"
     		    return
