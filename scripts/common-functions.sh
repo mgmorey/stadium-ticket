@@ -175,7 +175,9 @@ find_development_python() (
 	dir=$pyenv_root/versions
 
     	for version in ${python_versions-$PYTHON_VERSIONS}; do
-    	    for python in $(ls $dir/$version.*/bin/python | sort -Vr); do
+	    pythons="$(ls $dir/$version.*/bin/python 2>/dev/null | sort -Vr)"
+
+    	    for python in $pythons; do
     		if $python --version >/dev/null 2>&1; then
     		    printf "%s\n" "$python"
     		    return
