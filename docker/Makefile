@@ -21,7 +21,7 @@ build:	.env .env-mysql
 
 .PHONY: build
 
-.env:			.env-template
+.env:		.env-template
 	$(script_dir)/configure-env.sh .env .env-template
 
 .env-mysql:	.env-template-mysql
