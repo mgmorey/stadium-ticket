@@ -52,7 +52,7 @@ pytest:	.update init-db
 	$(script_dir)/run.sh pytest tests
 
 realclean:	clean clean-venvs
-	@/bin/rm -f .update
+	@/bin/rm -f .update app/app/*.sqlite
 
 stress:
 	$(script_dir)/load-test.sh
