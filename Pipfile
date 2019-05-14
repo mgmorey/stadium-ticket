@@ -36,7 +36,6 @@ pycodestyle = "*"
 pylint = "*"
 pylint-sqlalchemy = "*"
 pytest = "*"
-virtualenv = "*"
 
 [scripts]
 drop-db = "python3 -m app drop-db"
