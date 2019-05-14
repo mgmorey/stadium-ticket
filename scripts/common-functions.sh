@@ -110,9 +110,9 @@ create_symlink() {
     if [ $dryrun = false ]; then
 	assert [ -r "$1" ]
 
-	if [ $1 != $2 ]; then
+	if [ $1 != $2 -a ! -e $2 ]; then
 	    printf "Creating link %s\n" "$2"
-	    /bin/ln -sf $1 $2
+	    /bin/ln -s $1 $2
 	fi
     fi
 }
