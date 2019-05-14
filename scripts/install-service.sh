@@ -133,17 +133,7 @@ install_flask_app() (
     check_permissions $3
 
     for source in $(find $2 -type f -print | sort); do
-	case $source in
-	    (*/tests/*)
-		: # Omit tests folder
-		;;
-	    (*/test_*.py)
-		: # Omit test modules
-		;;
-	    (*)
-		install_file $1 $source $3/$source
-		;;
-	esac
+	install_file $1 $source $3/$source
     done
 )
 
