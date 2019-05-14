@@ -58,6 +58,8 @@ fi
 export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PYTHONPATH=$app_prefix/lib
 
+cd $APP_VARDIR
+
 if [ ! -d $UWSGI_PLUGIN_DIR ]; then
     abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
 elif [ ! -d $(dirname $APP_CONFIG) ]; then
