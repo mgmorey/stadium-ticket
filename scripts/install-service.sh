@@ -132,7 +132,7 @@ install_flask_app() (
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
     check_permissions $3
 
-    for source in $(find $2 -type f -name '*.py' -print | sort); do
+    for source in $(find $2 -type f -print | sort); do
 	case $source in
 	    (*/tests/*)
 		: # Omit tests folder
@@ -156,24 +156,6 @@ install_service() {
     generate_service_ini $APP_CONFIG app.ini "$UWSGI_VARS"
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
 }
-
-run_python_unprivileged() (
-    assert [ $# -ge 1 ]
-
-    if [ "$(id -u)" -eq 0 ]; then
-	dir=$APP_DIR
-	python=$VENV_FILENAME/bin/python3
-	setpriv_opts="--egid $APP_GID --euid $APP_UID"
-	sh="$(get_setpriv_command $setpriv_opts || echo su $SUDO_USER)"
-    else
-	dir=$source_dir
-	python=python3
-	sh='"$script_dir/run.sh"'
-    fi
-
-    cd "$dir"
-    eval $sh $python "$@"
-)
 
 restart_service() {
 	case "$kernel_name" in
@@ -278,25 +260,22 @@ source_dir=$script_dir/..
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
-printf "%s\n" "Loading .env environment variables"
-. "$source_dir/.env"
-
 configure_system
 cd "$source_dir"
-venv_filename=$VENV_FILENAME-$APP_NAME
+
+run_unprivileged "'$script_dir/run.sh'" python3 -m app init-db
 
 for dryrun in true false; do
     "$script_dir/install-uwsgi.sh" $dryrun
 
     if [ $dryrun = false ]; then
-	create_virtualenv $venv_filename
+	create_virtualenv $VENV_FILENAME-$APP_NAME
     fi
 
     install_service
 done
 
 start_service
-run_python_unprivileged -m app init-db
 
 if [ -e $APP_PIDFILE ]; then
     tail_file $APP_LOGFILE
