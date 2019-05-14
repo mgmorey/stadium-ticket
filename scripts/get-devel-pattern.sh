@@ -60,14 +60,14 @@ case "$kernel_name" in
     (Linux)
 	case "$ID" in
 	    (debian|ubuntu)
-	    	packages=$DEBIAN_PKGS
-	    	;;
+		packages=$DEBIAN_PKGS
+		;;
 	    (opensuse-*)
-	    	packages=$OPENSUSE_PKGS
-	    	;;
+		packages=$OPENSUSE_PKGS
+		;;
 	    (fedora)
-	    	packages=$FEDORA_PKGS
-	    	;;
+		packages=$FEDORA_PKGS
+		;;
 	    (redhat|centos)
 		packages=$REDHAT_PKGS
 		;;

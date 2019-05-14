@@ -138,7 +138,7 @@ configure_system_defaults() {
     fi
 
     if [ -z "${APP_LOGFILE-}" ]; then
-        APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+	APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
     fi
 
     if [ -z "${APP_PIDFILE-}" ]; then
@@ -146,7 +146,7 @@ configure_system_defaults() {
     fi
 
     if [ -z "${APP_SOCKET-}" ]; then
-        APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
+	APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     fi
 
     if [ -z "${UWSGI_ETCDIR-}" ]; then

@@ -21,9 +21,9 @@ n = split($1, a, "-");
 
 for(i = 1; i < n; i++) {
     if (i > 1) {
-        printf("-%s", a[i])}
+	printf("-%s", a[i])}
     else {
-        printf("%s", a[i])
+	printf("%s", a[i])
     }
 }
 

@@ -109,8 +109,8 @@ case "$kernel_name" in
 	:
 	;;
     (FreeBSD)
-    	:
-    	;;
+	:
+	;;
     # (SunOS)
     #	:
     #	;;
@@ -146,5 +146,5 @@ case "$kernel_name" in
 	;;
     (FreeBSD)
 	"$script_dir/install-uwsgi-from-source.sh" $dryrun
-    	;;
+	;;
 esac

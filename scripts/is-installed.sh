@@ -56,7 +56,7 @@ case "$kernel_name" in
 	    (debian|ubuntu)
 		status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
 		test "$status" = "install ok installed"
-	    	;;
+		;;
 	    (opensuse-*)
 		rpm --query $1 >/dev/null 2>&1
 		;;
@@ -67,11 +67,11 @@ case "$kernel_name" in
 	;;
     (Darwin)
 	brew list | grep -E '^'"$1"'$'
-    	;;
+	;;
     # (FreeBSD)
-    # 	;;
+    #	;;
     # (SunOS)
-    # 	;;
+    #	;;
     (*)
 	abort_not_supported "Operating system"
 	;;
