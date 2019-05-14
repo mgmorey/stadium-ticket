@@ -167,6 +167,16 @@ configure_system() {
 			(10)
 			    configure_debian
 			    ;;
+			('')
+			    case "$(cat /etc/debian_version)" in
+				(buster/sid)
+				    configure_debian
+				    ;;
+				(*)
+				    abort_not_supported Release
+				    ;;
+			    esac
+			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
