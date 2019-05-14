@@ -18,7 +18,7 @@ script_dir = scripts
 
 all:	.env .update pycode pylint pytest
 
-build:	.env .env-docker .update
+build:	.env .env-docker-mysql .env-docker-web .update
 	$(script_dir)/run.sh docker-compose up --build
 
 clean:
@@ -63,11 +63,14 @@ uninstall:
 .PHONY: all build clean clean-venvs client client-debug debug init-db install
 .PHONY: pycode pylint pytest init-db realclean stress uninstall
 
-.env:		.env-template
-	$(script_dir)/configure-env.sh .env
+.env:		.env-template-web
+	$(script_dir)/configure-env.sh .env .env-template-web
 
-.env-docker:	.env-template
-	$(script_dir)/configure-env.sh .env-docker
+.env-docker-mysql:	.env-template-mysql
+	$(script_dir)/configure-env.sh .env-docker-mysql .env-template-mysql
+
+.env-docker-web:	.env-template-web
+	$(script_dir)/configure-env.sh .env-docker-web .env-template-web
 
 .update:	Pipfile Pipfile.lock
 	$(script_dir)/update-virtualenv.sh && touch .update

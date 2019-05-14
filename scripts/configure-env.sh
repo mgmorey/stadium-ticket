@@ -32,12 +32,13 @@ if [ $# -eq 0 ]; then
 fi
 
 file="$1"
+template="$2"
 create_tmpfile
 
 if [ -r $file ]; then
     cp -f $file $tmpfile
-elif [ -r .env-template ]; then
-    cp -f .env-template $tmpfile
+elif [ -r $template ]; then
+    cp -f $template $tmpfile
 fi
 
 if ${EDITOR:=cat} $tmpfile; then
