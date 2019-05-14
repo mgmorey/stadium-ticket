@@ -85,23 +85,19 @@ pipenv_lock() {
     chmod a+r "$@"
 }
 
-script_dir=$(get_path "$(dirname "$0")")
-
-. "$script_dir/common-parameters.sh"
-. "$script_dir/common-functions.sh"
-. "$script_dir/virtualenv-functions.sh"
-
 if [ $(id -u) -eq 0 ]; then
-    if [ -n "${SUDO_USER-}" ]; then
-	run_unprivileged "'$0'" "$@"
-    else
-	abort "%s: Must be run as a non-privileged user\n" "$0"
-    fi
+    abort "%s: Must be run as a non-privileged user\n" "$0"
 fi
 
 if [ -n "${VIRTUAL_ENV:-}" ]; then
     abort "%s: Must not be run within a virtual environment\n" "$0"
 fi
+
+script_dir=$(get_path "$(dirname "$0")")
+
+. "$script_dir/common-parameters.sh"
+. "$script_dir/common-functions.sh"
+. "$script_dir/virtualenv-functions.sh"
 
 pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
