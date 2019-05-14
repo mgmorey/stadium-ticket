@@ -10,6 +10,7 @@
 **/test_*.py
 **/tests
 */*.sqlite
+*/.env-mysql
 */.env-template*
 */.git
 */.venv*
