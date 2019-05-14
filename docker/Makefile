@@ -1,4 +1,4 @@
-# docker-compose.yml
+# Makefile
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -14,18 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version: '3'
-services:
+script_dir = ../scripts
 
-    # mysql:
-    #     env_file: .env-docker-mysql
-    #     image: mysql:5.7
-    #     ports:
-    #         - 3306:3306
+build:	.env .env-mysql
+	docker-compose up --build
 
-    web:
-        build:
-            context: .
-        env_file: .env-docker-web
-        ports:
-            - 5000:5000
+.PHONY: build
+
+.env:			.env-template
+	$(script_dir)/configure-env.sh .env .env-template
+
+.env-mysql:	.env-template-mysql
+	$(script_dir)/configure-env.sh .env-mysql .env-template-mysql

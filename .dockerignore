@@ -10,7 +10,7 @@
 **/test_*.py
 **/tests
 */*.sqlite
-*/.env
-*/.env-template
+*/.env-template*
 */.git
 */.venv*
+.env
