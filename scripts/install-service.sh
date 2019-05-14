@@ -238,11 +238,13 @@ start_service() (
 	restart_service
     fi
 
-    printf "Waiting for service %s to start\n" "$APP_NAME"
+    if [ $restart_pending = true -o $signal_received = false ]; then
+	printf "Waiting for service %s to start\n" "$APP_NAME"
+    fi
 
     if [ $restart_pending = true ]; then
 	wait_for_service $APP_PIDFILE $WAIT_INITIAL $WAIT_TIMEOUT
-    elif [ $signal_received = true ]; then
+    elif [ $signal_received = false ]; then
 	sleep $SLEEP_PERIOD
     fi
 )
