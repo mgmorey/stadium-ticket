@@ -13,8 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-PIP_19_OPTS="--no-cache-dir --no-warn-script-location"
-PIP_OPTS="--no-cache-dir"
+PIP_9_OPTS="--no-cache-dir"
+PIP_10_OPTS="--no-cache-dir --no-warn-script-location"
 
 activate_virtualenv() {
     assert [ $# -eq 1 ]
@@ -55,11 +55,11 @@ create_virtualenv() {
 
 get_pip_options() {
     case "$($pip --version | awk '{print $2}')" in
-	(19.*)
-	    printf "%s\n" "$PIP_19_OPTS"
+	([123456789][0123456789].*)
+	    printf "%s\n" "$PIP_10_OPTS"
 	    ;;
 	(*)
-	    printf "%s\n" "$PIP_OPTS"
+	    printf "%s\n" "$PIP_9_OPTS"
 	    ;;
     esac
 }
@@ -98,9 +98,12 @@ sync_virtualenv() {
     if [ -d $1 ]; then
 	sync=false
     else
+	sync=true
+    fi
+
+    if [ $sync = true ]; then
 	pip_upgrade pip virtualenv
 	create_virtualenv "$@"
-	sync=true
     fi
 
     if [ -r $1/bin/activate ]; then
