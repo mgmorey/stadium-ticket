@@ -62,6 +62,28 @@ get_path() {
     fi
 }
 
+run_in_virtualenv() {
+    source_dir=$script_dir/..
+
+    cd "$source_dir"
+
+    export $APP_ENV_VARS
+
+    pipenv=$("$script_dir/get-python-command.sh" pipenv)
+
+    if [ "$pipenv" = false ]; then
+	pip=$("$script_dir/get-python-command.sh" pip)
+    fi
+
+    if [ "$pipenv" != false ]; then
+	pipenv_run "$@"
+    elif [ "$pip" != false ]; then
+	pip_run "$@"
+    else
+	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
+    fi
+}
+
 if [ $# -eq 0 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
@@ -72,22 +94,4 @@ script_dir=$(get_path "$(dirname "$0")")
 . "$script_dir/common-functions.sh"
 . "$script_dir/virtualenv-functions.sh"
 
-source_dir=$script_dir/..
-
-cd "$source_dir"
-
-export $APP_ENV_VARS
-
-pipenv=$("$script_dir/get-python-command.sh" pipenv)
-
-if [ "$pipenv" = false ]; then
-    pip=$("$script_dir/get-python-command.sh" pip)
-fi
-
-if [ "$pipenv" != false ]; then
-    pipenv_run "$@"
-elif [ "$pip" != false ]; then
-    pip_run "$@"
-else
-    abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
-fi
+run_in_virtualenv "$@"
