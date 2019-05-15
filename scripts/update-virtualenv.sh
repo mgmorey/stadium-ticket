@@ -42,20 +42,7 @@ get_path() {
     fi
 }
 
-pipenv_init() {
-    if ! $pipenv --venv >/dev/null 2>&1; then
-	if pyenv --version >/dev/null 2>&1; then
-	    python=$(find_development_python)
-	    check_python $python
-	    $pipenv --python $python
-	else
-	    $pipenv $PIPENV_OPTS
-	fi
-    fi
-}
-
-pipenv_lock() {
-    pipenv_init
+generate_lockfile_and_requirements() {
     $pipenv lock -d
     create_tmpfile
 
@@ -85,6 +72,42 @@ pipenv_lock() {
     chmod a+r "$@"
 }
 
+initialize_virtualenv() {
+    if ! $pipenv --venv >/dev/null 2>&1; then
+	if pyenv --version >/dev/null 2>&1; then
+	    python=$(find_development_python)
+	    check_python $python
+	    $pipenv --python $python
+	else
+	    $pipenv $PIPENV_OPTS
+	fi
+    fi
+}
+
+update_virtualenv() (
+    pipenv=$("$script_dir/get-python-command.sh" pipenv)
+
+    if [ "$pipenv" = false ]; then
+	pip=$("$script_dir/get-python-command.sh" pip)
+    fi
+
+    source_dir=$script_dir/..
+
+    cd "$source_dir"
+
+    if [ "$pipenv" != false ]; then
+	initialize_virtualenv
+	generate_lockfile_and_requirements $VENV_REQUIREMENTS
+	$pipenv sync -d
+    elif [ "$pip" != false ]; then
+	venv_force_sync=true
+	venv_requirements=$VENV_REQUIREMENTS
+	sync_virtualenv $VENV_FILENAME
+    else
+	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
+    fi
+)
+
 if [ $(id -u) -eq 0 ]; then
     abort "%s: Must be run as a non-privileged user\n" "$0"
 fi
@@ -99,23 +122,4 @@ script_dir=$(get_path "$(dirname "$0")")
 . "$script_dir/common-functions.sh"
 . "$script_dir/virtualenv-functions.sh"
 
-pipenv=$("$script_dir/get-python-command.sh" pipenv)
-
-if [ "$pipenv" = false ]; then
-    pip=$("$script_dir/get-python-command.sh" pip)
-fi
-
-source_dir=$script_dir/..
-
-cd "$source_dir"
-
-if [ "$pipenv" != false ]; then
-    pipenv_lock $VENV_REQUIREMENTS
-    $pipenv sync -d
-elif [ "$pip" != false ]; then
-    venv_force_sync=true
-    venv_requirements=$VENV_REQUIREMENTS
-    sync_virtualenv $VENV_FILENAME
-else
-    abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
-fi
+update_virtualenv
