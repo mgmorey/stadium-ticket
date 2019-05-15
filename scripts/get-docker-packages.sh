@@ -65,7 +65,7 @@ get_path() {
 
 script_dir=$(get_path "$(dirname "$0")")
 
-package=$("$script_dir/get-docker-package.sh")
+package=$("$script_dir/get-installed-docker-package.sh")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
