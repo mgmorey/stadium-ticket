@@ -320,7 +320,7 @@ run_unprivileged() (
 )
 
 signal_service() {
-    pid=$("$script_dir/read-file.sh" $APP_PIDFILE)
+    pid=$(cat $APP_PIDFILE)
     result=1
 
     if [ -z "$pid" ]; then
