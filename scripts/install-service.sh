@@ -168,20 +168,7 @@ start_service() (
 
     if [ $signal_received = true ]; then
 	case "$kernel_name" in
-	    (Linux)
-		case "$ID" in
-		    (debian|ubuntu)
-			restart_pending=false
-			;;
-		    (opensuse-*)
-			restart_pending=false
-			;;
-		esac
-		;;
-	    (Darwin)
-		restart_pending=false
-		;;
-	    (FreeBSD)
+	    (*)
 		restart_pending=false
 		;;
 	esac
