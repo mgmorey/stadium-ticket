@@ -42,8 +42,7 @@ get_path() {
     fi
 }
 
-generate_lockfile_and_requirements() {
-    $pipenv lock -d
+generate_requirements_files() {
     create_tmpfile
 
     for file; do
@@ -72,7 +71,7 @@ generate_lockfile_and_requirements() {
     chmod a+r "$@"
 }
 
-initialize_virtualenv() {
+initialize_virtualenv_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	if pyenv --version >/dev/null 2>&1; then
 	    python=$(find_development_python)
@@ -82,6 +81,9 @@ initialize_virtualenv() {
 	    $pipenv $PIPENV_OPTS
 	fi
     fi
+
+    # Generate Pipfile.lock (including development dependencies)
+    $pipenv lock -d
 }
 
 update_virtualenv() (
@@ -96,8 +98,8 @@ update_virtualenv() (
     cd "$source_dir"
 
     if [ "$pipenv" != false ]; then
-	initialize_virtualenv
-	generate_lockfile_and_requirements $VENV_REQUIREMENTS
+	initialize_virtualenv_via_pipenv
+	generate_requirements_files $VENV_REQUIREMENTS
 	$pipenv sync -d
     elif [ "$pip" != false ]; then
 	venv_force_sync=true
