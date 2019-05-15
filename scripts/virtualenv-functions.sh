@@ -13,8 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-PIP_9_OPTS="--no-cache-dir"
-PIP_10_OPTS="--no-cache-dir --no-warn-script-location"
+PIP_9_UPGRADE_OPTS="--no-cache-dir"
+PIP_10_UPGRADE_OPTS="--no-cache-dir --no-warn-script-location"
 
 activate_virtualenv() {
     assert [ $# -eq 1 ]
@@ -53,13 +53,13 @@ create_virtualenv() {
     fi
 }
 
-get_pip_options() {
+get_pip_upgrade_options() {
     case "$($pip --version | awk '{print $2}')" in
 	([123456789][0123456789].*)
-	    printf "%s\n" "$PIP_10_OPTS"
+	    printf "%s\n" "$PIP_10_UPGRADE_OPTS"
 	    ;;
 	(*)
-	    printf "%s\n" "$PIP_9_OPTS"
+	    printf "%s\n" "$PIP_9_UPGRADE_OPTS"
 	    ;;
     esac
 }
@@ -110,12 +110,11 @@ sync_virtualenv() {
 
 upgrade_via_pip() {
     pip=$("$script_dir/get-python-command.sh" pip)
-    pip_opts=
 
     if [ "$pip" = false ]; then
 	return
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
-    $pip install $(get_pip_options) --upgrade --user "$@"
+    $pip install $(get_pip_upgrade_options) --upgrade --user "$@"
 }
