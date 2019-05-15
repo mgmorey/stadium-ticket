@@ -64,18 +64,6 @@ get_pip_options() {
     esac
 }
 
-pip_upgrade() {
-    pip=$("$script_dir/get-python-command.sh" pip)
-    pip_opts=
-
-    if [ "$pip" = false ]; then
-	return
-    fi
-
-    printf "%s\n" "Upgrading user packages via pip"
-    $pip install $(get_pip_options) --upgrade --user "$@"
-}
-
 sync_requirements() {
     assert [ "$pip" != false ]
     printf "%s\n" "Installing required packages via pip"
@@ -102,7 +90,7 @@ sync_virtualenv() {
     fi
 
     if [ $sync = true ]; then
-	pip_upgrade pip virtualenv
+	upgrade_via_pip pip virtualenv
 	create_virtualenv "$@"
     fi
 
@@ -118,4 +106,16 @@ sync_virtualenv() {
     else
 	abort "%s: No virtual environment\n" "$0"
     fi
+}
+
+upgrade_via_pip() {
+    pip=$("$script_dir/get-python-command.sh" pip)
+    pip_opts=
+
+    if [ "$pip" = false ]; then
+	return
+    fi
+
+    printf "%s\n" "Upgrading user packages via pip"
+    $pip install $(get_pip_options) --upgrade --user "$@"
 }
