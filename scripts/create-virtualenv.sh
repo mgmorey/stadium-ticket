@@ -25,6 +25,29 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+create_virtualenv() {
+    source_dir=$script_dir/..
+
+    cd "$source_dir"
+
+    pip=$("$script_dir/get-python-command.sh" pip)
+    pipenv=$("$script_dir/get-python-command.sh" pipenv)
+    python=
+    venv_filename=$1
+    venv_requirements=requirements.txt
+
+    case $venv_filename in
+	($VENV_FILENAME)
+	    :
+	    ;;
+	($VENV_FILENAME-$APP_NAME)
+	    python=$(find_container_python)
+	    ;;
+    esac
+
+    sync_virtualenv_via_pip $venv_filename $python
+}
+
 get_path() {
     assert [ -d "$1" ]
     command=$(which realpath)
@@ -56,22 +79,4 @@ script_dir=$(get_path "$(dirname "$0")")
 . "$script_dir/common-functions.sh"
 . "$script_dir/virtualenv-functions.sh"
 
-source_dir=$script_dir/..
-
-cd "$source_dir"
-
-pip=$("$script_dir/get-python-command.sh" pip)
-pipenv=$("$script_dir/get-python-command.sh" pipenv)
-python=
-venv_filename=$1
-venv_requirements=requirements.txt
-
-case $venv_filename in
-    ($VENV_FILENAME)
-	;;
-    ($VENV_FILENAME-$APP_NAME)
-	python=$(find_container_python)
-	;;
-esac
-
-sync_virtualenv_via_pip $venv_filename $python
+create_virtualenv "$@"
