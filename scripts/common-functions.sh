@@ -245,9 +245,6 @@ get_setpriv_command() (
 	(2.3[3456789].*|2.[456789]?.*|[3456789].*)
 	    setpriv_opts="$setpriv_opts --reset-env"
 	    ;;
-	(2.31.*)
-	    :
-	    ;;
 	(*)
 	    return 1
 	    ;;
