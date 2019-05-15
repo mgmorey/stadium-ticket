@@ -39,21 +39,6 @@ class ParseError(Exception):
     pass
 
 
-def compare_versions(s1, s2):
-    return compute_scalar_version(s1) - compute_scalar_version(s2)
-
-
-def compute_scalar_version(s):
-    result = 0
-    v = s.split('.')
-
-    for i in range(PYTHON_VERSION_LEN):
-        result *= 1000
-        result += int(v[i]) if i < len(v) else 0
-
-    return result
-
-
 def get_minimum_version():
     config = ConfigParser()
     path = get_pipfile()
@@ -86,6 +71,17 @@ def unquote(s):
         raise ParseError("Invalid quoted string '{}'".format(s))
 
 
+def version_str_to_int(s):
+    result = 0
+    v = s.split('.')
+
+    for i in range(PYTHON_VERSION_LEN):
+        result *= 1000
+        result += int(v[i]) if i < len(v) else 0
+
+    return result
+
+
 def main():
     if len(sys.argv) > 2:
         s = "{}: Invalid number of arguments".format(sys.argv[0])
@@ -100,7 +96,8 @@ def main():
         exit(2)
     else:
         if actual:
-            difference = compare_versions(actual, minimum)
+            difference = (version_str_to_int(actual) -
+                          version_str_to_int(minimum))
 
             if difference >= 0:
                 message = "Python {} interpreter meets {} requirement"
