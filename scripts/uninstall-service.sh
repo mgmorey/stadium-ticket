@@ -69,14 +69,14 @@ parse_arguments() {
 
 remove_service() {
     config_files="$APP_ETCDIR"
-    service_files="$APP_DIR $APP_VARDIR $APP_RUNDIR"
+    service_files="$APP_DIR"
 
     if [ -d "$UWSGI_ETCDIR" ]; then
 	config_files="$(find $UWSGI_ETCDIR -name $APP_NAME.ini -print) $config_files"
     fi
 
     if [ $purge = true ]; then
-	service_files="$service_files $APP_LOGFILE"
+	service_files="$service_files $APP_RUNDIR $APP_VARDIR $APP_LOGFILE"
     fi
 
     remove_files $config_files $service_files
