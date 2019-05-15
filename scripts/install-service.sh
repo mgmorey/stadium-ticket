@@ -64,7 +64,7 @@ create_symlinks() (
     done
 )
 
-create_virtualenv() {
+create_service_virtualenv() {
     run_unprivileged '"$script_dir/check-home.sh"'
 
     if ! run_unprivileged '"$script_dir/create-virtualenv.sh"' "$@"; then
@@ -259,7 +259,7 @@ for dryrun in true false; do
     "$script_dir/install-uwsgi.sh" $dryrun
 
     if [ $dryrun = false ]; then
-	create_virtualenv $VENV_FILENAME-$APP_NAME
+	create_service_virtualenv $VENV_FILENAME-$APP_NAME
     fi
 
     install_service
