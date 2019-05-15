@@ -74,4 +74,4 @@ case $venv_filename in
 	;;
 esac
 
-sync_virtualenv $venv_filename $python
+sync_virtualenv_via_pip $venv_filename $python

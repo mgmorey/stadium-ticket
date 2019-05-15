@@ -102,7 +102,7 @@ update_virtualenv() (
     elif [ "$pip" != false ]; then
 	venv_force_sync=true
 	venv_requirements=$VENV_REQUIREMENTS
-	sync_virtualenv $VENV_FILENAME
+	sync_virtualenv_via_pip $VENV_FILENAME
     else
 	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
     fi

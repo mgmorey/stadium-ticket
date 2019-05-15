@@ -31,7 +31,7 @@ assert() {
 
 pip_run() {
     venv_requirements=$VENV_REQUIREMENTS
-    sync_virtualenv $VENV_FILENAME
+    sync_virtualenv_via_pip $VENV_FILENAME
     printf "%s\n" "Loading .env environment variables"
     . ./.env
     "$@"

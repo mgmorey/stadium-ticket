@@ -64,13 +64,13 @@ get_pip_upgrade_options() {
     esac
 }
 
-sync_requirements() {
+sync_pip_requirements() {
     assert [ "$pip" != false ]
     printf "%s\n" "Installing required packages via pip"
     $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
 }
 
-sync_virtualenv() {
+sync_virtualenv_via_pip() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
 
@@ -99,7 +99,7 @@ sync_virtualenv() {
 	assert [ -n "${VIRTUAL_ENV:-}" ]
 
 	if [ "${venv_force_sync:-$sync}" = true ]; then
-	    sync_requirements
+	    sync_pip_requirements
 	fi
     elif [ -d $1 ]; then
 	abort "%s: Unable to activate environment\n" "$0"
