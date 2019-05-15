@@ -238,7 +238,10 @@ generate_launch_agent_plist() (
 )
 
 get_setpriv_command() (
-    setpriv_opts="--clear-groups"
+    assert [ -n "${SUDO_USER-}" ]
+    rgid="$(id -g $SUDO_USER)"
+    ruid="$(id -u $SUDO_USER)"
+    setpriv_opts="--clear-groups --rgid $rgid --ruid $ruid"
     setpriv_version="$(setpriv --version 2>/dev/null)"
 
     case "${setpriv_version##* }" in
@@ -305,10 +308,7 @@ run_unprivileged() (
     assert [ $# -ge 1 ]
 
     if [ "$(id -u)" -eq 0 -a -n "${SUDO_USER:-}" ]; then
-	gid="$(id -g $SUDO_USER)"
-	uid="$(id -u $SUDO_USER)"
-	setpriv_opts="--rgid $gid --ruid $uid"
-	sh="$(get_setpriv_command $setpriv_opts || echo su $SUDO_USER)"
+	sh="$(get_setpriv_command || echo su $SUDO_USER)"
     else
 	sh=
     fi
