@@ -13,7 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-PIP_OPTS="--no-cache-dir --no-warn-script-location"
+PIP_19_OPTS="--no-cache-dir --no-warn-script-location"
+PIP_OPTS="--no-cache-dir"
 
 activate_virtualenv() {
     assert [ $# -eq 1 ]
@@ -28,7 +29,6 @@ activate_virtualenv() {
 create_virtualenv() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-    pip_upgrade pip virtualenv
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
 
     if [ "$virtualenv" = false ]; then
@@ -53,6 +53,17 @@ create_virtualenv() {
     fi
 }
 
+get_pip_options() {
+    case "$($pip --version | awk '{print $2}')" in
+	(19.*)
+	    printf "%s\n" "$PIP_19_OPTS"
+	    ;;
+	(*)
+	    printf "%s\n" "$PIP_OPTS"
+	    ;;
+    esac
+}
+
 pip_upgrade() {
     pip=$("$script_dir/get-python-command.sh" pip)
     pip_opts=
@@ -61,13 +72,13 @@ pip_upgrade() {
 	return
     fi
 
-    printf "%s\n" "Upgrading user packages"
-    $pip install $PIP_OPTS --upgrade --user "$@"
+    printf "%s\n" "Upgrading user packages via pip"
+    $pip install $(get_pip_options) --upgrade --user "$@"
 }
 
 sync_requirements() {
     assert [ "$pip" != false ]
-    printf "%s\n" "Installing required packages"
+    printf "%s\n" "Installing required packages via pip"
     $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
 }
 
@@ -87,6 +98,7 @@ sync_virtualenv() {
     if [ -d $1 ]; then
 	sync=false
     else
+	pip_upgrade pip virtualenv
 	create_virtualenv "$@"
 	sync=true
     fi
