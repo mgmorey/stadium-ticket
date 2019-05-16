@@ -313,7 +313,7 @@ shell() (
     if [ "$(id -u)" -eq 0 -a -n "${SUDO_USER:-}" ]; then
 	setpriv=$(get_setpriv_command $SUDO_USER)
 
-	if [ -n "$setpriv" ]; then
+	if [ -z "$setpriv" ]; then
 	    setpriv="su -l $SUDO_USER"
 	fi
 
