@@ -317,7 +317,7 @@ run_unprivileged() (
 )
 
 signal_service() {
-    pid=$(cat $APP_PIDFILE)
+    pid=$(cat $APP_PIDFILE 2>/dev/null)
     result=1
 
     if [ -z "$pid" ]; then
@@ -330,7 +330,7 @@ signal_service() {
 	fi
 
 	if [ $signal = HUP ]; then
-	    if kill -s $signal $pid; then
+	    if kill -s $signal $pid 2>/dev/null; then
 		printf "Waiting for process to handle SIG%s\n" "$signal"
 		sleep $KILL_INTERVAL
 		result=0
@@ -341,7 +341,7 @@ signal_service() {
 	    printf "%s\n" "Waiting for process to exit"
 	    i=0
 
-	    while kill -s $signal $pid && [ $i -lt $KILL_COUNT ]; do
+	    while kill -s $signal $pid 2>/dev/null && [ $i -lt $KILL_COUNT ]; do
 		sleep 1
 		i=$((i + 1))
 	    done
