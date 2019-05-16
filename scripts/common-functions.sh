@@ -254,18 +254,18 @@ generate_launch_agent_plist() (
 )
 
 get_pyenv_versions() (
-    version_as_regex=$(printf "%s\n" $1 | sed 's/\./\\./')
-    regex=$(printf "$GREP_REGEX" "$version_as_regex")
-    pyenv install --list | egrep "$regex" | sort -Vr
+    assert [ $# -eq 0 -o $# -eq 1 ]
+    pyenv install --list | grep_pyenv_version ${1-} | sort -Vr
 )
 
-get_required_python_version() {
+get_required_python_versions() {
     python=$(find_bootstrap_python)
     python_versions=$($python "$script_dir/check-python.py")
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
-	get_pyenv_versions $python_version | head -n 1
-	return
+	if ! get_pyenv_versions $python_version; then
+	    get_pyenv_versions
+	fi
     done
 }
 
@@ -292,6 +292,18 @@ get_setpriv_command() (
     return 0
 )
 
+grep_pyenv_version() {
+    assert [ $# -eq 0 -o $# -eq 1 ]
+
+    if [ $# -eq 1 ]; then
+	version_as_regex=$(printf "%s\n" $1 | sed 's/\./\\./')
+	grep_regex=$(printf "$GREP_REGEX" "$version_as_regex")
+	egrep "$grep_regex"
+    else
+	cat
+    fi
+}
+
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
@@ -309,9 +321,13 @@ install_file() {
     fi
 }
 
-install_python_version() {
-    pyenv install -s ${1-$(get_required_python_version)}
-}
+install_python_version() (
+    version=${1-$(get_required_python_versions | head -n 1)}
+
+    if [ -n "$version" ]; then
+	pyenv install -s $version
+    fi
+)
 
 is_tmpfile() {
     printf "%s\n" ${tmpfiles-} | grep $1 >/dev/null
