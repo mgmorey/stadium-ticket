@@ -13,7 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-AWK_EXPR='/^  [0-9]+([.][0-9]+){0,2}$/ {print $1}'
+GREP_REGEX='^  \d+([.]\d+){0,2}$'
 
 KILL_COUNT=20
 KILL_INTERVAL=10
@@ -254,7 +254,7 @@ generate_launch_agent_plist() (
 )
 
 get_all_python_versions() {
-    pyenv install --list | awk "$AWK_EXPR" | sort -Vr
+    pyenv install --list | egrep "$GREP_REGEX" | sort -Vr
 }
 
 get_required_python_version() {
