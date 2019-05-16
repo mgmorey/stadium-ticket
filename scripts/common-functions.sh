@@ -174,6 +174,10 @@ find_development_python() (
     if [ -n "$pyenv_root" ]; then
 	python=$(find_pyenv_python $pyenv_root)
 
+	if [ -z "$python" ]; then
+	    install_python_version
+	fi
+
 	if [ -n "$python" ]; then
 	    printf "%s\n" "$python"
 	    return
