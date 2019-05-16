@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# create-virtualenv.sh: create application virtual environment
+# create-service-venv.sh: create service virtual environment
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-create_virtualenv() {
+create_service_virtualenv() {
     source_dir=$script_dir/..
 
     cd "$source_dir"
@@ -79,4 +79,4 @@ script_dir=$(get_path "$(dirname "$0")")
 . "$script_dir/common-functions.sh"
 . "$script_dir/virtualenv-functions.sh"
 
-create_virtualenv "$@"
+create_service_virtualenv "$@"

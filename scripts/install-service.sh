@@ -65,9 +65,11 @@ create_symlinks() (
 )
 
 create_service_virtualenv() {
-    run_unprivileged '"$script_dir/check-home.sh"'
+    if ! run_unprivileged '"$script_dir/check-home.sh"'; then
+	abort "%s: Unable to create virtual environment\n" "$0"
+    fi
 
-    if ! run_unprivileged '"$script_dir/create-virtualenv.sh"' "$@"; then
+    if ! run_unprivileged '"$script_dir/create-service-venv.sh"' "$@"; then
 	abort "%s: Unable to create virtual environment\n" "$0"
     fi
 }
