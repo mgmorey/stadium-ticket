@@ -238,9 +238,9 @@ generate_launch_agent_plist() (
 )
 
 get_setpriv_command() (
-    assert [ -n "${SUDO_USER-}" ]
-    rgid="$(id -g $SUDO_USER)"
-    ruid="$(id -u $SUDO_USER)"
+    assert [ -n "$1" ]
+    rgid="$(id -g $1)"
+    ruid="$(id -u $1)"
     setpriv_opts="--clear-groups --rgid $rgid --ruid $ruid"
     setpriv_version="$(setpriv --version 2>/dev/null)"
 
@@ -307,16 +307,20 @@ remove_files() {
     fi
 }
 
-run_unprivileged() (
+shell() (
     assert [ $# -ge 1 ]
 
     if [ "$(id -u)" -eq 0 -a -n "${SUDO_USER:-}" ]; then
-	sh="$(get_setpriv_command || echo su $SUDO_USER)"
-    else
-	sh=
-    fi
+	setpriv=$(get_setpriv_command $SUDO_USER)
 
-    eval ${sh+$sh }"$@"
+	if [ -n "$setpriv" ]; then
+	    setpriv="su -l $SUDO_USER"
+	fi
+
+	eval $setpriv "$@"
+    else
+	eval "$@"
+    fi
 )
 
 signal_service() {

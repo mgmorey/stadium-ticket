@@ -65,11 +65,11 @@ create_symlinks() (
 )
 
 create_service_virtualenv() {
-    if ! run_unprivileged '"$script_dir/check-home.sh"'; then
+    if ! shell '"$script_dir/check-home.sh"'; then
 	abort "%s: Unable to create virtual environment\n" "$0"
     fi
 
-    if ! run_unprivileged '"$script_dir/create-service-venv.sh"' "$@"; then
+    if ! shell '"$script_dir/create-service-venv.sh"' "$@"; then
 	abort "%s: Unable to create virtual environment\n" "$0"
     fi
 }
@@ -242,7 +242,7 @@ source_dir=$script_dir/..
 configure_system
 cd "$source_dir"
 
-run_unprivileged "'$script_dir/run.sh'" python3 -m app init-db
+shell "'$script_dir/run.sh'" python3 -m app init-db
 
 for dryrun in true false; do
     "$script_dir/install-uwsgi.sh" $dryrun
