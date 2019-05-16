@@ -13,6 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+AWK_EXPR='/^  [0-9]+([.][0-9]+){0,2}$/ {print $1}'
+
 KILL_COUNT=20
 KILL_INTERVAL=10
 
@@ -172,16 +174,19 @@ find_development_python() (
     fi
 
     if [ -n "$pyenv_root" ]; then
-	python=$(find_pyenv_python $pyenv_root)
+	for version in ${python_versions-$PYTHON_VERSIONS}; do
+	    python=$(find_pyenv_python $pyenv_root $version)
 
-	if [ -z "$python" ]; then
-	    install_python_version
-	fi
+	    if [ -z "$python" ]; then
+		install_python_version >&2
+		python=$(find_pyenv_python $pyenv_root $version)
+	    fi
 
-	if [ -n "$python" ]; then
-	    printf "%s\n" "$python"
-	    return
-	fi
+	    if [ -n "$python" ]; then
+		printf "%s\n" "$python"
+		return
+	    fi
+	done
     fi
 
     for version in ${python_versions-$PYTHON_VERSIONS}; do
@@ -199,20 +204,15 @@ find_development_python() (
 )
 
 find_pyenv_python() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    pyenv_root=$1
-    dir=$pyenv_root/versions
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" -a -n "$2" ]
+    pythons="$(ls $1/versions/$2.*/bin/python 2>/dev/null | sort -Vr)"
 
-    for version in ${python_versions-$PYTHON_VERSIONS}; do
-	pythons="$(ls $dir/$version.*/bin/python 2>/dev/null | sort -Vr)"
-
-	for python in $pythons; do
-	    if $python --version >/dev/null 2>&1; then
-		printf "%s\n" "$python"
-		return
-	    fi
-	done
+    for python in $pythons; do
+	if $python --version >/dev/null 2>&1; then
+	    printf "%s\n" "$python"
+	    return
+	fi
     done
 )
 

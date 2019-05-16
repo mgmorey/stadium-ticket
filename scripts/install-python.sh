@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-AWK_EXPR='/^  [0-9]+([.][0-9]+){0,2}$/ {print $1}'
-
 abort() {
     printf "$@" >&2
     exit 1
