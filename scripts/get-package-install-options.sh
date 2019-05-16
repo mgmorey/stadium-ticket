@@ -48,6 +48,9 @@ case "$kernel_name" in
 	    (debian|ubuntu)
 		printf "%s\n" "--no-install-recommends"
 		;;
+	    (fedora)
+		printf "%s\n" "--setopt=install_weak_deps=False"
+		;;
 	esac
 	;;
 esac
