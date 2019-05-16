@@ -40,31 +40,6 @@ get_path() {
     fi
 }
 
-get_all_python_versions() {
-    pyenv install --list | awk "$AWK_EXPR" | sort -Vr
-}
-
-get_python_version() {
-    python=$(find_bootstrap_python)
-    python_versions=$($python "$script_dir/check-python.py")
-
-    for python_version in ${python_versions-$PYTHON_VERSIONS}; do
-	versions="$(get_all_python_versions)"
-
-	for version in $versions; do
-	    case $version in
-		($python_version.*)
-		    printf "%s\n" $version
-		    return
-	    esac
-	done
-    done
-}
-
-install_python() {
-    pyenv install -s ${1-$(get_python_version)}
-}
-
 script_dir=$(get_path "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
@@ -74,4 +49,4 @@ if ! pyenv --version >/dev/null 2>&1; then
     abort "%s: No pyenv found in PATH\n" "$0"
 fi
 
-install_python "$@"
+install_python_version "$@"

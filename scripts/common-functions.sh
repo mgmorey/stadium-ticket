@@ -249,6 +249,27 @@ generate_launch_agent_plist() (
     fi
 )
 
+get_all_python_versions() {
+    pyenv install --list | awk "$AWK_EXPR" | sort -Vr
+}
+
+get_required_python_version() {
+    python=$(find_bootstrap_python)
+    python_versions=$($python "$script_dir/check-python.py")
+
+    for python_version in ${python_versions-$PYTHON_VERSIONS}; do
+	versions="$(get_all_python_versions)"
+
+	for version in $versions; do
+	    case $version in
+		($python_version.*)
+		    printf "%s\n" $version
+		    return
+	    esac
+	done
+    done
+}
+
 get_setpriv_command() (
     assert [ -n "$1" ]
     rgid="$(id -g $1)"
@@ -287,6 +308,10 @@ install_file() {
 	install -d -m 755 "$(dirname "$3")"
 	install -C -m $1 $2 $3
     fi
+}
+
+install_python_version() {
+    pyenv install -s ${1-$(get_required_python_version)}
 }
 
 is_tmpfile() {
