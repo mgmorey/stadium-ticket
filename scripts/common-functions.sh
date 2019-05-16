@@ -171,19 +171,13 @@ find_development_python() (
 	which=which
     fi
 
-    if [ -n "${pyenv_root-}" ]; then
-	dir=$pyenv_root/versions
+    if [ -n "$pyenv_root" ]; then
+	python=$(find_pyenv_python $pyenv_root)
 
-	for version in ${python_versions-$PYTHON_VERSIONS}; do
-	    pythons="$(ls $dir/$version.*/bin/python 2>/dev/null | sort -Vr)"
-
-	    for python in $pythons; do
-		if $python --version >/dev/null 2>&1; then
-		    printf "%s\n" "$python"
-		    return
-		fi
-	    done
-	done
+	if [ -n "$python" ]; then
+	    printf "%s\n" "$python"
+	    return
+	fi
     fi
 
     for version in ${python_versions-$PYTHON_VERSIONS}; do
@@ -197,6 +191,24 @@ find_development_python() (
 	    printf "%s\n" "$python"
 	    return
 	fi
+    done
+)
+
+find_pyenv_python() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    pyenv_root=$1
+    dir=$pyenv_root/versions
+
+    for version in ${python_versions-$PYTHON_VERSIONS}; do
+	pythons="$(ls $dir/$version.*/bin/python 2>/dev/null | sort -Vr)"
+
+	for python in $pythons; do
+	    if $python --version >/dev/null 2>&1; then
+		printf "%s\n" "$python"
+		return
+	    fi
+	done
     done
 )
 
