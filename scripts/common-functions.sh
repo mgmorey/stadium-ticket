@@ -13,7 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-GREP_REGEX='^  \d+([.]\d+){0,2}$'
+GREP_REGEX='^  %s([.]\d+){0,2}$'
 
 KILL_COUNT=20
 KILL_INTERVAL=10
@@ -253,24 +253,19 @@ generate_launch_agent_plist() (
     fi
 )
 
-get_all_python_versions() {
-    pyenv install --list | egrep "$GREP_REGEX" | sort -Vr
-}
+get_pyenv_versions() (
+    version_as_regex=$(printf "%s\n" $1 | sed 's/\./\\./')
+    regex=$(printf "$GREP_REGEX" "$version_as_regex")
+    pyenv install --list | egrep "$regex" | sort -Vr
+)
 
 get_required_python_version() {
     python=$(find_bootstrap_python)
     python_versions=$($python "$script_dir/check-python.py")
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
-	versions="$(get_all_python_versions)"
-
-	for version in $versions; do
-	    case $version in
-		($python_version.*)
-		    printf "%s\n" $version
-		    return
-	    esac
-	done
+	get_pyenv_versions $python_version | head -n 1
+	return
     done
 }
 
