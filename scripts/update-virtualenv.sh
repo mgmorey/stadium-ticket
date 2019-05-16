@@ -82,7 +82,8 @@ initialize_virtualenv_via_pipenv() {
 	fi
     fi
 
-    # Generate Pipfile.lock (including development dependencies)
+    # Lock dependencies and generate Pipfile.lock (including
+    # development dependencies)
     $pipenv lock -d
 }
 
