@@ -109,3 +109,8 @@ esac
 
 packages=$("$script_dir/get-extra-packages.sh")
 "$script_dir/install-packages.sh" $packages
+
+if [ $(id -u) = 0 -a -n "${SUDO_USER-}" ]; then
+    groupadd docker || true
+    usermod -a -G docker $SUDO_USER || true
+fi
