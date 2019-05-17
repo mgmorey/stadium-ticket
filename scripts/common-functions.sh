@@ -153,12 +153,14 @@ find_container_python () (
 		if [ -x $python ]; then
 		    if $python --version >/dev/null 2>&1; then
 			printf "%s\n" "$python"
-			return
+			return 0
 		    fi
 		fi
 	    done
 	fi
     done
+
+    return 1
 )
 
 find_development_python() (
@@ -184,7 +186,7 @@ find_development_python() (
 
 	    if [ -n "$python" ]; then
 		printf "%s\n" "$python"
-		return
+		return 0
 	    fi
 	done
     fi
@@ -198,9 +200,11 @@ find_development_python() (
 	    abort_no_python
 	elif $python --version >/dev/null 2>&1; then
 	    printf "%s\n" "$python"
-	    return
+	    return 0
 	fi
     done
+
+    return 1
 )
 
 find_pyenv_python() (
@@ -211,9 +215,11 @@ find_pyenv_python() (
     for python in $pythons; do
 	if $python --version >/dev/null 2>&1; then
 	    printf "%s\n" "$python"
-	    return
+	    return 0
 	fi
     done
+
+    return 1
 )
 
 generate_launch_agent_plist() (
@@ -264,9 +270,11 @@ get_required_python_versions() {
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
 	if get_pyenv_versions $python_version; then
-	    return
+	    return 0
 	fi
     done
+
+    return 1
 }
 
 get_setpriv_command() (
@@ -297,9 +305,7 @@ grep_pyenv_version() {
     assert [ $# -eq 0 -o $# -eq 1 ]
 
     if [ $# -eq 1 ]; then
-	version_as_regex=$(printf "%s\n" $1 | sed 's/\./\\./')
-	grep_regex=$(printf "$GREP_REGEX" "$version_as_regex")
-	egrep "$grep_regex"
+	egrep $(printf "$GREP_REGEX" "${1//./\.}")
     else
 	cat
     fi
