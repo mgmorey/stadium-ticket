@@ -177,7 +177,7 @@ find_development_python() (
 
     if [ -n "$pyenv_root" ]; then
 	for version in ${python_versions-$PYTHON_VERSIONS}; do
-	    python=$(find_pyenv_python $pyenv_root $version)
+	    python=$(find_pyenv_python $pyenv_root $version || true)
 
 	    if [ -z "$python" ]; then
 		install_python_version >&2
