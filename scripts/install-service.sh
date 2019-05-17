@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-SLEEP_PERIOD=10
+SLEEP_SIGNAL=10
 
 WAIT_INITIAL=0
 WAIT_TIMEOUT=10
@@ -224,7 +224,7 @@ start_service() (
     if [ $restart_pending = true ]; then
 	wait_for_service $APP_PIDFILE $WAIT_INITIAL $WAIT_TIMEOUT
     elif [ $signal_received = false ]; then
-	sleep $SLEEP_PERIOD
+	sleep $SLEEP_SIGNAL
     fi
 )
 
