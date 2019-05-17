@@ -64,7 +64,7 @@ uninstall:
 .PHONY: pycode pylint pytest init-db realclean stress uninstall
 
 .env:			.env-template
-	$(script_dir)/configure-env.sh .env .env-template
+	$(script_dir)/configure-env.sh $@ $<
 
 .update:		Pipfile Pipfile.lock
-	$(script_dir)/update-virtualenv.sh && touch .update
+	$(script_dir)/update-virtualenv.sh && touch $@

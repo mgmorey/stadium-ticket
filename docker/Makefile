@@ -22,7 +22,7 @@ build:	.env .env-mysql
 .PHONY: build
 
 .env:		.env-template
-	$(script_dir)/configure-env.sh .env .env-template
+	$(script_dir)/configure-env.sh $@ $<
 
 .env-mysql:	.env-template-mysql
-	$(script_dir)/configure-env.sh .env-mysql .env-template-mysql
+	$(script_dir)/configure-env.sh $@ $<
