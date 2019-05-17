@@ -76,7 +76,7 @@ parse_arg() {
     esac
 
     if [ -z "${file:-}" ]; then
-	return
+	return 1
     elif [ -e "$file" ]; then
 	script="$1"
     elif [ -e "$sql_dir/$file" ]; then

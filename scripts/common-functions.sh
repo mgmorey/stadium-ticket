@@ -347,7 +347,7 @@ print_file_tail() {
     tail $1 >$tmpfile
 
     if [ ! -s "$tmpfile" ]; then
-	return
+	return 1
     fi
 
     printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE

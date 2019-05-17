@@ -30,7 +30,7 @@ build_binary() {
     assert [ -n "$1" ]
 
     if [ -x $1 ]; then
-	return
+	return 0
     fi
 
     case $1 in
