@@ -275,6 +275,7 @@ get_setpriv_command() (
     ruid="$(id -u $1)"
     setpriv_opts="--clear-groups --rgid $rgid --ruid $ruid"
     setpriv_version="$(setpriv --version 2>/dev/null)"
+    shift
 
     case "${setpriv_version##* }" in
 	(2.3[3456789].*|2.[456789]?.*|[3456789].*)
