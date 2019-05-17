@@ -1,7 +1,7 @@
 Stadium Ticket RESTful API for POSIX Operating Systems
 
 This project has been tested with the following versions of Python:
-2.6.8 and 2.7.2.
+3.6.8 and 3.7.2.
 
 This project has been tested on the following platforms: Debian 9/10,
 Ubuntu 18.04, openSUSE Tumbleweed 20190512, Fedora 30, macOS 10.14,
