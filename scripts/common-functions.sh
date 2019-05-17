@@ -305,7 +305,7 @@ grep_pyenv_version() {
     assert [ $# -eq 0 -o $# -eq 1 ]
 
     if [ $# -eq 1 ]; then
-	egrep $(printf "$GREP_REGEX" "${1//./\.}")
+	egrep $(printf "$GREP_REGEX" "$(printf "%s\n" "$1" | sed -e 's/./\./')")
     else
 	cat
     fi
