@@ -105,7 +105,7 @@ def main():
                 status = 0
             else:
                 message = "Python {} interpreter does not meet {} requirement"
-                output=sys.sterr
+                output=sys.stderr
                 status = 1
 
             print(message.format(actual, INPUT), file=output)
