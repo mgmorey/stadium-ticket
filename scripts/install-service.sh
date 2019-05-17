@@ -140,7 +140,6 @@ install_flask_app() (
 )
 
 install_service() {
-    configure_system
     cd "$source_dir"
 
     # initialize the database before starting the service
@@ -267,6 +266,7 @@ source_dir=$script_dir/..
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
+configure_system
 install_service
 start_service
 tail_log_file
