@@ -255,7 +255,7 @@ generate_launch_agent_plist() (
 
 get_pyenv_versions() (
     assert [ $# -eq 0 -o $# -eq 1 ]
-    pyenv install --list | grep_pyenv_version ${1-} | sort -Vr
+    pyenv install --list | awk 'NR > 1 {print $1}' | grep_pyenv_version ${1-}
 )
 
 get_required_python_versions() {
@@ -263,8 +263,8 @@ get_required_python_versions() {
     python_versions=$($python "$script_dir/check-python.py")
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
-	if ! get_pyenv_versions $python_version; then
-	    get_pyenv_versions
+	if get_pyenv_versions $python_version; then
+	    return
 	fi
     done
 }
@@ -298,7 +298,7 @@ grep_pyenv_version() {
     if [ $# -eq 1 ]; then
 	version_as_regex=$(printf "%s\n" $1 | sed 's/\./\\./')
 	grep_regex=$(printf "$GREP_REGEX" "$version_as_regex")
-	awk 'NR > 1 {print $1}' | egrep "$grep_regex"
+	egrep "$grep_regex"
     else
 	cat
     fi
@@ -322,7 +322,7 @@ install_file() {
 }
 
 install_python_version() (
-    version=${1-$(get_required_python_versions | head -n 1)}
+    version=${1-$(get_required_python_versions | sort -Vr | head -n 1)}
 
     if [ -n "$version" ]; then
 	pyenv install -s $version
