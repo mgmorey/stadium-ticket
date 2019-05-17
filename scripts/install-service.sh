@@ -228,6 +228,15 @@ start_service() (
     fi
 )
 
+tail_log_file() {
+    if [ -e $APP_PIDFILE ]; then
+	tail_file $APP_LOGFILE
+	printf "Service %s installed and started successfully\n" "$APP_NAME"
+    else
+	printf "Service %s installed successfully\n" "$APP_NAME"
+    fi
+}
+
 wait_for_service() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -n "$3" ]
@@ -260,10 +269,4 @@ source_dir=$script_dir/..
 
 install_service
 start_service
-
-if [ -e $APP_PIDFILE ]; then
-    tail_file $APP_LOGFILE
-    printf "Service %s installed and started successfully\n" "$APP_NAME"
-else
-    printf "Service %s installed successfully\n" "$APP_NAME"
-fi
+tail_log_file
