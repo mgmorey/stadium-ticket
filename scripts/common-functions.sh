@@ -13,7 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-GREP_REGEX='^%s(\.[0-9]+){0,2}$'
+GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
 
 KILL_COUNT=20
 KILL_INTERVAL=10
