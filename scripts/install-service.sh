@@ -168,15 +168,15 @@ install_service_files() {
 }
 
 restart_service() {
-	case "$kernel_name" in
-	    (Linux)
-		service uwsgi restart
-		;;
-	    (Darwin)
-		control_launch_agent load
-		control_launch_agent start
-		;;
-	esac
+    case "$kernel_name" in
+	(Linux)
+	    service uwsgi restart
+	    ;;
+	(Darwin)
+	    control_launch_agent load
+	    control_launch_agent start
+	    ;;
+    esac
 }
 
 start_service() (
@@ -229,7 +229,8 @@ start_service() (
 )
 
 wait_for_service() (
-    assert [ -n "$2" -a -n "$3" ]
+    assert [ $# -eq 3 ]
+    assert [ -n "$1" -a -n "$2" -a -n "$3" ]
     assert [ $2 -ge 0 -a $3 -gt 0 -a $2 -lt $3 ]
 
     if [ $2 -gt 0 ]; then
