@@ -140,6 +140,24 @@ install_flask_app() (
 )
 
 install_service() {
+    configure_system
+    cd "$source_dir"
+
+    # initialize the database before starting the service
+    shell "'$script_dir/run.sh'" python3 -m app init-db
+
+    for dryrun in true false; do
+	"$script_dir/install-uwsgi.sh" $dryrun
+
+	if [ $dryrun = false ]; then
+	    create_service_virtualenv $VENV_FILENAME-$APP_NAME
+	fi
+
+	install_service_files
+    done
+}
+
+install_service_files() {
     create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
     install_file 600 .env $APP_DIR/.env
     install_flask_app 644 app $APP_DIR
@@ -239,21 +257,7 @@ source_dir=$script_dir/..
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
-configure_system
-cd "$source_dir"
-
-shell "'$script_dir/run.sh'" python3 -m app init-db
-
-for dryrun in true false; do
-    "$script_dir/install-uwsgi.sh" $dryrun
-
-    if [ $dryrun = false ]; then
-	create_service_virtualenv $VENV_FILENAME-$APP_NAME
-    fi
-
-    install_service
-done
-
+install_service
 start_service
 
 if [ -e $APP_PIDFILE ]; then
