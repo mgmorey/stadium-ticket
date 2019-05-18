@@ -19,7 +19,7 @@ script_dir = scripts
 all:	.env .update pycode pylint pytest
 
 build:	
-	cd docker && make $@
+	$(MAKE) -C docker $@
 
 clean:
 	$(script_dir)/clean-caches.sh
