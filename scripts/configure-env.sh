@@ -31,6 +31,14 @@ if [ $# -eq 0 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
 
+if [ $# -gt 2 ]; then
+    abort "%s: Too many arguments\n" "$0"
+fi
+
+if [ $(id -u) -eq 0 ]; then
+    abort "%s: Must be run as a non-privileged user\n" "$0"
+fi
+
 file="$1"
 template="$2"
 create_tmpfile
