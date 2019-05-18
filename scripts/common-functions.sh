@@ -266,7 +266,7 @@ get_pyenv_versions() (
 
 get_required_python_versions() {
     python=$(find_bootstrap_python)
-    python_versions=$($python "$script_dir/check-python.py" --delimit '\.')
+    python_versions=$($python "$script_dir/check-python.py" --delim '\.')
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
 	if get_pyenv_versions $python_version; then
