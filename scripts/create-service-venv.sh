@@ -26,6 +26,8 @@ assert() {
 }
 
 create_service_virtualenv() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
     source_dir=$script_dir/..
 
     cd "$source_dir"
