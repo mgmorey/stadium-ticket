@@ -305,7 +305,7 @@ grep_pyenv_version() {
     assert [ $# -eq 0 -o $# -eq 1 ]
 
     if [ $# -eq 1 ]; then
-	egrep $(printf "$GREP_REGEX" "$1")
+	grep -E $(printf "$GREP_REGEX" "$1")
     else
 	cat
     fi
