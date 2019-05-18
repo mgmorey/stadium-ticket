@@ -95,6 +95,10 @@ usage() {
 	EOM
 }
 
+if [ $# -gt 2 ]; then
+    abort "%s: Too many arguments\n" "$0"
+fi
+
 script_dir=$(get_realpath "$(dirname "$0")")
 
 source_dir=$script_dir/..

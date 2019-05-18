@@ -91,6 +91,9 @@ install_uwsgi() (
     done
 )
 
+if [ $# -gt 0 ]; then
+    abort "%s: Too many arguments\n" "$0"
+fi
 
 dryrun=${1-false}
 script_dir=$(get_realpath "$(dirname "$0")")
