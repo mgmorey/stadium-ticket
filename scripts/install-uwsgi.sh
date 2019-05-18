@@ -29,18 +29,20 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_path() {
+get_realpath() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
     assert [ -d "$1" ]
-    command=$(which realpath)
+    realpath=$(which realpath)
 
-    if [ -n "$command" ]; then
-	$command "$1"
+    if [ -n "$realpath" ]; then
+	$realpath "$1"
     elif expr "$1" : '/.*' >/dev/null; then
 	printf "%s\n" "$1"
     else
 	printf "%s\n" "$PWD/${1#./}"
     fi
-}
+)
 
 start_uwsgi() {
     systemctl enable uwsgi
@@ -48,7 +50,7 @@ start_uwsgi() {
 }
 
 dryrun=${1-false}
-script_dir=$(get_path "$(dirname "$0")")
+script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 

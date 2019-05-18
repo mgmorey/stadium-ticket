@@ -31,18 +31,20 @@ create_tmpfile() {
     trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
 }
 
-get_path() {
+get_realpath() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
     assert [ -d "$1" ]
-    command=$(which realpath)
+    realpath=$(which realpath)
 
-    if [ -n "$command" ]; then
-	$command "$1"
+    if [ -n "$realpath" ]; then
+	$realpath "$1"
     elif expr "$1" : '/.*' >/dev/null; then
 	printf "%s\n" "$1"
     else
 	printf "%s\n" "$PWD/${1#./}"
     fi
-}
+)
 
 if [ $# -ne 1 ]; then
     abort "%s: Invalid number of arguments\n" "$0"
@@ -51,7 +53,7 @@ elif [ "$1" != client -a "$1" != server ]; then
 fi
 
 mode=$1
-script_dir=$(get_path "$(dirname "$0")")
+script_dir=$(get_realpath "$(dirname "$0")")
 
 create_tmpfile
 "$script_dir/get-installed-packages.sh" >$tmpfile

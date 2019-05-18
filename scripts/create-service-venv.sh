@@ -48,18 +48,20 @@ create_service_virtualenv() {
     sync_virtualenv_via_pip $venv_filename $python
 }
 
-get_path() {
+get_realpath() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
     assert [ -d "$1" ]
-    command=$(which realpath)
+    realpath=$(which realpath)
 
-    if [ -n "$command" ]; then
-	$command "$1"
+    if [ -n "$realpath" ]; then
+	$realpath "$1"
     elif expr "$1" : '/.*' >/dev/null; then
 	printf "%s\n" "$1"
     else
 	printf "%s\n" "$PWD/${1#./}"
     fi
-}
+)
 
 if [ $# -eq 0 ]; then
     abort "%s: Not enough arguments\n" "$0"
@@ -73,7 +75,7 @@ if [ $(id -u) -eq 0 ]; then
     abort "%s: Must be run as a non-privileged user\n" "$0"
 fi
 
-script_dir=$(get_path "$(dirname "$0")")
+script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"

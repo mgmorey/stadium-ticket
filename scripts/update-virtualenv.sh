@@ -29,19 +29,6 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_path() {
-    assert [ -d "$1" ]
-    command=$(which realpath)
-
-    if [ -n "$command" ]; then
-	$command "$1"
-    elif expr "$1" : '/.*' >/dev/null; then
-	printf "%s\n" "$1"
-    else
-	printf "%s\n" "$PWD/${1#./}"
-    fi
-}
-
 generate_requirements_files() {
     create_tmpfile
 
@@ -70,6 +57,21 @@ generate_requirements_files() {
     chgrp $(id -g) "$@"
     chmod a+r "$@"
 }
+
+get_realpath() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ -d "$1" ]
+    realpath=$(which realpath)
+
+    if [ -n "$realpath" ]; then
+	$realpath "$1"
+    elif expr "$1" : '/.*' >/dev/null; then
+	printf "%s\n" "$1"
+    else
+	printf "%s\n" "$PWD/${1#./}"
+    fi
+)
 
 initialize_virtualenv_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
@@ -119,7 +121,7 @@ if [ -n "${VIRTUAL_ENV:-}" ]; then
     abort "%s: Must not be run within a virtual environment\n" "$0"
 fi
 
-script_dir=$(get_path "$(dirname "$0")")
+script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
