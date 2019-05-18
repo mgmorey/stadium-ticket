@@ -1,6 +1,6 @@
-Stadium Ticket RESTful API for POSIX Operating Systems
+Stadium Ticket RESTful API for Linux, macOS and Unix.
 
-This project has been tested with Python 3.6.
+This project has been tested with Python 3.6 and 3.7.
 
 This project has been tested on the following platforms: Debian 9/10,
 Ubuntu 18.04, openSUSE Tumbleweed 20190512, Fedora 30, macOS 10.14,
