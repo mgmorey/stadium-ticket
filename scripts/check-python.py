@@ -17,6 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import print_function
+import argparse
 import os
 import re
 import sys
@@ -83,13 +84,22 @@ def version_str_to_int(s):
 
 
 def main():
-    if len(sys.argv) > 2:
-        s = "{}: Invalid number of arguments".format(sys.argv[0])
-        print(s, file=sys.stderr)
-        exit(2)
+    description='Check Python interpreter version against Pipfile'
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('--delimiter',
+                        const='_',
+                        default='.',
+                        metavar='TEXT',
+                        nargs='?',
+                        help='use TEXT to delimit elements of version in output')
+    parser.add_argument('version',
+                        metavar='VERSION',
+                        nargs='?',
+                        help='Check Python version VERSION')
+    args = parser.parse_args()
 
     try:
-        actual = parse_version(sys.argv[1]) if len(sys.argv) > 1 else None
+        actual = parse_version(args.version) if args.version else None
         minimum = get_minimum_version()
     except ParseError as e:
         print("{}: {}".format(sys.argv[0], e), file=sys.stderr)
@@ -115,7 +125,7 @@ def main():
             versions=''
 
             for n in range(len(components), 0, -1):
-                versions += '.'.join(components[:n])
+                versions += args.delimiter.join(components[:n])
 
                 if n > 1:
                     versions += ' '
