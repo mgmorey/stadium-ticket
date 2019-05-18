@@ -84,8 +84,8 @@ initialize_virtualenv_via_pipenv() {
 	fi
     fi
 
-    # Lock dependencies and generate Pipfile.lock (including
-    # development dependencies)
+    # Lock dependencies (including development dependencies) and
+    # generate Pipfile.lock
     $pipenv lock -d
 }
 
@@ -112,6 +112,10 @@ update_virtualenv() (
 	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
     fi
 )
+
+if [ $# -gt 0 ]; then
+    abort "%s: Too many arguments\n" "$0"
+fi
 
 if [ $(id -u) -eq 0 ]; then
     abort "%s: Must be run as a non-privileged user\n" "$0"
