@@ -44,9 +44,35 @@ get_realpath() (
     fi
 )
 
+install_uwsgi() (
+    if [ $dryrun = true ]; then
+	:
+    else
+	is_installed=true
+	packages=$("$script_dir/get-uwsgi-packages.sh")
+
+	for package in $packages; do
+	    if ! "$script_dir/is-installed.sh" $package; then
+		is_installed=false
+		break
+	    fi
+	done
+
+	if [ $is_installed = false ]; then
+	    "$script_dir/install-packages.sh" $packages
+	fi
+
+	start_uwsgi
+    fi
+)
+
 start_uwsgi() {
-    systemctl enable uwsgi
-    systemctl start uwsgi
+    case "$kernel_name" in
+	(Linux)
+	    systemctl enable uwsgi
+	    systemctl start uwsgi
+	    ;;
+    esac
 }
 
 if [ $# -gt 1 ]; then
@@ -133,27 +159,12 @@ esac
 
 case "$kernel_name" in
     (Linux)
-	if [ $dryrun = true ]; then
-	    :
-	else
-	    is_installed=true
-	    packages=$("$script_dir/get-uwsgi-packages.sh")
-
-	    for package in $packages; do
-		if ! "$script_dir/is-installed.sh" $package; then
-		    is_installed=false
-		    break
-		fi
-	    done
-
-	    if [ $is_installed = false ]; then
-		"$script_dir/install-packages.sh" $packages
-	    fi
-
-	    start_uwsgi
-	fi
+	install_uwsgi
 	;;
     (Darwin)
 	"$script_dir/install-uwsgi-from-source.sh" $dryrun
+	;;
+    (FreeBSD)
+	install_uwsgi
 	;;
 esac
