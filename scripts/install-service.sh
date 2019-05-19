@@ -256,7 +256,7 @@ wait_for_service() (
     done
 
     if [ $i -ge $3 ]; then
-	printf "Service failed to start within %s seconds\n" $1 >&2
+	printf "Service failed to start within %s seconds\n" $3 >&2
     fi
 )
 
