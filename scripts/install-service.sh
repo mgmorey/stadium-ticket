@@ -84,6 +84,12 @@ generate_sed_program() (
 	printf 's|^#<%s>$|%s|g\n' "$pattern" "$replace"
 	printf 's|^%s$|%s|g\n' "$pattern" "$replace"
     done
+
+    case "$kernel_name" in
+	(FreeBSD)
+	    printf '/^plugin = [a-z0-9]*$/d\n'
+	    ;;
+    esac
 )
 
 generate_service_ini() {
