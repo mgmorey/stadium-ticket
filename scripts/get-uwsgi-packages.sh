@@ -27,7 +27,7 @@ FREEBSD_PKGS="rsync uwsgi-%s"
 
 OPENSUSE_PKGS="rsync uwsgi uwsgi-%s"
 
-REDHAT_PKGS="uwsgi uwsgi-plugin-%s"
+REDHAT_PKGS="rsync uwsgi uwsgi-plugin-%s"
 
 SUNOS_PKGS=""
 
