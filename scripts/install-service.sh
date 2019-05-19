@@ -163,8 +163,8 @@ install_service_files() {
     install_file 600 .env $APP_DIR/.env
     install_flask_app 644 app $APP_DIR
     install_files $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
-    change_owner $APP_DIR $APP_VARDIR
     generate_service_ini $APP_CONFIG app.ini "$UWSGI_VARS"
+    change_owner $APP_ETCDIR $APP_DIR $APP_VARDIR
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
 }
 
@@ -203,12 +203,18 @@ start_service() (
 		    (opensuse-*)
 			restart_pending=false
 			;;
+		    (*)
+			restart_pending=false
+			;;
 		esac
 		;;
 	    (Darwin)
 		restart_pending=true
 		;;
 	    (FreeBSD)
+		restart_pending=false
+		;;
+	    (*)
 		restart_pending=false
 		;;
 	esac
