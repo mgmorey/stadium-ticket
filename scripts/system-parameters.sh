@@ -20,7 +20,7 @@ configure_common() {
 
     # Set uWSGI variables
     UWSGI_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
-APP_RUNDIR APP_UID APP_VARDIR"
+APP_RUNDIR APP_UID APP_VARDIR UWSGI_PLUGIN_NAME"
 }
 
 configure_darwin() {
@@ -107,6 +107,8 @@ configure_freebsd() {
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
     UWSGI_BINARY_NAME=uwsgi-3.6
+    UWSGI_PLUGIN_DIR=
+    UWSGI_PLUGIN_NAME=
 }
 
 configure_opensuse() {
@@ -164,6 +166,10 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_BINARY_NAME-}" ]; then
 	UWSGI_BINARY_NAME=uwsgi
+    fi
+
+    if [ -z "${UWSGI_PLUGIN_NAME-}" ]; then
+	UWSGI_PLUGIN_NAME=python3
     fi
 }
 
