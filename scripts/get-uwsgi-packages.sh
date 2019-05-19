@@ -18,8 +18,8 @@
 
 DARWIN_PKGS="uwsgi"
 
-DEBIAN_9_PKGS="%s-venv rsync setpriv uwsgi uwsgi-plugin-%s"
-DEBIAN_10_PKGS="%s-venv rsync util-linux uwsgi uwsgi-plugin-%s"
+DEBIAN_9_PKGS="rsync setpriv uwsgi uwsgi-plugin-%s"
+DEBIAN_10_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
 FEDORA_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
@@ -31,8 +31,8 @@ REDHAT_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
 SUNOS_PKGS=""
 
-UBUNTU_18_04_PKGS="%s-venv rsync setpriv uwsgi uwsgi-plugin-%s"
-UBUNTU_19_04_PKGS="%s-venv rsync util-linux uwsgi uwsgi-plugin-%s"
+UBUNTU_18_04_PKGS="rsync setpriv uwsgi uwsgi-plugin-%s"
+UBUNTU_19_04_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
 abort() {
     printf "$@" >&2
