@@ -23,6 +23,9 @@ ENV APP_PORT=5000
 ENV APP_GID=www-data
 ENV APP_UID=www-data
 
+# Set Ubuntu uWSGI plugin
+ENV UWSGI_PLUGIN_NAME=python3
+
 # Update Debian package repository index and install binary packages
 ENV APT_INSTALL="apt-get install -qy --no-install-recommends build-essential \
 mariadb-client-10.1 python3 python3-dev python3-pip sqlite3 uwsgi \
