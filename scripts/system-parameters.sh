@@ -117,7 +117,6 @@ configure_opensuse() {
 
     # Set uWSGI directories
     UWSGI_APPDIRS="vassals"
-    UWSGI_PLUGIN_DIR=.
 }
 
 configure_sunos() {
