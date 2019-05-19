@@ -62,6 +62,9 @@ case "$kernel_name" in
 	    (opensuse-*)
 		rpm --query $1 >/dev/null 2>&1
 		;;
+	    (fedora)
+		rpm --query $1 >/dev/null 2>&1
+		;;
 	    (*)
 		abort_not_supported Distro
 		;;
