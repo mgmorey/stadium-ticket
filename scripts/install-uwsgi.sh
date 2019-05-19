@@ -156,7 +156,4 @@ case "$kernel_name" in
     (Darwin)
 	"$script_dir/install-uwsgi-from-source.sh" $dryrun
 	;;
-    (FreeBSD)
-	"$script_dir/install-uwsgi-from-source.sh" $dryrun
-	;;
 esac
