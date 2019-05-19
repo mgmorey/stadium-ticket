@@ -109,6 +109,9 @@ case "$kernel_name" in
 	    (fedora)
 		:
 		;;
+	    (redhat|centos)
+		:
+		;;
 	    (*)
 		abort_not_supported Distro
 		;;
