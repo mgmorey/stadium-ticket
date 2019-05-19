@@ -21,7 +21,7 @@ DARWIN_PKGS="uwsgi"
 DEBIAN_9_PKGS="%s-venv rsync setpriv uwsgi uwsgi-plugin-%s"
 DEBIAN_10_PKGS="%s-venv rsync util-linux uwsgi uwsgi-plugin-%s"
 
-FEDORA_PKGS="uwsgi uwsgi-plugin-%s"
+FEDORA_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
 FREEBSD_PKGS="rsync uwsgi-%s"
 
