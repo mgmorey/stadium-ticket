@@ -65,6 +65,9 @@ case "$kernel_name" in
 	    (fedora)
 		rpm --query $1 >/dev/null 2>&1
 		;;
+	    (redhat|centos)
+		rpm --query $1 >/dev/null 2>&1
+		;;
 	    (*)
 		abort_not_supported Distro
 		;;
