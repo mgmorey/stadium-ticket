@@ -25,7 +25,7 @@ FEDORA_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
 FREEBSD_PKGS="rsync uwsgi-%s"
 
-OPENSUSE_PKGS="uwsgi uwsgi-python3"
+OPENSUSE_PKGS="rsync uwsgi uwsgi-%s"
 
 REDHAT_PKGS="uwsgi uwsgi-plugin-%s"
 
