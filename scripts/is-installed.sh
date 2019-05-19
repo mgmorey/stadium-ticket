@@ -77,7 +77,7 @@ case "$kernel_name" in
 	brew list | grep -E '^'"$1"'$'
 	;;
     (FreeBSD)
-	pkg query %n "$1"
+	pkg query %n "$1" >/dev/null 2>&1
 	;;
     # (SunOS)
     #	;;
