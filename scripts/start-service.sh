@@ -47,13 +47,16 @@ configure_system
 
 app_prefix=$APP_DIR/$VENV_FILENAME
 binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
+
+if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+    plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
+fi
 
 if ! $binary --version >/dev/null 2>&1; then
     abort "%s: %s: No such binary file\n" "$0" "$binary"
 fi
 
-if [ ! -x $plugin ]; then
+if [ -n "${plugin-}" ] && [ -x $plugin ]; then
     abort "%s: %s: No such plugin file\n" "$0" "$plugin"
 fi
 
@@ -62,7 +65,7 @@ export PYTHONPATH=$app_prefix/lib
 
 cd $APP_VARDIR
 
-if [ ! -d $UWSGI_PLUGIN_DIR ]; then
+if [ -n "${UWSGI_PLUGIN_DIR-}" ] && [ ! -d $UWSGI_PLUGIN_DIR ]; then
     abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
 elif [ ! -d $(dirname $APP_CONFIG) ]; then
     abort "%s: %s: No such configuration directory\n" "$0" "$(dirname $APP_CONFIG)"
@@ -73,5 +76,5 @@ elif [ ! -e $APP_CONFIG ]; then
 elif signal_service HUP; then
     abort "Service is running as PID %s\n" "$pid"
 else
-    $binary --plugin-dir $UWSGI_PLUGIN_DIR --ini $APP_CONFIG
+    $binary${UWSGI_PLUGIN_DIR+ --plugin-dir $UWSGI_PLUGIN_DIR} --ini $APP_CONFIG
 fi
