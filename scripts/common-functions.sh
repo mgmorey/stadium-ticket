@@ -369,13 +369,13 @@ shell() (
     assert [ $# -ge 1 ]
 
     if [ "$(id -u)" -eq 0 -a -n "${SUDO_USER:-}" ]; then
-	setpriv=$(get_setpriv_command $SUDO_USER)
+	su=$(get_setpriv_command $SUDO_USER || true)
 
-	if [ -z "$setpriv" ]; then
-	    setpriv="su -l $SUDO_USER"
+	if [ -z "$su" ]; then
+	    su="/usr/bin/su -l $SUDO_USER"
 	fi
 
-	eval $setpriv "$@"
+	eval $su "$@"
     else
 	eval "$@"
     fi
