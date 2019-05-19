@@ -141,7 +141,7 @@ find_bootstrap_python() (
 
 find_container_python () (
     python=$(find_bootstrap_python)
-    python_versions=$($python "$script_dir/check-python.py")
+    # python_versions=$($python "$script_dir/check-python.py")
 
     for prefix in /usr /usr/local; do
 	python_dir=$prefix/bin
