@@ -74,6 +74,17 @@ configure_debian() {
     APP_SOCKET=$APP_RUNDIR/socket
 }
 
+configure_fedora() {
+    # Set application group and user accounts
+    APP_GID=uwsgi
+    APP_UID=uwsgi
+
+    # Set uWSGI directories
+    UWSGI_APPDIRS="."
+    UWSGI_ETCDIR=/etc/uwsgi.d
+    UWSGI_RUNDIR=/run/uwsgi
+}
+
 configure_freebsd() {
     # Set application group and user accounts
     APP_GID=wheel
@@ -201,6 +212,9 @@ configure_system() {
 			    abort_not_supported Release
 			    ;;
 		    esac
+		    ;;
+		(fedora)
+		    configure_fedora
 		    ;;
 		(*)
 		    abort_not_supported Distro
