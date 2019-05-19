@@ -91,7 +91,7 @@ install_uwsgi() (
     done
 )
 
-if [ $# -gt 0 ]; then
+if [ $# -gt 1 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
 
