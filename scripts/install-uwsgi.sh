@@ -49,7 +49,7 @@ start_uwsgi() {
     systemctl start uwsgi
 }
 
-if [ $# -gt 0 ]; then
+if [ $# -gt 1 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
 
@@ -105,6 +105,9 @@ case "$kernel_name" in
 			abort_not_supported Release
 			;;
 		esac
+		;;
+	    (fedora)
+		:
 		;;
 	    (*)
 		abort_not_supported Distro
