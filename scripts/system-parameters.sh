@@ -14,13 +14,15 @@
 # GNU General Public License for more details.
 
 configure_common() {
+    APP_PLUGIN=python3
+
     # Set uWSGI parameters
     UWSGI_BINARY_NAME=uwsgi
-    UWSGI_PLUGIN_NAME=python3_plugin.so
+    UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
 
     # Set uWSGI variables
-    UWSGI_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PORT \
-APP_RUNDIR APP_UID APP_VARDIR UWSGI_PLUGIN_NAME"
+    UWSGI_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PLUGIN \
+APP_PORT APP_RUNDIR APP_UID APP_VARDIR"
 }
 
 configure_darwin() {
@@ -166,10 +168,6 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_BINARY_NAME-}" ]; then
 	UWSGI_BINARY_NAME=uwsgi
-    fi
-
-    if [ -z "${UWSGI_PLUGIN_NAME-}" ]; then
-	UWSGI_PLUGIN_NAME=python3
     fi
 }
 
