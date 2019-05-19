@@ -23,7 +23,7 @@ DEBIAN_10_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
 FEDORA_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
-FREEBSD_PKGS="rsync uwsgi uwsgi-%s"
+FREEBSD_PKGS="rsync uwsgi-%s"
 
 OPENSUSE_PKGS="rsync util-linux uwsgi uwsgi-%s"
 
