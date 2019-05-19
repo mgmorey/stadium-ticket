@@ -76,8 +76,9 @@ case "$kernel_name" in
     (Darwin)
 	brew list | grep -E '^'"$1"'$'
 	;;
-    # (FreeBSD)
-    #	;;
+    (FreeBSD)
+	pkg query %n "$1"
+	;;
     # (SunOS)
     #	;;
     (*)
