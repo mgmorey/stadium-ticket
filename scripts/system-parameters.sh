@@ -87,8 +87,8 @@ configure_fedora() {
 
 configure_freebsd() {
     # Set application group and user accounts
-    APP_GID=wheel
-    APP_UID=root
+    APP_GID=uwsgi
+    APP_UID=uwsgi
 
     # Set application directory prefix
     APP_PREFIX=/usr/local
@@ -99,15 +99,14 @@ configure_freebsd() {
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
-    # Set uWSGI directories
+    # Set uWSGI top-level directories
     UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
     UWSGI_LOGDIR=$UWSGI_PREFIX/var/log
-    UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
     UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
 
     # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/lib/plugin
+    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
+    UWSGI_BINARY_NAME=uwsgi-3.6
 }
 
 configure_opensuse() {
@@ -161,6 +160,10 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_ETCDIR-}" ]; then
 	UWSGI_ETCDIR=/etc/uwsgi
+    fi
+
+    if [ -z "${UWSGI_BINARY_NAME-}" ]; then
+	UWSGI_BINARY_NAME=uwsgi
     fi
 }
 
@@ -223,9 +226,9 @@ configure_system() {
 	(Darwin)
 	    configure_darwin
 	    ;;
-	# (FreeBSD)
-	#	configure_freebsd
-	#	;;
+	(FreeBSD)
+	    configure_freebsd
+	    ;;
 	# (SunOS)
 	#	configure_sunos
 	#	;;
