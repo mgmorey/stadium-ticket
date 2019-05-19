@@ -80,7 +80,7 @@ install_binary() {
 
 install_uwsgi() (
     cd $HOME/git/uwsgi
-    python=$(find_container_python)
+    python=$(find_system_python)
 
     for binary; do
 	build_binary $binary

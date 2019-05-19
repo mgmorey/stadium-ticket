@@ -43,7 +43,7 @@ create_service_virtualenv() {
 	    :
 	    ;;
 	($VENV_FILENAME-$APP_NAME)
-	    python=$(find_container_python)
+	    python=$(find_system_python)
 	    ;;
     esac
 

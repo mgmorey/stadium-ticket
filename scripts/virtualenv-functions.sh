@@ -37,7 +37,7 @@ create_virtualenv() {
 
     if [ "$virtualenv" != false ]; then
 	if [ -z "${python-${2-}}" ]; then
-	    python=$(find_development_python)
+	    python=$(find_user_python)
 	fi
     fi
 

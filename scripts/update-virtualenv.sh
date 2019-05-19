@@ -76,7 +76,7 @@ get_realpath() (
 initialize_virtualenv_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	if pyenv --version >/dev/null 2>&1; then
-	    python=$(find_development_python)
+	    python=$(find_user_python)
 	    check_python $python
 	    $pipenv --python $python
 	else
