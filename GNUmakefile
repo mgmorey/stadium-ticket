@@ -18,8 +18,8 @@ script_dir = scripts
 
 all:	.env .update pycode pylint pytest
 
-build:	
-	$(MAKE) -C docker $@
+build:	.env .env-mysql .update
+	docker-compose up --build
 
 clean:
 	$(script_dir)/clean-caches.sh
@@ -64,6 +64,9 @@ uninstall:
 .PHONY: pycode pylint pytest init-db realclean stress uninstall
 
 .env:			.env-template
+	$(script_dir)/configure-env.sh $@ $<
+
+.env-mysql:		.env-template-mysql
 	$(script_dir)/configure-env.sh $@ $<
 
 .update:		Pipfile Pipfile.lock

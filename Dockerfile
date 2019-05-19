@@ -48,7 +48,6 @@ RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
 # Install application files
 COPY app/ $APP_DIR/app/
-COPY docker/.env $APP_DIR/.env
 COPY Pipfile* $APP_DIR/
 COPY app.ini $APP_ETCDIR/
 
