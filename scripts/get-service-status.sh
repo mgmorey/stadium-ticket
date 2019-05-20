@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# tail-service-log.sh: print last few lines of service log file
+# get-service-status.sh: print last few lines of service log file
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
