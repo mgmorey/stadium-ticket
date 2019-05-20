@@ -27,30 +27,34 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_python_command() (
+    name="$1"
+    version="${2:-$VERSION}"
+
+    case "$name" in
+	(pip|pipenv|virtualenv)
+	    for command in $name$version $name "python$version -m $name" false; do
+		if $command --help >/dev/null 2>&1; then
+		    break
+		fi
+	    done
+	    ;;
+	(pyvenv)
+	    for command in "python$version -m venv" false; do
+		if $command --help >/dev/null 2>&1; then
+		    break
+		fi
+	    done
+	    ;;
+	(*)
+	    abort "%s: Invalid command/module '%s'\n" "$0" "$name"
+    esac
+
+    printf "%s\n" "$command"
+)
+
 if [ $# -eq 0 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
 
-name="$1"
-version="${2:-$VERSION}"
-
-case "$name" in
-    (pip|pipenv|virtualenv)
-	for command in $name$version $name "python$version -m $name" false; do
-	    if $command --help >/dev/null 2>&1; then
-		break
-	    fi
-	done
-	;;
-    (pyvenv)
-	for command in "python$version -m venv" false; do
-	    if $command --help >/dev/null 2>&1; then
-		break
-	    fi
-	done
-	;;
-    (*)
-	abort "%s: Invalid command/module '%s'\n" "$0" "$name"
-esac
-
-printf "%s\n" "$command"
+get_python_command "$@"
