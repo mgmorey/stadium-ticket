@@ -59,13 +59,7 @@ case "$kernel_name" in
 		status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
 		test "$status" = "install ok installed"
 		;;
-	    (opensuse-*)
-		rpm --query $1 >/dev/null 2>&1
-		;;
-	    (fedora)
-		rpm --query $1 >/dev/null 2>&1
-		;;
-	    (redhat|centos)
+	    (opensuse-*|fedora|redhat|centos)
 		rpm --query $1 >/dev/null 2>&1
 		;;
 	    (*)
@@ -79,8 +73,6 @@ case "$kernel_name" in
     (FreeBSD)
 	pkg query %n "$1" >/dev/null 2>&1
 	;;
-    # (SunOS)
-    #	;;
     (*)
 	abort_not_supported "Operating system"
 	;;
