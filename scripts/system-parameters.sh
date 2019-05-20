@@ -44,7 +44,7 @@ configure_darwin() {
 
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/lib/plugin
+    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/lib/plugins
 }
 
 configure_freebsd() {
