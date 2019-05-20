@@ -47,49 +47,6 @@ configure_darwin() {
     UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/lib/plugin
 }
 
-configure_debian() {
-    # Set app plugin
-    APP_PLUGIN=python3
-
-    # Set application group and user accounts
-    APP_GID=www-data
-    APP_UID=www-data
-
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS="apps-available apps-enabled"
-
-    # Set uWSGI top-level directories
-    UWSGI_PREFIX=/usr
-    UWSGI_LOGDIR=/var/log/uwsgi/app
-    UWSGI_RUNDIR=/var/run/uwsgi/app/$APP_NAME
-
-    # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/uwsgi/plugins
-
-    # Set additional application directories
-    APP_LOGDIR=$UWSGI_LOGDIR
-    APP_RUNDIR=$UWSGI_RUNDIR
-
-    # Set additional parameters from app directories
-    APP_PIDFILE=$APP_RUNDIR/pid
-    APP_SOCKET=$APP_RUNDIR/socket
-}
-
-configure_fedora() {
-    # Set app plugin
-    APP_PLUGIN=python3
-
-    # Set application group and user accounts
-    APP_GID=uwsgi
-    APP_UID=uwsgi
-
-    # Set uWSGI directories
-    UWSGI_APPDIRS="."
-    UWSGI_ETCDIR=/etc/uwsgi.d
-    UWSGI_RUNDIR=/run/uwsgi
-}
-
 configure_freebsd() {
     # Set app plugin
     APP_PLUGIN=
@@ -119,7 +76,50 @@ configure_freebsd() {
     UWSGI_PLUGIN_NAME=
 }
 
-configure_opensuse() {
+configure_linux_debian() {
+    # Set app plugin
+    APP_PLUGIN=python3
+
+    # Set application group and user accounts
+    APP_GID=www-data
+    APP_UID=www-data
+
+    # Set uWSGI configuration directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
+
+    # Set uWSGI top-level directories
+    UWSGI_PREFIX=/usr
+    UWSGI_LOGDIR=/var/log/uwsgi/app
+    UWSGI_RUNDIR=/var/run/uwsgi/app/$APP_NAME
+
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
+    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/uwsgi/plugins
+
+    # Set additional application directories
+    APP_LOGDIR=$UWSGI_LOGDIR
+    APP_RUNDIR=$UWSGI_RUNDIR
+
+    # Set additional parameters from app directories
+    APP_PIDFILE=$APP_RUNDIR/pid
+    APP_SOCKET=$APP_RUNDIR/socket
+}
+
+configure_linux_fedora() {
+    # Set app plugin
+    APP_PLUGIN=python3
+
+    # Set application group and user accounts
+    APP_GID=uwsgi
+    APP_UID=uwsgi
+
+    # Set uWSGI directories
+    UWSGI_APPDIRS="."
+    UWSGI_ETCDIR=/etc/uwsgi.d
+    UWSGI_RUNDIR=/run/uwsgi
+}
+
+configure_linux_opensuse() {
     # Set app plugin
     APP_PLUGIN=python3
 
@@ -198,12 +198,12 @@ configure_system() {
 		(debian)
 		    case "$VERSION_ID" in
 			(10)
-			    configure_debian
+			    configure_linux_debian
 			    ;;
 			('')
 			    case "$(cat /etc/debian_version)" in
 				(buster/sid)
-				    configure_debian
+				    configure_linux_debian
 				    ;;
 				(*)
 				    abort_not_supported Release
@@ -218,7 +218,7 @@ configure_system() {
 		(ubuntu)
 		    case "$VERSION_ID" in
 			(18.*|19.04)
-			    configure_debian
+			    configure_linux_debian
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -228,7 +228,7 @@ configure_system() {
 		(opensuse-tumbleweed)
 		    case "$VERSION_ID" in
 			(2019*)
-			    configure_opensuse
+			    configure_linux_opensuse
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -236,7 +236,7 @@ configure_system() {
 		    esac
 		    ;;
 		(fedora)
-		    configure_fedora
+		    configure_linux_fedora
 		    ;;
 		(*)
 		    abort_not_supported Distro
