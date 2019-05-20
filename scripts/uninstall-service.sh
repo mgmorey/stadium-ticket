@@ -101,9 +101,8 @@ stop_service() {
 }
 
 uninstall_service() {
-    source_dir=$script_dir/..
-
     printf "%s\n" "Loading .env environment variables"
+    source_dir=$script_dir/..
     . "$source_dir/.env"
 
     parse_arguments "$@"
@@ -114,6 +113,7 @@ uninstall_service() {
 	remove_service
     done
 
+    printf "Service %s uninstalled successfully\n" $APP_NAME
 }
 
 usage() {
@@ -138,4 +138,3 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 
 uninstall_service
-printf "Service %s uninstalled successfully\n" $APP_NAME
