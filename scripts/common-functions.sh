@@ -193,11 +193,7 @@ find_user_python() (
     for version in ${python_versions-$PYTHON_VERSIONS}; do
 	python=$($which python$version 2>/dev/null || true)
 
-	if [ -z "$python" ]; then
-	    :
-	elif [ $python = false ]; then
-	    abort_no_python
-	elif $python --version >/dev/null 2>&1; then
+	if [ -n "$python" ]; then
 	    printf "%s\n" "$python"
 	    return 0
 	fi
