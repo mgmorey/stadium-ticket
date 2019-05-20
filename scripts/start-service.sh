@@ -56,21 +56,21 @@ if ! $binary --version >/dev/null 2>&1; then
     abort "%s: %s: No such binary file\n" "$0" "$binary"
 fi
 
-if [ -n "${plugin-}" ] && [ -x $plugin ]; then
-    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
-fi
-
 export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
 export PYTHONPATH=$app_prefix/lib
 
 cd $APP_VARDIR
 
-if [ -n "${UWSGI_PLUGIN_DIR-}" ] && [ ! -d $UWSGI_PLUGIN_DIR ]; then
+if [ ! -e "$binary" ]; then
+    abort "%s: %s: No such binary file\n" "$0" "$binary"
+elif [ -n "${UWSGI_PLUGIN_DIR-}" ] && [ ! -d $UWSGI_PLUGIN_DIR ]; then
     abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
+elif [ -n "${plugin-}" ] && [ ! -e $plugin ]; then
+    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
 elif [ ! -d $(dirname $APP_CONFIG) ]; then
     abort "%s: %s: No such configuration directory\n" "$0" "$(dirname $APP_CONFIG)"
 elif [ ! -r $APP_CONFIG ]; then
-    abort "%s: %s: No read permissions\n" "$0" "$APP_CONFIG"
+    abort "%s: %s: No read permission\n" "$0" "$APP_CONFIG"
 elif [ ! -e $APP_CONFIG ]; then
     abort "%s: %s: No such configuration file\n" "$0" "$APP_CONFIG"
 elif signal_service HUP; then
