@@ -91,16 +91,13 @@ case "$kernel_name" in
 	case "$ID" in
 	    (debian)
 		case "$VERSION_ID" in
-		    (9)
-			:
-			;;
 		    (10)
-			:
+			install_uwsgi
 			;;
 		    ('')
 			case "$(cat /etc/debian_version)" in
 			    (buster/sid)
-				:
+				install_uwsgi
 				;;
 			    (*)
 				abort_not_supported Release
@@ -115,7 +112,7 @@ case "$kernel_name" in
 	    (ubuntu)
 		case "$VERSION_ID" in
 		    (18.*|19.04)
-			:
+			install_uwsgi
 			;;
 		    (*)
 			abort_not_supported Release
@@ -125,18 +122,15 @@ case "$kernel_name" in
 	    (opensuse-tumbleweed)
 		case "$VERSION_ID" in
 		    (2019*)
-			:
+			install_uwsgi
 			;;
 		    (*)
 			abort_not_supported Release
 			;;
 		esac
 		;;
-	    (fedora)
-		:
-		;;
-	    (redhat|centos)
-		:
+	    (fedora|redhat|centos)
+		install_uwsgi
 		;;
 	    (*)
 		abort_not_supported Distro
@@ -144,27 +138,12 @@ case "$kernel_name" in
 	esac
 	;;
     (Darwin)
-	:
-	;;
-    (FreeBSD)
-	:
-	;;
-    # (SunOS)
-    #	:
-    #	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
-
-case "$kernel_name" in
-    (Linux)
-	install_uwsgi
-	;;
-    (Darwin)
 	"$script_dir/install-uwsgi-from-source.sh" $dryrun
 	;;
     (FreeBSD)
 	install_uwsgi
+	;;
+    (*)
+	abort_not_supported "Operating system"
 	;;
 esac
