@@ -100,6 +100,22 @@ stop_service() {
     fi
 }
 
+uninstall_service() {
+    source_dir=$script_dir/..
+
+    printf "%s\n" "Loading .env environment variables"
+    . "$source_dir/.env"
+
+    parse_arguments "$@"
+    configure_system
+
+    for dryrun in true false; do
+	stop_service
+	remove_service
+    done
+
+}
+
 usage() {
     if [ $# -gt 0 ]; then
 	printf "$@" >&2
@@ -117,21 +133,9 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$script_dir/..
-
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
-printf "%s\n" "Loading .env environment variables"
-. "$source_dir/.env"
-
-parse_arguments "$@"
-configure_system
-
-for dryrun in true false; do
-    stop_service
-    remove_service
-done
-
+uninstall_service
 printf "Service %s uninstalled successfully\n" $APP_NAME
