@@ -26,8 +26,6 @@ REDHAT_PKGS="curl httpd-tools"
 
 SUNOS_PKGS="apache-24 curl"
 
-UBUNTU_PKGS="apache2-utils curl"
-
 abort() {
     printf "$@" >&2
     exit 1
@@ -59,11 +57,8 @@ eval $("$script_dir/get-os-release.sh" -X)
 case "$kernel_name" in
     (Linux)
 	case "$ID" in
-	    (debian)
+	    (debian|ubuntu)
 		packages="$DEBIAN_PKGS"
-		;;
-	    (ubuntu)
-		packages="$UBUNTU_PKGS"
 		;;
 	    (opensuse-*)
 		packages="$OPENSUSE_PKGS"
