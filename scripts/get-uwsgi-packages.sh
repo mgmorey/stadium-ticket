@@ -31,9 +31,6 @@ REDHAT_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
 SUNOS_PKGS=""
 
-UBUNTU_18_04_PKGS="rsync setpriv uwsgi uwsgi-plugin-%s"
-UBUNTU_19_04_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
-
 abort() {
     printf "$@" >&2
     exit 1
@@ -91,10 +88,10 @@ case "$kernel_name" in
 	    (ubuntu)
 		case "$VERSION_ID" in
 		    (18.04)
-			packages=$UBUNTU_18_04_PKGS
+			packages=$DEBIAN_9_PKGS
 			;;
 		    (19.04)
-			packages=$UBUNTU_19_04_PKGS
+			packages=$DEBIAN_10_PKGS
 			;;
 		esac
 		;;
