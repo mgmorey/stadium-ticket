@@ -84,6 +84,22 @@ remove_service() {
     remove_files $config_files $service_files
 }
 
+stop_service() {
+    if [ $dryrun = false ]; then
+	case "$kernel_name" in
+	    (Linux)
+		signal_service INT INT TERM KILL || true
+		;;
+	    (Darwin)
+		control_launch_agent stop
+		control_launch_agent unload
+		;;
+	esac
+
+	tail_file $APP_LOGFILE
+    fi
+}
+
 usage() {
     if [ $# -gt 0 ]; then
 	printf "$@" >&2
@@ -114,20 +130,7 @@ parse_arguments "$@"
 configure_system
 
 for dryrun in true false; do
-    if [ $dryrun = false ]; then
-
-	case "$kernel_name" in
-	    (Linux)
-		signal_service INT INT TERM KILL || true
-		;;
-	    (Darwin)
-		control_launch_agent stop
-		control_launch_agent unload
-		;;
-	esac
-	tail_file $APP_LOGFILE
-    fi
-
+    stop_service
     remove_service
 done
 
