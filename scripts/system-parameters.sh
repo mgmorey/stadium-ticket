@@ -88,6 +88,8 @@ configure_fedora() {
 }
 
 configure_freebsd() {
+    APP_PLUGIN=
+
     # Set application group and user accounts
     APP_GID=uwsgi
     APP_UID=uwsgi
@@ -233,9 +235,6 @@ configure_system() {
 	(FreeBSD)
 	    configure_freebsd
 	    ;;
-	# (SunOS)
-	#	configure_sunos
-	#	;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;
