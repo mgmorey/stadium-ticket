@@ -14,8 +14,6 @@
 # GNU General Public License for more details.
 
 configure_common() {
-    APP_PLUGIN=python3
-
     # Set uWSGI parameters
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
@@ -26,6 +24,9 @@ APP_PORT APP_RUNDIR APP_UID APP_VARDIR"
 }
 
 configure_darwin() {
+    # Set app plugin
+    APP_PLUGIN=python3
+
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
@@ -51,6 +52,9 @@ configure_darwin() {
 }
 
 configure_debian() {
+    # Set app plugin
+    APP_PLUGIN=python3
+
     # Set application group and user accounts
     APP_GID=www-data
     APP_UID=www-data
@@ -77,6 +81,9 @@ configure_debian() {
 }
 
 configure_fedora() {
+    # Set app plugin
+    APP_PLUGIN=python3
+
     # Set application group and user accounts
     APP_GID=uwsgi
     APP_UID=uwsgi
@@ -88,6 +95,7 @@ configure_fedora() {
 }
 
 configure_freebsd() {
+    # Set app plugin
     APP_PLUGIN=
 
     # Set application group and user accounts
@@ -116,6 +124,9 @@ configure_freebsd() {
 }
 
 configure_opensuse() {
+    # Set app plugin
+    APP_PLUGIN=python3
+
     # Set application group and user accounts
     APP_GID=nogroup
     APP_UID=nobody
@@ -125,6 +136,9 @@ configure_opensuse() {
 }
 
 configure_sunos() {
+    # Set app plugin
+    APP_PLUGIN=python3
+
     # Set application group and user accounts
     APP_GID=sys
     APP_UID=root
