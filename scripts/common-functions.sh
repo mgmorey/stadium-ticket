@@ -376,6 +376,42 @@ shell() (
     fi
 )
 
+signal_exit() {
+    i=0
+
+    while kill -s $signal $pid 2>/dev/null && [ $i -lt $wait ]; do
+	if [ $i -eq 0 ]; then
+	    printf "%s\n" "Waiting for process to exit"
+	fi
+
+	sleep 1
+	i=$((i + 1))
+    done
+
+    elapsed=$((elapsed + i))
+
+    if [ $i -lt $wait ]; then
+	result=0
+    else
+	result=1
+    fi
+
+    return $result
+}
+
+signal_handle() {
+    if kill -s $signal $pid 2>/dev/null; then
+	printf "Waiting for process to handle SIG%s\n" "$signal"
+	sleep $wait
+	elapsed=$((elapsed + wait))
+	result=0
+    else
+	result=1
+    fi
+
+    return $result
+}
+
 signal_service() {
     assert [ $# -ge 2 ]
     assert [ -n "$1" ]
@@ -386,50 +422,31 @@ signal_service() {
     shift 2
 
     pid=$(cat $file 2>/dev/null)
-    result=1
 
     if [ -z "$pid" ]; then
-	return $result
+	return 1
     fi
 
     elapsed=0
 
     for signal in "$@"; do
-	if [ $result -gt 0 ]; then
-	    printf "Sending SIG%s to process (PID: %s)\n" $signal $pid
-	fi
+	printf "Sending SIG%s to process (PID: %s)\n" $signal $pid
 
-	if [ $signal = HUP ]; then
-	    if kill -s $signal $pid 2>/dev/null; then
-		printf "Waiting for process to handle SIG%s\n" "$signal"
-		sleep $wait
-		elapsed=$((elapsed + wait))
-		result=0
-	    else
-		break
-	    fi
-	else
-	    i=0
-
-	    while kill -s $signal $pid 2>/dev/null && [ $i -lt $wait ]; do
-		if [ $i -eq 0 ]; then
-		    printf "%s\n" "Waiting for process to exit"
+	case $signal in
+	    (HUP)
+		if signal_handle; then
+		    return 0
 		fi
-
-		sleep 1
-		i=$((i + 1))
-	    done
-
-	    elapsed=$((elapsed + i))
-
-	    if [ $i -lt $wait ]; then
-		result=0
-		break
-	    fi
-	fi
+		;;
+	    (*)
+		if signal_exit; then
+		    return 0
+		fi
+		;;
+	esac
     done
 
-    return $result
+    return 1
 }
 
 signal_service_restart() {
