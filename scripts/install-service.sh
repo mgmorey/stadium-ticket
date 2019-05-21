@@ -194,15 +194,7 @@ restart_service() {
     esac
 }
 
-start_service() {
-    if signal_service_restart; then
-	signal_received=true
-    else
-	signal_received=false
-    fi
-
-    total_elapsed=$elapsed
-
+set_restart_pending() {
     if [ $signal_received = true ]; then
 	case "$kernel_name" in
 	    (*)
@@ -229,6 +221,17 @@ start_service() {
 		;;
 	esac
     fi
+}
+
+start_service() {
+    if signal_service_restart; then
+	signal_received=true
+    else
+	signal_received=false
+    fi
+
+    total_elapsed=$elapsed
+    set_restart_pending
 
     if [ $restart_pending = true ]; then
 	restart_service
