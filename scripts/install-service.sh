@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+WAIT_DEFAULT=5
 WAIT_RESTART=10
-WAIT_TOTAL=10
 
 abort() {
     printf "$@" >&2
@@ -122,6 +122,16 @@ get_realpath() (
     fi
 )
 
+get_status() {
+    if [ -e $APP_PIDFILE ]; then
+	printf "Service started in %s seconds\n" "$total_elapsed"
+	tail_file $APP_LOGFILE
+	printf "Service %s installed and started successfully\n" "$APP_NAME"
+    else
+	printf "Service %s installed successfully\n" "$APP_NAME"
+    fi
+}
+
 install_files() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" -a -n "$2" ]
@@ -184,7 +194,7 @@ restart_service() {
     esac
 }
 
-start_service() (
+start_service() {
     if signal_service_restart; then
 	signal_received=true
     else
@@ -239,24 +249,20 @@ start_service() (
 	wait_period=$((WAIT_RESTART - total_elapsed))
 	elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
     elif [ $signal_received = true ]; then
-	elapsed=$(wait_for_interval $((WAIT_TOTAL - total_elapsed)))
+	elapsed=$(wait_for_interval $((WAIT_DEFAULT - total_elapsed)))
     else
-	elapsed=$(wait_for_interval $((WAIT_TOTAL - total_elapsed)))
+	elapsed=$(wait_for_interval $((WAIT_DEFAULT - total_elapsed)))
     fi
 
     total_elapsed=$((total_elapsed + elapsed))
-)
 
-tail_log_file() {
-    if [ -e $APP_PIDFILE ]; then
-	tail_file $APP_LOGFILE
-	printf "Service %s installed and started successfully\n" "$APP_NAME"
-    else
-	printf "Service %s installed successfully\n" "$APP_NAME"
+    if [ $total_elapsed -lt $WAIT_DEFAULT ]; then
+	elapsed=$(wait_for_interval $((WAIT_DEFAULT - total_elapsed)))
+	total_elapsed=$((total_elapsed + elapsed))
     fi
 }
 
-wait_for_interval() (
+wait_for_interval() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
@@ -265,9 +271,9 @@ wait_for_interval() (
     fi
 
     printf "%s\n" "$1"
-)
+}
 
-wait_for_service() (
+wait_for_service() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" -a -n "$2" ]
     i=0
@@ -284,7 +290,7 @@ wait_for_service() (
     fi
 
     printf "%s\n" "$i"
-)
+}
 
 if [ $# -gt 0 ]; then
     abort "%s: Too many arguments\n" "$0"
@@ -301,4 +307,4 @@ source_dir=$script_dir/..
 configure_system
 install_service
 start_service
-tail_log_file
+get_status
