@@ -268,9 +268,10 @@ wait_for_interval() {
 
     if [ $1 -gt 0 ]; then
 	sleep $1
+	printf "%s\n" "$1"
+    else
+	printf "%s\n" 0
     fi
-
-    printf "%s\n" "$1"
 }
 
 wait_for_service() {
