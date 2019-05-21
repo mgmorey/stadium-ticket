@@ -216,9 +216,6 @@ start_service() {
 		    (debian|ubuntu)
 			restart_pending=true
 			;;
-		    (opensuse-*)
-			restart_pending=false
-			;;
 		    (*)
 			restart_pending=false
 			;;
@@ -226,9 +223,6 @@ start_service() {
 		;;
 	    (Darwin)
 		restart_pending=true
-		;;
-	    (FreeBSD)
-		restart_pending=false
 		;;
 	    (*)
 		restart_pending=false
