@@ -382,7 +382,7 @@ signal_service() {
     assert [ -n "$2" ]
     assert [ $2 -gt 0 ]
     file=$1
-    wait_signal=$2
+    wait=$2
     shift 2
 
     pid=$(cat $file 2>/dev/null)
@@ -402,8 +402,8 @@ signal_service() {
 	if [ $signal = HUP ]; then
 	    if kill -s $signal $pid 2>/dev/null; then
 		printf "Waiting for process to handle SIG%s\n" "$signal"
-		sleep $wait_signal
-		elapsed=$((elapsed + wait_signal))
+		sleep $wait
+		elapsed=$((elapsed + wait))
 		result=0
 	    else
 		break
@@ -411,8 +411,7 @@ signal_service() {
 	else
 	    i=0
 
-	    while kill -s $signal $pid 2>/dev/null && [ $i -lt $wait_signal ]
-	    do
+	    while kill -s $signal $pid 2>/dev/null && [ $i -lt $wait ]; do
 		if [ $i -eq 0 ]; then
 		    printf "%s\n" "Waiting for process to exit"
 		fi
@@ -423,7 +422,7 @@ signal_service() {
 
 	    elapsed=$((elapsed + i))
 
-	    if [ $i -lt $wait_signal ]; then
+	    if [ $i -lt $wait ]; then
 		result=0
 		break
 	    fi
