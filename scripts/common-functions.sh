@@ -412,7 +412,7 @@ signal_handle() {
     return $result
 }
 
-signal_service() {
+signal_series() {
     assert [ $# -ge 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
@@ -450,11 +450,11 @@ signal_service() {
 }
 
 signal_service_restart() {
-    signal_service $APP_PIDFILE $WAIT_SIGNAL HUP
+    signal_series $APP_PIDFILE $WAIT_SIGNAL HUP
 }
 
 signal_service_stop() {
-    signal_service $APP_PIDFILE $WAIT_SIGNAL INT INT TERM KILL
+    signal_series $APP_PIDFILE $WAIT_SIGNAL INT INT TERM KILL
 }
 
 tail_file() {
