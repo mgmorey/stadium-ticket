@@ -96,7 +96,7 @@ stop_service() {
 		;;
 	esac
 
-	tail_file $APP_LOGFILE
+	tail_file $APP_LOGFILE || true
     fi
 }
 
