@@ -16,10 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-SLEEP_SIGNAL=10
-
-WAIT_INITIAL=0
-WAIT_TIMEOUT=10
+WAIT_RESTART=10
+WAIT_TOTAL=10
 
 abort() {
     printf "$@" >&2
@@ -187,11 +185,13 @@ restart_service() {
 }
 
 start_service() (
-    if signal_service HUP; then
+    if signal_service_restart; then
 	signal_received=true
     else
 	signal_received=false
     fi
+
+    total_elapsed=$elapsed
 
     if [ $signal_received = true ]; then
 	case "$kernel_name" in
@@ -228,6 +228,7 @@ start_service() (
 
     if [ $restart_pending = true ]; then
 	restart_service
+	total_elapsed=0
     fi
 
     if [ $restart_pending = true -o $signal_received = false ]; then
@@ -235,10 +236,15 @@ start_service() (
     fi
 
     if [ $restart_pending = true ]; then
-	wait_for_service $APP_PIDFILE $WAIT_INITIAL $WAIT_TIMEOUT
-    elif [ $signal_received = false ]; then
-	sleep $SLEEP_SIGNAL
+	wait_period=$((WAIT_RESTART - total_elapsed))
+	elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
+    elif [ $signal_received = true ]; then
+	elapsed=$(wait_for_interval $((WAIT_TOTAL - total_elapsed)))
+    else
+	elapsed=$(wait_for_interval $((WAIT_TOTAL - total_elapsed)))
     fi
+
+    total_elapsed=$((total_elapsed + elapsed))
 )
 
 tail_log_file() {
@@ -250,26 +256,34 @@ tail_log_file() {
     fi
 }
 
+wait_for_interval() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ $1 -gt 0 ]; then
+	sleep $1
+    fi
+
+    printf "%s\n" "$1"
+)
+
 wait_for_service() (
-    assert [ $# -eq 3 ]
-    assert [ -n "$1" -a -n "$2" -a -n "$3" ]
-    assert [ $2 -ge 0 -a $3 -gt 0 -a $2 -lt $3 ]
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" -a -n "$2" ]
+    i=0
 
     if [ $2 -gt 0 ]; then
-	sleep $2
+	while [ ! -e $1 -a $i -lt $2 ]; do
+	    sleep 1
+	    i=$((i + 1))
+	done
     fi
 
-    i=0
-    n=$(($3 - $2))
-
-    while [ ! -e $1 -a $i -lt $n ]; do
-	sleep 1
-	i=$((i + 1))
-    done
-
-    if [ $i -ge $3 ]; then
+    if [ $i -ge $2 ]; then
 	printf "Service failed to start within %s seconds\n" $3 >&2
     fi
+
+    printf "%s\n" "$i"
 )
 
 if [ $# -gt 0 ]; then

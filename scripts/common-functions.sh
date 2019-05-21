@@ -15,11 +15,11 @@
 
 GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
 
-KILL_COUNT=20
-KILL_INTERVAL=10
-
 LINE_SINGLE="----------------------------------------"
 LINE_DOUBLE="========================================"
+
+WAIT_RESTART=10
+WAIT_STOP=20
 
 abort_insufficient_permissions() {
     cat <<-EOF >&2
@@ -378,7 +378,19 @@ shell() (
 )
 
 signal_service() {
-    pid=$(cat $APP_PIDFILE 2>/dev/null)
+    assert [ $# -ge 3 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    assert [ -n "$3" ]
+    assert [ $2 -gt 0 ]
+    assert [ $3 -gt 0 ]
+    file=$1
+    wait_restart=$2
+    wait_stop=$3
+    shift 3
+
+    elapsed=0
+    pid=$(cat $file 2>/dev/null)
     result=1
 
     if [ -z "$pid" ]; then
@@ -393,21 +405,27 @@ signal_service() {
 	if [ $signal = HUP ]; then
 	    if kill -s $signal $pid 2>/dev/null; then
 		printf "Waiting for process to handle SIG%s\n" "$signal"
-		sleep $KILL_INTERVAL
+		sleep $wait_restart
+		elapsed=$((elapsed + wait_restart))
 		result=0
 	    else
 		break
 	    fi
 	else
-	    printf "%s\n" "Waiting for process to exit"
 	    i=0
 
-	    while kill -s $signal $pid 2>/dev/null && [ $i -lt $KILL_COUNT ]; do
+	    while kill -s $signal $pid 2>/dev/null && [ $i -lt $wait_stop ]; do
+		if [ $i -eq 0 ]; then
+		    printf "%s\n" "Waiting for process to exit"
+		fi
+
 		sleep 1
 		i=$((i + 1))
 	    done
 
-	    if [ $i -lt $KILL_COUNT ]; then
+	    elapsed=$((elapsed + i))
+
+	    if [ $i -lt $wait_stop ]; then
 		result=0
 		break
 	    fi
@@ -417,7 +435,16 @@ signal_service() {
     return $result
 }
 
+signal_service_restart() {
+    signal_service $APP_PIDFILE $WAIT_RESTART $WAIT_STOP HUP
+}
+
+signal_service_stop() {
+    signal_service $APP_PIDFILE $WAIT_RESTART $WAIT_STOP INT INT TERM KILL
+}
+
 tail_file() {
+    assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
     if [ -r $1 ]; then

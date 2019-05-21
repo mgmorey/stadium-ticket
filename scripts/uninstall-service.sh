@@ -88,7 +88,7 @@ stop_service() {
     if [ $dryrun = false ]; then
 	case "$kernel_name" in
 	    (Linux)
-		signal_service INT INT TERM KILL || true
+		signal_service_stop || true
 		;;
 	    (Darwin)
 		control_launch_agent stop
