@@ -29,7 +29,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-pip_run() {
+run_via_pip() {
     venv_requirements=$VENV_REQUIREMENTS
     sync_virtualenv_via_pip $VENV_FILENAME
     printf "%s\n" "Loading .env environment variables"
@@ -37,7 +37,7 @@ pip_run() {
     "$@"
 }
 
-pipenv_run() {
+run_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	$pipenv sync -d
     fi
@@ -78,9 +78,9 @@ run_in_virtualenv() {
     fi
 
     if [ "$pipenv" != false ]; then
-	pipenv_run "$@"
+	run_via_pipenv "$@"
     elif [ "$pip" != false ]; then
-	pip_run "$@"
+	run_via_pip "$@"
     else
 	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
     fi
