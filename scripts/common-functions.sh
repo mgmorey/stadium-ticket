@@ -399,7 +399,7 @@ signal_service() {
 
     for signal in "$@"; do
 	if [ $result -gt 0 ]; then
-	    printf "Sending SIG%s to process (pid: %s)\n" $signal $pid
+	    printf "Sending SIG%s to process (PID: %s)\n" $signal $pid
 	fi
 
 	if [ $signal = HUP ]; then
