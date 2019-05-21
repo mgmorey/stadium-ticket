@@ -125,7 +125,7 @@ get_realpath() (
 get_status() {
     if [ -e $APP_PIDFILE ]; then
 	printf "Service started in %s seconds\n" "$total_elapsed"
-	tail_file $APP_LOGFILE
+	show_logs $APP_LOGFILE
 	printf "Service %s installed and started successfully\n" "$APP_NAME"
     else
 	printf "Service %s installed successfully\n" "$APP_NAME"

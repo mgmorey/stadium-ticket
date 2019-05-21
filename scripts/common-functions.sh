@@ -376,6 +376,17 @@ shell() (
     fi
 )
 
+show_logs() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ -r $1 ]; then
+	print_file_tail $1
+    elif [ -e $1 ]; then
+	printf "%s: No permission to read file\n" "$1" >&2
+    fi
+}
+
 signal_exit() {
     i=0
 
@@ -455,15 +466,4 @@ signal_service_restart() {
 
 signal_service_stop() {
     signal_series $APP_PIDFILE $WAIT_SIGNAL INT INT TERM KILL
-}
-
-tail_file() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    if [ -r $1 ]; then
-	print_file_tail $1
-    elif [ -e $1 ]; then
-	printf "%s: No permission to read file\n" "$1" >&2
-    fi
 }

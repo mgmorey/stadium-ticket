@@ -44,4 +44,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 
 configure_system
-tail_file $APP_LOGFILE
+show_logs $APP_LOGFILE
