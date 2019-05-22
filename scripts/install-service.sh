@@ -110,6 +110,44 @@ fetch_uwsgi_source() {
     fi
 }
 
+generate_launch_agent_plist() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ $dryrun = false ]; then
+	create_tmpfile
+	xmlfile=$tmpfile
+	cat <<-EOF >$xmlfile
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+	<plist version="1.0">
+	  <dict>
+	    <key>Label</key>
+	    <string>local.$APP_NAME</string>
+	    <key>RunAtLoad</key>
+	    <true/>
+	    <key>KeepAlive</key>
+	    <true/>
+	    <key>ProgramArguments</key>
+	    <array>
+	        <string>$UWSGI_BINARY_DIR/uwsgi</string>
+	        <string>--plugin-dir</string>
+	        <string>$UWSGI_PLUGIN_DIR</string>
+	        <string>--ini</string>
+	        <string>$APP_CONFIG</string>
+	    </array>
+	    <key>WorkingDirectory</key>
+	    <string>$APP_VARDIR</string>
+	  </dict>
+	</plist>
+	EOF
+    else
+	xmlfile=
+    fi
+
+    install_file 644 "$xmlfile" $1
+)
+
 generate_sed_program() (
     assert [ $# -ge 1 ]
 
@@ -289,7 +327,7 @@ restart_service() {
 	    service uwsgi restart
 	    ;;
 	(Darwin)
-	    control_launch_agent load
+	    control_launch_agent load generate_launch_agent_plist
 	    control_launch_agent start
 	    ;;
     esac
