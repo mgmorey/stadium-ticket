@@ -79,12 +79,14 @@ install_binary() {
 }
 
 install_uwsgi() (
-    cd $HOME/git/uwsgi
-    python=$(find_system_python)
+    if [ $dryrun = false ]; then
+	cd $HOME/git/uwsgi
+	python=$(find_system_python)
 
-    for binary; do
-	build_binary $binary
-    done
+	for binary; do
+	    build_binary $binary
+	done
+    fi
 
     for binary; do
 	install_binary $binary
@@ -97,16 +99,15 @@ fi
 
 dryrun=${1-false}
 
-if [ $dryrun = true ]; then
-    exit 0
-fi
-
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
-configure_system
-fetch_source
+if [ $dryrun = false ]; then
+    configure_system
+    fetch_source
+fi
+
 install_uwsgi $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
