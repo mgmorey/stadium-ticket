@@ -25,7 +25,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-build_binary() {
+build_uwsgi_binary() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
@@ -42,7 +42,7 @@ build_binary() {
     esac
 }
 
-fetch_source() {
+fetch_uwsgi_source() {
     if [ ! -d $HOME/git/uwsgi ]; then
 	cd && mkdir -p git && cd git
 	git clone https://github.com/unbit/uwsgi.git
@@ -64,7 +64,7 @@ get_realpath() (
     fi
 )
 
-install_binary() {
+install_uwsgi_binary() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
@@ -80,16 +80,20 @@ install_binary() {
 
 install_uwsgi_from_source() (
     if [ $dryrun = false ]; then
+	fetch_uwsgi_source
+    fi
+
+    if [ $dryrun = false ]; then
 	cd $HOME/git/uwsgi
 	python=$(find_system_python)
 
 	for binary; do
-	    build_binary $binary
+	    build_uwsgi_binary $binary
 	done
     fi
 
     for binary; do
-	install_binary $binary
+	install_uwsgi_binary $binary
     done
 )
 
@@ -106,9 +110,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 
 configure_system
-
-if [ $dryrun = false ]; then
-    fetch_source
-fi
-
 install_uwsgi_from_source $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
