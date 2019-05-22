@@ -32,9 +32,9 @@ change_owner() {
     assert [ $# -ge 1 ]
 
     if [ "$(id -un)" != "$APP_UID"  -o "$(id -gn)" != "$APP_GID" ]; then
-	check_permissions "$@"
-
-	if [ $dryrun = false -a $(id -u) -eq 0 ]; then
+	if [ $dryrun = true ]; then
+	    check_permissions "$@"
+	elif [ $(id -u) -eq 0 ]; then
 	    printf "Changing ownership of directory %s\n" "$@"
 	    chown -R $APP_UID:$APP_GID "$@"
 	fi
@@ -43,9 +43,10 @@ change_owner() {
 
 create_dirs() {
     assert [ $# -ge 1 ]
-    check_permissions "$@"
 
-    if [ $dryrun = false ]; then
+    if [ $dryrun = true ]; then
+	check_permissions "$@"
+    else
 	printf "Creating directory %s\n" "$@"
 	mkdir -p "$@"
     fi
@@ -136,9 +137,10 @@ get_status() {
 install_files() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" -a -n "$2" ]
-    check_permissions "$2"
 
-    if [ $dryrun = false ]; then
+    if [ $dryrun = true ]; then
+	check_permissions "$2"
+    else
 	assert [ -r "$1" ]
 	printf "Installing files in directory %s\n" "$2"
 	mkdir -p $2

@@ -106,9 +106,10 @@ control_launch_agent() (
 create_symlink() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
-    check_permissions "$2"
 
-    if [ $dryrun = false ]; then
+    if [ $dryrun = true ]; then
+	check_permissions "$2"
+    else
 	assert [ -r "$1" ]
 
 	if [ $1 != $2 -a ! -e $2 ]; then
@@ -309,9 +310,10 @@ grep_pyenv_version() {
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$3" ]
-    check_permissions $3
 
-    if [ $dryrun = false ]; then
+    if [ $dryrun = true ]; then
+	check_permissions $3
+    else
 	assert [ -n "$2" ]
 	assert [ -r $2 ]
 
@@ -356,9 +358,9 @@ print_file_tail() {
 }
 
 remove_files() {
-    check_permissions "$@"
-
-    if [ "$dryrun" = false ]; then
+    if [ $dryrun = true ]; then
+	check_permissions "$@"
+    else
 	printf "Removing %s\n" "$@" | sort -u
 	/bin/rm -rf "$@"
     fi
