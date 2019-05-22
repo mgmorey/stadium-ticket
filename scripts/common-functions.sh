@@ -387,10 +387,14 @@ show_logs() {
     fi
 }
 
-signal_exit() {
+signal_process_exit() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    assert [ $3 -ge 0 ]
     i=0
 
-    while kill -s $signal $pid 2>/dev/null && [ $i -lt $wait ]; do
+    while kill -s $2 $1 2>/dev/null && [ $i -lt $3 ]; do
 	if [ $i -eq 0 ]; then
 	    printf "%s\n" "Waiting for process to exit"
 	fi
@@ -401,7 +405,7 @@ signal_exit() {
 
     elapsed=$((elapsed + i))
 
-    if [ $i -lt $wait ]; then
+    if [ $i -lt $3 ]; then
 	result=0
     else
 	result=1
@@ -410,30 +414,34 @@ signal_exit() {
     return $result
 }
 
-signal_handle() {
-    if kill -s $signal $pid 2>/dev/null; then
-	printf "Waiting for process to handle SIG%s\n" "$signal"
-	sleep $wait
-	elapsed=$((elapsed + wait))
-	result=0
-    else
-	result=1
-    fi
-
-    return $result
-}
-
-signal_series() {
-    assert [ $# -ge 2 ]
+signal_process_handle() {
+    assert [ $# -eq 3 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
-    assert [ $2 -gt 0 ]
-    elapsed=0
-    file=$1
-    wait=$2
-    shift 2
+    assert [ -n "$3" ]
+    assert [ $3 -ge 0 ]
 
-    pid=$(cat $file 2>/dev/null)
+    if kill -s $2 $1 2>/dev/null; then
+	printf "Waiting for process to handle SIG%s\n" "$2"
+	sleep $3
+	elapsed=$((elapsed + $3))
+	result=0
+    else
+	result=1
+    fi
+
+    return $result
+}
+
+signal_service() {
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+    assert [ $1 -gt 0 ]
+    elapsed=0
+    wait=$1
+    shift
+
+    pid=$(cat $APP_PIDFILE 2>/dev/null)
 
     if [ -z "$pid" ]; then
 	return 1
@@ -444,12 +452,12 @@ signal_series() {
 
 	case $signal in
 	    (HUP)
-		if signal_handle; then
+		if signal_process_handle $pid $signal $wait; then
 		    return 0
 		fi
 		;;
 	    (*)
-		if signal_exit; then
+		if signal_process_exit $pid $signal $wait; then
 		    return 0
 		fi
 		;;
@@ -460,9 +468,9 @@ signal_series() {
 }
 
 signal_service_restart() {
-    signal_series $APP_PIDFILE $WAIT_SIGNAL HUP
+    signal_service $WAIT_SIGNAL HUP
 }
 
 signal_service_stop() {
-    signal_series $APP_PIDFILE $WAIT_SIGNAL INT INT TERM KILL
+    signal_service $WAIT_SIGNAL INT INT TERM KILL
 }
