@@ -46,24 +46,24 @@ get_realpath() (
 
 install_uwsgi() (
     if [ $dryrun = true ]; then
-	:
-    else
-	is_installed=true
-	packages=$("$script_dir/get-uwsgi-packages.sh")
-
-	for package in $packages; do
-	    if ! "$script_dir/is-installed.sh" $package; then
-		is_installed=false
-		break
-	    fi
-	done
-
-	if [ $is_installed = false ]; then
-	    "$script_dir/install-packages.sh" $packages
-	fi
-
-	start_uwsgi
+	return 0
     fi
+
+    is_installed=true
+    packages=$("$script_dir/get-uwsgi-packages.sh")
+
+    for package in $packages; do
+	if ! "$script_dir/is-installed.sh" $package; then
+	    is_installed=false
+	    break
+	fi
+    done
+
+    if [ $is_installed = false ]; then
+	"$script_dir/install-packages.sh" $packages
+    fi
+
+    start_uwsgi
 )
 
 start_uwsgi() {
