@@ -37,6 +37,23 @@ abort_no_python() {
     abort "%s\n" "No suitable Python interpreter found"
 }
 
+build_uwsgi_binary() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ -x $1 ]; then
+	return 0
+    fi
+
+    case $1 in
+	(python3*)
+	    $python uwsgiconfig.py --plugin plugins/python core ${1%_*}
+	    ;;
+	(uwsgi)
+	    $python uwsgiconfig.py --build core
+    esac
+}
+
 check_permissions() (
     for file; do
 	if [ -e $file -a -w $file ]; then
@@ -124,6 +141,13 @@ create_tmpfile() {
     tmpfile=$(mktemp)
     tmpfiles="${tmpfiles+$tmpfiles }$tmpfile"
     trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
+}
+
+fetch_uwsgi_source() {
+    if [ ! -d $HOME/git/uwsgi ]; then
+	cd && mkdir -p git && cd git
+	git clone https://github.com/unbit/uwsgi.git
+    fi
 }
 
 find_bootstrap_python() (
@@ -338,6 +362,20 @@ install_python_version() (
     fi
 )
 
+install_uwsgi_binary() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case $1 in
+	(*_plugin.so)
+	    install_file 755 $1 $UWSGI_PLUGIN_DIR/$1
+	    ;;
+	(uwsgi)
+	    install_file 755 $1 $UWSGI_BINARY_DIR/$1
+	    ;;
+    esac
+}
+
 install_uwsgi() (
     if [ $dryrun = true ]; then
 	return 0
@@ -358,6 +396,25 @@ install_uwsgi() (
     fi
 
     start_uwsgi
+)
+
+install_uwsgi_from_source() (
+    if [ $dryrun = false ]; then
+	fetch_uwsgi_source
+    fi
+
+    if [ $dryrun = false ]; then
+	cd $HOME/git/uwsgi
+	python=$(find_system_python)
+
+	for binary; do
+	    build_uwsgi_binary $binary
+	done
+    fi
+
+    for binary; do
+	install_uwsgi_binary $binary
+    done
 )
 
 is_tmpfile() {

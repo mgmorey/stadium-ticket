@@ -173,7 +173,7 @@ install_service() {
 		install_uwsgi
 		;;
 	    (Darwin)
-		"$script_dir/install-uwsgi-from-source.sh" $dryrun
+		install_uwsgi_from_source $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
 		;;
 	    (FreeBSD)
 		install_uwsgi
