@@ -31,13 +31,17 @@ assert() {
 change_owner() {
     assert [ $# -ge 1 ]
 
-    if [ "$(id -un)" != "$APP_UID"  -o "$(id -gn)" != "$APP_GID" ]; then
-	if [ $dryrun = true ]; then
-	    check_permissions "$@"
-	elif [ $(id -u) -eq 0 ]; then
-	    printf "Changing ownership of directory %s\n" "$@"
-	    chown -R $APP_UID:$APP_GID "$@"
-	fi
+    if [ "$(id -u)" -gt 0 ]; then
+	return 0
+    elif [ "$(id -un)" = "$APP_UID" -a "$(id -gn)" = "$APP_GID" ]; then
+	return 0
+    fi
+
+    if [ $dryrun = true ]; then
+	check_permissions "$@"
+    else
+	printf "Changing ownership of directory %s\n" "$@"
+	chown -R $APP_UID:$APP_GID "$@"
     fi
 }
 
