@@ -81,10 +81,6 @@ fi
 
 dryrun=${1-false}
 
-if [ $dryrun = true ]; then
-    exit 0
-fi
-
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
