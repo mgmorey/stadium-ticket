@@ -78,7 +78,7 @@ install_binary() {
     esac
 }
 
-install_uwsgi() (
+install_uwsgi_from_source() (
     if [ $dryrun = false ]; then
 	cd $HOME/git/uwsgi
 	python=$(find_system_python)
@@ -105,9 +105,10 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
+configure_system
+
 if [ $dryrun = false ]; then
-    configure_system
     fetch_source
 fi
 
-install_uwsgi $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
+install_uwsgi_from_source $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME

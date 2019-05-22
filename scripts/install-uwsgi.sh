@@ -44,37 +44,6 @@ get_realpath() (
     fi
 )
 
-install_uwsgi() (
-    if [ $dryrun = true ]; then
-	return 0
-    fi
-
-    is_installed=true
-    packages=$("$script_dir/get-uwsgi-packages.sh")
-
-    for package in $packages; do
-	if ! "$script_dir/is-installed.sh" $package; then
-	    is_installed=false
-	    break
-	fi
-    done
-
-    if [ $is_installed = false ]; then
-	"$script_dir/install-packages.sh" $packages
-    fi
-
-    start_uwsgi
-)
-
-start_uwsgi() {
-    case "$kernel_name" in
-	(Linux)
-	    systemctl enable uwsgi
-	    systemctl start uwsgi
-	    ;;
-    esac
-}
-
 if [ $# -gt 1 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi

@@ -338,6 +338,28 @@ install_python_version() (
     fi
 )
 
+install_uwsgi() (
+    if [ $dryrun = true ]; then
+	return 0
+    fi
+
+    is_installed=true
+    packages=$("$script_dir/get-uwsgi-packages.sh")
+
+    for package in $packages; do
+	if ! "$script_dir/is-installed.sh" $package; then
+	    is_installed=false
+	    break
+	fi
+    done
+
+    if [ $is_installed = false ]; then
+	"$script_dir/install-packages.sh" $packages
+    fi
+
+    start_uwsgi
+)
+
 is_tmpfile() {
     printf "%s\n" ${tmpfiles-} | grep $1 >/dev/null
 }
@@ -481,4 +503,13 @@ signal_service_restart() {
 
 signal_service_stop() {
     signal_service $WAIT_SIGNAL INT INT TERM KILL
+}
+
+start_uwsgi() {
+    case "$kernel_name" in
+	(Linux)
+	    systemctl enable uwsgi
+	    systemctl start uwsgi
+	    ;;
+    esac
 }

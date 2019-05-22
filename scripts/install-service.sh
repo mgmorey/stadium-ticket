@@ -168,7 +168,17 @@ install_service() {
     shell "'$script_dir/run.sh'" python3 -m app init-db
 
     for dryrun in true false; do
-	"$script_dir/install-uwsgi.sh" $dryrun
+	case "$kernel_name" in
+	    (Linux)
+		install_uwsgi
+		;;
+	    (Darwin)
+		"$script_dir/install-uwsgi-from-source.sh" $dryrun
+		;;
+	    (FreeBSD)
+		install_uwsgi
+		;;
+	esac
 
 	if [ $dryrun = false ]; then
 	    create_service_virtualenv $VENV_FILENAME-$APP_NAME
