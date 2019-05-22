@@ -428,6 +428,7 @@ signal_series() {
     assert [ -n "$1" ]
     assert [ -n "$2" ]
     assert [ $2 -gt 0 ]
+    elapsed=0
     file=$1
     wait=$2
     shift 2
@@ -437,8 +438,6 @@ signal_series() {
     if [ -z "$pid" ]; then
 	return 1
     fi
-
-    elapsed=0
 
     for signal in "$@"; do
 	printf "Sending SIG%s to process (PID: %s)\n" $signal $pid
