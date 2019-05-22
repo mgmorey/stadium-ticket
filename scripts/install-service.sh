@@ -28,6 +28,23 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+build_uwsgi_binary() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ -x $1 ]; then
+	return 0
+    fi
+
+    case $1 in
+	(python3*)
+	    $python uwsgiconfig.py --plugin plugins/python core ${1%_*}
+	    ;;
+	(uwsgi)
+	    $python uwsgiconfig.py --build core
+    esac
+}
+
 change_owner() {
     assert [ $# -ge 1 ]
 
@@ -74,6 +91,22 @@ create_service_virtualenv() {
 
     if ! shell '"$script_dir/create-service-venv.sh"' "$@"; then
 	abort "%s: Unable to create virtual environment\n" "$0"
+    fi
+}
+
+enable_and_start_uwsgi() {
+    case "$kernel_name" in
+	(Linux)
+	    systemctl enable uwsgi
+	    systemctl start uwsgi
+	    ;;
+    esac
+}
+
+fetch_uwsgi_source() {
+    if [ ! -d $HOME/git/uwsgi ]; then
+	cd && mkdir -p git && cd git
+	git clone https://github.com/unbit/uwsgi.git
     fi
 }
 
@@ -169,14 +202,11 @@ install_service() {
 
     for dryrun in true false; do
 	case "$kernel_name" in
-	    (Linux)
-		install_uwsgi
-		;;
 	    (Darwin)
 		install_uwsgi_from_source $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
 		;;
-	    (FreeBSD)
-		install_uwsgi
+	    (*)
+		install_uwsgi_from_package
 		;;
 	esac
 
@@ -197,6 +227,61 @@ install_service_files() {
     change_owner $APP_ETCDIR $APP_DIR $APP_VARDIR
     create_symlinks $APP_CONFIG $UWSGI_APPDIRS
 }
+
+install_uwsgi_binary() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case $1 in
+	(*_plugin.so)
+	    install_file 755 $1 $UWSGI_PLUGIN_DIR/$1
+	    ;;
+	(uwsgi)
+	    install_file 755 $1 $UWSGI_BINARY_DIR/$1
+	    ;;
+    esac
+}
+
+install_uwsgi_from_package() (
+    if [ $dryrun = true ]; then
+	return 0
+    fi
+
+    is_installed=true
+    packages=$("$script_dir/get-uwsgi-packages.sh")
+
+    for package in $packages; do
+	if ! "$script_dir/is-installed.sh" $package; then
+	    is_installed=false
+	    break
+	fi
+    done
+
+    if [ $is_installed = false ]; then
+	"$script_dir/install-packages.sh" $packages
+    fi
+
+    enable_and_start_uwsgi
+)
+
+install_uwsgi_from_source() (
+    if [ $dryrun = false ]; then
+	fetch_uwsgi_source
+    fi
+
+    if [ $dryrun = false ]; then
+	cd $HOME/git/uwsgi
+	python=$(find_system_python)
+
+	for binary; do
+	    build_uwsgi_binary $binary
+	done
+    fi
+
+    for binary; do
+	install_uwsgi_binary $binary
+    done
+)
 
 restart_service() {
     case "$kernel_name" in
