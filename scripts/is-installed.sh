@@ -68,7 +68,7 @@ case "$kernel_name" in
 	esac
 	;;
     (Darwin)
-	brew list | grep -E '^'"$1"'$'
+	brew list 2>/dev/null | grep -E '^'"$1"'$' >/dev/null
 	;;
     (FreeBSD)
 	pkg query %n "$1" >/dev/null 2>&1
