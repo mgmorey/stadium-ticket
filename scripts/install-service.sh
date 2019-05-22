@@ -92,19 +92,20 @@ generate_sed_program() (
 
 generate_service_ini() {
     assert [ $# -eq 3 ]
-    assert [ -n "$1" -a -n "$2" -a -r "$2" -a "$3" ]
-    check_permissions $1
+    assert [ -n "$2" -a -r "$2" -a -n "$3" ]
 
     if [ $dryrun = false ]; then
-	mkdir -p "$(dirname $1)"
 	create_tmpfile
 	sedfile=$tmpfile
 	generate_sed_program $3 >$sedfile
 	create_tmpfile
 	inifile=$tmpfile
 	sed -f $sedfile $2 >$inifile
-	install_file 644 $inifile $1
+    else
+	inifile=
     fi
+
+    install_file 644 "$inifile" $1
 }
 
 get_realpath() (

@@ -219,9 +219,11 @@ find_pyenv_python() (
 generate_launch_agent_plist() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    check_permissions $1
-    create_tmpfile
-    cat <<-EOF >$tmpfile
+
+    if [ $dryrun = false ]; then
+	create_tmpfile
+	xmlfile=$tmpfile
+	cat <<-EOF >$xmlfile
 	<?xml version="1.0" encoding="UTF-8"?>
 	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 	<plist version="1.0">
@@ -245,12 +247,11 @@ generate_launch_agent_plist() (
 	  </dict>
 	</plist>
 	EOF
-
-    if [ $dryrun = false ]; then
-	printf "Generating file %s\n" "$1"
-	install -d -m 755 $(dirname $1)
-	install -C -m 644 $tmpfile $1
+    else
+	xmlfile=
     fi
+
+    install_file 644 "$xmlfile" $1
 )
 
 get_pyenv_versions() (
@@ -307,10 +308,13 @@ grep_pyenv_version() {
 
 install_file() {
     assert [ $# -eq 3 ]
-    assert [ -n "$1" -a -n "$2" -a -r "$2" -a -n "$3" ]
+    assert [ -n "$3" ]
     check_permissions $3
 
     if [ $dryrun = false ]; then
+	assert [ -n "$2" ]
+	assert [ -r $2 ]
+
 	if is_tmpfile $2; then
 	    printf "Generating file %s\n" "$3"
 	else
