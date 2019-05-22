@@ -387,7 +387,7 @@ show_logs() {
     fi
 }
 
-signal_process_exit() {
+signal_process_and_poll() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
@@ -414,7 +414,7 @@ signal_process_exit() {
     return $result
 }
 
-signal_process_handle() {
+signal_process_and_wait() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
@@ -452,12 +452,12 @@ signal_service() {
 
 	case $signal in
 	    (HUP)
-		if signal_process_handle $pid $signal $wait; then
+		if signal_process_and_wait $pid $signal $wait; then
 		    return 0
 		fi
 		;;
 	    (*)
-		if signal_process_exit $pid $signal $wait; then
+		if signal_process_and_poll $pid $signal $wait; then
 		    return 0
 		fi
 		;;
