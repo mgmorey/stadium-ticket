@@ -105,12 +105,13 @@ control_launch_agent() (
 
 create_symlink() {
     assert [ $# -eq 2 ]
-    assert [ -n "$1" ]
+    assert [ -n "$2" ]
 
     if [ $dryrun = true ]; then
 	check_permissions "$2"
     else
-	assert [ -r "$1" ]
+	assert [ -n "$1" ]
+	assert [ -r $1 ]
 
 	if [ $1 != $2 -a ! -e $2 ]; then
 	    printf "Creating link %s\n" "$2"
@@ -314,6 +315,7 @@ install_file() {
     if [ $dryrun = true ]; then
 	check_permissions $3
     else
+	assert [ -n "$1" ]
 	assert [ -n "$2" ]
 	assert [ -r $2 ]
 
