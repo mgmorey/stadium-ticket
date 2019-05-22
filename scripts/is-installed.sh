@@ -44,36 +44,47 @@ get_realpath() (
     fi
 )
 
+is_installed() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian|ubuntu)
+		    status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
+		    test "$status" = "install ok installed"
+		    ;;
+		(opensuse-*|fedora|redhat|centos)
+		    rpm --query $1 >/dev/null 2>&1
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    brew list 2>/dev/null | grep -E '^'"$1"'$' >/dev/null
+	    ;;
+	(FreeBSD)
+	    pkg query %n "$1" >/dev/null 2>&1
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+)
+
 if [ $# -eq 0 ]; then
     abort "%s: Not enough arguments\n" "$0"
+fi
+
+if [ $# -gt 1 ]; then
+    abort "%s: Too many arguments\n" "$0"
 fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian|ubuntu)
-		status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
-		test "$status" = "install ok installed"
-		;;
-	    (opensuse-*|fedora|redhat|centos)
-		rpm --query $1 >/dev/null 2>&1
-		;;
-	    (*)
-		abort_not_supported Distro
-		;;
-	esac
-	;;
-    (Darwin)
-	brew list 2>/dev/null | grep -E '^'"$1"'$' >/dev/null
-	;;
-    (FreeBSD)
-	pkg query %n "$1" >/dev/null 2>&1
-	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
+is_installed "$@"
