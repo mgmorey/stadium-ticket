@@ -174,10 +174,6 @@ configure_system_defaults() {
 	APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     fi
 
-    if [ -z "${UWSGI_ETCDIR-}" ]; then
-	UWSGI_ETCDIR=/etc/uwsgi
-    fi
-
     if [ -z "${UWSGI_BINARY_NAME-}" ]; then
 	UWSGI_BINARY_NAME=uwsgi
     fi
