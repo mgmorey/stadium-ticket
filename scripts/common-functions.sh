@@ -208,11 +208,7 @@ find_pyenv_python() (
 )
 
 get_home_directory() {
-    if [ -n "${1-}" ]; then
-	printf "%s\n" "$(getent passwd $1 | awk -F: '{print $6}')"
-    else
-	printf "%s\n" "$HOME"
-    fi
+    getent passwd ${1-$USER} | awk -F: '{print $6}'
 }
 
 get_pyenv_versions() {
