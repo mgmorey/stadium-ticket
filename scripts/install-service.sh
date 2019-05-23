@@ -244,16 +244,6 @@ get_setpriv_command() (
     return 0
 )
 
-get_status() {
-    if [ -e $APP_PIDFILE ]; then
-	printf "Service started in %s seconds\n" "$total_elapsed"
-	show_logs $APP_LOGFILE
-	printf "Service %s installed and started successfully\n" "$APP_NAME"
-    else
-	printf "Service %s installed successfully\n" "$APP_NAME"
-    fi
-}
-
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$3" ]
@@ -473,6 +463,16 @@ shell() (
     fi
 )
 
+show_status() {
+    if [ -e $APP_PIDFILE ]; then
+	printf "Service started in %s seconds\n" "$total_elapsed"
+	show_logs $APP_LOGFILE
+	printf "Service %s installed and started successfully\n" "$APP_NAME"
+    else
+	printf "Service %s installed successfully\n" "$APP_NAME"
+    fi
+}
+
 start_service() {
     case "$kernel_name" in
 	(Linux)
@@ -531,4 +531,4 @@ source_dir=$script_dir/..
 configure_system
 install_service
 restart_service
-get_status
+show_status
