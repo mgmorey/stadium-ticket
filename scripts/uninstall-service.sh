@@ -115,7 +115,6 @@ uninstall_service() {
     . "$source_dir/.env"
 
     parse_arguments "$@"
-    configure_system
 
     for dryrun in true false; do
 	stop_service
@@ -136,14 +135,11 @@ usage() {
 	EOM
 }
 
-if [ $# -gt 2 ]; then
-    abort "%s: Too many arguments\n" "$0"
-fi
-
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
-uninstall_service
+configure_system
+uninstall_service "$@"
