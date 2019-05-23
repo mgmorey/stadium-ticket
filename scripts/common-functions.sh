@@ -361,9 +361,10 @@ show_logs() {
 }
 
 signal_process_and_poll() {
-    assert [ $# -eq 2 ]
+    assert [ $# -eq 3 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
+    assert [ -n "$3" ]
     assert [ $3 -ge 0 ]
     i=0
 
