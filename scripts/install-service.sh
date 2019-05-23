@@ -337,17 +337,17 @@ install_uwsgi_from_package() (
 	return 0
     fi
 
-    is_installed=true
+    is_installed_package=true
     packages=$("$script_dir/get-uwsgi-packages.sh")
 
     for package in $packages; do
-	if ! "$script_dir/is-installed.sh" $package; then
-	    is_installed=false
+	if ! is_installed $package; then
+	    is_installed_package=false
 	    break
 	fi
     done
 
-    if [ $is_installed = false ]; then
+    if [ $is_installed_package = false ]; then
 	"$script_dir/install-packages.sh" $packages
     fi
 
@@ -371,6 +371,37 @@ install_uwsgi_from_source() (
     for binary; do
 	install_uwsgi_binary $binary
     done
+)
+
+is_installed() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian|ubuntu)
+		    status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
+		    test "$status" = "install ok installed"
+		    ;;
+		(opensuse-*|fedora|redhat|centos)
+		    rpm --query $1 >/dev/null 2>&1
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    brew list 2>/dev/null | grep -E '^'"$1"'$' >/dev/null
+	    ;;
+	(FreeBSD)
+	    pkg query %n "$1" >/dev/null 2>&1
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
 )
 
 is_tmpfile() {
