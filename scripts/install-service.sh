@@ -79,6 +79,10 @@ create_symlinks() (
     file=$1
     shift
 
+    if [ -z "${UWSGI_ETCDIR-}" ]; then
+	return 0
+    fi
+
     for dir in "$@"; do
 	create_symlink $file $UWSGI_ETCDIR/$dir/$APP_NAME.ini
     done
