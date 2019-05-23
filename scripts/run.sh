@@ -65,17 +65,15 @@ get_realpath() (
 )
 
 run_in_virtualenv() {
-    source_dir=$script_dir/..
-
-    cd "$source_dir"
-
-    export $APP_ENV_VARS
-
     pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
     if [ "$pipenv" = false ]; then
 	pip=$("$script_dir/get-python-command.sh" pip)
     fi
+
+    export $APP_ENV_VARS
+    source_dir=$script_dir/..
+    cd "$source_dir"
 
     if [ "$pipenv" != false ]; then
 	run_via_pipenv "$@"
