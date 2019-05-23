@@ -208,8 +208,8 @@ find_pyenv_python() (
 )
 
 get_home_directory() {
-    if [ -n "${SUDO_USER-}" ]; then
-	printf "%s\n" "$(getent passwd $SUDO_USER | awk -F: '{print $6}')"
+    if [ -n "${1-}" ]; then
+	printf "%s\n" "$(getent passwd $1 | awk -F: '{print $6}')"
     else
 	printf "%s\n" "$HOME"
     fi
@@ -268,7 +268,11 @@ print_file_tail() {
 }
 
 reset_home_directory() {
-    home_dir="$(get_home_directory)"
+    if [ -z "${SUDO_USER-}" ]; then
+	return 0
+    fi
+
+    home_dir="$(get_home_directory $SUDO_USER)"
 
     if [ "$HOME" != "$home_dir" ]; then
 	export HOME="$home_dir"
