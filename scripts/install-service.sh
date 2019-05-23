@@ -476,7 +476,7 @@ set_start_pending() {
 shell() (
     assert [ $# -ge 1 ]
 
-    if [ "$(id -u)" -eq 0 -a -n "${SUDO_USER:-}" ]; then
+    if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
 	su=$(get_setpriv_command $SUDO_USER || true)
 	eval ${su-/usr/bin/su -l $SUDO_USER} "$@"
     else
