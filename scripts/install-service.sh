@@ -283,7 +283,7 @@ install_flask_app() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -d "$2" -a -n "$3" ]
 
-    for source in $(find $2 -type f -print | sort); do
+    for source in $(find $2 -type f ! -name '*.pyc' -print | sort); do
 	install_file $1 $source $3/$source
     done
 )
