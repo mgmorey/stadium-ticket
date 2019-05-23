@@ -73,6 +73,16 @@ create_dirs() {
     fi
 }
 
+create_service_virtualenv() {
+    if ! shell '"$script_dir/check-home.sh"'; then
+	abort "%s: Unable to create virtual environment\n" "$0"
+    fi
+
+    if ! shell '"$script_dir/create-service-venv.sh"' "$@"; then
+	abort "%s: Unable to create virtual environment\n" "$0"
+    fi
+}
+
 create_symlink() {
     assert [ $# -eq 2 ]
     assert [ -n "$2" ]
@@ -104,16 +114,6 @@ create_symlinks() (
 	create_symlink $file $UWSGI_ETCDIR/$dir/$APP_NAME.ini
     done
 )
-
-create_service_virtualenv() {
-    if ! shell '"$script_dir/check-home.sh"'; then
-	abort "%s: Unable to create virtual environment\n" "$0"
-    fi
-
-    if ! shell '"$script_dir/create-service-venv.sh"' "$@"; then
-	abort "%s: Unable to create virtual environment\n" "$0"
-    fi
-}
 
 enable_and_start_uwsgi() {
     case "$kernel_name" in
