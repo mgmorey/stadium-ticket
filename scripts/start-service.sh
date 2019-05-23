@@ -37,6 +37,42 @@ get_realpath() (
     fi
 )
 
+start_service() {
+    app_prefix=$APP_DIR/$VENV_FILENAME
+    binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+
+    if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+	plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
+    fi
+
+    if ! $binary --version >/dev/null 2>&1; then
+	abort "%s: %s: No such binary file\n" "$0" "$binary"
+    fi
+
+    export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
+    export PYTHONPATH=$app_prefix/lib
+
+    cd $APP_VARDIR
+
+    if [ ! -e "$binary" ]; then
+	abort "%s: %s: No such binary file\n" "$0" "$binary"
+    elif [ -n "${UWSGI_PLUGIN_DIR-}" ] && [ ! -d $UWSGI_PLUGIN_DIR ]; then
+	abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
+    elif [ -n "${plugin-}" ] && [ ! -e $plugin ]; then
+	abort "%s: %s: No such plugin file\n" "$0" "$plugin"
+    elif [ ! -d $(dirname $APP_CONFIG) ]; then
+	abort "%s: %s: No such configuration directory\n" "$0" "$(dirname $APP_CONFIG)"
+    elif [ ! -r $APP_CONFIG ]; then
+	abort "%s: %s: No read permission\n" "$0" "$APP_CONFIG"
+    elif [ ! -e $APP_CONFIG ]; then
+	abort "%s: %s: No such configuration file\n" "$0" "$APP_CONFIG"
+    elif signal_service_restart; then
+	abort "Service is running as PID %s\n" "$pid"
+    else
+	$binary${UWSGI_PLUGIN_DIR+ --plugin-dir $UWSGI_PLUGIN_DIR} --ini $APP_CONFIG
+    fi
+}
+
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
@@ -44,37 +80,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 
 configure_system
-
-app_prefix=$APP_DIR/$VENV_FILENAME
-binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-
-if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
-    plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
-fi
-
-if ! $binary --version >/dev/null 2>&1; then
-    abort "%s: %s: No such binary file\n" "$0" "$binary"
-fi
-
-export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
-export PYTHONPATH=$app_prefix/lib
-
-cd $APP_VARDIR
-
-if [ ! -e "$binary" ]; then
-    abort "%s: %s: No such binary file\n" "$0" "$binary"
-elif [ -n "${UWSGI_PLUGIN_DIR-}" ] && [ ! -d $UWSGI_PLUGIN_DIR ]; then
-    abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
-elif [ -n "${plugin-}" ] && [ ! -e $plugin ]; then
-    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
-elif [ ! -d $(dirname $APP_CONFIG) ]; then
-    abort "%s: %s: No such configuration directory\n" "$0" "$(dirname $APP_CONFIG)"
-elif [ ! -r $APP_CONFIG ]; then
-    abort "%s: %s: No read permission\n" "$0" "$APP_CONFIG"
-elif [ ! -e $APP_CONFIG ]; then
-    abort "%s: %s: No such configuration file\n" "$0" "$APP_CONFIG"
-elif signal_service_restart; then
-    abort "Service is running as PID %s\n" "$pid"
-else
-    $binary${UWSGI_PLUGIN_DIR+ --plugin-dir $UWSGI_PLUGIN_DIR} --ini $APP_CONFIG
-fi
+start_service

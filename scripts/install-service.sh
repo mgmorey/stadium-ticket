@@ -419,7 +419,7 @@ restart_service() {
     set_start_pending
 
     if [ $start_pending = true ]; then
-	start_service
+	start_app_service
 	total_elapsed=0
     fi
 
@@ -494,7 +494,7 @@ show_status() {
     fi
 }
 
-start_service() {
+start_app_service() {
     case "$kernel_name" in
 	(Linux)
 	    systemctl restart uwsgi
