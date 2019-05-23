@@ -65,16 +65,6 @@ get_realpath() (
     fi
 )
 
-set_home_directory() {
-    if [ -n "${SUDO_USER-}" ]; then
-	home_dir="$(getent passwd $SUDO_USER | awk -F: '{print $6}')"
-
-	if [ "$HOME" != "$home_dir" ]; then
-	    export HOME="$home_dir"
-	fi
-    fi
-}
-
 if [ $# -eq 0 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
@@ -93,5 +83,5 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/common-functions.sh"
 . "$script_dir/virtualenv-functions.sh"
 
-set_home_directory
+reset_home_directory
 create_service_virtualenv "$@"

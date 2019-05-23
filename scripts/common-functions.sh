@@ -207,10 +207,17 @@ find_pyenv_python() (
     return 1
 )
 
-get_pyenv_versions() (
-    assert [ $# -eq 0 -o $# -eq 1 ]
+get_home_directory() {
+    if [ -n "${SUDO_USER-}" ]; then
+	printf "%s\n" "$(getent passwd $SUDO_USER | awk -F: '{print $6}')"
+    else
+	printf "%s\n" "$HOME"
+    fi
+}
+
+get_pyenv_versions() {
     pyenv install --list | awk 'NR > 1 {print $1}' | grep_pyenv_version ${1-}
-)
+}
 
 get_required_python_versions() {
     python=$(find_bootstrap_python)
@@ -258,6 +265,14 @@ print_file_tail() {
     printf "%s\n" $LINE_SINGLE$LINE_SINGLE
     cat $tmpfile
     printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE
+}
+
+reset_home_directory() {
+    home_dir="$(get_home_directory)"
+
+    if [ "$HOME" != "$home_dir" ]; then
+	export HOME="$home_dir"
+    fi
 }
 
 show_logs() {

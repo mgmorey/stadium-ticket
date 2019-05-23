@@ -94,4 +94,5 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/common-functions.sh"
 . "$script_dir/virtualenv-functions.sh"
 
+reset_home_directory
 run_in_virtualenv "$@"
