@@ -250,23 +250,6 @@ install_python_version() (
     fi
 )
 
-print_file_tail() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    create_tmpfile
-    tail $1 >$tmpfile
-
-    if [ ! -s "$tmpfile" ]; then
-	return 1
-    fi
-
-    printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE
-    printf "%s\n" "Contents of $1 (last 10 lines)"
-    printf "%s\n" $LINE_SINGLE$LINE_SINGLE
-    cat $tmpfile
-    printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE
-}
-
 reset_home_directory() {
     if [ -z "${SUDO_USER-}" ]; then
 	return 0
@@ -284,10 +267,27 @@ show_logs() {
     assert [ -n "$1" ]
 
     if [ -r $1 ]; then
-	print_file_tail $1
+	show_tail $1
     elif [ -e $1 ]; then
 	printf "%s: No permission to read file\n" "$1" >&2
     fi
+}
+
+show_tail() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    create_tmpfile
+    tail $1 >$tmpfile
+
+    if [ ! -s "$tmpfile" ]; then
+	return 1
+    fi
+
+    printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE
+    printf "%s\n" "Contents of $1 (last 10 lines)"
+    printf "%s\n" $LINE_SINGLE$LINE_SINGLE
+    cat $tmpfile
+    printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE
 }
 
 signal_process_and_poll() {
