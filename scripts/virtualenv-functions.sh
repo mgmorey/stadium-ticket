@@ -53,6 +53,12 @@ create_virtualenv() {
     fi
 }
 
+set_home_directory() {
+    if [ -n "${SUDO_USER-}" ]; then
+	export HOME="$(getent passwd $SUDO_USER | awk -F: '{print $6}')"
+    fi
+}
+
 get_pip_upgrade_options() {
     case "$($pip --version | awk '{print $2}')" in
 	([123456789][0123456789].*)
@@ -65,7 +71,7 @@ get_pip_upgrade_options() {
 }
 
 sync_requirements_via_pip() {
-    assert [ "$pip" != false ]
+    set_home_directory
     printf "%s\n" "Installing required packages via pip"
     $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
 }
@@ -108,13 +114,14 @@ sync_virtualenv_via_pip() {
     fi
 }
 
-upgrade_via_pip() {
+upgrade_via_pip() (
     pip=$("$script_dir/get-python-command.sh" pip)
 
     if [ "$pip" = false ]; then
 	return
     fi
 
+    set_home_directory
     printf "%s\n" "Upgrading user packages via pip"
     $pip install $(get_pip_upgrade_options) --upgrade --user "$@"
-}
+)

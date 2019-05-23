@@ -108,7 +108,19 @@ configure_linux_debian() {
     APP_SOCKET=$APP_RUNDIR/socket
 }
 
-configure_linux_fedora() {
+configure_linux_opensuse() {
+    # Set app plugin
+    APP_PLUGIN=python3
+
+    # Set application group and user accounts
+    APP_GID=nogroup
+    APP_UID=nobody
+
+    # Set uWSGI directories
+    UWSGI_APPDIRS="vassals"
+}
+
+configure_linux_redhat() {
     # Set app plugin
     APP_PLUGIN=python3
 
@@ -120,18 +132,6 @@ configure_linux_fedora() {
     UWSGI_APPDIRS="."
     UWSGI_ETCDIR=/etc/uwsgi.d
     UWSGI_RUNDIR=/run/uwsgi
-}
-
-configure_linux_opensuse() {
-    # Set app plugin
-    APP_PLUGIN=python3
-
-    # Set application group and user accounts
-    APP_GID=nogroup
-    APP_UID=nobody
-
-    # Set uWSGI directories
-    UWSGI_APPDIRS="vassals"
 }
 
 configure_sunos() {
@@ -234,8 +234,8 @@ configure_system() {
 			    ;;
 		    esac
 		    ;;
-		(fedora)
-		    configure_linux_fedora
+		(fedora|redhat|centos)
+		    configure_linux_redhat
 		    ;;
 		(*)
 		    abort_not_supported Distro

@@ -74,10 +74,6 @@ create_dirs() {
 }
 
 create_service_virtualenv() {
-    if ! shell '"$script_dir/check-home.sh"'; then
-	abort "%s: Unable to create virtual environment\n" "$0"
-    fi
-
     if ! shell '"$script_dir/create-service-venv.sh"' "$@"; then
 	abort "%s: Unable to create virtual environment\n" "$0"
     fi
@@ -233,6 +229,9 @@ get_setpriv_command() (
 	    setpriv_opts="$setpriv_opts --reset-env"
 	    ;;
 	(2.3[12].*)
+	    :
+	    ;;
+	(2.23.*)
 	    :
 	    ;;
 	(*)
