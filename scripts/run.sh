@@ -29,26 +29,6 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-run_via_pip() {
-    venv_requirements=$VENV_REQUIREMENTS
-    sync_virtualenv_via_pip $VENV_FILENAME
-    printf "%s\n" "Loading .env environment variables"
-    . ./.env
-    "$@"
-}
-
-run_via_pipenv() {
-    if ! $pipenv --venv >/dev/null 2>&1; then
-	$pipenv sync -d
-    fi
-
-    if [ "${PIPENV_ACTIVE:-0}" -gt 0 ]; then
-	"$@"
-    else
-	$pipenv run "$@"
-    fi
-}
-
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -81,6 +61,26 @@ run_in_virtualenv() {
 	run_via_pip "$@"
     else
 	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
+    fi
+}
+
+run_via_pip() {
+    venv_requirements=$VENV_REQUIREMENTS
+    sync_virtualenv_via_pip $VENV_FILENAME
+    printf "%s\n" "Loading .env environment variables"
+    . ./.env
+    "$@"
+}
+
+run_via_pipenv() {
+    if ! $pipenv --venv >/dev/null 2>&1; then
+	$pipenv sync -d
+    fi
+
+    if [ "${PIPENV_ACTIVE:-0}" -gt 0 ]; then
+	"$@"
+    else
+	$pipenv run "$@"
     fi
 }
 
