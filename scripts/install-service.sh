@@ -73,6 +73,23 @@ create_dirs() {
     fi
 }
 
+create_symlink() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$2" ]
+
+    if [ $dryrun = true ]; then
+	check_permissions "$2"
+    else
+	assert [ -n "$1" ]
+	assert [ -r $1 ]
+
+	if [ $1 != $2 -a ! -e $2 ]; then
+	    printf "Creating link %s\n" "$2"
+	    /bin/ln -s $1 $2
+	fi
+    fi
+}
+
 create_symlinks() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
@@ -203,6 +220,30 @@ get_realpath() (
     fi
 )
 
+get_setpriv_command() (
+    assert [ -n "$1" ]
+    rgid="$(id -g $1)"
+    ruid="$(id -u $1)"
+    setpriv_opts="--clear-groups --rgid $rgid --ruid $ruid"
+    setpriv_version="$(setpriv --version 2>/dev/null)"
+    shift
+
+    case "${setpriv_version##* }" in
+	(2.3[3456789].*|2.[456789]?.*|[3456789].*)
+	    setpriv_opts="$setpriv_opts --reset-env"
+	    ;;
+	(2.3[12].*)
+	    :
+	    ;;
+	(*)
+	    return 1
+	    ;;
+    esac
+
+    printf "setpriv %s %s\n" "$setpriv_opts" "$*"
+    return 0
+)
+
 get_status() {
     if [ -e $APP_PIDFILE ]; then
 	printf "Service started in %s seconds\n" "$total_elapsed"
@@ -210,6 +251,28 @@ get_status() {
 	printf "Service %s installed and started successfully\n" "$APP_NAME"
     else
 	printf "Service %s installed successfully\n" "$APP_NAME"
+    fi
+}
+
+install_file() {
+    assert [ $# -eq 3 ]
+    assert [ -n "$3" ]
+
+    if [ $dryrun = true ]; then
+	check_permissions $3
+    else
+	assert [ -n "$1" ]
+	assert [ -n "$2" ]
+	assert [ -r $2 ]
+
+	if is_tmpfile $2; then
+	    printf "Generating file %s\n" "$3"
+	else
+	    printf "Installing file %s as %s\n" "$2" "$3"
+	fi
+
+	install -d -m 755 "$(dirname "$3")"
+	install -C -m $1 $2 $3
     fi
 }
 
@@ -325,6 +388,10 @@ install_uwsgi_from_source() (
     done
 )
 
+is_tmpfile() {
+    printf "%s\n" ${tmpfiles-} | grep $1 >/dev/null
+}
+
 restart_service() {
     if signal_service_restart; then
 	signal_received=true
@@ -389,6 +456,22 @@ set_start_pending() {
 	esac
     fi
 }
+
+shell() (
+    assert [ $# -ge 1 ]
+
+    if [ "$(id -u)" -eq 0 -a -n "${SUDO_USER:-}" ]; then
+	su=$(get_setpriv_command $SUDO_USER || true)
+
+	if [ -z "$su" ]; then
+	    su="/usr/bin/su -l $SUDO_USER"
+	fi
+
+	eval $su "$@"
+    else
+	eval "$@"
+    fi
+)
 
 start_service() {
     case "$kernel_name" in

@@ -106,23 +106,6 @@ control_launch_agent() (
     esac
 )
 
-create_symlink() {
-    assert [ $# -eq 2 ]
-    assert [ -n "$2" ]
-
-    if [ $dryrun = true ]; then
-	check_permissions "$2"
-    else
-	assert [ -n "$1" ]
-	assert [ -r $1 ]
-
-	if [ $1 != $2 -a ! -e $2 ]; then
-	    printf "Creating link %s\n" "$2"
-	    /bin/ln -s $1 $2
-	fi
-    fi
-}
-
 create_tmpfile() {
     tmpfile=$(mktemp)
     tmpfiles="${tmpfiles+$tmpfiles }$tmpfile"
@@ -239,30 +222,6 @@ get_required_python_versions() {
     return 1
 }
 
-get_setpriv_command() (
-    assert [ -n "$1" ]
-    rgid="$(id -g $1)"
-    ruid="$(id -u $1)"
-    setpriv_opts="--clear-groups --rgid $rgid --ruid $ruid"
-    setpriv_version="$(setpriv --version 2>/dev/null)"
-    shift
-
-    case "${setpriv_version##* }" in
-	(2.3[3456789].*|2.[456789]?.*|[3456789].*)
-	    setpriv_opts="$setpriv_opts --reset-env"
-	    ;;
-	(2.3[12].*)
-	    :
-	    ;;
-	(*)
-	    return 1
-	    ;;
-    esac
-
-    printf "setpriv %s %s\n" "$setpriv_opts" "$*"
-    return 0
-)
-
 grep_pyenv_version() {
     assert [ $# -eq 0 -o $# -eq 1 ]
 
@@ -273,28 +232,6 @@ grep_pyenv_version() {
     fi
 }
 
-install_file() {
-    assert [ $# -eq 3 ]
-    assert [ -n "$3" ]
-
-    if [ $dryrun = true ]; then
-	check_permissions $3
-    else
-	assert [ -n "$1" ]
-	assert [ -n "$2" ]
-	assert [ -r $2 ]
-
-	if is_tmpfile $2; then
-	    printf "Generating file %s\n" "$3"
-	else
-	    printf "Installing file %s as %s\n" "$2" "$3"
-	fi
-
-	install -d -m 755 "$(dirname "$3")"
-	install -C -m $1 $2 $3
-    fi
-}
-
 install_python_version() (
     version=${1-$(get_required_python_versions | sort -Vr | head -n 1)}
 
@@ -302,10 +239,6 @@ install_python_version() (
 	pyenv install -s $version
     fi
 )
-
-is_tmpfile() {
-    printf "%s\n" ${tmpfiles-} | grep $1 >/dev/null
-}
 
 print_file_tail() {
     assert [ $# -eq 1 ]
@@ -332,22 +265,6 @@ remove_files() {
 	/bin/rm -rf "$@"
     fi
 }
-
-shell() (
-    assert [ $# -ge 1 ]
-
-    if [ "$(id -u)" -eq 0 -a -n "${SUDO_USER:-}" ]; then
-	su=$(get_setpriv_command $SUDO_USER || true)
-
-	if [ -z "$su" ]; then
-	    su="/usr/bin/su -l $SUDO_USER"
-	fi
-
-	eval $su "$@"
-    else
-	eval "$@"
-    fi
-)
 
 show_logs() {
     assert [ $# -eq 1 ]
