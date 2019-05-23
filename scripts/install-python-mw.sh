@@ -44,6 +44,72 @@ get_realpath() (
     fi
 )
 
+install_python_mw() {
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian)
+		    case "$VERSION_ID" in
+			(9)
+			    :
+			    ;;
+			(10)
+			    :
+			    ;;
+			('')
+			    case "$(cat /etc/debian_version)" in
+				(buster/sid)
+				    :
+				    ;;
+				(*)
+				    abort_not_supported Release
+				    ;;
+			    esac
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(ubuntu)
+		    case "$VERSION_ID" in
+			(18.04)
+			    :
+			    ;;
+			(19.04)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(opensuse-*)
+		    :
+		    ;;
+		(fedora)
+		    :
+		    ;;
+		(redhat)
+		    :
+		    ;;
+		(centos)
+		    "$script_dir/install-packages.sh" epel-release
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+
+    packages=$("$script_dir/get-python-mw-packages.sh")
+    "$script_dir/install-packages.sh" $packages
+}
+
 if [ $# -gt 0 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
@@ -52,66 +118,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian)
-		case "$VERSION_ID" in
-		    (9)
-			:
-			;;
-		    (10)
-			:
-			;;
-		    ('')
-			case "$(cat /etc/debian_version)" in
-			    (buster/sid)
-				:
-				;;
-			    (*)
-				abort_not_supported Release
-				;;
-			esac
-			;;
-		    (*)
-			abort_not_supported Release
-			;;
-		esac
-		;;
-	    (ubuntu)
-		case "$VERSION_ID" in
-		    (18.04)
-			:
-			;;
-		    (19.04)
-			:
-			;;
-		    (*)
-			abort_not_supported Release
-			;;
-		esac
-		;;
-	    (opensuse-*)
-		:
-		;;
-	    (fedora)
-		:
-		;;
-	    (redhat)
-		:
-		;;
-	    (centos)
-		"$script_dir/install-packages.sh" epel-release
-		;;
-	    (*)
-		abort_not_supported Distro
-		;;
-	esac
-	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
-
-packages=$("$script_dir/get-python-mw-packages.sh")
-"$script_dir/install-packages.sh" $packages
+install_python_mw

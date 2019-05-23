@@ -29,13 +29,59 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_realpath() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ -d "$1" ]
+    realpath=$(which realpath)
+
+    if [ -n "$realpath" ]; then
+	$realpath "$1"
+    elif expr "$1" : '/.*' >/dev/null; then
+	printf "%s\n" "$1"
+    else
+	printf "%s\n" "$PWD/${1#./}"
+    fi
+)
+
 install_packages() {
+    install_opts=$("$script_dir/get-package-install-options.sh")
+    installer=$("$script_dir/get-package-manager.sh")
+
+    parse_arguments "$@"
+
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian|ubuntu|opensuse-*|fedora|redhat|centos)
+		    install_pattern_from_args
+		    install_packages_from_args
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    "$script_dir/install-homebrew.sh"
+	    install_packages_from_args
+	    ;;
+	(FreeBSD|SunOS)
+	    install_packages_from_args
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+}
+
+install_packages_from_args() {
     if [ -n "$packages" ]; then
 	$installer install $install_opts $packages
     fi
 }
 
-install_pattern() {
+install_pattern_from_args() {
     if [ -n "$pattern" ]; then
 	pattern_opts=$("$script_dir/get-pattern-install-options.sh")
 	$installer install $install_opts $pattern_opts $pattern
@@ -67,21 +113,6 @@ parse_arguments() {
     packages="$@"
 }
 
-get_realpath() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    assert [ -d "$1" ]
-    realpath=$(which realpath)
-
-    if [ -n "$realpath" ]; then
-	$realpath "$1"
-    elif expr "$1" : '/.*' >/dev/null; then
-	printf "%s\n" "$1"
-    else
-	printf "%s\n" "$PWD/${1#./}"
-    fi
-)
-
 usage() {
     if [ $# -gt 0 ]; then
 	printf "$@" >&2
@@ -94,35 +125,8 @@ usage() {
 	EOM
 }
 
-parse_arguments "$@"
-
 script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-install_opts=$("$script_dir/get-package-install-options.sh")
-installer=$("$script_dir/get-package-manager.sh")
-
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian|ubuntu|opensuse-*|fedora|redhat|centos)
-		install_pattern
-		install_packages
-		;;
-	    (*)
-		abort_not_supported Distro
-		;;
-	esac
-	;;
-    (Darwin)
-	"$script_dir/install-homebrew.sh"
-	install_packages
-	;;
-    (FreeBSD|SunOS)
-	install_packages
-	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
+install_packages "$@"

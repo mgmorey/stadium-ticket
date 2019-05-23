@@ -40,6 +40,14 @@ get_realpath() (
     fi
 )
 
+install_python() {
+    if ! pyenv --version >/dev/null 2>&1; then
+	abort "%s: No pyenv found in PATH\n" "$0"
+    fi
+
+    install_python_version "$@"
+}
+
 if [ $# -gt 1 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
@@ -49,8 +57,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 
-if ! pyenv --version >/dev/null 2>&1; then
-    abort "%s: No pyenv found in PATH\n" "$0"
-fi
-
-install_python_version "$@"
+install_python "$@"

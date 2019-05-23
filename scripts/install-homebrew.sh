@@ -46,6 +46,23 @@ get_realpath() (
     fi
 )
 
+install_homebrew() {
+    case "$kernel_name" in
+	(Darwin)
+	;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+
+    if brew --version >/dev/null 2>&1; then
+	brew update
+	brew upgrade
+    else
+	/usr/bin/ruby -e "$(curl -fsSL $HOMEBREW_URL)"
+    fi
+}
+
 if [ $# -gt 0 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
@@ -54,17 +71,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Darwin)
-	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
-
-if brew --version >/dev/null 2>&1; then
-    brew update
-    brew upgrade
-else
-    /usr/bin/ruby -e "$(curl -fsSL $HOMEBREW_URL)"
-fi
+install_homebrew
