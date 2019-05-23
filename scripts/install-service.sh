@@ -325,10 +325,10 @@ install_uwsgi_from_source() (
     done
 )
 
-restart_service() {
+restart_system_service() {
     case "$kernel_name" in
 	(Linux)
-	    service uwsgi restart
+	    systemctl restart uwsgi
 	    ;;
 	(Darwin)
 	    control_launch_agent load generate_launch_agent_plist
@@ -377,7 +377,7 @@ start_service() {
     set_restart_pending
 
     if [ $restart_pending = true ]; then
-	restart_service
+	restart_system_service
 	total_elapsed=0
     fi
 
@@ -427,7 +427,7 @@ wait_for_service() {
     fi
 
     if [ $i -ge $2 ]; then
-	printf "Service failed to start within %s seconds\n" $3 >&2
+	printf "Service failed to start within %s seconds\n" $2 >&2
     fi
 
     printf "%s\n" "$i"
