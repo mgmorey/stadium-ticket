@@ -325,48 +325,7 @@ install_uwsgi_from_source() (
     done
 )
 
-restart_system_service() {
-    case "$kernel_name" in
-	(Linux)
-	    systemctl restart uwsgi
-	    ;;
-	(Darwin)
-	    control_launch_agent load generate_launch_agent_plist
-	    control_launch_agent start
-	    ;;
-    esac
-}
-
-set_restart_pending() {
-    if [ $signal_received = true ]; then
-	case "$kernel_name" in
-	    (*)
-		restart_pending=false
-		;;
-	esac
-    else
-	case "$kernel_name" in
-	    (Linux)
-		case "$ID" in
-		    (debian|ubuntu)
-			restart_pending=true
-			;;
-		    (*)
-			restart_pending=false
-			;;
-		esac
-		;;
-	    (Darwin)
-		restart_pending=true
-		;;
-	    (*)
-		restart_pending=false
-		;;
-	esac
-    fi
-}
-
-start_service() {
+restart_service() {
     if signal_service_restart; then
 	signal_received=true
     else
@@ -374,18 +333,18 @@ start_service() {
     fi
 
     total_elapsed=$elapsed
-    set_restart_pending
+    set_start_pending
 
-    if [ $restart_pending = true ]; then
-	restart_system_service
+    if [ $start_pending = true ]; then
+	start_service
 	total_elapsed=0
     fi
 
-    if [ $restart_pending = true -o $signal_received = false ]; then
+    if [ $start_pending = true -o $signal_received = false ]; then
 	printf "Waiting for service %s to start\n" "$APP_NAME"
     fi
 
-    if [ $restart_pending = true ]; then
+    if [ $start_pending = true ]; then
 	wait_period=$((WAIT_RESTART - total_elapsed))
 	elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
     elif [ $signal_received = true ]; then
@@ -400,6 +359,47 @@ start_service() {
 	elapsed=$(wait_for_interval $((WAIT_DEFAULT - total_elapsed)))
 	total_elapsed=$((total_elapsed + elapsed))
     fi
+}
+
+set_start_pending() {
+    if [ $signal_received = true ]; then
+	case "$kernel_name" in
+	    (*)
+		start_pending=false
+		;;
+	esac
+    else
+	case "$kernel_name" in
+	    (Linux)
+		case "$ID" in
+		    (debian|ubuntu)
+			start_pending=true
+			;;
+		    (*)
+			start_pending=false
+			;;
+		esac
+		;;
+	    (Darwin)
+		start_pending=true
+		;;
+	    (*)
+		start_pending=false
+		;;
+	esac
+    fi
+}
+
+start_service() {
+    case "$kernel_name" in
+	(Linux)
+	    systemctl restart uwsgi
+	    ;;
+	(Darwin)
+	    control_launch_agent load generate_launch_agent_plist
+	    control_launch_agent start
+	    ;;
+    esac
 }
 
 wait_for_interval() {
@@ -447,5 +447,5 @@ source_dir=$script_dir/..
 
 configure_system
 install_service
-start_service
+restart_service
 get_status
