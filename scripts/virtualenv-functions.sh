@@ -55,7 +55,11 @@ create_virtualenv() {
 
 set_home_directory() {
     if [ -n "${SUDO_USER-}" ]; then
-	export HOME="$(getent passwd $SUDO_USER | awk -F: '{print $6}')"
+	home_dir="$(getent passwd $SUDO_USER | awk -F: '{print $6}')"
+
+	if [ "$HOME" != "$home_dir" ]; then
+	    export HOME="$home_dir"
+	fi
     fi
 }
 
