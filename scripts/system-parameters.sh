@@ -87,8 +87,11 @@ configure_linux_debian() {
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
 
-    # Set uWSGI top-level directories
+    # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr
+
+    # Set uWSGI top-level directories
+    UWSGI_ETCDIR=/etc/uwsgi
     UWSGI_LOGDIR=/var/log/uwsgi/app
     UWSGI_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 
