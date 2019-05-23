@@ -405,15 +405,15 @@ restart_service() {
 	wait_period=$((WAIT_RESTART - total_elapsed))
 	elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
     elif [ $signal_received = true ]; then
-	elapsed=$(wait_for_interval $((WAIT_DEFAULT - total_elapsed)))
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
     else
-	elapsed=$(wait_for_interval $((WAIT_DEFAULT - total_elapsed)))
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
     fi
 
     total_elapsed=$((total_elapsed + elapsed))
 
     if [ $total_elapsed -lt $WAIT_DEFAULT ]; then
-	elapsed=$(wait_for_interval $((WAIT_DEFAULT - total_elapsed)))
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
 	total_elapsed=$((total_elapsed + elapsed))
     fi
 }
@@ -485,18 +485,6 @@ start_service() {
     esac
 }
 
-wait_for_interval() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    if [ $1 -gt 0 ]; then
-	sleep $1
-	printf "%s\n" "$1"
-    else
-	printf "%s\n" 0
-    fi
-}
-
 wait_for_service() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" -a -n "$2" ]
@@ -514,6 +502,18 @@ wait_for_service() {
     fi
 
     printf "%s\n" "$i"
+}
+
+wait_for_timeout() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ $1 -gt 0 ]; then
+	sleep $1
+	printf "%s\n" "$1"
+    else
+	printf "%s\n" 0
+    fi
 }
 
 if [ $# -gt 0 ]; then
