@@ -69,6 +69,15 @@ parse_arguments() {
     fi
 }
 
+remove_files() {
+    if [ $dryrun = true ]; then
+	check_permissions "$@"
+    else
+	printf "Removing %s\n" "$@" | sort -u
+	/bin/rm -rf "$@"
+    fi
+}
+
 remove_service() {
     config_files="$APP_ETCDIR"
     service_files="$APP_DIR"
@@ -92,7 +101,7 @@ stop_service() {
 		;;
 	    (Darwin)
 		control_launch_agent stop
-		control_launch_agent unload
+		control_launch_agent unload remove_files
 		;;
 	esac
 

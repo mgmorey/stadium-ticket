@@ -97,11 +97,14 @@ control_launch_agent() (
 	    fi
 	    ;;
 	(unload)
+	    assert [ $# -eq 2 ]
+	    assert [ -n "$2" ]
+
 	    if [ $dryrun = false -a -e $agent_target ]; then
 		launchctl unload $agent_target
 	    fi
 
-	    remove_files $agent_target
+	    $2 $agent_target
 	    ;;
     esac
 )
@@ -255,15 +258,6 @@ print_file_tail() {
     printf "%s\n" $LINE_SINGLE$LINE_SINGLE
     cat $tmpfile
     printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE
-}
-
-remove_files() {
-    if [ $dryrun = true ]; then
-	check_permissions "$@"
-    else
-	printf "Removing %s\n" "$@" | sort -u
-	/bin/rm -rf "$@"
-    fi
 }
 
 show_logs() {
