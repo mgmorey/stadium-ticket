@@ -370,11 +370,3 @@ signal_service() {
 
     return 1
 }
-
-signal_service_restart() {
-    signal_service $WAIT_SIGNAL HUP
-}
-
-signal_service_stop() {
-    signal_service $WAIT_SIGNAL INT INT TERM KILL
-}

@@ -382,7 +382,7 @@ is_tmpfile() {
 }
 
 restart_service() {
-    if signal_service_restart; then
+    if signal_service $WAIT_SIGNAL HUP; then
 	signal_received=true
     else
 	signal_received=false
