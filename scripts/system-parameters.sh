@@ -94,10 +94,6 @@ configure_linux_debian() {
     UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
     UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/uwsgi/plugins
 
-    # Set additional application directories
-    APP_LOGDIR=$UWSGI_LOGDIR
-    APP_RUNDIR=$UWSGI_RUNDIR
-
     # Set additional parameters from app directories
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/socket
