@@ -45,6 +45,45 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_python_package() {
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian)
+		    printf "%s %s\n" $DEBIAN_INFO
+		    ;;
+		(ubuntu)
+		    printf "%s %s\n" $UBUNTU_INFO
+		    ;;
+		(opensuse-*)
+		    printf "%s %s\n" $OPENSUSE_INFO
+		    ;;
+		(fedora)
+		    printf "%s %s\n" $FEDORA_INFO
+		    ;;
+		(redhat|centos)
+		    printf "%s %s\n" $REDHAT_INFO
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    printf "%s %s\n" $DARWIN_INFO
+	    ;;
+	(FreeBSD)
+	    printf "%s %s\n" $FREEBSD_INFO
+	    ;;
+	(SunOS)
+	    printf "%s %s\n" $SUNOS_INFO
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+}
+
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -64,39 +103,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian)
-		printf "%s %s\n" $DEBIAN_INFO
-		;;
-	    (ubuntu)
-		printf "%s %s\n" $UBUNTU_INFO
-		;;
-	    (opensuse-*)
-		printf "%s %s\n" $OPENSUSE_INFO
-		;;
-	    (fedora)
-		printf "%s %s\n" $FEDORA_INFO
-		;;
-	    (redhat|centos)
-		printf "%s %s\n" $REDHAT_INFO
-		;;
-	    (*)
-		abort_not_supported Distro
-		;;
-	esac
-	;;
-    (Darwin)
-	printf "%s %s\n" $DARWIN_INFO
-	;;
-    (FreeBSD)
-	printf "%s %s\n" $FREEBSD_INFO
-	;;
-    (SunOS)
-	printf "%s %s\n" $SUNOS_INFO
-	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
+get_python_package
