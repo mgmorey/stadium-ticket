@@ -218,29 +218,41 @@ get_realpath() (
 
 get_setpriv_command() (
     assert [ -n "$1" ]
-    rgid="$(id -g $1)"
-    ruid="$(id -u $1)"
-    setpriv_opts="--clear-groups --rgid $rgid --ruid $ruid"
-    setpriv_version="$(setpriv --version 2>/dev/null)"
+    username=$1
     shift
 
-    case "${setpriv_version##* }" in
-	(2.3[3456789].*|2.[456789]?.*|[3456789].*)
-	    setpriv_opts="$setpriv_opts --reset-env"
-	    ;;
-	(2.3[12].*)
-	    :
-	    ;;
-	(2.23.*)
-	    :
+    case "$kernel_name" in
+	(Linux)
+	    rgid="$(id -g $username)"
+	    ruid="$(id -u $username)"
+	    setpriv_options="--clear-groups --rgid $rgid --ruid $ruid"
+	    setpriv_version="$(setpriv --version 2>/dev/null)"
+
+	    case "${setpriv_version##* }" in
+		(2.3[012].*)
+		    :
+		    ;;
+		(2.[12][0-9].*)
+		    :
+		    ;;
+		(2.[0-9].*)
+		    :
+		    ;;
+		([01].*)
+		    :
+		    ;;
+		(*)
+		    setpriv_options="$setpriv_options --reset-env"
+		    ;;
+	    esac
+
+	    printf "setpriv %s %s\n" "$setpriv_options" "$*"
+	    return 0
 	    ;;
 	(*)
 	    return 1
 	    ;;
     esac
-
-    printf "setpriv %s %s\n" "$setpriv_opts" "$*"
-    return 0
 )
 
 install_file() {
