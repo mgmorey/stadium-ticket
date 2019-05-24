@@ -29,6 +29,39 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_package_manager() {
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian|ubuntu)
+		    printf "%s\n" apt-get
+		    ;;
+		(opensuse-*)
+		    printf "%s\n" zypper
+		    ;;
+		(fedora)
+		    printf "%s\n" dnf
+		    ;;
+		(redhat|centos)
+		    printf "%s\n" yum
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    printf "%s\n" brew
+	    ;;
+	(FreeBSD|SunOS)
+	    printf "%s\n" pkg
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+}
+
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -48,33 +81,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian|ubuntu)
-		printf "%s\n" apt-get
-		;;
-	    (opensuse-*)
-		printf "%s\n" zypper
-		;;
-	    (fedora)
-		printf "%s\n" dnf
-		;;
-	    (redhat|centos)
-		printf "%s\n" yum
-		;;
-	    (*)
-		abort_not_supported Distro
-		;;
-	esac
-	;;
-    (Darwin)
-	printf "%s\n" brew
-	;;
-    (FreeBSD|SunOS)
-	printf "%s\n" pkg
-	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
+get_package_manager
