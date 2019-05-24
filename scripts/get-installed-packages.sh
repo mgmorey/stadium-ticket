@@ -39,6 +39,33 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_installed_packages() {
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian|ubuntu)
+		    dpkg-query -Wf '${Package}\n'
+		    ;;
+		(opensuse-*)
+		    zypper -q search -i -t package | awk 'NR > 3 {print $3}'
+		    ;;
+		(redhat|centos|fedora)
+		    yum list installed | awk '{print $1}' | awk -F. '{print $1}'
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    brew list -1
+	    ;;
+	(FreeBSD)
+	    pkg info | awk "$FREEBSD_AWK"
+	    ;;
+	(SunOS)
+	    pkg list -s | awk '{print $1}'
+	    ;;
+    esac
+}
+
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -58,27 +85,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian|ubuntu)
-		dpkg-query -Wf '${Package}\n'
-		;;
-	    (opensuse-*)
-		zypper -q search -i -t package | awk 'NR > 3 {print $3}'
-		;;
-	    (redhat|centos|fedora)
-		yum list installed | awk '{print $1}' | awk -F. '{print $1}'
-		;;
-	esac
-	;;
-    (Darwin)
-	brew list -1
-	;;
-    (FreeBSD)
-	pkg info | awk "$FREEBSD_AWK"
-	;;
-    (SunOS)
-	pkg list -s | awk '{print $1}'
-	;;
-esac
+get_installed_packages
