@@ -130,10 +130,6 @@ configure_system_defaults() {
 	    UWSGI_LOGDIR=$UWSGI_PREFIX/var/log
 	fi
 
-	if [ -z "${UWSGI_OPTDIR-}" ]; then
-	    UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
-	fi
-
 	if [ -z "${UWSGI_RUNDIR-}" ]; then
 	    UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
 	fi
