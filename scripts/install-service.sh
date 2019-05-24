@@ -336,7 +336,7 @@ install_service() {
 	install_files $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
 	generate_service_ini $APP_CONFIG app.ini "$APP_VARS"
 	change_owner $APP_ETCDIR $APP_DIR $APP_VARDIR
-	create_symlinks $APP_CONFIG $UWSGI_APPDIRS
+	create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
     done
 }
 

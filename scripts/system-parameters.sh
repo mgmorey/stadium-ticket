@@ -26,9 +26,6 @@ configure_darwin() {
     # Set application directory prefix
     APP_PREFIX=/usr/local
 
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS=""
-
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
@@ -50,9 +47,6 @@ configure_freebsd() {
 
     # Set application directory prefix
     APP_PREFIX=/usr/local
-
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS=""
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
@@ -108,7 +102,7 @@ configure_linux_redhat() {
     APP_UID=uwsgi
 
     # Set uWSGI directories
-    UWSGI_APPDIRS="."
+    UWSGI_APPDIRS=.
     UWSGI_ETCDIR=/etc/uwsgi.d
     UWSGI_RUNDIR=/run/uwsgi
 }
