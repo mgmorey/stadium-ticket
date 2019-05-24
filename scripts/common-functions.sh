@@ -215,7 +215,7 @@ get_pyenv_versions() {
     pyenv install --list | awk 'NR > 1 {print $1}' | grep_pyenv_version ${1-}
 }
 
-get_required_python_versions() {
+get_required_python_versions() (
     python=$(find_bootstrap_python)
     python_versions=$($python "$script_dir/check-python.py" --delim '\.')
 
@@ -226,7 +226,7 @@ get_required_python_versions() {
     done
 
     return 1
-}
+)
 
 grep_pyenv_version() {
     assert [ $# -eq 0 -o $# -eq 1 ]
@@ -304,14 +304,7 @@ signal_process_and_poll() {
     done
 
     elapsed=$((elapsed + i))
-
-    if [ $i -lt $3 ]; then
-	result=0
-    else
-	result=1
-    fi
-
-    return $result
+    return [ $i -lt $3 ]
 }
 
 signal_process_and_wait() {
