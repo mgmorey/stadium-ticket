@@ -27,6 +27,21 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_config_files() (
+    printf "%s\n" $APP_ETCDIR/app.ini
+
+    if [ -z "${UWSGI_APPDIRS-}" ]; then
+	return 0
+    elif [ -z "${UWSGI_ETCDIR-}" ]; then
+	return 0
+    elif [ ! -d $UWSGI_ETCDIR ]; then
+	return 0
+    else
+	cd $UWSGI_ETCDIR
+	find $UWSGI_APPDIRS -name $APP_NAME.ini -print
+    fi
+)
+
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -79,18 +94,13 @@ remove_files() {
 }
 
 remove_service() {
-    config_files="$APP_ETCDIR"
     service_files="$APP_DIR"
-
-    if [ -n "${UWSGI_ETCDIR-}" ] && [ -d "$UWSGI_ETCDIR" ]; then
-	config_files="$(find $UWSGI_ETCDIR -name $APP_NAME.ini -print) $config_files"
-    fi
 
     if [ $purge = true ]; then
 	service_files="$service_files $APP_RUNDIR $APP_VARDIR $APP_LOGFILE"
     fi
 
-    remove_files $config_files $service_files
+    remove_files $(get_config_files) $service_files
 }
 
 stop_service() {
