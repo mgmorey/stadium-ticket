@@ -241,6 +241,8 @@ get_setpriv_command() (
 		([01].*)
 		    :
 		    ;;
+		('')
+		    ;;
 		(*)
 		    setpriv_options="$setpriv_options --reset-env"
 		    ;;
