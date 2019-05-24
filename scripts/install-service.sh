@@ -334,7 +334,7 @@ install_service() {
 	install_file 600 .env $APP_DIR/.env
 	install_flask_app 644 app $APP_DIR
 	install_files $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
-	generate_service_ini $APP_CONFIG app.ini "$UWSGI_VARS"
+	generate_service_ini $APP_CONFIG app.ini "$APP_VARS"
 	change_owner $APP_ETCDIR $APP_DIR $APP_VARDIR
 	create_symlinks $APP_CONFIG $UWSGI_APPDIRS
     done

@@ -13,11 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-configure_common() {
-    # Set uWSGI variables
-    UWSGI_VARS="APP_DIR APP_GID APP_LOGFILE APP_NAME APP_PIDFILE APP_PLUGIN \
-APP_PORT APP_RUNDIR APP_UID APP_VARDIR"
-}
+APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
 configure_darwin() {
     # Set app plugin
@@ -188,8 +184,6 @@ configure_system_defaults() {
 
 configure_system() {
     eval $("$script_dir/get-os-release.sh" -X)
-
-    configure_common
 
     case "$kernel_name" in
 	(Linux)
