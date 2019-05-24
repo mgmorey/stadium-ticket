@@ -25,7 +25,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-create_service_virtualenv() {
+create_service_virtualenv() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     source_dir=$script_dir/..
@@ -48,7 +48,7 @@ create_service_virtualenv() {
     esac
 
     sync_virtualenv_via_pip $venv_filename $python
-}
+)
 
 get_realpath() (
     assert [ $# -eq 1 ]
