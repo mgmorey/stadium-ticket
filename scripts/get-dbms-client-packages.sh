@@ -49,6 +49,73 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_dbms_client_packages() {
+    package=$("$script_dir/get-installed-dbms-package.sh" client)
+
+    case "$package" in
+	(*-client-core-*)
+	    package=$(printf "%s\n" $package | sed -e 's/-core-/-/')
+	    ;;
+    esac
+
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian)
+		    case "$VERSION_ID" in
+			(9)
+			    packages="${package:-$DEBIAN_9_PKG} $DEBIAN_PKGS"
+			    ;;
+			(10)
+			    packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
+			    ;;
+			('')
+			    case "$(cat /etc/debian_version)" in
+				(buster/sid)
+				    packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
+				    ;;
+				(*)
+				    abort_not_supported Release
+				    ;;
+			    esac
+			    ;;
+		    esac
+		    ;;
+		(ubuntu)
+		    case "$VERSION_ID" in
+			(18.04)
+			    packages="${package:-$UBUNTU_18_04_PKG} $UBUNTU_PKGS"
+			    ;;
+			(19.04)
+			    packages="${package:-$UBUNTU_19_04_PKG} $UBUNTU_PKGS"
+			    ;;
+		    esac
+		    ;;
+		(opensuse-*)
+		    packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
+		    ;;
+		(fedora)
+		    packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
+		    ;;
+		(redhat|centos)
+		    packages="${package:-$REDHAT_PKG}"
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    packages="${package:-$DARWIN_PKG}"
+	    ;;
+	(FreeBSD)
+	    packages="${package:-$FREEBSD_PKG} $FREEBSD_PKGS"
+	    ;;
+	(SunOS)
+	    packages="${package:-$SUNOS_PKG} $SUNOS_PKGS"
+	    ;;
+    esac
+
+    "$script_dir/get-python-packages.sh" $packages
+}
+
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -66,69 +133,6 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-package=$("$script_dir/get-installed-dbms-package.sh" client)
-
-case "$package" in
-    (*-client-core-*)
-	package=$(printf "%s\n" $package | sed -e 's/-core-/-/')
-	;;
-esac
-
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian)
-		case "$VERSION_ID" in
-		    (9)
-			packages="${package:-$DEBIAN_9_PKG} $DEBIAN_PKGS"
-			;;
-		    (10)
-			packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
-			;;
-		    ('')
-			case "$(cat /etc/debian_version)" in
-			    (buster/sid)
-				packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
-				;;
-			    (*)
-				abort_not_supported Release
-				;;
-			esac
-			;;
-		esac
-		;;
-	    (ubuntu)
-		case "$VERSION_ID" in
-		    (18.04)
-			packages="${package:-$UBUNTU_18_04_PKG} $UBUNTU_PKGS"
-			;;
-		    (19.04)
-			packages="${package:-$UBUNTU_19_04_PKG} $UBUNTU_PKGS"
-			;;
-		esac
-		;;
-	    (opensuse-*)
-		packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
-		;;
-	    (fedora)
-		packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
-		;;
-	    (redhat|centos)
-		packages="${package:-$REDHAT_PKG}"
-		;;
-	esac
-	;;
-    (Darwin)
-	packages="${package:-$DARWIN_PKG}"
-	;;
-    (FreeBSD)
-	packages="${package:-$FREEBSD_PKG} $FREEBSD_PKGS"
-	;;
-    (SunOS)
-	packages="${package:-$SUNOS_PKG} $SUNOS_PKGS"
-	;;
-esac
-
-"$script_dir/get-python-packages.sh" $packages
+get_dbms_client_packages
