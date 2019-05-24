@@ -170,17 +170,25 @@ generate_sed_program() (
 
     for var; do
 	eval value=\$$var
-	pattern="\(.*\) = \(.*\)\$($var)\(.*\)"
-	replace="\\1 = \\2$value\\3"
-	printf 's|^#<%s>$|%s|g\n' "$pattern" "$replace"
-	printf 's|^%s$|%s|g\n' "$pattern" "$replace"
-    done
 
-    case "$kernel_name" in
-	(FreeBSD)
-	    printf '/^plugin = [a-z0-9]*$/d\n'
-	    ;;
-    esac
+	case var in
+	    (APP_PLUGIN)
+		if [ -n "$value" ]; then
+		    pattern="\(plugin = \)[a-z0-9]*"
+		    replace="plugin = $value"
+		    printf 's|^%s$|%s|g\n' "$pattern" "$replace"
+		else
+		    printf '/^plugin = [a-z0-9]*$/d\n'
+		fi
+		;;
+	    (*)
+		pattern="\(.*\) = \(.*\)\$($var)\(.*\)"
+		replace="\\1 = \\2$value\\3"
+		printf 's|^#<%s>$|%s|g\n' "$pattern" "$replace"
+		printf 's|^%s$|%s|g\n' "$pattern" "$replace"
+		;;
+	esac
+    done
 )
 
 generate_service_ini() {
