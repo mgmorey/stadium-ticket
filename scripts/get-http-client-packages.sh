@@ -58,7 +58,7 @@ get_http_client_packages() {
 	    ;;
     esac
 
-    if [ -n "${packages:-}" ]; then
+    if [ -n "${packages-}" ]; then
 	printf "%s\n" $packages
     fi
 }
