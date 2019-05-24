@@ -168,7 +168,7 @@ configure_system_defaults() {
 	fi
     else
 	if [ -z "${UWSGI_BINARY_DIR-}" ]; then
-	    UWSGI_BINARY_DIR=$UWSGI_PREFIX/usr/bin
+	    UWSGI_BINARY_DIR=/usr/bin
 	fi
     fi
 
