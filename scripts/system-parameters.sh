@@ -94,12 +94,6 @@ configure_linux_redhat() {
     UWSGI_RUNDIR=/run/uwsgi
 }
 
-configure_sunos() {
-    # Set application group and user accounts
-    APP_GID=sys
-    APP_UID=root
-}
-
 configure_system_defaults() {
     # Set app plugin
     if [ -z "${APP_PLUGIN-}" ]; then
