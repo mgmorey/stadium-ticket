@@ -89,8 +89,8 @@ configure_linux_redhat() {
     APP_UID=uwsgi
 
     # Set uWSGI directories
-    UWSGI_APPDIRS=.
-    UWSGI_ETCDIR=/etc/uwsgi.d
+    UWSGI_APPDIRS=uwsgi.d
+    UWSGI_ETCDIR=/etc
     UWSGI_RUNDIR=/run/uwsgi
 }
 
