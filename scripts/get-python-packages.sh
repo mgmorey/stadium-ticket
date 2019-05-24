@@ -21,34 +21,11 @@ abort() {
     exit 1
 }
 
-abort_not_supported() {
-    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
-}
-
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
 get_python_packages() {
-    case "$kernel_name" in
-	(Linux)
-	    case "$ID" in
-		(debian|ubuntu|opensuse-*|fedora|redhat|centos)
-		    :
-		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
-	    esac
-	    ;;
-	(Darwin|FreeBSD|SunOS)
-	    :
-	    ;;
-	(*)
-	    abort_not_supported "Operating system"
-	    ;;
-    esac
-
     data=$("$script_dir/get-python-package.sh")
 
     package_name=$(printf "%s" "$data" | awk '{print $1}')
