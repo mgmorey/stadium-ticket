@@ -148,12 +148,16 @@ configure_system_defaults() {
     # Set additional file/directory parameters
     APP_CONFIG=$APP_ETCDIR/app.ini
 
+    if [ -z "${UWSGI_PREFIX-}" ]; then
+	UWSGI_PREFIX=
+    fi
+
     if [ -n "${UWSGI_PREFIX-}" ]; then
 	if [ -z "${UWSGI_BINARY_DIR-}" ]; then
 	    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
 	fi
 
-	if [ -z ${UWSGI_ETCDIR-} ]; then
+	if [ -z "${UWSGI_ETCDIR-}" ]; then
 	    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
 	fi
 
