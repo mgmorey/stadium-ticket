@@ -83,9 +83,7 @@ get_sqlite_packages() {
 	    ;;
     esac
 
-    if [ "${packages-}" ]; then
-	"$script_dir/get-python-packages.sh" $packages
-    fi
+    "$script_dir/get-python-packages.sh" ${packages-}
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")

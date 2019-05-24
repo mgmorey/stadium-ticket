@@ -113,7 +113,7 @@ get_dbms_client_packages() {
 	    ;;
     esac
 
-    "$script_dir/get-python-packages.sh" $packages
+    "$script_dir/get-python-packages.sh" ${packages-}
 }
 
 get_realpath() (

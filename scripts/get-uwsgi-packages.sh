@@ -55,66 +55,70 @@ get_realpath() (
     fi
 )
 
+get_uwsgi_packages() {
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian)
+		    case "$VERSION_ID" in
+			(9)
+			    packages=$DEBIAN_9_PKGS
+			    ;;
+			(10)
+			    packages=$DEBIAN_10_PKGS
+			    ;;
+			('')
+			    case "$(cat /etc/debian_version)" in
+				(buster/sid)
+				    packages=$DEBIAN_10_PKGS
+				    ;;
+				(*)
+				    abort_not_supported Release
+				    ;;
+			    esac
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(ubuntu)
+		    case "$VERSION_ID" in
+			(18.04)
+			    packages=$DEBIAN_9_PKGS
+			    ;;
+			(19.04)
+			    packages=$DEBIAN_10_PKGS
+			    ;;
+		    esac
+		    ;;
+		(opensuse-*)
+		    packages=$OPENSUSE_PKGS
+		    ;;
+		(fedora)
+		    packages=$FEDORA_PKGS
+		    ;;
+		(redhat|centos)
+		    packages=$REDHAT_PKGS
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    packages=$DARWIN_PKGS
+	    ;;
+	(FreeBSD)
+	    packages=$FREEBSD_PKGS
+	    ;;
+	(SunOS)
+	    packages=$SUNOS_PKGS
+	    ;;
+    esac
+
+    "$script_dir/get-python-packages.sh" ${packages-}
+}
+
 script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian)
-		case "$VERSION_ID" in
-		    (9)
-			packages=$DEBIAN_9_PKGS
-			;;
-		    (10)
-			packages=$DEBIAN_10_PKGS
-			;;
-		    ('')
-			case "$(cat /etc/debian_version)" in
-			    (buster/sid)
-				packages=$DEBIAN_10_PKGS
-				;;
-			    (*)
-				abort_not_supported Release
-				;;
-			esac
-			;;
-		    (*)
-			abort_not_supported Release
-			;;
-		esac
-		;;
-	    (ubuntu)
-		case "$VERSION_ID" in
-		    (18.04)
-			packages=$DEBIAN_9_PKGS
-			;;
-		    (19.04)
-			packages=$DEBIAN_10_PKGS
-			;;
-		esac
-		;;
-	    (opensuse-*)
-		packages=$OPENSUSE_PKGS
-		;;
-	    (fedora)
-		packages=$FEDORA_PKGS
-		;;
-	    (redhat|centos)
-		packages=$REDHAT_PKGS
-		;;
-	esac
-	;;
-    (Darwin)
-	packages=$DARWIN_PKGS
-	;;
-    (FreeBSD)
-	packages=$FREEBSD_PKGS
-	;;
-    (SunOS)
-	packages=$SUNOS_PKGS
-	;;
-esac
-
-"$script_dir/get-python-packages.sh" $packages
+get_uwsgi_packages

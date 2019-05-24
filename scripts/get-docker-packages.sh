@@ -91,9 +91,7 @@ get_docker_packages() {
 	    ;;
     esac
 
-    if [ -n "${packages-}" ]; then
-	"$script_dir/get-python-packages.sh" $packages
-    fi
+    "$script_dir/get-python-packages.sh" ${packages-}
 }
 
 get_realpath() (
