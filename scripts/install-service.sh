@@ -225,7 +225,7 @@ get_setpriv_command() (
 	(Linux)
 	    regid="--regid $(id -g $username)"
 	    reuid="--reuid $(id -u $username)"
-	    setpriv_options="$reuid $regid --init-groups"
+	    setpriv_options="$reuid $regid --clear-groups"
 	    setpriv_version="$(setpriv --version 2>/dev/null)"
 
 	    case "${setpriv_version##* }" in
