@@ -147,7 +147,7 @@ configure_system_defaults() {
 	UWSGI_BINARY_NAME=uwsgi
     fi
 
-    if [ -z "${UWSGI_PLUGIN_NAME-}" ]; then
+    if [ -z "${UWSGI_PLUGIN_NAME-}" -a -n "${UWSGI_PLUGIN-}" ]; then
 	UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
     fi
 
