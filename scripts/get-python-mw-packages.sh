@@ -37,6 +37,34 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_python_mw_packages() {
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian|ubuntu)
+		    packages=$DEBIAN_PKGS
+		    ;;
+		(opensuse-*)
+		    packages=$OPENSUSE_PKGS
+		    ;;
+		(fedora)
+		    packages=$FEDORA_PKGS
+		    ;;
+	    esac
+	    ;;
+	(FreeBSD)
+	    packages=$FREEBSD_PKGS
+	    ;;
+	(SunOS)
+	    packages=$SUNOS_PKGS
+	    ;;
+    esac
+
+    if [ "${packages-}" ]; then
+	"$script_dir/get-python-packages.sh" $packages
+    fi
+}
+
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -56,28 +84,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian|ubuntu)
-		packages=$DEBIAN_PKGS
-		;;
-	    (opensuse-*)
-		packages=$OPENSUSE_PKGS
-		;;
-	    (fedora)
-		packages=$FEDORA_PKGS
-		;;
-	esac
-	;;
-    (FreeBSD)
-	packages=$FREEBSD_PKGS
-	;;
-    (SunOS)
-	packages=$SUNOS_PKGS
-	;;
-esac
-
-if [ "${packages-}" ]; then
-    "$script_dir/get-python-packages.sh" $packages
-fi
+get_python_mw_packages
