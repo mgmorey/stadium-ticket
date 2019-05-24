@@ -29,6 +29,45 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_python_packages() {
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian|ubuntu|opensuse-*|fedora|redhat|centos)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(Darwin|FreeBSD|SunOS)
+	    :
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+
+    data=$("$script_dir/get-python-package.sh")
+
+    package_name=$(printf "%s" "$data" | awk '{print $1}')
+    package_modifier=$(printf "%s" "$data" | awk '{print $2}')
+
+    printf "%s\n" $package_name
+
+    for package in "$@"; do
+	case $package in
+	    (*%s*)
+		printf "$package\n" $package_modifier
+		;;
+	    (*)
+		printf "%s\n" $package
+		;;
+	esac
+    done
+}
+
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -48,39 +87,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian|ubuntu|opensuse-*|fedora|redhat|centos)
-		:
-		;;
-	    (*)
-		abort_not_supported Distro
-		;;
-	esac
-	;;
-    (Darwin|FreeBSD|SunOS)
-	:
-	;;
-    (*)
-	abort_not_supported "Operating system"
-	;;
-esac
-
-data=$("$script_dir/get-python-package.sh")
-
-package_name=$(printf "%s" "$data" | awk '{print $1}')
-package_modifier=$(printf "%s" "$data" | awk '{print $2}')
-
-printf "%s\n" $package_name
-
-for package in "$@"; do
-    case $package in
-	(*%s*)
-	    printf "$package\n" $package_modifier
-	    ;;
-	(*)
-	    printf "%s\n" $package
-	    ;;
-    esac
-done
+get_python_packages
