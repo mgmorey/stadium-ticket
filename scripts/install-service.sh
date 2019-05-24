@@ -74,7 +74,7 @@ create_dirs() {
 }
 
 create_service_virtualenv() {
-    if ! shell '"$script_dir/create-service-venv.sh"' "$@"; then
+    if ! run_unpriv '"$script_dir/create-service-venv.sh"' "$@"; then
 	abort "%s: Unable to create virtual environment\n" "$0"
     fi
 }
@@ -306,7 +306,7 @@ install_service() {
     cd "$source_dir"
 
     # initialize the database before starting the service
-    shell "'$script_dir/run.sh'" python3 -m app init-db
+    run_unpriv "'$script_dir/run.sh'" python3 -m app init-db
 
     for dryrun in true false; do
 	case "$kernel_name" in
@@ -458,6 +458,17 @@ restart_service() {
     fi
 }
 
+run_unpriv() (
+    assert [ $# -ge 1 ]
+
+    if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
+	setpriv=$(get_setpriv_command $SUDO_USER || true)
+	eval ${setpriv:-/usr/bin/su -l $SUDO_USER} "$@"
+    else
+	eval "$@"
+    fi
+)
+
 set_start_pending() {
     if [ $signal_received = true ]; then
 	case "$kernel_name" in
@@ -486,17 +497,6 @@ set_start_pending() {
 	esac
     fi
 }
-
-shell() (
-    assert [ $# -ge 1 ]
-
-    if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	su=$(get_setpriv_command $SUDO_USER || true)
-	eval ${su:-/usr/bin/su -l $SUDO_USER} "$@"
-    else
-	eval "$@"
-    fi
-)
 
 show_status() {
     if [ -e $APP_PIDFILE ]; then
