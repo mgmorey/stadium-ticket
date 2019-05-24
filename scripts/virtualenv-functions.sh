@@ -55,11 +55,11 @@ create_virtualenv() {
 
 get_pip_upgrade_options() {
     case "$($pip --version | awk '{print $2}')" in
-	([123456789][0123456789].*)
-	    printf "%s\n" "$PIP_10_UPGRADE_OPTS"
+	([0-9].*)
+	    printf "%s\n" "$PIP_9_UPGRADE_OPTS"
 	    ;;
 	(*)
-	    printf "%s\n" "$PIP_9_UPGRADE_OPTS"
+	    printf "%s\n" "$PIP_10_UPGRADE_OPTS"
 	    ;;
     esac
 }
