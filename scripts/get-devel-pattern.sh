@@ -16,19 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS=""
+DARWIN_PATT=""
 
-DEBIAN_PKGS="build-essential"
+DEBIAN_PATT="build-essential"
 
-FEDORA_PKGS=""
+FEDORA_PATT=""
 
-FREEBSD_PKGS=""
+FREEBSD_PATT=""
 
-OPENSUSE_PKGS="devel_basis"
+OPENSUSE_PATT="devel_basis"
 
-REDHAT_PKGS=""
+REDHAT_PATT=""
 
-SUNOS_PKGS="build-essential"
+SUNOS_PATT="build-essential"
 
 abort() {
     printf "$@" >&2
@@ -37,6 +37,38 @@ abort() {
 
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
+get_devel_pattern() {
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian|ubuntu)
+		    pattern=$DEBIAN_PATT
+		    ;;
+		(opensuse-*)
+		    pattern=$OPENSUSE_PATT
+		    ;;
+		(fedora)
+		    pattern=$FEDORA_PATT
+		    ;;
+		(redhat|centos)
+		    pattern=$REDHAT_PATT
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    pattern=$DARWIN_PATT
+	    ;;
+	(FreeBSD)
+	    pattern=$FREEBSD_PATT
+	    ;;
+	(SunOS)
+	    pattern=$SUNOS_PATT
+	    ;;
+    esac
+
+    printf "%s\n" $pattern
 }
 
 get_realpath() (
@@ -58,32 +90,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux)
-	case "$ID" in
-	    (debian|ubuntu)
-		packages=$DEBIAN_PKGS
-		;;
-	    (opensuse-*)
-		packages=$OPENSUSE_PKGS
-		;;
-	    (fedora)
-		packages=$FEDORA_PKGS
-		;;
-	    (redhat|centos)
-		packages=$REDHAT_PKGS
-		;;
-	esac
-	;;
-    (Darwin)
-	packages=$DARWIN_PKGS
-	;;
-    (FreeBSD)
-	packages=$FREEBSD_PKGS
-	;;
-    (SunOS)
-	packages=$SUNOS_PKGS
-	;;
-esac
-
-printf "%s\n" $packages
+get_devel_pattern
