@@ -1,13 +1,13 @@
 Stadium Ticket RESTful API for Linux, macOS and Unix.
 
-This project has been tested with Python 3.6 and 3.7.
+This project has been tested with Python 3.6 and 3.7 on the following
+platforms: Debian 9 and 10, Ubuntu 18.04 LTS and 19.04, openSUSE
+Tumbleweed 20190512, Fedora 30, macOS 10.14, FreeBSD 11 and 12,
+OpenIndiana 2019.04 and CentOS 7 1810.
 
-This project has been tested on the following platforms: Debian 9/10,
-Ubuntu 18.04, openSUSE Tumbleweed 20190512, Fedora 30, macOS 10.14,
-FreeBSD 11/12, OpenIndiana Hipster 2019.04 and CentOS 7 1810.
-
-Service installation is only supported on the following platforms:
-Debian 10, Ubuntu 18.04, openSUSE Tumbleweed, Fedora 30 and CentOS 7.
+Installation as a service has been tested on the following: Debian 10,
+Ubuntu 18.04 LTS, openSUSE Tumbleweed 20190512, Fedora 30 and CentOS
+7.
 
 1.  To install dependencies (may require sudo):
 
