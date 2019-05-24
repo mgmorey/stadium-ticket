@@ -23,12 +23,12 @@ abort() {
     exit 1
 }
 
-abort_not_supported() {
-    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
-}
-
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
+get_dependencies() {
+    get_packages | sort -u
 }
 
 get_packages() {
@@ -53,4 +53,4 @@ get_realpath() (
 )
 
 script_dir=$(get_realpath "$(dirname "$0")")
-get_packages | sort -u
+get_dependencies
