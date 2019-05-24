@@ -44,6 +44,8 @@ assert() {
 }
 
 get_dbms_server_packages() {
+    package=$("$script_dir/get-installed-dbms-package.sh" server)
+
     case "$package" in
 	(*-server-core-*)
 	    package=$(printf "%s\n" $package | sed -e 's/-core-/-/')
@@ -126,8 +128,6 @@ get_realpath() (
 )
 
 script_dir=$(get_realpath "$(dirname "$0")")
-
-package=$("$script_dir/get-installed-dbms-package.sh" server)
 
 eval $("$script_dir/get-os-release.sh" -X)
 
