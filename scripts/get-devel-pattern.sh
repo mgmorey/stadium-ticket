@@ -68,7 +68,9 @@ get_devel_pattern() {
 	    ;;
     esac
 
-    printf "%s\n" $pattern
+    if [ -n "${pattern-}" ]; then
+	printf "%s\n" $pattern
+    fi
 }
 
 get_realpath() (
