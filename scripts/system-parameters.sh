@@ -57,13 +57,7 @@ configure_freebsd() {
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
-    # Set uWSGI top-level directories
-    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
-    UWSGI_LOGDIR=$UWSGI_PREFIX/var/log
-    UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
-
     # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
     UWSGI_BINARY_NAME=uwsgi-3.6
     UWSGI_PLUGIN_DIR=
     UWSGI_PLUGIN_NAME=
