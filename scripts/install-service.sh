@@ -478,7 +478,7 @@ shell() (
 
     if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
 	su=$(get_setpriv_command $SUDO_USER || true)
-	eval ${su-/usr/bin/su -l $SUDO_USER} "$@"
+	eval ${su:-/usr/bin/su -l $SUDO_USER} "$@"
     else
 	eval "$@"
     fi
