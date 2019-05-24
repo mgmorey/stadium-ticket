@@ -33,9 +33,7 @@ configure_darwin() {
     UWSGI_PREFIX=/usr/local
 
     # Set uWSGI top-level directories
-    UWSGI_LOGDIR=$UWSGI_PREFIX/var/log
     UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
-    UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
 
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
