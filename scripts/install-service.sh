@@ -174,7 +174,7 @@ generate_sed_program() (
 	case $var in
 	    (APP_PLUGIN)
 		if [ -n "$value" ]; then
-		    pattern="\(plugin\) = [a-z0-9]*"
+		    pattern="\(plugin\) = python[0-9]*"
 		    replace="\\1 = $value"
 		    printf 's|^%s$|%s|g\n' "$pattern" "$replace"
 		else
