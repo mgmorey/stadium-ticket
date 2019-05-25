@@ -258,7 +258,7 @@ find_uwsgi_plugin() (
 	return 1
     fi
 
-    for version in $PYTHON_VERSIONS; do
+    for version in $(printf "%s\n" $PYTHON_VERSIONS | tr -d .); do
 	plugins=$(ls $UWSGI_PLUGIN_DIR/python${version}*_plugin.so | sort -Vr)
 
 	for plugin in $plugins; do
