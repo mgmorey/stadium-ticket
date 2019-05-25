@@ -129,7 +129,7 @@ find_bootstrap_python() (
     printf "%s\n" "$python"
 )
 
-find_system_python () (
+find_system_python() (
     for prefix in /usr /usr/local; do
 	python_dir=$prefix/bin
 
