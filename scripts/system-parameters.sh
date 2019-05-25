@@ -67,6 +67,7 @@ configure_linux_debian() {
     UWSGI_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 
     # Set additional file/directory parameters
+    APP_LOGDIR=$UWSGI_LOGDIR
     APP_RUNDIR=$UWSGI_RUNDIR
 
     # Set additional parameters from app directories
@@ -83,6 +84,7 @@ configure_linux_opensuse() {
     UWSGI_APPDIRS="vassals"
 
     # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=/usr/sbin
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
@@ -97,6 +99,10 @@ configure_linux_redhat() {
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc
     UWSGI_RUNDIR=/run/uwsgi
+
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=/usr/sbin
+    UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
 configure_system_defaults() {
@@ -113,18 +119,20 @@ configure_system_defaults() {
     # Set application directories from APP_NAME and APP_PREFIX
     APP_DIR=$APP_PREFIX/opt/$APP_NAME
     APP_ETCDIR=$APP_PREFIX/etc/opt/$APP_NAME
-    APP_VARDIR=$APP_PREFIX/var/opt/$APP_NAME
+
+    if [ -z "${APP_VARDIR-}" ]; then
+	APP_VARDIR=$APP_PREFIX/var/opt/$APP_NAME
+    fi
 
     # Set additional file/directory parameters
     APP_CONFIG=$APP_ETCDIR/app.ini
 
+    # Set uWSGI prefix directory
     if [ -z "${UWSGI_PREFIX-}" ]; then
 	UWSGI_PREFIX=
     fi
 
-    if [ -z "${UWSGI_BINARY_DIR-}" ]; then
-	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
-    fi
+    # Set uWSGI top-level directories
 
     if [ -z "${UWSGI_ETCDIR-}" ]; then
 	UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
@@ -134,13 +142,31 @@ configure_system_defaults() {
 	UWSGI_LOGDIR=$UWSGI_PREFIX/var/log
     fi
 
+    if [ -z "${UWSGI_RUNDIR-}" ]; then
+	UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
+    fi
+
+    # Set uWSGI binary/plugin directories
+
+    if [ -z "${UWSGI_BINARY_DIR-}" ]; then
+	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
+    fi
+
     if [ -z "${UWSGI_PLUGIN_DIR-}" ]; then
 	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
     fi
 
-    if [ -z "${UWSGI_RUNDIR-}" ]; then
-	UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
+    # Set additional file/directory parameters
+
+    if [ -z "${APP_LOGDIR-}" ]; then
+	APP_LOGDIR=$APP_VARDIR
     fi
+
+    if [ -z "${APP_RUNDIR-}" ]; then
+	APP_RUNDIR=$APP_VARDIR
+    fi
+
+    # Set uWSGI binary/plugin filenames
 
     if [ -z "${UWSGI_BINARY_NAME-}" ]; then
 	UWSGI_BINARY_NAME=uwsgi
@@ -150,13 +176,7 @@ configure_system_defaults() {
 	UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
     fi
 
-    if [ -z "${APP_LOGDIR-}" ]; then
-	APP_LOGDIR=$UWSGI_LOGDIR
-    fi
-
-    if [ -z "${APP_RUNDIR-}" ]; then
-	APP_RUNDIR=$UWSGI_RUNDIR
-    fi
+    # Set additional parameters from app directories
 
     if [ -z "${APP_LOGFILE-}" ]; then
 	APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
