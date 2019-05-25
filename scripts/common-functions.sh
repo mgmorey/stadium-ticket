@@ -130,8 +130,6 @@ find_bootstrap_python() (
 )
 
 find_system_python () (
-    python=$(find_bootstrap_python)
-
     for prefix in /usr /usr/local; do
 	python_dir=$prefix/bin
 
@@ -153,8 +151,8 @@ find_system_python () (
 )
 
 find_user_python() (
-    python=$(find_bootstrap_python)
-    python_versions=$($python "$script_dir/check-python.py")
+    bootstrap_python=$(find_bootstrap_python)
+    python_versions=$($bootstrap_python "$script_dir/check-python.py")
 
     if pyenv --version >/dev/null 2>&1; then
 	pyenv_root="$(pyenv root)"
