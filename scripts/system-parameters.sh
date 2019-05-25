@@ -53,8 +53,6 @@ configure_freebsd() {
 
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_NAME=uwsgi-3.6
-    UWSGI_PLUGIN_DIR=
-    UWSGI_PLUGIN_NAME=
 }
 
 configure_linux_debian() {
@@ -159,7 +157,7 @@ configure_system_defaults() {
 	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
     fi
 
-    if [ -z "${UWSGI_PLUGIN_DIR-}" ]; then
+    if [ -z "${UWSGI_PLUGIN_DIR-}" -a -n "${APP_PLUGIN:-}" ]; then
 	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
     fi
 
@@ -179,7 +177,7 @@ configure_system_defaults() {
 	UWSGI_BINARY_NAME=uwsgi
     fi
 
-    if [ -z "${UWSGI_PLUGIN_NAME-}" -a -n "${APP_PLUGIN-}" ]; then
+    if [ -z "${UWSGI_PLUGIN_NAME-}" -a -n "${APP_PLUGIN:-}" ]; then
 	UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
     fi
 
