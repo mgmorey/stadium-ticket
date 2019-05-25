@@ -328,7 +328,7 @@ install_service() {
 	    create_service_virtualenv $VENV_FILENAME-$APP_NAME
 	fi
 
-	create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR
+	create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR $APP_LOGDIR $APP_RUNDIR
 	install_file 600 .env $APP_DIR/.env
 	install_flask_app 644 app $APP_DIR
 	install_files $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
