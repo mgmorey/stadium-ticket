@@ -257,3 +257,47 @@ configure_system() {
 
     configure_system_defaults
 }
+
+validate_parameters_postinstallation() {
+    if [ ! -d $APP_ETCDIR ]; then
+	abort "%s: %s: No such configuration directory\n" "$0" "$APP_ETCDIR"
+    elif [ ! -r $APP_CONFIG ]; then
+	abort "%s: %s: No read permission\n" "$0" "$APP_CONFIG"
+    elif [ ! -e $APP_CONFIG ]; then
+	abort "%s: %s: No such configuration file\n" "$0" "$APP_CONFIG"
+    elif [ ! -d $APP_DIR ]; then
+	abort "%s: %s: No such app directory\n" "$0" "$APP_DIR"
+    elif [ ! -d $APP_VARDIR ]; then
+	abort "%s: %s: No such var directory\n" "$0" "$APP_VARDIR"
+    elif [ ! -d $APP_LOGDIR ]; then
+	abort "%s: %s: No such log directory\n" "$0" "$APP_LOGDIR"
+    elif [ ! -d $APP_RUNDIR ]; then
+	abort "%s: %s: No such run directory\n" "$0" "$APP_RUNDIR"
+    fi
+}
+
+validate_parameters_preinstallation() {
+    binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+
+    if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+	plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
+    fi
+
+    if [ ! -d $UWSGI_BINARY_DIR ]; then
+	abort "%s: %s: No such binary directory\n" "$0" "$UWSGI_BINARY_DIR"
+    elif [ ! -e $binary ]; then
+	abort "%s: %s: No such binary file\n" "$0" "$binary"
+    elif [ ! -x $binary ]; then
+	abort "%s: %s: No execute permission\n" "$0" "$binary"
+    elif ! $binary --version >/dev/null 2>&1; then
+	abort "%s: %s: Unable to query version\n" "$0" "$binary"
+    elif [ -n "${plugin-}" ]; then
+	if [ ! -d $UWSGI_PLUGIN_DIR ]; then
+	    abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
+	elif [ ! -e $plugin ]; then
+	    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
+	elif [ ! -x $plugin ]; then
+	    abort "%s: %s: No execute permission\n" "$0" "$plugin"
+	fi
+    fi
+}
