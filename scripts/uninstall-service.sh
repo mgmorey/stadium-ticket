@@ -98,7 +98,7 @@ remove_service() {
     service_files="$APP_ETCDIR $APP_DIR"
 
     if [ $purge = true ]; then
-	service_files="$service_files $APP_RUNDIR $APP_VARDIR $APP_LOGFILE"
+	service_files="$service_files $APP_VARDIR $APP_LOGFILE"
     fi
 
     remove_files $(get_config_files) $service_files
