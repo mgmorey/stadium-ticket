@@ -79,8 +79,11 @@ configure_linux_opensuse() {
     APP_GID=nogroup
     APP_UID=nobody
 
-    # Set uWSGI directories
+    # Set uWSGI configuration directories
     UWSGI_APPDIRS="vassals"
+
+    # Set uWSGI binary/plugin directories
+    UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
 configure_linux_redhat() {
@@ -90,6 +93,8 @@ configure_linux_redhat() {
 
     # Set uWSGI directories
     UWSGI_APPDIRS=uwsgi.d
+
+    # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc
     UWSGI_RUNDIR=/run/uwsgi
 }
