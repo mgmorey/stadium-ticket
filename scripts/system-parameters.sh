@@ -66,8 +66,8 @@ configure_linux_debian() {
     UWSGI_LOGDIR=/var/log/uwsgi/app
     UWSGI_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 
-    # Set uWSGI binary/plugin directories
-    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/uwsgi/plugins
+    # Set additional file/directory parameters
+    APP_RUNDIR=$UWSGI_RUNDIR
 
     # Set additional parameters from app directories
     APP_PIDFILE=$APP_RUNDIR/pid
@@ -117,33 +117,31 @@ configure_system_defaults() {
 	UWSGI_PREFIX=
     fi
 
-    if [ -n "${UWSGI_PREFIX-}" ]; then
-	if [ -z "${UWSGI_BINARY_DIR-}" ]; then
-	    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
-	fi
+    if [ -z "${UWSGI_BINARY_DIR-}" ]; then
+	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
+    fi
 
-	if [ -z "${UWSGI_ETCDIR-}" ]; then
-	    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
-	fi
+    if [ -z "${UWSGI_ETCDIR-}" ]; then
+	UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
+    fi
 
-	if [ -z "${UWSGI_LOGDIR-}" ]; then
-	    UWSGI_LOGDIR=$UWSGI_PREFIX/var/log
-	fi
+    if [ -z "${UWSGI_LOGDIR-}" ]; then
+	UWSGI_LOGDIR=$UWSGI_PREFIX/var/log
+    fi
 
-	if [ -z "${UWSGI_RUNDIR-}" ]; then
-	    UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
-	fi
-    else
-	if [ -z "${UWSGI_BINARY_DIR-}" ]; then
-	    UWSGI_BINARY_DIR=/usr/bin
-	fi
+    if [ -z "${UWSGI_PLUGIN_DIR-}" ]; then
+	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
+    fi
+
+    if [ -z "${UWSGI_RUNDIR-}" ]; then
+	UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
     fi
 
     if [ -z "${UWSGI_BINARY_NAME-}" ]; then
 	UWSGI_BINARY_NAME=uwsgi
     fi
 
-    if [ -z "${UWSGI_PLUGIN_NAME-}" -a -n "${UWSGI_PLUGIN-}" ]; then
+    if [ -z "${UWSGI_PLUGIN_NAME-}" -a -n "${APP_PLUGIN-}" ]; then
 	UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
     fi
 
