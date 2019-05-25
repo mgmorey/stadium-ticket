@@ -311,6 +311,7 @@ install_flask_app() (
 )
 
 install_service() {
+    validate_parameters_preinstallation
     cd "$source_dir"
 
     # initialize the database before starting the service
@@ -335,6 +336,8 @@ install_service() {
 	change_owner $APP_ETCDIR $APP_DIR $APP_VARDIR
 	create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
     done
+
+    validate_parameters_postinstallation
 }
 
 install_uwsgi_binary() {

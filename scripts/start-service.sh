@@ -54,19 +54,10 @@ start_service() {
 
     cd $APP_VARDIR
 
-    if [ ! -e "$binary" ]; then
-	abort "%s: %s: No such binary file\n" "$0" "$binary"
-    elif [ -n "${UWSGI_PLUGIN_DIR-}" ] && [ ! -d $UWSGI_PLUGIN_DIR ]; then
-	abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
-    elif [ -n "${plugin-}" ] && [ ! -e $plugin ]; then
-	abort "%s: %s: No such plugin file\n" "$0" "$plugin"
-    elif [ ! -d $(dirname $APP_CONFIG) ]; then
-	abort "%s: %s: No such configuration directory\n" "$0" "$(dirname $APP_CONFIG)"
-    elif [ ! -r $APP_CONFIG ]; then
-	abort "%s: %s: No read permission\n" "$0" "$APP_CONFIG"
-    elif [ ! -e $APP_CONFIG ]; then
-	abort "%s: %s: No such configuration file\n" "$0" "$APP_CONFIG"
-    elif signal_service $WAIT_SIGNAL HUP; then
+    validate_parameters_preinstallation
+    validate_parameters_postinstallation
+
+    if signal_service $WAIT_SIGNAL HUP; then
 	abort "Service is running as PID %s\n" "$pid"
     else
 	$binary${UWSGI_PLUGIN_DIR+ --plugin-dir $UWSGI_PLUGIN_DIR} --ini $APP_CONFIG
