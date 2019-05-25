@@ -39,7 +39,7 @@ configure_darwin() {
 }
 
 configure_freebsd() {
-    # Set app plugin
+    # Unset application plugin
     unset APP_PLUGIN
 
     # Set application group and user accounts
@@ -87,6 +87,9 @@ configure_linux_opensuse() {
 }
 
 configure_linux_redhat() {
+    # Reset application plugin
+    APP_PLUGIN=python36
+
     # Set application group and user accounts
     APP_GID=uwsgi
     APP_UID=uwsgi
