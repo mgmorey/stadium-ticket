@@ -80,7 +80,7 @@ configure_linux_opensuse() {
     APP_UID=nobody
 
     # Set uWSGI configuration directories
-    UWSGI_APPDIRS="vassals"
+    UWSGI_APPDIRS=vassals
 
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=/usr/sbin
