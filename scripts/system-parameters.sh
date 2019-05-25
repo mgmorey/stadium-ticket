@@ -104,7 +104,7 @@ configure_linux_redhat() {
 
 configure_linux_redhat7() {
     # Reset application plugin
-    APP_PLUGIN=python36
+    # APP_PLUGIN=python36
 
     # Set application group and user accounts
     APP_GID=uwsgi
