@@ -171,7 +171,7 @@ generate_sed_program() (
     for var; do
 	eval value=\$$var
 
-	case var in
+	case $var in
 	    (APP_PLUGIN)
 		if [ -n "$value" ]; then
 		    pattern="\(plugin\) = [a-z0-9]*"
