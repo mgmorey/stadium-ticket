@@ -13,7 +13,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-# APP_PLUGIN=python3
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
 configure_darwin() {
@@ -39,9 +38,6 @@ configure_darwin() {
 }
 
 configure_freebsd() {
-    # Unset application plugin
-    # unset APP_PLUGIN
-
     # Set application group and user accounts
     APP_GID=uwsgi
     APP_UID=uwsgi
@@ -87,25 +83,6 @@ configure_linux_opensuse() {
 }
 
 configure_linux_redhat() {
-    # Set application group and user accounts
-    APP_GID=uwsgi
-    APP_UID=uwsgi
-
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS=uwsgi.d
-
-    # Set uWSGI top-level directories
-    UWSGI_ETCDIR=/etc
-
-    # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=/usr/sbin
-    UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
-}
-
-configure_linux_redhat7() {
-    # Reset application plugin
-    # APP_PLUGIN=python36
-
     # Set application group and user accounts
     APP_GID=uwsgi
     APP_UID=uwsgi
@@ -252,11 +229,8 @@ configure_system() {
 			    ;;
 		    esac
 		    ;;
-		(fedora)
+		(fedora|redhat|centos)
 		    configure_linux_redhat
-		    ;;
-		(redhat|centos)
-		    configure_linux_redhat7
 		    ;;
 		(*)
 		    abort_not_supported Distro
