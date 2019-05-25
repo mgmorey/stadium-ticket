@@ -33,6 +33,8 @@ configure_darwin() {
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
     UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/lib/plugins
+
+    # Set uWSGI build from source hint
     UWSGI_SOURCE_ONLY=true
 }
 
@@ -62,13 +64,9 @@ configure_linux_debian() {
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
 
-    # Set uWSGI top-level directories
-    UWSGI_LOGDIR=/var/log/uwsgi/app
-    UWSGI_RUNDIR=/var/run/uwsgi/app/$APP_NAME
-
     # Set additional file/directory parameters
-    APP_LOGDIR=$UWSGI_LOGDIR
-    APP_RUNDIR=$UWSGI_RUNDIR
+    APP_LOGDIR=/var/log/uwsgi/app
+    APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 
     # Set additional parameters from app directories
     APP_PIDFILE=$APP_RUNDIR/pid
@@ -93,12 +91,11 @@ configure_linux_redhat() {
     APP_GID=uwsgi
     APP_UID=uwsgi
 
-    # Set uWSGI directories
+    # Set uWSGI configuration directories
     UWSGI_APPDIRS=uwsgi.d
 
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=/etc
-    UWSGI_RUNDIR=/run/uwsgi
 
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=/usr/sbin
@@ -131,14 +128,6 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_ETCDIR-}" ]; then
 	UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
-    fi
-
-    if [ -z "${UWSGI_LOGDIR-}" ]; then
-	UWSGI_LOGDIR=$UWSGI_PREFIX/var/log
-    fi
-
-    if [ -z "${UWSGI_RUNDIR-}" ]; then
-	UWSGI_RUNDIR=$UWSGI_PREFIX/var/run
     fi
 
     # Set uWSGI binary/plugin directories
@@ -296,8 +285,8 @@ validate_parameters_preinstallation() {
 	    abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
 	elif [ ! -e $plugin ]; then
 	    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
-	elif [ ! -x $plugin ]; then
-	    abort "%s: %s: No execute permission\n" "$0" "$plugin"
+	elif [ ! -r $plugin ]; then
+	    abort "%s: %s: No read permission\n" "$0" "$plugin"
 	fi
     fi
 }
