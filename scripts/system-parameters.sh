@@ -120,7 +120,7 @@ configure_linux_redhat() {
 configure_system_defaults() {
     # Set application directory prefix
     if [ -z "${APP_PREFIX-}" ]; then
-	APP_PREFIX=""
+	APP_PREFIX=
     fi
 
     # Set application directories from APP_NAME and APP_PREFIX
