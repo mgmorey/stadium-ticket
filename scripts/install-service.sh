@@ -169,7 +169,7 @@ generate_sed_program() (
     assert [ $# -ge 1 ]
 
     for var; do
-	eval value=\$$var
+	eval value=\${$var-}
 
 	case $var in
 	    (APP_PLUGIN)
