@@ -13,7 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-APP_PLUGIN=python3
+# APP_PLUGIN=python3
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
 configure_darwin() {
@@ -40,7 +40,7 @@ configure_darwin() {
 
 configure_freebsd() {
     # Unset application plugin
-    unset APP_PLUGIN
+    # unset APP_PLUGIN
 
     # Set application group and user accounts
     APP_GID=uwsgi
@@ -155,11 +155,33 @@ configure_system_defaults() {
 	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
     fi
 
-    if [ -z "${UWSGI_PLUGIN_DIR-}" -a -n "${APP_PLUGIN-}" ]; then
+    if [ -z "${UWSGI_BINARY_NAME-}" ]; then
+	UWSGI_BINARY_NAME=uwsgi
+    fi
+
+    if [ -z "${UWSGI_PLUGIN_DIR-}" ]; then
 	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
     fi
 
-    # Set additional file/directory parameters
+    if [ -z "${APP_PLUGIN-}" ]; then
+	if [ -d "${UWSGI_PLUGIN_DIR-}" ]; then
+	    UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin || true)
+
+	    if [ -n "$UWSGI_PLUGIN_NAME" ]; then
+		APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
+	    else
+		unset UWSGI_PLUGIN_NAME
+	    fi
+	else
+	    unset UWSGI_PLUGIN_DIR
+	fi
+    fi
+
+    if [ -z "${UWSGI_SOURCE_ONLY-}" ]; then
+	UWSGI_SOURCE_ONLY=false
+    fi
+
+    # Set additional app directory parameters
 
     if [ -z "${APP_LOGDIR-}" ]; then
 	APP_LOGDIR=$APP_VARDIR
@@ -169,21 +191,7 @@ configure_system_defaults() {
 	APP_RUNDIR=$APP_VARDIR
     fi
 
-    # Set uWSGI binary/plugin filenames
-
-    if [ -z "${UWSGI_BINARY_NAME-}" ]; then
-	UWSGI_BINARY_NAME=uwsgi
-    fi
-
-    if [ -z "${UWSGI_PLUGIN_NAME-}" -a -n "${APP_PLUGIN-}" ]; then
-	UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
-    fi
-
-    if [ -z "${UWSGI_SOURCE_ONLY-}" ]; then
-	UWSGI_SOURCE_ONLY=false
-    fi
-
-    # Set additional parameters from app directories
+    # Set additional file parameters from app directories
 
     if [ -z "${APP_LOGFILE-}" ]; then
 	APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
@@ -269,6 +277,25 @@ configure_system() {
     configure_system_defaults
 }
 
+find_uwsgi_plugin() (
+    if [ -z "$UWSGI_PLUGIN_DIR" ]; then
+	return 1
+    elif [ ! -d $UWSGI_PLUGIN_DIR ]; then
+	return 1
+    fi
+
+    for version in $PYTHON_VERSIONS; do
+	plugins=$(ls $UWSGI_PLUGIN_DIR/python${version}*_plugin.so | sort -Vr)
+
+	for plugin in $plugins; do
+	    printf "%s\n" "$(basename $plugin)"
+	    return 0
+	done
+    done
+
+    return 1
+)
+
 validate_parameters_postinstallation() {
     if [ ! -d $APP_ETCDIR ]; then
 	abort "%s: %s: No such configuration directory\n" "$0" "$APP_ETCDIR"
@@ -290,7 +317,7 @@ validate_parameters_postinstallation() {
 validate_parameters_preinstallation() {
     binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 
-    if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
 	plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
     fi
 
