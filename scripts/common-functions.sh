@@ -304,7 +304,8 @@ signal_process_and_poll() {
     done
 
     elapsed=$((elapsed + i))
-    return [ $i -lt $3 ]
+    test $i -lt $3
+    return $?
 }
 
 signal_process_and_wait() {
