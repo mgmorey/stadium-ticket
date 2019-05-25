@@ -33,6 +33,7 @@ configure_darwin() {
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
     UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/lib/plugins
+    UWSGI_SOURCE_ONLY=true
 }
 
 configure_freebsd() {
@@ -168,6 +169,10 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_PLUGIN_NAME-}" -a -n "${APP_PLUGIN-}" ]; then
 	UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
+    fi
+
+    if [ -z "${UWSGI_SOURCE_ONLY-}" ]; then
+	UWSGI_SOURCE_ONLY=false
     fi
 
     # Set additional parameters from app directories

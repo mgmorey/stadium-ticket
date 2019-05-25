@@ -317,14 +317,11 @@ install_service() {
     run_unpriv "'$script_dir/run.sh'" python3 -m app init-db
 
     for dryrun in true false; do
-	case "$kernel_name" in
-	    (Darwin)
-		install_uwsgi_from_source $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
-		;;
-	    (*)
-		install_uwsgi_from_package
-		;;
-	esac
+	if [ $UWSGI_SOURCE_ONLY = true ]; then
+	    install_uwsgi_from_source $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
+	else
+	    install_uwsgi_from_package
+	fi
 
 	if [ $dryrun = false ]; then
 	    create_service_virtualenv $VENV_FILENAME-$APP_NAME
