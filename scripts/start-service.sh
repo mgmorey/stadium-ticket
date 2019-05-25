@@ -66,7 +66,7 @@ start_service() {
 	abort "%s: %s: No read permission\n" "$0" "$APP_CONFIG"
     elif [ ! -e $APP_CONFIG ]; then
 	abort "%s: %s: No such configuration file\n" "$0" "$APP_CONFIG"
-    elif signal_service_restart; then
+    elif signal_service $WAIT_SIGNAL HUP; then
 	abort "Service is running as PID %s\n" "$pid"
     else
 	$binary${UWSGI_PLUGIN_DIR+ --plugin-dir $UWSGI_PLUGIN_DIR} --ini $APP_CONFIG
