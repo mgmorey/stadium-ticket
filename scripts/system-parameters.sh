@@ -13,12 +13,10 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+APP_PLUGIN=python3
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
 configure_darwin() {
-    # Set app plugin
-    APP_PLUGIN=python3
-
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
@@ -39,7 +37,7 @@ configure_darwin() {
 
 configure_freebsd() {
     # Set app plugin
-    APP_PLUGIN=
+    unset APP_PLUGIN
 
     # Set application group and user accounts
     APP_GID=uwsgi
@@ -56,9 +54,6 @@ configure_freebsd() {
 }
 
 configure_linux_debian() {
-    # Set app plugin
-    APP_PLUGIN=python3
-
     # Set application group and user accounts
     APP_GID=www-data
     APP_UID=www-data
@@ -80,9 +75,6 @@ configure_linux_debian() {
 }
 
 configure_linux_opensuse() {
-    # Set app plugin
-    APP_PLUGIN=python3
-
     # Set application group and user accounts
     APP_GID=nogroup
     APP_UID=nobody
@@ -96,9 +88,6 @@ configure_linux_opensuse() {
 }
 
 configure_linux_redhat() {
-    # Set app plugin
-    APP_PLUGIN=python3
-
     # Set application group and user accounts
     APP_GID=uwsgi
     APP_UID=uwsgi
@@ -157,7 +146,7 @@ configure_system_defaults() {
 	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
     fi
 
-    if [ -z "${UWSGI_PLUGIN_DIR-}" -a -n "${APP_PLUGIN:-}" ]; then
+    if [ -z "${UWSGI_PLUGIN_DIR-}" -a -n "${APP_PLUGIN-}" ]; then
 	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
     fi
 
@@ -177,7 +166,7 @@ configure_system_defaults() {
 	UWSGI_BINARY_NAME=uwsgi
     fi
 
-    if [ -z "${UWSGI_PLUGIN_NAME-}" -a -n "${APP_PLUGIN:-}" ]; then
+    if [ -z "${UWSGI_PLUGIN_NAME-}" -a -n "${APP_PLUGIN-}" ]; then
 	UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
     fi
 
