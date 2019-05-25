@@ -37,8 +37,9 @@ get_config_files() (
     elif [ ! -d $UWSGI_ETCDIR ]; then
 	return 0
     else
-	cd $UWSGI_ETCDIR
-	find $UWSGI_APPDIRS -name $APP_NAME.ini -print
+	for dir in $UWSGI_APPDIRS; do
+	    printf "%s\n" $UWSGI_ETCDIR/$dir/$APP_NAME.ini
+	done
     fi
 )
 
