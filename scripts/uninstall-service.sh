@@ -28,7 +28,7 @@ assert() {
 }
 
 get_config_files() (
-    printf "%s\n" $APP_ETCDIR/app.ini
+    printf "%s\n" $APP_CONFIG
 
     if [ -z "${UWSGI_APPDIRS-}" ]; then
 	return 0
@@ -95,7 +95,7 @@ remove_files() {
 }
 
 remove_service() {
-    service_files="$APP_DIR"
+    service_files="$APP_ETCDIR $APP_DIR"
 
     if [ $purge = true ]; then
 	service_files="$service_files $APP_RUNDIR $APP_VARDIR $APP_LOGFILE"
