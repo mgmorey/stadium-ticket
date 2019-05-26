@@ -52,7 +52,6 @@ run_in_virtualenv() {
     fi
 
     export $APP_ENV_VARS
-    source_dir=$script_dir/..
     cd "$source_dir"
 
     if [ "$pipenv" != false ]; then
@@ -89,6 +88,8 @@ if [ $# -eq 0 ]; then
 fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
+
+source_dir=$script_dir/..
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
