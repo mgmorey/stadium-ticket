@@ -223,7 +223,7 @@ configure_system() {
 		    ;;
 		(opensuse-leap)
 		    case "$VERSION_ID" in
-			(15.0)
+			(15.0|15.1)
 			    configure_linux_opensuse
 			    ;;
 			(*)
