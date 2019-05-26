@@ -209,6 +209,19 @@ generate_service_ini() {
     install_file 644 "$inifile" $1
 }
 
+get_dotenv() {
+    for dotenv in .env .env-tempate; do
+	if [ -e $dotenv ]; then
+	    printf "%s\n" "$dotenv"
+	    return 0
+	fi
+    done
+
+    dotenv=.env
+    touch $dotenv
+    printf "%s\n" "$dotenv"
+}
+
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -265,6 +278,11 @@ get_setpriv_command() (
     esac
 )
 
+initialize_database() {
+    cd $source_dir
+    run_unpriv "'$script_dir/run.sh'" python3 -m app init-db
+}
+
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$3" ]
@@ -313,9 +331,6 @@ install_flask_app() (
 install_service() {
     cd "$source_dir"
 
-    # initialize the database before starting the service
-    run_unpriv "'$script_dir/run.sh'" python3 -m app init-db
-
     for dryrun in true false; do
 	if [ $UWSGI_SOURCE_ONLY = true ]; then
 	    install_uwsgi_from_source $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
@@ -330,7 +345,7 @@ install_service() {
 	fi
 
 	create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR $APP_LOGDIR $APP_RUNDIR
-	install_file 600 .env $APP_DIR/.env
+	install_file 600 $(get_dotenv) $APP_DIR/.env
 	install_flask_app 644 app $APP_DIR
 	install_files $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
 	generate_service_ini $APP_CONFIG app.ini "$APP_VARS"
@@ -339,6 +354,7 @@ install_service() {
     done
 
     validate_parameters_postinstallation
+    initialize_database
 }
 
 install_uwsgi_binary() {
