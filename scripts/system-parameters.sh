@@ -38,10 +38,6 @@ configure_darwin() {
 }
 
 configure_freebsd() {
-    # Set application group and user accounts
-    APP_GID=uwsgi
-    APP_UID=uwsgi
-
     # Set application directory prefix
     APP_PREFIX=/usr/local
 
