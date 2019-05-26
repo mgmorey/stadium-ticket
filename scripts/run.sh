@@ -78,7 +78,6 @@ run_via_pip() {
 	. ./.env
     fi
 
-    printenv | sort
     "$@"
 }
 
