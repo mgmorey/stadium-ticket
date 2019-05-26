@@ -39,17 +39,25 @@ if [ $(id -u) -eq 0 ]; then
     abort "%s: Must be run as a non-privileged user\n" "$0"
 fi
 
+if [ -z "${TERM-}" ]; then
+    exit 0
+elif [ $TERM = dumb ]; then
+    exit 0
+elif [ -z "${EDITOR}" ]; then
+    exit 0
+fi
+
 file="$1"
 template="$2"
 create_tmpfile
 
-if [ -r $file ]; then
-    cp -f $file $tmpfile
-elif [ -r $template ]; then
-    cp -f $template $tmpfile
-fi
+if $EDITOR $tmpfile; then
+    if [ -r $file ]; then
+	cp -f $file $tmpfile
+    elif [ -r $template ]; then
+	cp -f $template $tmpfile
+    fi
 
-if ${EDITOR:=cat} $tmpfile; then
     mv -f $tmpfile $file
     chgrp $(id -g) $file
 fi
