@@ -61,8 +61,10 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 source_dir=$script_dir/..
 
-printf "%s\n" "Loading .env environment variables"
-. "$source_dir/.env"
+if [ -r "source_dir/.env" ]; then
+    printf "%s\n" "Loading .env environment variables"
+    . "$source_dir/.env"
+fi
 
 host=${FLASK_HOST-localhost}
 port=${FLASK_PORT-5000}
