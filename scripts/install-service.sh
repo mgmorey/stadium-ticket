@@ -311,7 +311,6 @@ install_flask_app() (
 )
 
 install_service() {
-    validate_parameters_preinstallation
     cd "$source_dir"
 
     # initialize the database before starting the service
@@ -325,6 +324,7 @@ install_service() {
 	fi
 
 	if [ $dryrun = false ]; then
+	    validate_parameters_preinstallation
 	    create_service_virtualenv $VENV_FILENAME-$APP_NAME
 	fi
 
