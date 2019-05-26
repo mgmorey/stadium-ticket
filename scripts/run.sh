@@ -51,7 +51,6 @@ run_in_virtualenv() {
 	pip=$("$script_dir/get-python-command.sh" pip)
     fi
 
-    export $APP_ENV_VARS
     cd "$source_dir"
 
     if [ "$pipenv" != false ]; then
@@ -67,11 +66,19 @@ run_via_pip() {
     venv_requirements=$VENV_REQUIREMENTS
     sync_virtualenv_via_pip $VENV_FILENAME
 
+    # Export nonempty parameters only
+    for var in $APP_ENV_VARS; do
+	if [ -n "${var-}" ]; then
+	    export $var
+	fi
+    done
+
     if [ -r .env ]; then
 	printf "%s\n" "Loading .env environment variables"
 	. ./.env
     fi
 
+    printenv | sort
     "$@"
 }
 
