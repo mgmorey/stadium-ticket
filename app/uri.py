@@ -19,6 +19,7 @@ URI = {
 USER = 'root'
 
 PATTERN = {
+    'DATABASE_DIALECT': re.compile(r'[\w]+'),
     'DATABASE_FILENAME': re.compile(r'([\w\d\-][\w\d\-\.]*){1,}'),
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
     'DATABASE_PASSWORD': re.compile(r'[\w\d\-\.!\#\$\^&\*\=\+]+'),
@@ -39,7 +40,7 @@ def _get_endpoint(dialect: str):
         return None
 
     host = _get_string('DATABASE_HOST', default=HOST)
-    port = _get_string('DATABASE_PORT')
+    port = _get_string('DATABASE_PORT', default=None)
     return f"{host}:{port}" if port else host
 
 
@@ -58,7 +59,7 @@ def _get_login(dialect: str):
     if '{3}' not in _get_uri(dialect):
         return None
 
-    password = _get_string('DATABASE_PASSWORD')
+    password = _get_string('DATABASE_PASSWORD', default=None)
     user = _get_string('DATABASE_USER', default=os.getenv('USER', USER))
     return f"{user}:{password}" if password else user
 
@@ -69,10 +70,14 @@ def _get_scheme(dialect: str):
     return f"{dialect}+{driver}" if driver else dialect
 
 
-def _get_string(parameter: str, default: str = None):
+def _get_string(parameter: str, default: str):
     """Return a validated string parameter value."""
     value = config(parameter, default=default)
-    return None if value is None else _validate(parameter, value)
+
+    if not value:
+        value = default
+
+    return _validate(parameter, value) if value else None
 
 
 def _get_uri(dialect: str):
