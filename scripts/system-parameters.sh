@@ -221,6 +221,16 @@ configure_system() {
 			    ;;
 		    esac
 		    ;;
+		(opensuse-leap)
+		    case "$VERSION_ID" in
+			(15.0)
+			    configure_linux_opensuse
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
 		(opensuse-tumbleweed)
 		    case "$VERSION_ID" in
 			(2019*)
