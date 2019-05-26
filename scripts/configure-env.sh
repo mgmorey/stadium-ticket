@@ -29,10 +29,14 @@ create_tmpfile() {
 
 if [ -z "${TERM-}" ]; then
     exit 0
+elif [ -z "${EDITOR-}" ]; then
+    exit 0
 elif [ $TERM = dumb ]; then
-    exit 0
-elif [ -z "${EDITOR}" ]; then
-    exit 0
+    if [ $EDITOR != emacs ]; then
+	exit 0
+    elif [ -z "${DISPLAY}" ]; then
+	exit 0
+    fi
 fi
 
 if [ $# -eq 0 ]; then
@@ -50,6 +54,7 @@ fi
 file="$1"
 template="$2"
 create_tmpfile
+cp -f $template $tmpfile
 
 if $EDITOR $tmpfile; then
     if [ -r $file ]; then
