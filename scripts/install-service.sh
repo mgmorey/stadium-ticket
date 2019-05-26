@@ -209,19 +209,6 @@ generate_service_ini() {
     install_file 644 "$inifile" $1
 }
 
-get_dotenv() {
-    for dotenv in .env .env-tempate; do
-	if [ -e $dotenv ]; then
-	    printf "%s\n" "$dotenv"
-	    return 0
-	fi
-    done
-
-    dotenv=.env
-    touch $dotenv
-    printf "%s\n" "$dotenv"
-}
-
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -244,14 +231,15 @@ get_setpriv_command() (
 
     case "$kernel_name" in
 	(Linux)
+	    options="--clear-groups"
 	    regid="--regid $(id -g $username)"
 	    reuid="--reuid $(id -u $username)"
-	    setpriv_options="$reuid $regid --clear-groups"
-	    setpriv_version="$(setpriv --version 2>/dev/null)"
+	    setpriv="setpriv $reuid $regid"
+	    version="$(setpriv --version 2>/dev/null)"
 
-	    case "${setpriv_version##* }" in
+	    case "${version##* }" in
 		(2.3[012].*)
-		    :
+		    options="--init-groups"
 		    ;;
 		(2.[12][0-9].*)
 		    :
@@ -265,11 +253,11 @@ get_setpriv_command() (
 		('')
 		    ;;
 		(*)
-		    setpriv_options="$setpriv_options --reset-env"
+		    options="--init-groups --reset-env"
 		    ;;
 	    esac
 
-	    printf "setpriv %s %s\n" "$setpriv_options" "$*"
+	    printf "$setpriv %s %s\n" "$options" "$*"
 	    return 0
 	    ;;
 	(*)
@@ -345,7 +333,11 @@ install_service() {
 	fi
 
 	create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR $APP_LOGDIR $APP_RUNDIR
-	install_file 600 $(get_dotenv) $APP_DIR/.env
+
+	if [ -r .env ]; then
+	    install_file 600 .env $APP_DIR/.env
+	fi
+
 	install_flask_app 644 app $APP_DIR
 	install_files $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
 	generate_service_ini $APP_CONFIG app.ini "$APP_VARS"
