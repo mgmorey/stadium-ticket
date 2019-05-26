@@ -41,7 +41,7 @@ start_service() {
     app_prefix=$APP_DIR/$VENV_FILENAME
     binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 
-    if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
 	plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
     fi
 
