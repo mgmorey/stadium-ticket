@@ -125,11 +125,6 @@ stop_service() {
 }
 
 uninstall_service() {
-    if [ -r "$source_dir/.env" ]; then
-	printf "%s\n" "Loading .env environment variables"
-	. "$source_dir/.env"
-    fi
-
     parse_arguments "$@"
 
     for dryrun in true false; do
@@ -152,8 +147,6 @@ usage() {
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
-
-source_dir=$script_dir/..
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
