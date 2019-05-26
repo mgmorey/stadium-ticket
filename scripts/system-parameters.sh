@@ -117,15 +117,10 @@ configure_system_defaults() {
     # Set additional file/directory parameters
     APP_CONFIG=$APP_ETCDIR/app.ini
 
-    # Set uWSGI prefix directory
-    if [ -z "${UWSGI_PREFIX-}" ]; then
-	UWSGI_PREFIX=
-    fi
-
     # Set uWSGI top-level directories
 
     if [ -z "${UWSGI_ETCDIR-}" ]; then
-	UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
+	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
     fi
 
     # Set uWSGI binary/plugin directories
@@ -151,8 +146,6 @@ configure_system_defaults() {
 	    else
 		unset UWSGI_PLUGIN_NAME
 	    fi
-	else
-	    unset UWSGI_PLUGIN_DIR
 	fi
     fi
 
