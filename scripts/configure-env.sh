@@ -27,6 +27,14 @@ create_tmpfile() {
     trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
 }
 
+if [ -z "${TERM-}" ]; then
+    exit 0
+elif [ $TERM = dumb ]; then
+    exit 0
+elif [ -z "${EDITOR}" ]; then
+    exit 0
+fi
+
 if [ $# -eq 0 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
@@ -37,14 +45,6 @@ fi
 
 if [ $(id -u) -eq 0 ]; then
     abort "%s: Must be run as a non-privileged user\n" "$0"
-fi
-
-if [ -z "${TERM-}" ]; then
-    exit 0
-elif [ $TERM = dumb ]; then
-    exit 0
-elif [ -z "${EDITOR}" ]; then
-    exit 0
 fi
 
 file="$1"
