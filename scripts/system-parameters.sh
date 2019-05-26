@@ -83,10 +83,6 @@ configure_linux_opensuse() {
 }
 
 configure_linux_redhat() {
-    # Set application group and user accounts
-    APP_GID=uwsgi
-    APP_UID=uwsgi
-
     # Set uWSGI configuration directories
     UWSGI_APPDIRS=uwsgi.d
 
@@ -99,6 +95,16 @@ configure_linux_redhat() {
 }
 
 configure_system_defaults() {
+    # Set application group and user accounts
+
+    if [ -z "${APP_GID-}" ]; then
+	APP_GID=uwsgi
+    fi
+
+    if [ -z "${APP_UID-}" ]; then
+	APP_UID=uwsgi
+    fi
+
     # Set application directory prefix
     if [ -z "${APP_PREFIX-}" ]; then
 	APP_PREFIX=
