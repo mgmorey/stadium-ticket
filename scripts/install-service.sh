@@ -324,6 +324,7 @@ install_service() {
 	fi
 
 	if [ $dryrun = false ]; then
+	    configure_system_defaults
 	    validate_parameters_preinstallation
 	    create_service_virtualenv $VENV_FILENAME-$APP_NAME
 	fi
