@@ -66,8 +66,12 @@ run_in_virtualenv() {
 run_via_pip() {
     venv_requirements=$VENV_REQUIREMENTS
     sync_virtualenv_via_pip $VENV_FILENAME
-    printf "%s\n" "Loading .env environment variables"
-    . ./.env
+
+    if [ -r .env ]; then
+	printf "%s\n" "Loading .env environment variables"
+	. ./.env
+    fi
+
     "$@"
 }
 
