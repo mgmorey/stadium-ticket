@@ -111,15 +111,6 @@ create_symlinks() (
     done
 )
 
-enable_and_start_uwsgi() {
-    case "$kernel_name" in
-	(Linux)
-	    systemctl enable uwsgi
-	    systemctl start uwsgi
-	    ;;
-    esac
-}
-
 fetch_uwsgi_source() {
     if [ ! -d $HOME/git/uwsgi ]; then
 	cd && mkdir -p git && cd git
@@ -381,8 +372,6 @@ install_uwsgi_from_package() (
     if [ $is_installed_package = false ]; then
 	"$script_dir/install-packages.sh" $packages
     fi
-
-    enable_and_start_uwsgi
 )
 
 install_uwsgi_from_source() (
@@ -528,6 +517,7 @@ show_status() {
 start_app_service() {
     case "$kernel_name" in
 	(Linux)
+	    systemctl enable uwsgi
 	    systemctl restart uwsgi
 	    ;;
 	(Darwin)
