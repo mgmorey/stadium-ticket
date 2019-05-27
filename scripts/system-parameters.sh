@@ -148,7 +148,7 @@ configure_system_defaults() {
 	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
     fi
 
-    if [ -n "${UWSGI_PLUGIN_NAME-}" -a -d $UWSGI_PLUGIN_DIR ]; then
+    if [ -z "${UWSGI_PLUGIN_NAME-}" -a -d $UWSGI_PLUGIN_DIR ]; then
 	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin || true)
     fi
 
