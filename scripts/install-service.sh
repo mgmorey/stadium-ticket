@@ -522,7 +522,7 @@ start_app_service() {
     case "$kernel_name" in
 	(Linux)
 	    systemctl enable uwsgi
-	    systemctl start uwsgi
+	    systemctl restart uwsgi
 	    ;;
 	(Darwin)
 	    if [ $UWSGI_SOURCE_ONLY = true ]; then
