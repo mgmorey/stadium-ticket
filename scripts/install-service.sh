@@ -91,6 +91,7 @@ create_symlink() {
 
 	if [ $1 != $2 -a ! -e $2 ]; then
 	    printf "Creating link %s\n" "$2"
+	    mkdir -p $(dirname $2)
 	    /bin/ln -s $1 $2
 	fi
     fi
@@ -139,6 +140,9 @@ generate_launch_agent_plist() (
 	    <key>ProgramArguments</key>
 	    <array>
 	        <string>$UWSGI_BINARY_DIR/uwsgi</string>
+	        <string>--die-on-term</string>
+	        <string>--logto</string>
+	        <string>$UWSGI_LOGFILE</string>
 	        <string>--plugin-dir</string>
 	        <string>$UWSGI_PLUGIN_DIR</string>
 	        <string>--ini</string>
@@ -521,8 +525,12 @@ start_app_service() {
 	    systemctl restart uwsgi
 	    ;;
 	(Darwin)
-	    control_launch_agent load generate_launch_agent_plist
-	    control_launch_agent start
+	    if [ $UWSGI_SOURCE_ONLY = true ]; then
+		control_launch_agent load generate_launch_agent_plist
+		control_launch_agent start
+	    else
+		brew services restart uwsgi
+	    fi
 	    ;;
     esac
 }
