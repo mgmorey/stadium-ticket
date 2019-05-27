@@ -36,7 +36,7 @@ Ubuntu 18.04 LTS, openSUSE Leap 15.0 and 15.1, openSUSE Tumbleweed
 7.  To build and run a Docker container (may require sudo):
 
     scripts/install-docker.sh
-    cd docker && docker-compose up --build (or "make build")
+    docker-compose up --build (or "make build")
 
 8. To install the app as a service (may require sudo):
 
