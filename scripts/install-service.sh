@@ -68,7 +68,7 @@ create_dirs() {
     if [ $dryrun = true ]; then
 	check_permissions "$@"
     else
-	printf "Creating directory %s\n" "$@"
+	printf "Creating directory %s\n" $(printf "%s\n" "$@" | sort -u)
 	mkdir -p "$@"
     fi
 }
