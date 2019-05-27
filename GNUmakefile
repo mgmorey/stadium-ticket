@@ -36,6 +36,9 @@ client-debug:	.env
 debug:		.update init-db
 	$(script_dir)/run.sh flask run --port 5001
 
+drop-db:
+	$(script_dir)/run.sh python3 -m app drop-db
+
 init-db:
 	$(script_dir)/run.sh python3 -m app init-db
 
@@ -60,8 +63,8 @@ stress:
 uninstall:
 	$(script_dir)/uninstall-service.sh
 
-.PHONY: all build clean clean-venvs client client-debug debug init-db install
-.PHONY: pycode pylint pytest init-db realclean stress uninstall
+.PHONY: all build clean clean-venvs client client-debug debug drop-db init-db
+.PHONY: install pycode pylint pytest init-db realclean stress uninstall
 
 .env:			.env-template
 	$(script_dir)/configure-env.sh $@ $<
