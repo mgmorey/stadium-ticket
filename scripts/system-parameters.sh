@@ -16,6 +16,9 @@
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
 configure_darwin() {
+    # Set app plugin
+    APP_PLUGIN=python3
+
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
@@ -29,6 +32,9 @@ configure_darwin() {
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
 
+    # Set uWSGI log filename
+    UWSGI_LOGFILE=$UWSGI_PREFIX/var/log/uwsgi.log
+
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
     UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
@@ -37,8 +43,9 @@ configure_darwin() {
     UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
     UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/libexec/uwsgi
 
-    # Set uWSGI log filename
-    UWSGI_LOGFILE_DIR=$UWSGI_PREFIX/var/log/uwsgi.log
+    # Set uWSGI binary/plugin filenames
+    UWSGI_BINARY_NAME=uwsgi
+    UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
 
     # Control build from source for uWSGI
     UWSGI_SOURCE_ONLY=true
@@ -51,7 +58,7 @@ configure_freebsd() {
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
-    # Set uWSGI binary/plugin directories
+    # Set uWSGI binary file
     UWSGI_BINARY_NAME=uwsgi-3.6
 }
 
