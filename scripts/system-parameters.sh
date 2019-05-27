@@ -101,6 +101,39 @@ configure_linux_redhat() {
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
+configure_openindiana() {
+    # Set application group and user accounts
+    APP_GID=webserverd
+    APP_UID=webserverd
+
+    # Set application directory prefix
+    APP_PREFIX=
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=
+
+    # Set uWSGI configuration directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
+
+    # Set uWSGI log filename
+    UWSGI_LOGFILE=$UWSGI_PREFIX/var/opt/uwsgi.log
+
+    # Set uWSGI top-level directories
+    UWSGI_ETCDIR=$UWSGI_PREFIX/opt/etc/uwsgi
+    UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
+
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
+    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/libexec/uwsgi
+
+    # Set uWSGI binary/plugin filenames
+    UWSGI_BINARY_NAME=uwsgi
+    UWSGI_PLUGIN_NAME=python3_plugin.so
+
+    # Control build from source for uWSGI
+    UWSGI_SOURCE_ONLY=true
+}
+
 configure_system_defaults() {
     # Set application group and user accounts
 
@@ -255,6 +288,16 @@ configure_system() {
 	    ;;
 	(FreeBSD)
 	    configure_freebsd
+	    ;;
+	(SunOS)
+	    case $ID in
+		# (openindiana)
+		#     configure_openindiana
+		#     ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"
