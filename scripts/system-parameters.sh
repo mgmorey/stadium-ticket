@@ -26,14 +26,21 @@ configure_darwin() {
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
+    # Set uWSGI configuration directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
+
     # Set uWSGI top-level directories
+    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
     UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
 
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/lib/plugins
+    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/libexec/uwsgi
 
-    # Set uWSGI build from source hint
+    # Set uWSGI log filename
+    UWSGI_LOGFILE_DIR=$UWSGI_PREFIX/var/log/uwsgi.log
+
+    # Control build from source for uWSGI
     UWSGI_SOURCE_ONLY=true
 }
 
