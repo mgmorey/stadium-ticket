@@ -34,7 +34,7 @@ elif [ -z "${EDITOR-}" ]; then
 elif [ $TERM = dumb ]; then
     if [ $EDITOR != emacs ]; then
 	exit 0
-    elif [ -z "${DISPLAY}" ]; then
+    elif [ -z "${DISPLAY-}" ]; then
 	exit 0
     fi
 fi
