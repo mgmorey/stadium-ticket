@@ -16,9 +16,6 @@
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
 configure_darwin() {
-    # Set app plugin
-    APP_PLUGIN=python3
-
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
@@ -45,7 +42,7 @@ configure_darwin() {
 
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
-    UWSGI_PLUGIN_NAME=${APP_PLUGIN}_plugin.so
+    UWSGI_PLUGIN_NAME=python3_plugin.so
 
     # Control build from source for uWSGI
     UWSGI_SOURCE_ONLY=true
@@ -151,20 +148,18 @@ configure_system_defaults() {
 	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
     fi
 
-    if [ -z "${APP_PLUGIN-}" ]; then
-	if [ -d "${UWSGI_PLUGIN_DIR-}" ]; then
-	    UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin || true)
-
-	    if [ -n "$UWSGI_PLUGIN_NAME" ]; then
-		APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
-	    else
-		unset UWSGI_PLUGIN_NAME
-	    fi
-	fi
+    if [ -n "${UWSGI_PLUGIN_NAME-}" -a -d $UWSGI_PLUGIN_DIR ]; then
+	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin || true)
     fi
 
     if [ -z "${UWSGI_SOURCE_ONLY-}" ]; then
 	UWSGI_SOURCE_ONLY=false
+    fi
+
+    # Set app plugin from uWSGI plugin name
+
+    if [ -z "${APP_PLUGIN-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
+	APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
     fi
 
     # Set additional app directory parameters
