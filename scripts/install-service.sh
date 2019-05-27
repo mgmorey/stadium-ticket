@@ -316,7 +316,7 @@ install_service() {
 
     for dryrun in true false; do
 	if [ $UWSGI_SOURCE_ONLY = true ]; then
-	    install_uwsgi_from_source $UWSGI_PLUGIN_NAME $UWSGI_BINARY_NAME
+	    install_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	else
 	    install_uwsgi_from_package
 	fi
