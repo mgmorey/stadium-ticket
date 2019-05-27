@@ -156,8 +156,7 @@ configure_system_defaults() {
 	UWSGI_SOURCE_ONLY=false
     fi
 
-    # Set app plugin from uWSGI plugin name
-
+    # Set app plugin from uWSGI plugin filename
     if [ -z "${APP_PLUGIN-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
 	APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
     fi
