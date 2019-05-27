@@ -490,7 +490,7 @@ set_start_pending() {
 	case "$kernel_name" in
 	    (Linux)
 		case "$ID" in
-		    (debian|ubuntu|opensuse-*)
+		    (debian|ubuntu|opensuse-*|fedora|redhat|centos)
 			start_pending=true
 			;;
 		    (*)
