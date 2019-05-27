@@ -490,7 +490,7 @@ set_start_pending() {
 	case "$kernel_name" in
 	    (Linux)
 		case "$ID" in
-		    (debian|ubuntu)
+		    (debian|ubuntu|opensuse-*)
 			start_pending=true
 			;;
 		    (*)
@@ -522,7 +522,7 @@ start_app_service() {
     case "$kernel_name" in
 	(Linux)
 	    systemctl enable uwsgi
-	    systemctl restart uwsgi
+	    systemctl start uwsgi
 	    ;;
 	(Darwin)
 	    if [ $UWSGI_SOURCE_ONLY = true ]; then
