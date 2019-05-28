@@ -106,7 +106,13 @@ remove_service() {
     fi
 
     if [ $UWSGI_SOURCE_ONLY = true ]; then
-	files="$files $UWSGI_ETCDIR $UWSGI_OPTDIR $UWSGI_LOGFILE"
+	binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+
+	if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+	    plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
+	fi
+
+	files="$files $UWSGI_ETCDIR $binary ${plugin-}"
     fi
 
     remove_files $(get_config_files) $files

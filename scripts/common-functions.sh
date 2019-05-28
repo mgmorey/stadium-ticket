@@ -111,6 +111,7 @@ control_launch_agent() (
 
 create_tmpfile() {
     tmpfile=$(mktemp)
+    assert [ -n "${tmpfile}" ]
     tmpfiles="${tmpfiles+$tmpfiles }$tmpfile"
     trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
 }
@@ -244,7 +245,7 @@ install_python_version() (
     fi
 )
 
-print_body() {
+print_table() {
     awk -v line1="$LINE_SINGLE" -v line2="$LINE_DOUBLE" -v header="$1" -v footer="${2-1}" '
   BEGIN {printf("%s%s\n", line2, line2)};
 NR == 1 {printf("%s\n%s%s\n%s\n", header, line1, line1, $0)};
@@ -259,23 +260,15 @@ print_logs() {
     assert [ -n "$1" ]
 
     if [ -r $1 ]; then
-	print_tail $1 ${2-}
+	create_tmpfile
+	tail $1 >$tmpfile
+
+	if [ -s "$tmpfile" ]; then
+	    cat $tmpfile | print_table "Contents of $1 (last 10 lines)" ${2-}
+	fi
     elif [ -e $1 ]; then
 	printf "%s: No permission to read file\n" "$1" >&2
     fi
-}
-
-print_tail() {
-    assert [ $# -eq 1 -o $# -eq 2 ]
-    assert [ -n "$1" ]
-    create_tmpfile
-    tail $1 >$tmpfile
-
-    if [ ! -s "$tmpfile" ]; then
-	return 1
-    fi
-
-    cat $tmpfile | print_body "Contents of $1 (last 10 lines)" ${2-}
 }
 
 reset_home_directory() {
