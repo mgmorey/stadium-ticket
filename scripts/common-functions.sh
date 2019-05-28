@@ -244,6 +244,44 @@ install_python_version() (
     fi
 )
 
+print_body() {
+    awk -v line1="$LINE_SINGLE" -v line2="$LINE_DOUBLE" -v header="$1" '
+  BEGIN {printf("%s%s\n", line2, line2)};
+NR == 1 {printf("%s\n%s%s\n%s\n", header, line1, line1, $0)};
+ NR > 1 {print $0};
+'
+}
+
+print_footer() {
+    awk -v line1="$LINE_SINGLE" -v line2="$LINE_DOUBLE" '
+  BEGIN {printf("%s%s\n", line2, line2)};
+'
+}
+
+print_logs() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ -r $1 ]; then
+	print_tail $1
+    elif [ -e $1 ]; then
+	printf "%s: No permission to read file\n" "$1" >&2
+    fi
+}
+
+print_tail() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    create_tmpfile
+    tail $1 >$tmpfile
+
+    if [ ! -s "$tmpfile" ]; then
+	return 1
+    fi
+
+    cat $tmpfile | print_body "Contents of $1 (last 10 lines)"
+}
+
 reset_home_directory() {
     if [ -z "${SUDO_USER-}" ]; then
 	return 0
@@ -254,34 +292,6 @@ reset_home_directory() {
     if [ "$HOME" != "$home_dir" ]; then
 	export HOME="$home_dir"
     fi
-}
-
-show_logs() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    if [ -r $1 ]; then
-	show_tail $1
-    elif [ -e $1 ]; then
-	printf "%s: No permission to read file\n" "$1" >&2
-    fi
-}
-
-show_tail() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    create_tmpfile
-    tail $1 >$tmpfile
-
-    if [ ! -s "$tmpfile" ]; then
-	return 1
-    fi
-
-    printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE
-    printf "%s\n" "Contents of $1 (last 10 lines)"
-    printf "%s\n" $LINE_SINGLE$LINE_SINGLE
-    cat $tmpfile
-    printf "%s\n" $LINE_DOUBLE$LINE_DOUBLE
 }
 
 signal_process_and_poll() {

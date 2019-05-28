@@ -37,6 +37,10 @@ get_realpath() (
     fi
 )
 
+get_process_status() {
+    ps -e | awk 'NR == 1 || $4 ~ /'"$UWSGI_BINARY_NAME"'$/ {print $0}'
+}
+
 get_service_status() {
     cat <<-EOF
 	      App name: $APP_NAME
@@ -57,8 +61,8 @@ EOF
 EOF
     fi
 
-    show_logs $APP_LOGFILE
-    ps -e | awk 'NR == 1 || $4 ~ /'"$UWSGI_BINARY_NAME"'$/ {print $0}'
+    print_logs $APP_LOGFILE
+    get_process_status | print_body "uWSGI Process Status" && print_footer
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")

@@ -511,7 +511,7 @@ set_start_pending() {
 show_status() {
     if [ -e $APP_PIDFILE ]; then
 	printf "Service started in %s seconds\n" "$total_elapsed"
-	show_logs $APP_LOGFILE
+	print_logs $APP_LOGFILE && print_footer || true
 	printf "Service %s installed and started successfully\n" "$APP_NAME"
     else
 	printf "Service %s installed successfully\n" "$APP_NAME"
