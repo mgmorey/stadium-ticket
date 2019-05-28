@@ -15,7 +15,7 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
-configure_darwin() {
+configure_darwin_brew() {
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
@@ -39,6 +39,35 @@ configure_darwin() {
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
     UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/libexec/uwsgi
+
+    # Set uWSGI binary/plugin filenames
+    UWSGI_BINARY_NAME=uwsgi
+    UWSGI_PLUGIN_NAME=python3_plugin.so
+}
+
+configure_darwin_source() {
+    # Set application group and user accounts
+    APP_GID=_www
+    APP_UID=_www
+
+    # Set application directory prefix
+    APP_PREFIX=/usr/local
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
+    # Set uWSGI configuration directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
+
+    # Set uWSGI log filename
+    UWSGI_LOGFILE=$UWSGI_PREFIX/var/log/uwsgi.log
+
+    # Set uWSGI top-level directories
+    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
+
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
+    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/uwsgi/plugins
 
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
@@ -284,7 +313,7 @@ configure_system() {
 	    esac
 	    ;;
 	(Darwin)
-	    configure_darwin
+	    configure_darwin_source
 	    ;;
 	(FreeBSD)
 	    configure_freebsd
