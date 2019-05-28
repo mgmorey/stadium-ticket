@@ -89,7 +89,7 @@ remove_files() {
     if [ $dryrun = true ]; then
 	check_permissions "$@"
     else
-	printf "Removing %s\n" "$@" | sort -u
+	printf "Removing %s\n" $(printf "%s\n" "$@" | sort -u)
 	/bin/rm -rf "$@"
     fi
 }
