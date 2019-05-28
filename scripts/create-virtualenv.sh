@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# create-service-venv.sh: create service virtual environment
+# create-virtualenv.sh: create virtual environment via pip
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-create_service_virtualenv() (
+create_virtualenv_via_pip() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     source_dir=$script_dir/..
@@ -84,4 +84,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/virtualenv-functions.sh"
 
 reset_home_directory
-create_service_virtualenv "$@"
+create_virtualenv_via_pip "$@"

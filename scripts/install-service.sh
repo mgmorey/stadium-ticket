@@ -74,7 +74,7 @@ create_dirs() {
 }
 
 create_service_virtualenv() {
-    if ! run_unpriv '"$script_dir/create-service-venv.sh"' "$@"; then
+    if ! run_unpriv '"$script_dir/create-virtualenv.sh"' "$@"; then
 	abort "%s: Unable to create virtual environment\n" "$0"
     fi
 }

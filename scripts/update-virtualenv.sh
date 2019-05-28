@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# update-virtualenv: update virtualenv dependencies
+# update-virtualenv: update virtual environment dependencies
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
