@@ -261,10 +261,10 @@ get_setpriv_command() (
     esac
 )
 
-initialize_database() {
+initialize_database() (
     cd $source_dir
     run_unpriv "'$script_dir/run.sh'" python3 -m app init-db
-}
+)
 
 install_file() {
     assert [ $# -eq 3 ]
