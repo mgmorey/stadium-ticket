@@ -29,6 +29,22 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+create_virtualenv_via_pipenv() {
+    if ! $pipenv --venv >/dev/null 2>&1; then
+	if pyenv --version >/dev/null 2>&1; then
+	    python=$(find_user_python)
+	    check_python $python
+	    $pipenv --python $python
+	else
+	    $pipenv $PIPENV_OPTS
+	fi
+    fi
+
+    # Lock dependencies (including development dependencies) and
+    # generate Pipfile.lock
+    $pipenv lock -d
+}
+
 generate_requirements_files() {
     create_tmpfile
 
@@ -73,22 +89,6 @@ get_realpath() (
     fi
 )
 
-initialize_virtualenv_via_pipenv() {
-    if ! $pipenv --venv >/dev/null 2>&1; then
-	if pyenv --version >/dev/null 2>&1; then
-	    python=$(find_user_python)
-	    check_python $python
-	    $pipenv --python $python
-	else
-	    $pipenv $PIPENV_OPTS
-	fi
-    fi
-
-    # Lock dependencies (including development dependencies) and
-    # generate Pipfile.lock
-    $pipenv lock -d
-}
-
 update_virtualenv() (
     pipenv=$("$script_dir/get-python-command.sh" pipenv)
 
@@ -101,7 +101,7 @@ update_virtualenv() (
     cd "$source_dir"
 
     if [ "$pipenv" != false ]; then
-	initialize_virtualenv_via_pipenv
+	create_virtualenv_via_pipenv
 	generate_requirements_files $VENV_REQUIREMENTS
 	$pipenv sync -d
     elif [ "$pip" != false ]; then
