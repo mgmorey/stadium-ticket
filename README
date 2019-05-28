@@ -6,8 +6,8 @@ platforms: Debian 9 and 10, Ubuntu 18.04 LTS and 19.04, openSUSE Leap
 FreeBSD 11 and 12, OpenIndiana 2019.04 and CentOS 7 1810.
 
 Installation as a service has been tested on the following: Debian 10,
-Ubuntu 18.04 LTS, openSUSE Leap 15.0 and 15.1, openSUSE Tumbleweed
-20190512, Fedora 30 and CentOS 7.
+Ubuntu 18.04 LTS and 19.04, openSUSE Leap 15.0 and 15.1, openSUSE
+Tumbleweed 20190512 and Fedora 30.
 
 1.  To install dependencies (may require sudo):
 
