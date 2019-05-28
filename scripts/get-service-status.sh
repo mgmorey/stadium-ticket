@@ -58,6 +58,7 @@ EOF
     fi
 
     show_logs $APP_LOGFILE
+    ps -e | awk 'NR == 1 || $4 ~ /'"$UWSGI_BINARY_NAME"'$/ {print $0}'
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
