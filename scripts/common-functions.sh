@@ -245,32 +245,28 @@ install_python_version() (
 )
 
 print_body() {
-    awk -v line1="$LINE_SINGLE" -v line2="$LINE_DOUBLE" -v header="$1" '
+    awk -v line1="$LINE_SINGLE" -v line2="$LINE_DOUBLE" -v header="$1" -v footer="${2-1}" '
   BEGIN {printf("%s%s\n", line2, line2)};
 NR == 1 {printf("%s\n%s%s\n%s\n", header, line1, line1, $0)};
  NR > 1 {print $0};
-'
-}
-
-print_footer() {
-    awk -v line1="$LINE_SINGLE" -v line2="$LINE_DOUBLE" '
-  BEGIN {printf("%s%s\n", line2, line2)};
+    END {if (footer > 0)
+  	    printf("%s%s\n", line2, line2);};
 '
 }
 
 print_logs() {
-    assert [ $# -eq 1 ]
+    assert [ $# -eq 1 -o $# -eq 2 ]
     assert [ -n "$1" ]
 
     if [ -r $1 ]; then
-	print_tail $1
+	print_tail $1 ${2-}
     elif [ -e $1 ]; then
 	printf "%s: No permission to read file\n" "$1" >&2
     fi
 }
 
 print_tail() {
-    assert [ $# -eq 1 ]
+    assert [ $# -eq 1 -o $# -eq 2 ]
     assert [ -n "$1" ]
     create_tmpfile
     tail $1 >$tmpfile
@@ -279,7 +275,7 @@ print_tail() {
 	return 1
     fi
 
-    cat $tmpfile | print_body "Contents of $1 (last 10 lines)"
+    cat $tmpfile | print_body "Contents of $1 (last 10 lines)" ${2-}
 }
 
 reset_home_directory() {

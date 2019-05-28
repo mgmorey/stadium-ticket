@@ -61,8 +61,8 @@ EOF
 EOF
     fi
 
-    print_logs $APP_LOGFILE
-    get_process_status | print_body "uWSGI Process Status" && print_footer
+    print_logs $APP_LOGFILE 0
+    get_process_status | print_body "uWSGI Process Status" 1
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
