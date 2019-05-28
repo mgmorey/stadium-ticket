@@ -288,20 +288,6 @@ install_file() {
     fi
 }
 
-install_files() {
-    assert [ $# -eq 2 ]
-    assert [ -n "$1" -a -n "$2" ]
-
-    if [ $dryrun = true ]; then
-	check_permissions "$2"
-    else
-	assert [ -r "$1" ]
-	printf "Installing files in directory %s\n" "$2"
-	mkdir -p $2
-	rsync -a $1/* $2
-    fi
-}
-
 install_flask_app() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" -a -n "$2" -a -d "$2" -a -n "$3" ]
@@ -334,7 +320,7 @@ install_service() {
 	fi
 
 	install_flask_app 644 app $APP_DIR
-	install_files $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
+	install_virtualenv $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
 	generate_service_ini $APP_CONFIG app.ini "$APP_VARS"
 	change_owner $APP_ETCDIR $APP_DIR $APP_VARDIR
 	create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
@@ -396,6 +382,20 @@ install_uwsgi_from_source() (
 	install_uwsgi_binary $binary
     done
 )
+
+install_virtualenv() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" -a -n "$2" ]
+
+    if [ $dryrun = true ]; then
+	check_permissions "$2"
+    else
+	assert [ -r "$1" ]
+	printf "Installing virtual environment in %s\n" "$2"
+	mkdir -p $2
+	rsync -a $1/* $2
+    fi
+}
 
 is_installed() (
     assert [ $# -eq 1 ]
