@@ -250,7 +250,7 @@ print_table() {
 	-v equals="$FORTY_EQUALS" \
 	-v header="$1" -v footer="${2-1}" '
 	  BEGIN {printf("%s%s\n", equals, equals)};
-	NR == 1 {if (header != "")
+	NR == 1 {if (header)
 		     printf("%s\n%s%s\n%s\n", header, dashes, dashes, $0)
 		 else
 		     printf("%s\n%s%s\n", $0, dashes, dashes)}
