@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 
-# print-table: print report with lines truncated after column COLUMNS
+# print-table: print a table with lines truncated after COLUMNS columns
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
