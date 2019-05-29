@@ -13,10 +13,10 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
+FORTY_DASHES="----------------------------------------"
+FORTY_EQUALS="========================================"
 
-LINE_SINGLE="----------------------------------------"
-LINE_DOUBLE="========================================"
+GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
 
 WAIT_SIGNAL=10
 
@@ -246,13 +246,17 @@ install_python_version() (
 )
 
 print_table() {
-    awk -v line1="$LINE_SINGLE" -v line2="$LINE_DOUBLE" -v header="$1" -v footer="${2-1}" '
-  BEGIN {printf("%s%s\n", line2, line2)};
-NR == 1 {printf("%s\n%s%s\n%s\n", header, line1, line1, $0)};
- NR > 1 {print $0};
-    END {if (footer > 0)
-  	    printf("%s%s\n", line2, line2);};
-'
+    awk -v dashes="$FORTY_DASHES" \
+	-v equals="$FORTY_EQUALS" \
+	-v header="$1" -v footer="${2-1}" '
+	  BEGIN {printf("%s%s\n", equals, equals)};
+	NR == 1 {if (header != "")
+		     printf("%s\n%s%s\n%s\n", header, dashes, dashes, $0)
+		 else
+		     printf("%s\n%s%s\n", $0, dashes, dashes)};
+	 NR > 1 {print $0};
+	    END {if (footer)
+		    printf("%s%s\n", equals, equals)};'
 }
 
 print_logs() {
