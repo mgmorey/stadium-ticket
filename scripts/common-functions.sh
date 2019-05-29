@@ -270,7 +270,7 @@ print_table() {
 		      equals = equals "="}
 		  header = truncate(header) }
 	NR == 1 { line1 = truncate($0) }
-	NR == 2 { printf("%s\n", truncate(equals));
+	NR == 2 { printf("%s\n", equals);
 		  if (header)
 		      printf("%s\n%s\n%s\n", header, dashes, line1)
 		  else
