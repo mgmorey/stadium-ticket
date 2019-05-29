@@ -38,10 +38,14 @@ Tumbleweed 20190512 and Fedora 30.
     scripts/install-docker.sh
     docker-compose up --build (or "make build")
 
-8. To install the app as a service (may require sudo):
+8.  To install the app as a service (may require sudo):
 
-   scripts/install-service.sh (or "make install")
+    scripts/install-service.sh (or "make install")
 
-9. To uninstall the app as a service (may require sudo):
+9.  To uninstall the app as a service (may require sudo):
 
-   scripts/uninstall-service.sh (or "make uninstall")
+    scripts/uninstall-service.sh (or "make uninstall")
+
+10. To report the current service status:
+
+    scripts/get-service-status.sh (or "make status")
