@@ -34,6 +34,9 @@ def add_event():
 
     event_name = request.json['event']
     event_total = request.json['total']
+    query = db.session.query(Events)
+    query = query.filter(Events.name == event_name)
+    query.delete()
     event = Events(name=event_name, sold=0, total=event_total)
     db.session.add(event)
     try:
