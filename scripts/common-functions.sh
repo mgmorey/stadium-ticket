@@ -247,7 +247,9 @@ print_logs() {
     assert [ -n "$1" ]
 
     if [ -r $1 ]; then
-	tail $1 | print_table "SERVICE LOG $1 (last 10 lines)" ${2-}
+	rows="${ROWS-10}"
+	header="SERVICE LOG $1 (last $rows lines)"
+	tail -n "$rows" $1 | print_table "$header" ${2-}
     elif [ -e $1 ]; then
 	printf "%s: No permission to read file\n" "$1" >&2
     fi
