@@ -47,10 +47,8 @@ NR == 2 {
 
     if (header)
         is_header = 1
-    else {
+    else
         header = line1;
-        line1 = "";
-    }
 
     print header;
     print dashes;
