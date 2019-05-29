@@ -22,26 +22,11 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_realpath() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    assert [ -d "$1" ]
-    realpath=$(which realpath)
-
-    if [ -n "$realpath" ]; then
-	$realpath "$1"
-    elif expr "$1" : '/.*' >/dev/null; then
-	printf "%s\n" "$1"
-    else
-	printf "%s\n" "$PWD/${1#./}"
-    fi
-)
-
 get_process_status() {
     ps -ef | awk 'NR == 1 || $8 ~ /'"$UWSGI_BINARY_NAME"'$/ {print $0}'
 }
 
-get_service_status() {
+get_parameters() {
     cat <<-EOF
 	      App name: $APP_NAME
 	      App port: $APP_PORT
@@ -60,9 +45,27 @@ EOF
 	  uWSGI plugin: $UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
 EOF
     fi
+}
 
+get_realpath() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ -d "$1" ]
+    realpath=$(which realpath)
+
+    if [ -n "$realpath" ]; then
+	$realpath "$1"
+    elif expr "$1" : '/.*' >/dev/null; then
+	printf "%s\n" "$1"
+    else
+	printf "%s\n" "$PWD/${1#./}"
+    fi
+)
+
+print_service_status() {
+    get_parameters | print_table "     PARAMETER: VALUE" 0
     print_logs $APP_LOGFILE 0
-    get_process_status | print_table "" 1
+    get_process_status | print_table ""
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
@@ -72,4 +75,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 
 configure_system
-get_service_status
+print_service_status
