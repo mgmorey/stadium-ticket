@@ -13,9 +13,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-SIXTY_DASHES="------------------------------------------------------------"
-SIXTY_EQUALS="============================================================"
-
 GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
 
 WAIT_SIGNAL=10
@@ -250,29 +247,42 @@ print_logs() {
     assert [ -n "$1" ]
 
     if [ -r $1 ]; then
-	create_tmpfile
-	tail $1 >$tmpfile
-
-	if [ -s "$tmpfile" ]; then
-	    cat $tmpfile | print_table "SERVICE LOG $1 (last 10 lines)" ${2-}
-	fi
+	tail $1 | print_table "SERVICE LOG $1 (last 10 lines)" ${2-}
     elif [ -e $1 ]; then
 	printf "%s: No permission to read file\n" "$1" >&2
     fi
 }
 
 print_table() {
-    awk -v dashes="$SIXTY_DASHES" \
-	-v equals="$SIXTY_EQUALS" \
+    awk -v columns=${COLUMNS-96} \
 	-v header="$1" -v footer="${2-1}" '
-	  BEGIN {printf("%s%s\n", equals, equals)};
-	NR == 1 {if (header)
-		     printf("%s\n%s%s\n%.120s\n", header, dashes, dashes, $0)
+	function truncate(s) {
+	    return substr(s, 1, columns)
+	}
+	  BEGIN {if (columns < 80)
+		     columns = 80;
+		 if (columns > 240)
+		     columns = 240;
+		 dashes = "";
+		 for (i = 0; i < columns; i++)
+		     dashes = dashes "-";
+		 equals = "";
+		 for (i = 0; i < columns; i++)
+		     equals = equals "="}
+	NR == 1 {line1 = $0}
+	NR == 2 {printf("%s\n", truncate(equals));
+		 if (header)
+		     printf("%s\n%s\n%s\n",
+			    truncate(header),
+			    truncate(dashes),
+			    truncate(line1));
 		 else
-		     printf("%.120s\n%s%s\n", $0, dashes, dashes)}
-	 NR > 1 {printf("%.120s\n", $0)}
+		     printf("%s\n%s\n",
+			    truncate(line1),
+			    truncate(dashes))}
+	NR >= 2 {printf("%s\n", truncate($0))}
 	    END {if (footer)
-		    printf("%s%s\n", equals, equals)}'
+		     printf("%s\n", truncate(equals))}'
 }
 
 reset_home_directory() {
