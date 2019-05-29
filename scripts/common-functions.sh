@@ -276,7 +276,7 @@ print_table() {
 		  else
 		      printf("%s\n%s\n", line1, dashes)}
 	NR >= 2 { printf("%s\n", truncate($0)) }
-	    END { if (footer)
+	END     { if (footer)
 		      printf("%s\n", equals) }'
 }
 
