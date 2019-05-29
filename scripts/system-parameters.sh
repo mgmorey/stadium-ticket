@@ -59,9 +59,6 @@ configure_darwin_source() {
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
 
-    # Set uWSGI log filename
-    UWSGI_LOGFILE=$UWSGI_PREFIX/var/log/uwsgi.log
-
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
 
