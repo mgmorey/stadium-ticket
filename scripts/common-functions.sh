@@ -254,7 +254,7 @@ print_logs() {
 }
 
 print_table() {
-    awk -v columns=${COLUMNS-96} -v header="$1" -v footer="${2-1}" '
+    awk -v columns="${COLUMNS-96}" -v header="$1" -v footer="${2-1}" '
 	function truncate(s) {
 	    return substr(s, 1, columns)
 	}
