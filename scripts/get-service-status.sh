@@ -59,7 +59,7 @@ EOF
 }
 
 get_service_process_status() {
-    ps -ef | awk 'NR == 1 || $8 ~ /'"$UWSGI_BINARY_NAME"'$/ {print $0}'
+    ps -e | awk 'NR == 1 || $4 ~ /'"$UWSGI_BINARY_NAME"'$/ {print $0}'
 }
 
 print_service_status() {
