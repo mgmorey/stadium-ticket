@@ -34,7 +34,6 @@ BEGIN {
     }
 
     header = truncate(header)
-    is_header = 0;
 }
 
 NR == 1 {
