@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+APPLE_URL=http://www.apple.com/DTDs/PropertyList-1.0.dtd
+
 WAIT_DEFAULT=2
 WAIT_RESTART=10
 
@@ -128,7 +130,7 @@ generate_launch_agent_plist() (
 	xmlfile=$tmpfile
 	cat <<-EOF >$xmlfile
 	<?xml version="1.0" encoding="UTF-8"?>
-	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "$APPLE_URL">
 	<plist version="1.0">
 	  <dict>
 	    <key>Label</key>
