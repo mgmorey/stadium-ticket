@@ -23,8 +23,7 @@ function truncate(s) {
 BEGIN {
     if (columns < 80)
         columns = 80;
-
-    if (columns > 240)
+    else if (columns > 240)
         columns = 240;
 
     equals = dashes = "";
