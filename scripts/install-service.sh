@@ -141,8 +141,6 @@ generate_launch_agent_plist() (
 	    <array>
 	        <string>$UWSGI_BINARY_DIR/uwsgi</string>
 	        <string>--die-on-term</string>
-	        <string>--logto</string>
-	        <string>$UWSGI_LOGFILE</string>
 	        <string>--plugin-dir</string>
 	        <string>$UWSGI_PLUGIN_DIR</string>
 	        <string>--ini</string>
