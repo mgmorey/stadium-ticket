@@ -44,16 +44,10 @@ NR == 1 {
 
 NR == 2 {
     print equals;
-
-    if (header)
-        is_header = 1
-    else
-        header = line1;
-
-    print header;
+    print header ? header : line1;
     print dashes;
 
-    if (is_header)
+    if (header)
         print line1
 }
 
