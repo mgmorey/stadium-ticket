@@ -13,8 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-FORTY_DASHES="----------------------------------------"
-FORTY_EQUALS="========================================"
+SIXTY_DASHES="------------------------------------------------------------"
+SIXTY_EQUALS="============================================================"
 
 GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
 
@@ -262,15 +262,15 @@ print_logs() {
 }
 
 print_table() {
-    awk -v dashes="$FORTY_DASHES" \
-	-v equals="$FORTY_EQUALS" \
+    awk -v dashes="$SIXTY_DASHES" \
+	-v equals="$SIXTY_EQUALS" \
 	-v header="$1" -v footer="${2-1}" '
 	  BEGIN {printf("%s%s\n", equals, equals)};
 	NR == 1 {if (header)
-		     printf("%s\n%s%s\n%.80s\n", header, dashes, dashes, $0)
+		     printf("%s\n%s%s\n%.120s\n", header, dashes, dashes, $0)
 		 else
-		     printf("%.80s\n%s%s\n", $0, dashes, dashes)}
-	 NR > 1 {printf("%.80s\n", $0)}
+		     printf("%.120s\n%s%s\n", $0, dashes, dashes)}
+	 NR > 1 {printf("%.120s\n", $0)}
 	    END {if (footer)
 		    printf("%s%s\n", equals, equals)}'
 }
