@@ -52,8 +52,7 @@ NR == 2 {
 }
 
 NR >= 2 {
-    if ($0)
-        print truncate($0)
+    print truncate($0)
 }
 
 END {
