@@ -263,6 +263,15 @@ initialize_database() (
     run_unpriv "'$script_dir/run.sh'" python3 -m app init-db
 )
 
+install_app_files() (
+    assert [ $# -eq 3 ]
+    assert [ -n "$1" -a -n "$2" -a -d "$2" -a -n "$3" ]
+
+    for source in $(find $2 -type f ! -name '*.pyc' -print | sort); do
+	install_file $1 $source $3/$source
+    done
+)
+
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$3" ]
@@ -284,15 +293,6 @@ install_file() {
 	install -C -m $1 $2 $3
     fi
 }
-
-install_flask_app() (
-    assert [ $# -eq 3 ]
-    assert [ -n "$1" -a -n "$2" -a -d "$2" -a -n "$3" ]
-
-    for source in $(find $2 -type f ! -name '*.pyc' -print | sort); do
-	install_file $1 $source $3/$source
-    done
-)
 
 install_service() {
     cd "$source_dir"
@@ -316,7 +316,7 @@ install_service() {
 	    install_file 600 .env $APP_DIR/.env
 	fi
 
-	install_flask_app 644 app $APP_DIR
+	install_app_files 644 app $APP_DIR
 	install_virtualenv $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
 	generate_service_ini $APP_CONFIG app.ini "$APP_VARS"
 	change_owner $APP_ETCDIR $APP_DIR $APP_VARDIR
@@ -324,7 +324,6 @@ install_service() {
     done
 
     validate_parameters_postinstallation
-    initialize_database
 }
 
 install_uwsgi_binary() {
@@ -577,5 +576,6 @@ source_dir=$script_dir/..
 
 configure_system
 install_service
+initialize_database
 restart_service
 show_status
