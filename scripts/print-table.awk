@@ -35,6 +35,7 @@ BEGIN {
     }
 
     header = truncate(header)
+    is_header = 0;
 }
 
 NR == 1 {
@@ -42,19 +43,28 @@ NR == 1 {
 }
 
 NR == 2 {
-    printf("%s\n", equals);
+    print equals;
 
     if (header)
-        printf("%s\n%s\n%s\n", header, dashes, line1)
-    else
-        printf("%s\n%s\n", line1, dashes)
+        is_header = 1
+    else {
+        header = line1;
+        line1 = "";
+    }
+
+    print header;
+    print dashes;
+
+    if (is_header)
+        print line1
 }
 
 NR >= 2 {
-    printf("%s\n", truncate($0))
+    if ($0)
+        print truncate($0)
 }
 
 END {
     if (footer)
-        printf("%s\n", equals)
+        print equals
 }
