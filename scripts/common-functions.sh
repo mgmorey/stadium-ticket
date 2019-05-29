@@ -253,10 +253,10 @@ print_table() {
 	NR == 1 {if (header != "")
 		     printf("%s\n%s%s\n%s\n", header, dashes, dashes, $0)
 		 else
-		     printf("%s\n%s%s\n", $0, dashes, dashes)};
-	 NR > 1 {print $0};
+		     printf("%s\n%s%s\n", $0, dashes, dashes)}
+	 NR > 1 {print $0}
 	    END {if (footer)
-		    printf("%s%s\n", equals, equals)};'
+		    printf("%s%s\n", equals, equals)}'
 }
 
 print_logs() {
