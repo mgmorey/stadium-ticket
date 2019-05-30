@@ -48,6 +48,27 @@ def add_event():
         return jsonify({'event_name': event_name})
 
 
+@app.route('/stadium/event', methods=['DELETE'])
+def remove_event():
+    """Remove an event from the calendar."""
+
+    event_name = request.args.get('name')
+
+    if not event_name:
+        abort(400)
+
+    query = db.session.query(Events)
+    query = query.filter(Events.name == event_name)
+    query.delete()
+    try:
+        db.session.commit()
+    except IntegrityError as error:
+        logging.error("Error removing event: %s", str(error))
+        abort(400, 'No such event')
+    else:
+        return jsonify({'event_name': event_name})
+
+
 @app.route('/stadium/events', methods=['GET'])
 def get_events():
     """Retrieve a list of all past and future events."""
