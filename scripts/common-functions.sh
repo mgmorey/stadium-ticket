@@ -35,24 +35,6 @@ abort_no_python() {
     abort "%s\n" "No suitable Python interpreter found"
 }
 
-check_python() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    assert [ -x $1 ]
-    python_output="$($1 --version || true)"
-
-    if [ -z "$python_output" ]; then
-	abort_no_python
-    fi
-
-    version="${python_output#Python }"
-    printf "Python %s interpreter found: %s\n" "$version" "$1"
-
-    if ! $1 "$script_dir/check-python.py" "$version"; then
-	abort_no_python
-    fi
-)
-
 create_tmpfile() {
     tmpfile=$(mktemp)
     assert [ -n "${tmpfile}" ]
