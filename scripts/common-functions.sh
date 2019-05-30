@@ -13,6 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+AWK_FMT='NR == 1 || $%s ~ /%s$/ {print $0}\n'
 GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
 
 WAIT_SIGNAL=10

@@ -13,8 +13,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-AWK_FMT='NR == 1 || $%s ~ /%s$/ {print $0}\n'
-
 abort() {
     printf "$@" >&2
     exit 1
