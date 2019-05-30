@@ -92,6 +92,10 @@ configure_freebsd() {
 
     # Set uWSGI binary file
     UWSGI_BINARY_NAME=uwsgi-3.6
+
+    # Set uUWGI process status command
+    UWSGI_PS="ps aux"
+    UWSGI_COL=11
 }
 
 configure_linux_debian() {
