@@ -130,7 +130,7 @@ stop_service() {
 		;;
 	esac
 
-	print_logs $APP_LOGFILE || true
+	print_service_log_file
     fi
 }
 

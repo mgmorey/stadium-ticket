@@ -506,10 +506,11 @@ set_start_pending() {
     fi
 }
 
-show_status() {
+print_service_status() {
     if [ -e $APP_PIDFILE ]; then
 	printf "Service started in %s seconds\n" "$total_elapsed"
-	print_logs $APP_LOGFILE || true
+	print_service_log_file 0
+	print_service_process 1
 	printf "Service %s installed and started successfully\n" "$APP_NAME"
     else
 	printf "Service %s installed successfully\n" "$APP_NAME"
@@ -580,4 +581,4 @@ configure_system
 install_service
 initialize_database
 restart_service
-show_status
+print_service_status
