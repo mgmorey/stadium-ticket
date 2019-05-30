@@ -16,11 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-EVENT_1="SoldOut"
-EVENT_2="The Beatles"
-EVENT_3="The Cure"
-EVENT_4="The Doors"
-EVENT_5="The Who"
+EVENT_1="The Beatles"
+EVENT_2="The Cure"
+EVENT_3="The Doors"
+EVENT_4="The Who"
+EVENT_5="SoldOut"
 HEADER="Content-Type: application/json"
 
 abort() {
