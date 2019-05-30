@@ -16,11 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-EVENT_1="SoldOut"
-EVENT_2="The Beatles"
-EVENT_3="The Cure"
-EVENT_4="The Doors"
-EVENT_5="The Who"
+EVENT_1="The Beatles"
+EVENT_2="The Cure"
+EVENT_3="The Doors"
+EVENT_4="The Who"
+EVENT_5="SoldOut"
 HEADER="Content-Type: application/json"
 
 add_event() {
@@ -52,12 +52,18 @@ get_realpath() (
     fi
 )
 
+list_event() {
+    name=$(printf "%s\n" "$1" | sed -e 's/ /%20/g')
+    curl -H "$HEADER" -X GET -i "${url_event}?name=$name"
+}
+
 list_events() {
     curl -H "$HEADER" -X GET -i $url_events
 }
 
 remove_event() {
-    curl -H "$HEADER" -X DELETE -i "${url_event}?name=\"$1\""
+    name=$(printf "%s\n" "$1" | tr -ds ' ' '%20')
+    curl -H "$HEADER" -X DELETE -i "${url_event}?name=$name"
 }
 
 request_tickets() {
@@ -105,6 +111,7 @@ url_events="$base_url/stadium/events"
 url_tickets="$base_url/stadium/tickets"
 
 add_event "$EVENT_1" 1000
+list_event "$EVENT_1"
 remove_event "$EVENT_1"
 
 for event in "$EVENT_1" "$EVENT_2" "$EVENT_3" "$EVENT_4" "$EVENT_5"; do
