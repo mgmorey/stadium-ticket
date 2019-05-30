@@ -60,19 +60,10 @@ remove_event() {
     curl -H "$HEADER" -X DELETE -i "${url_event}?name=\"$1\""
 }
 
-request_ticket() {
-    curl -H "$HEADER" -X PUT -d @- -i $url_ticket <<-EOF
-	{
-	    "command": "request_ticket",
-	    "event": "$1"
-	}
-	EOF
-}
-
 request_tickets() {
-    curl -H "$HEADER" -X PUT -d @- -i $url_tickets <<-EOF
+    curl -H "$HEADER" -X POST -d @- -i $url_tickets <<-EOF
 	{
-	    "command": "request_ticket",
+	    "command": "request_tickets",
 	    "event": "$1",
 	    "count": $2
 	}
@@ -111,7 +102,6 @@ shift $(($OPTIND - 1))
 base_url="http://${host}${port:+:}${port}"
 url_event="$base_url/stadium/event"
 url_events="$base_url/stadium/events"
-url_ticket="$base_url/stadium/ticket"
 url_tickets="$base_url/stadium/tickets"
 
 add_event "$EVENT_1" 1000
@@ -122,7 +112,7 @@ for event in "$EVENT_1" "$EVENT_2" "$EVENT_3" "$EVENT_4" "$EVENT_5"; do
 done
 
 list_events
-request_ticket "The Beatles"
+request_tickets "The Beatles" 1
 request_tickets "The Cure" 10
 request_tickets "The Doors" 100
 request_tickets "The Doors" 100
