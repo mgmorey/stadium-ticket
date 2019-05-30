@@ -34,10 +34,9 @@ def stadium_event_delete():
         db.session.commit()
     except IntegrityError as error:
         logging.error("Error removing event: %s", str(error))
-        abort(400, 'No such event')
+        abort(500, 'Integrity error')
     else:
-        result = jsonify({'event_name': event_name})
-        return result
+        return jsonify({'event_name': event_name})
 
 
 @app.route('/stadium/event', methods=['GET'])
@@ -55,8 +54,7 @@ def stadium_event_get():
     if not event:
         abort(404)
 
-    result = jsonify({'event': event.name})
-    return result
+    return jsonify({'event': event.name})
 
 
 @app.route('/stadium/event', methods=['PUT'])
@@ -82,14 +80,13 @@ def stadium_event_put():
         db.session.commit()
     except IntegrityError as error:
         logging.error("Error adding event: %s", str(error))
-        abort(400, 'Duplicate event')
+        abort(500, 'Integrity error')
     else:
-        result = jsonify({'event_name': event_name})
-        return result
+        return jsonify({'event_name': event_name})
 
 
 @app.route('/stadium/events', methods=['GET'])
-def stadium_events():
+def stadium_events_get():
     """Retrieve a list of all events."""
 
     events = [e.name for e in db.session.query(Events).all()]
@@ -97,7 +94,7 @@ def stadium_events():
 
 
 @app.route('/stadium/tickets', methods=['POST'])
-def stadium_tickets():
+def stadium_tickets_post():
     """Request one or more tickets for an event."""
     max_count = 10
     min_count = 1
