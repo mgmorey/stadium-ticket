@@ -64,10 +64,18 @@ get_service_process_status() {
     $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL "$UWSGI_BINARY_NAME")"
 }
 
+print_service_parameters() {
+    get_service_parameters | print_table "SERVICE PARAMETER: VALUE" ${1-}
+}
+
+print_service_process_status() {
+    get_service_process_status | print_table "" ${1-}
+}
+
 print_service_status() {
-    get_service_parameters | print_table "SERVICE PARAMETER: VALUE" 0
+    print_service_parameters 0
     print_logs $APP_LOGFILE 0
-    get_service_process_status | print_table ""
+    print_service_process_status
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
