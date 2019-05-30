@@ -19,19 +19,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 app = create_app(__name__)  # pylint: disable=invalid-name
 
 
-@app.route('/stadium/event', methods=['GET', 'DELETE', 'PUT'])
-def stadium_event():
-    """Add, retrieve or replace an event."""
-
-    if request.method == 'DELETE':
-        result = stadium_event_delete()
-    elif request.method == 'GET':
-        result = stadium_event_get()
-    elif request.method == 'PUT':
-        result = stadium_event_put()
-    return result
-
-
+@app.route('/stadium/event', methods=['DELETE'])
 def stadium_event_delete():
     """Remove an event."""
     event_name = request.args.get('name')
@@ -52,6 +40,7 @@ def stadium_event_delete():
         return result
 
 
+@app.route('/stadium/event', methods=['GET'])
 def stadium_event_get():
     """Retrieve an event."""
     event_name = request.args.get('name')
@@ -70,6 +59,7 @@ def stadium_event_get():
     return result
 
 
+@app.route('/stadium/event', methods=['PUT'])
 def stadium_event_put():
     """Add, replace an event."""
     if not request.json:
