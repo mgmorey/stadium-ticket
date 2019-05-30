@@ -88,10 +88,10 @@ shift $(($OPTIND - 1))
 
 base_url="http://${host}${port:+:}${port}"
 url_event="$base_url/stadium/event"
-url_ticket="$base_url/stadium/ticket"
+url_tickets="$base_url/stadium/tickets"
 
 for event in "$EVENT_1" "$EVENT_2" "$EVENT_3" "$EVENT_4" "$EVENT_5"; do
     add_event "$event" 1000
 done
 
-ab -H "$HEADER" -u "$script_dir/put.json" -n 1000 -r -c 10 $url_ticket
+ab -H "$HEADER" -u "$script_dir/put.json" -n 1000 -r -c 10 $url_tickets

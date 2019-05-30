@@ -1,4 +1,5 @@
 {
-    "command": "request_ticket",
-    "event": "The Doors"
+    "command": "request_tickets",
+    "event": "The Doors",
+    "count": 1
 }
