@@ -103,7 +103,7 @@ source_dir=$script_dir/..
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
-. "$script_dir/virtualenv-functions.sh"
+. "$script_dir/user-functions.sh"
 
 reset_home_directory
 run_in_virtualenv "$@"
