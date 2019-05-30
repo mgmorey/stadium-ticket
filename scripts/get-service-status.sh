@@ -13,6 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+AWK_FMT='NR == 1 || $%s ~ /%s$/ {print $0}\n'
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -59,7 +61,7 @@ EOF
 }
 
 get_service_process_status() {
-    $UWSGI_PS | awk "$(printf "$UWSGI_AWK" $UWSGI_PS_COL "$UWSGI_BINARY_NAME")"
+    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL "$UWSGI_BINARY_NAME")"
 }
 
 print_service_status() {

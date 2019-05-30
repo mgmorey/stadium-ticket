@@ -14,7 +14,6 @@
 # GNU General Public License for more details.
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
-UWSGI_AWK='NR == 1 || $%s ~ /%s$/ {print $0}\n'
 
 configure_darwin_brew() {
     # Set application group and user accounts
