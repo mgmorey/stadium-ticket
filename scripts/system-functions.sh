@@ -13,6 +13,15 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+abort_insufficient_permissions() {
+    cat <<-EOF >&2
+	$0: Write access required to update file or directory: $1
+	$0: Insufficient access to complete the requested operation.
+	$0: Please try the operation again as a privileged user.
+	EOF
+    exit 1
+}
+
 check_permissions() (
     for file; do
 	if [ -e $file -a -w $file ]; then

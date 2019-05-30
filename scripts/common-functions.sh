@@ -18,15 +18,6 @@ GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
 
 WAIT_SIGNAL=10
 
-abort_insufficient_permissions() {
-    cat <<-EOF >&2
-	$0: Write access required to update file or directory: $1
-	$0: Insufficient access to complete the requested operation.
-	$0: Please try the operation again as a privileged user.
-	EOF
-    exit 1
-}
-
 abort_not_supported() {
     abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
