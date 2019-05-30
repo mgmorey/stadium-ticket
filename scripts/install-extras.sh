@@ -44,7 +44,7 @@ get_realpath() (
     fi
 )
 
-install_extra_packages() {
+install_extras() {
     case "$kernel_name" in
 	(Linux)
 	    case "$ID" in
@@ -123,4 +123,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-install_extra_packages
+install_extras
