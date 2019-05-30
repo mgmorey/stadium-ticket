@@ -20,8 +20,8 @@ app = create_app(__name__)  # pylint: disable=invalid-name
 
 
 @app.route('/stadium/event', methods=['PUT'])
-def add_event():
-    """Add an event to the calendar."""
+def add_or_replace_event():
+    """Add (or replace) an event to (or on) the calendar."""
 
     if not request.json:
         abort(400)
@@ -29,7 +29,7 @@ def add_event():
     if set(request.json.keys()) != {'command', 'event', 'total'}:
         abort(400)
 
-    if request.json['command'] != 'add_event':
+    if set(request.json['command']) != {'add_event', 'replace_event'}:
         abort(400)
 
     event_name = request.json['event']
@@ -48,9 +48,23 @@ def add_event():
         return jsonify({'event_name': event_name})
 
 
+@app.route('/stadium/event', methods=['GET'])
+def get_event():
+    """Retrieve an event from the calendar."""
+
+    event_name = request.args.get('name')
+
+    if not event_name:
+        abort(400)
+
+    query = db.session.query(Events)
+    query = query.filter(Events.name == event_name)
+    return jsonify({'event': query})
+
+
 @app.route('/stadium/events', methods=['GET'])
 def get_events():
-    """Retrieve a list of all past and future events."""
+    """Retrieve a list of events from the calendar."""
 
     events = [e.name for e in db.session.query(Events).all()]
     return jsonify({'events': events})
