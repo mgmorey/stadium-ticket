@@ -31,10 +31,6 @@ abort_not_supported() {
     abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
 
-abort_no_python() {
-    abort "%s\n" "No suitable Python interpreter found"
-}
-
 create_tmpfile() {
     tmpfile=$(mktemp)
     assert [ -n "${tmpfile}" ]
@@ -50,7 +46,7 @@ find_bootstrap_python() (
     done
 
     if [ $python = false ]; then
-	abort_no_python
+	abort "%s\n" "No Python interpreter found"
     fi
 
     printf "%s\n" "$python"

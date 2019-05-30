@@ -16,6 +16,10 @@
 PIP_9_UPGRADE_OPTS="--no-cache-dir"
 PIP_10_UPGRADE_OPTS="--no-cache-dir --no-warn-script-location"
 
+abort_no_python() {
+    abort "%s\n" "No suitable Python interpreter found"
+}
+
 activate_virtualenv() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
