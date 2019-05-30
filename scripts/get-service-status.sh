@@ -51,7 +51,7 @@ get_service_parameters() {
 	     uWSGI binary: $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 EOF
 
-    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_DIR-}" ]; then
+    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
 	cat <<-EOF
 	     uWSGI plugin: $UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
 EOF
