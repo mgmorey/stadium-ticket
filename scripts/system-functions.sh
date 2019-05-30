@@ -13,6 +13,22 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+check_permissions() (
+    for file; do
+	if [ -e $file -a -w $file ]; then
+	    :
+	else
+	    dir=$(dirname $file)
+
+	    if [ $dir != . -a $dir != / ]; then
+		check_permissions $dir
+	    else
+		abort_insufficient_permissions $file
+	    fi
+	fi
+    done
+)
+
 control_launch_agent() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]

@@ -35,22 +35,6 @@ abort_no_python() {
     abort "%s\n" "No suitable Python interpreter found"
 }
 
-check_permissions() (
-    for file; do
-	if [ -e $file -a -w $file ]; then
-	    :
-	else
-	    dir=$(dirname $file)
-
-	    if [ $dir != . -a $dir != / ]; then
-		check_permissions $dir
-	    else
-		abort_insufficient_permissions $file
-	    fi
-	fi
-    done
-)
-
 check_python() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
