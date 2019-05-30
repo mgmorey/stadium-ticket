@@ -14,6 +14,7 @@
 # GNU General Public License for more details.
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
+UWSGI_AWK='NR == 1 || $%s ~ /%s$/ {print $0}\n'
 
 configure_darwin_brew() {
     # Set application group and user accounts
@@ -43,6 +44,10 @@ configure_darwin_brew() {
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=python3_plugin.so
+
+    # Set uUWGI process status command
+    UWSGI_PS="ps -e"
+    UWSGI_COL=4
 }
 
 configure_darwin_source() {
@@ -69,6 +74,10 @@ configure_darwin_source() {
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=python3_plugin.so
+
+    # Set uUWGI process status command
+    UWSGI_PS="ps -e"
+    UWSGI_COL=4
 
     # Control build from source for uWSGI
     UWSGI_SOURCE_ONLY=true
@@ -209,6 +218,14 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_PLUGIN_NAME-}" -a -d $UWSGI_PLUGIN_DIR ]; then
 	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin || true)
+    fi
+
+    if [ -z "${UWSGI_PS-}" ]; then
+	UWSGI_PS="ps -ef"
+    fi
+
+    if [ -z "${UWSGI_COL-}" ]; then
+	UWSGI_COL=8
     fi
 
     if [ -z "${UWSGI_SOURCE_ONLY-}" ]; then
