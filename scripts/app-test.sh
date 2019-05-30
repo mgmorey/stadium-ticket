@@ -24,13 +24,13 @@ EVENT_5="The Who"
 HEADER="Content-Type: application/json"
 
 add_event() {
-    curl -H "$HEADER" -X PUT -d @- -i $url_event <<EOF
-{
-	"command": "add_event",
-	"event": "$1",
-	"total": $2
-}
-EOF
+    curl -H "$HEADER" -X PUT -d @- -i $url_event <<-EOF
+	{
+		"command": "add_event",
+		"event": "$1",
+		"total": $2
+	}
+	EOF
 }
 
 assert() {
