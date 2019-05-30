@@ -1,6 +1,6 @@
 # -*- Mode: Shell-script -*-
 
-# common-functions.sh: define commonly-used shell functions
+# common-functions.sh: define commonly used shell functions
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
