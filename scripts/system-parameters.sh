@@ -46,7 +46,7 @@ configure_darwin_brew() {
     UWSGI_PLUGIN_NAME=python3_plugin.so
 
     # Set uUWGI process status command
-    UWSGI_PS="ps -hxO user"
+    UWSGI_PS="ps -xO user"
     UWSGI_COL=6
 }
 
@@ -76,7 +76,7 @@ configure_darwin_source() {
     UWSGI_PLUGIN_NAME=python3_plugin.so
 
     # Set uUWGI process status command
-    UWSGI_PS="ps -hxO user"
+    UWSGI_PS="ps -xO user"
     UWSGI_COL=6
 
     # Build uWSGI from source
