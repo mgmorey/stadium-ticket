@@ -101,6 +101,9 @@ install_dependencies() {
 		    ;;
 	    esac
 	    ;;
+	(Darwin)
+	    :
+	    ;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;

@@ -101,6 +101,9 @@ install_extras() {
 		    ;;
 	    esac
 	    ;;
+	(Darwin)
+	    :
+	    ;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;

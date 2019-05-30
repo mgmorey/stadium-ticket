@@ -91,6 +91,9 @@ install_docker() {
 		    ;;
 	    esac
 	    ;;
+	(Darwin)
+	    :
+	    ;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;
