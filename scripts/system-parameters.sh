@@ -47,7 +47,7 @@ configure_darwin_brew() {
 
     # Set uUWGI process status command
     UWSGI_PS="ps -xO user"
-    UWSGI_COL=6
+    UWSGI_PS_COL=6
 }
 
 configure_darwin_source() {
@@ -77,7 +77,7 @@ configure_darwin_source() {
 
     # Set uUWGI process status command
     UWSGI_PS="ps -xO user"
-    UWSGI_COL=6
+    UWSGI_PS_COL=6
 
     # Build uWSGI from source
     UWSGI_SOURCE_ONLY=true
@@ -95,7 +95,7 @@ configure_freebsd() {
 
     # Set uUWGI process status command
     UWSGI_PS="ps aux"
-    UWSGI_COL=11
+    UWSGI_PS_COL=11
 }
 
 configure_linux_debian() {
@@ -228,8 +228,8 @@ configure_system_defaults() {
 	UWSGI_PS="ps -ef"
     fi
 
-    if [ -z "${UWSGI_COL-}" ]; then
-	UWSGI_COL=8
+    if [ -z "${UWSGI_PS_COL-}" ]; then
+	UWSGI_PS_COL=8
     fi
 
     if [ -z "${UWSGI_SOURCE_ONLY-}" ]; then

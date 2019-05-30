@@ -59,7 +59,7 @@ EOF
 }
 
 get_service_process_status() {
-    $UWSGI_PS | awk "$(printf "$UWSGI_AWK" $UWSGI_COL "$UWSGI_BINARY_NAME")"
+    $UWSGI_PS | awk "$(printf "$UWSGI_AWK" $UWSGI_PS_COL "$UWSGI_BINARY_NAME")"
 }
 
 print_service_status() {
