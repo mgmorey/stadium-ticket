@@ -224,8 +224,33 @@ get_required_python_versions() (
     return 1
 )
 
+get_service_parameters() {
+    cat <<-EOF
+	             Name: $APP_NAME
+	             Port: $APP_PORT
+	          User ID: $APP_UID
+	         Group ID: $APP_GID
+	    Configuration: $APP_CONFIG
+	   Code directory: $APP_DIR
+	   Data directory: $APP_VARDIR
+	         Log file: $APP_LOGFILE
+	         PID file: $APP_PIDFILE
+	     uWSGI binary: $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+EOF
+
+    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
+	cat <<-EOF
+	     uWSGI plugin: $UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
+EOF
+    fi
+}
+
+get_service_process() {
+    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL "$UWSGI_BINARY_NAME")"
+}
+
 grep_pyenv_version() {
-    assert [ $# -eq 0 -o $# -eq 1 ]
+    assert [ $# -le 1 ]
 
     if [ $# -eq 1 ]; then
 	grep -E $(printf "$GREP_REGEX" "$1")
@@ -242,17 +267,24 @@ install_python_version() (
     fi
 )
 
-print_logs() {
-    assert [ $# -eq 1 -o $# -eq 2 ]
-    assert [ -n "$1" ]
+print_service_log_file() {
+    assert [ $# -le 1 ]
 
-    if [ -r $1 ]; then
+    if [ -r $APP_LOGFILE ]; then
 	rows="${ROWS-10}"
-	header="SERVICE LOG $1 (last $rows lines)"
-	tail -n "$rows" $1 | print_table "$header" ${2-}
-    elif [ -e $1 ]; then
-	printf "%s: No permission to read file\n" "$1" >&2
+	header="SERVICE LOG $APP_LOGFILE (last $rows lines)"
+	tail -n "$rows" $APP_LOGFILE | print_table "$header" ${1-}
+    elif [ -e $APP_LOGFILE ]; then
+	printf "%s: No permission to read file\n" "$APP_LOGFILE" >&2
     fi
+}
+
+print_service_parameters() {
+    get_service_parameters | print_table "SERVICE PARAMETER: VALUE" ${1-}
+}
+
+print_service_process() {
+    get_service_process | print_table "" ${1-}
 }
 
 print_table() {

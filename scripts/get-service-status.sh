@@ -39,43 +39,10 @@ get_realpath() (
     fi
 )
 
-get_service_parameters() {
-    cat <<-EOF
-	             Name: $APP_NAME
-	             Port: $APP_PORT
-	          User ID: $APP_UID
-	         Group ID: $APP_GID
-	    Configuration: $APP_CONFIG
-	   Code directory: $APP_DIR
-	   Data directory: $APP_VARDIR
-	         Log file: $APP_LOGFILE
-	         PID file: $APP_PIDFILE
-	     uWSGI binary: $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-EOF
-
-    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	cat <<-EOF
-	     uWSGI plugin: $UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
-EOF
-    fi
-}
-
-get_service_process_status() {
-    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL "$UWSGI_BINARY_NAME")"
-}
-
-print_service_parameters() {
-    get_service_parameters | print_table "SERVICE PARAMETER: VALUE" ${1-}
-}
-
-print_service_process_status() {
-    get_service_process_status | print_table "" ${1-}
-}
-
 print_service_status() {
     print_service_parameters 0
-    print_logs $APP_LOGFILE 0
-    print_service_process_status
+    print_service_log_file 0
+    print_service_process
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
