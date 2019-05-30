@@ -1,4 +1,4 @@
-#!/usr/bin/env awk -f
+#!/usr/bin/awk -f
 
 # print-table: print a table with lines truncated after COLUMNS columns
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
