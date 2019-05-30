@@ -53,6 +53,10 @@ create_virtualenv() {
     fi
 }
 
+get_home_directory() {
+    getent passwd ${1-$USER} | awk -F: '{print $6}'
+}
+
 get_pip_upgrade_options() {
     case "$($pip --version | awk '{print $2}')" in
 	([0-9].*)
@@ -62,6 +66,18 @@ get_pip_upgrade_options() {
 	    printf "%s\n" "$PIP_10_UPGRADE_OPTS"
 	    ;;
     esac
+}
+
+reset_home_directory() {
+    if [ -z "${SUDO_USER-}" ]; then
+	return 0
+    fi
+
+    home_dir="$(get_home_directory $SUDO_USER)"
+
+    if [ "$HOME" != "$home_dir" ]; then
+	export HOME="$home_dir"
+    fi
 }
 
 sync_requirements_via_pip() {

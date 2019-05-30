@@ -150,10 +150,6 @@ find_pyenv_python() (
     return 1
 )
 
-get_home_directory() {
-    getent passwd ${1-$USER} | awk -F: '{print $6}'
-}
-
 get_pyenv_versions() {
     pyenv install --list | awk 'NR > 1 {print $1}' | grep_pyenv_version ${1-}
 }
@@ -188,15 +184,3 @@ install_python_version() (
 	pyenv install -s $version
     fi
 )
-
-reset_home_directory() {
-    if [ -z "${SUDO_USER-}" ]; then
-	return 0
-    fi
-
-    home_dir="$(get_home_directory $SUDO_USER)"
-
-    if [ "$HOME" != "$home_dir" ]; then
-	export HOME="$home_dir"
-    fi
-}
