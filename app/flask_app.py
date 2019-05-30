@@ -20,67 +20,86 @@ app = create_app(__name__)  # pylint: disable=invalid-name
 
 
 @app.route('/stadium/event', methods=['GET', 'DELETE', 'PUT'])
-def event():
+def stadium_event():
     """Add, retrieve or replace an event."""
 
-    if request.method == 'GET':
-        event_name = request.args.get('name')
-
-        if not event_name:
-            abort(400)
-
-        query = db.session.query(Events)
-        query = query.filter(Events.name == event_name)
-        event = query.first()
-
-        if not event:
-            abort(404)
-
-        return jsonify({'event': event.name})
-    elif request.method == 'DELETE':
-        event_name = request.args.get('name')
-
-        if not event_name:
-            abort(400)
-
-        query = db.session.query(Events)
-        query = query.filter(Events.name == event_name)
-        query.delete()
-        try:
-            db.session.commit()
-        except IntegrityError as error:
-            logging.error("Error removing event: %s", str(error))
-            abort(400, 'No such event')
-        else:
-            return jsonify({'event_name': event_name})
+    if request.method == 'DELETE':
+        result = stadium_event_delete()
+    elif request.method == 'GET':
+        result = stadium_event_get()
     elif request.method == 'PUT':
-        if not request.json:
-            abort(400)
+        result = stadium_event_put()
+    return result
 
-        if set(request.json.keys()) != {'command', 'event', 'total'}:
-            abort(400)
 
-        if request.json['command'] not in {'add_event', 'replace_event'}:
-            abort(400)
+def stadium_event_delete():
+    """Remove an event."""
+    event_name = request.args.get('name')
 
-        event_name = request.json['event']
-        event_total = request.json['total']
-        query = db.session.query(Events)
-        query = query.filter(Events.name == event_name)
-        query.delete()
-        event = Events(name=event_name, sold=0, total=event_total)
-        db.session.add(event)
-        try:
-            db.session.commit()
-        except IntegrityError as error:
-            logging.error("Error adding event: %s", str(error))
-            abort(400, 'Duplicate event')
-        else:
-            return jsonify({'event_name': event_name})
+    if not event_name:
+        abort(400)
+
+    query = db.session.query(Events)
+    query = query.filter(Events.name == event_name)
+    query.delete()
+    try:
+        db.session.commit()
+    except IntegrityError as error:
+        logging.error("Error removing event: %s", str(error))
+        abort(400, 'No such event')
+    else:
+        result = jsonify({'event_name': event_name})
+        return result
+
+
+def stadium_event_get():
+    """Retrieve an event."""
+    event_name = request.args.get('name')
+
+    if not event_name:
+        abort(400)
+
+    query = db.session.query(Events)
+    query = query.filter(Events.name == event_name)
+    event = query.first()
+
+    if not event:
+        abort(404)
+
+    result = jsonify({'event': event.name})
+    return result
+
+
+def stadium_event_put():
+    """Add, replace an event."""
+    if not request.json:
+        abort(400)
+
+    if set(request.json.keys()) != {'command', 'event', 'total'}:
+        abort(400)
+
+    if request.json['command'] not in {'add_event', 'replace_event'}:
+        abort(400)
+
+    event_name = request.json['event']
+    event_total = request.json['total']
+    query = db.session.query(Events)
+    query = query.filter(Events.name == event_name)
+    query.delete()
+    event = Events(name=event_name, sold=0, total=event_total)
+    db.session.add(event)
+    try:
+        db.session.commit()
+    except IntegrityError as error:
+        logging.error("Error adding event: %s", str(error))
+        abort(400, 'Duplicate event')
+    else:
+        result = jsonify({'event_name': event_name})
+        return result
 
 
 @app.route('/stadium/events', methods=['GET'])
-def events():
+def stadium_events():
     """Retrieve a list of all events."""
 
     events = [e.name for e in db.session.query(Events).all()]
@@ -88,7 +107,7 @@ def events():
 
 
 @app.route('/stadium/tickets', methods=['POST'])
-def tickets():
+def stadium_tickets():
     """Request one or more tickets for an event."""
     max_count = 10
     min_count = 1
