@@ -48,6 +48,14 @@ def add_event():
         return jsonify({'event_name': event_name})
 
 
+@app.route('/stadium/events', methods=['GET'])
+def get_events():
+    """Retrieve a list of all past and future events."""
+
+    events = [e.name for e in db.session.query(Events).all()]
+    return jsonify({'events': events})
+
+
 @app.route('/stadium/event', methods=['DELETE'])
 def remove_event():
     """Remove an event from the calendar."""
@@ -67,14 +75,6 @@ def remove_event():
         abort(400, 'No such event')
     else:
         return jsonify({'event_name': event_name})
-
-
-@app.route('/stadium/events', methods=['GET'])
-def get_events():
-    """Retrieve a list of all past and future events."""
-
-    events = [e.name for e in db.session.query(Events).all()]
-    return jsonify({'events': events})
 
 
 @app.route('/stadium/ticket', methods=['PUT'])
