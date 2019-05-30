@@ -56,6 +56,10 @@ list_events() {
     curl -H "$HEADER" -X GET -i $url_events
 }
 
+remove_event() {
+    curl -H "$HEADER" -X DELETE -i "${url_event}?name=\"$1\""
+}
+
 request_ticket() {
     curl -H "$HEADER" -X PUT -d @- -i $url_ticket <<-EOF
 	{
@@ -109,6 +113,9 @@ url_event="$base_url/stadium/event"
 url_events="$base_url/stadium/events"
 url_ticket="$base_url/stadium/ticket"
 url_tickets="$base_url/stadium/tickets"
+
+add_event "$EVENT_1" 1000
+remove_event "$EVENT_1"
 
 for event in "$EVENT_1" "$EVENT_2" "$EVENT_3" "$EVENT_4" "$EVENT_5"; do
     add_event "$event" 1000
