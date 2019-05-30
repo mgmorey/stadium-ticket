@@ -15,7 +15,7 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
-configure_darwin_brew() {
+configure_darwin_homebrew() {
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
