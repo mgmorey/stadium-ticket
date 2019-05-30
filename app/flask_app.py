@@ -29,7 +29,7 @@ def add_or_replace_event():
     if set(request.json.keys()) != {'command', 'event', 'total'}:
         abort(400)
 
-    if set(request.json['command']) != {'add_event', 'replace_event'}:
+    if request.json['command'] not in {'add_event', 'replace_event'}:
         abort(400)
 
     event_name = request.json['event']
@@ -91,29 +91,7 @@ def remove_event():
         return jsonify({'event_name': event_name})
 
 
-@app.route('/stadium/ticket', methods=['PUT'])
-def request_ticket():
-    """Request a single ticket for an event."""
-    if not request.json:
-        abort(400)
-
-    if set(request.json.keys()) != {'command', 'event'}:
-        abort(400)
-
-    if request.json['command'] != 'request_ticket':
-        abort(400)
-
-    try:
-        ticket = Tickets(db.session, request.json['event'])
-    except SoldOut as error:
-        logging.error("Error requesting ticket: %s", str(error))
-        abort(400, 'No tickets available')
-    else:
-        return jsonify({'ticket_number': ticket.serial,
-                        'time': ticket.issue})
-
-
-@app.route('/stadium/tickets', methods=['PUT'])
+@app.route('/stadium/tickets', methods=['POST'])
 def request_tickets():
     """Request one or more tickets for an event."""
     max_count = 10
@@ -125,7 +103,7 @@ def request_tickets():
     if set(request.json.keys()) != {'command', 'count', 'event'}:
         abort(400)
 
-    if request.json['command'] != 'request_ticket':
+    if request.json['command'] != 'request_tickets':
         abort(400)
 
     count = request.json['count']
