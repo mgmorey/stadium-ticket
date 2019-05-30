@@ -36,7 +36,7 @@ def stadium_event_delete():
         logging.error("Error removing event: %s", str(error))
         abort(500, 'Integrity error')
     else:
-        return jsonify({'event_name': event_name})
+        return jsonify({})
 
 
 @app.route('/stadium/event', methods=['GET'])
@@ -54,7 +54,14 @@ def stadium_event_get():
     if not event:
         abort(404)
 
-    return jsonify({'event': event.name})
+    result = {
+        'event': {
+            'name': event.name,
+            'sold': event.sold,
+            'total': event.total
+        }
+    }
+    return jsonify(result)
 
 
 @app.route('/stadium/event', methods=['PUT'])
