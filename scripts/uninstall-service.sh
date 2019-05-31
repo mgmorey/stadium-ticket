@@ -125,8 +125,7 @@ stop_service() {
 		signal_service $WAIT_SIGNAL INT TERM KILL || true
 		;;
 	    (Darwin)
-		control_launch_agent stop
-		control_launch_agent unload remove_files
+		control_launch_agent unload remove_files || true
 		;;
 	esac
     fi
@@ -158,7 +157,6 @@ usage() {
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
-. "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 

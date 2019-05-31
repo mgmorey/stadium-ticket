@@ -15,8 +15,6 @@
 
 GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
 
-WAIT_SIGNAL=10
-
 abort_not_supported() {
     abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
