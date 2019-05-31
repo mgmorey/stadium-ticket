@@ -13,7 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-AWK_FMT='NR == 1 || $10 == command {print $0}'
+AWK_FMT='NR == 1 || $%s == command {print $0}'
 
 abort_insufficient_permissions() {
     cat <<-EOF >&2
@@ -116,7 +116,7 @@ EOF
 get_service_process() {
     awk=$(find_awk)
     command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-    $UWSGI_PS | $awk -v command=$command "$AWK_FMT"
+    $UWSGI_PS | $awk -v command=$command "$(printf "$AWK_FMT\n" $UWSGI_PS_COL)"
 }
 
 print_service_parameters() {
