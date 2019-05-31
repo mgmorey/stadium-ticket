@@ -158,9 +158,6 @@ configure_openindiana() {
 
     # Set uWSGI log filename
     UWSGI_LOGFILE=$UWSGI_PREFIX/var/opt/uwsgi.log
-
-    # Control build from source for uWSGI
-    UWSGI_SOURCE_ONLY=true
 }
 
 configure_sunos() {
@@ -340,6 +337,8 @@ configure_system() {
 
 	    case $ID in
 		# (openindiana)
+		#     # Build uWSGI from source
+		#     UWSGI_SOURCE_ONLY=true
 		#     configure_openindiana
 		#     ;;
 		(*)
