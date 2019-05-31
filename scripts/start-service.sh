@@ -38,34 +38,25 @@ get_realpath() (
 )
 
 start_service() {
-    app_prefix=$APP_DIR/$VENV_FILENAME
-    binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-
-    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
-    fi
-
-    if ! $binary --version >/dev/null 2>&1; then
-	abort "%s: %s: No such binary file\n" "$0" "$binary"
-    fi
-
-    export PATH=$app_prefix/bin:/usr/bin:/bin:/usr/sbin:/sbin
-    export PYTHONPATH=$app_prefix/lib
-
-    cd $APP_VARDIR
-
     validate_parameters_preinstallation
     validate_parameters_postinstallation
+    command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 
-    if signal_service $WAIT_SIGNAL HUP; then
-	abort "Service is running as PID %s\n" "$pid"
-    elif [ -e $APP_LOGFILE -a ! -w $APP_LOGFILE ]; then
-	abort "%s: No write permission\n" "$APP_LOGFILE"
-    elif [ -d $APP_LOGDIR -a ! -w $APP_LOGDIR ]; then
-	abort "%s: No write permission\n" "$APP_LOGDIR"
-    else
-	$binary${UWSGI_PLUGIN_DIR+ --plugin-dir $UWSGI_PLUGIN_DIR} --ini $APP_CONFIG
+    if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+	command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
     fi
+
+    for dryrun in true false; do
+	check_permissions $APP_LOGFILE
+
+	if [ $dryrun = false ]; then
+	    if signal_service $WAIT_SIGNAL HUP; then
+		abort "Service is running as PID %s\n" "$pid"
+	    else
+		$command --ini $APP_CONFIG
+	    fi
+	fi
+    done
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
