@@ -38,9 +38,12 @@ get_realpath() (
 )
 
 print_service_status() {
-    print_service_parameters 1
-    print_service_log_file 0
-    print_service_process 0
+    border=1
+
+    for item in parameters log_file process; do
+	eval print_service_$item $border
+	border=0
+    done
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
