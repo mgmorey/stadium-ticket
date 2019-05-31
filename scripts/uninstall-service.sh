@@ -129,8 +129,6 @@ stop_service() {
 		control_launch_agent unload remove_files
 		;;
 	esac
-
-	print_service_log_file
     fi
 }
 
@@ -142,6 +140,7 @@ uninstall_service() {
 	remove_service
     done
 
+    print_service_log_file
     printf "Service %s uninstalled successfully\n" $APP_NAME
 }
 
