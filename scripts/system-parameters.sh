@@ -226,11 +226,8 @@ configure_system_defaults() {
     # Set ps command format and command column
 
     if [ -z "${UWSGI_PS-}" ]; then
-	UWSGI_PS="ps -O user ax"
-    fi
-
-    if [ -z "${UWSGI_PS_COL-}" ]; then
-	UWSGI_PS_COL=6
+	UWSGI_PS="ps axo user,pid,ppid,stime,command"
+	UWSGI_PS_COL=5
     fi
 
     if [ -z "${UWSGI_SOURCE_ONLY-}" ]; then
