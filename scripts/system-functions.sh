@@ -13,6 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+AWK_FMT='NR == 1 || $%s ~ /(^|\/)%s$/ {print $0}\n'
+
 abort_insufficient_permissions() {
     cat <<-EOF >&2
 	$0: Write access required to update file or directory: $1
