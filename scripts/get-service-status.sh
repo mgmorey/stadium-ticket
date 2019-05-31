@@ -45,10 +45,14 @@ print_service_status() {
 	border=0
     done
 
-    if is_service_running; then
-	status=running
+    if [ -e $APP_CONFIG ]; then
+	if is_service_running; then
+	    status=running
+	else
+	    status=stopped
+	fi
     else
-	status=stopped
+	status=uninstalled
     fi
 
     printf "Service %s is %s\n" "$APP_NAME" "$status"
