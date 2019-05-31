@@ -34,10 +34,11 @@ BEGIN {
     }
 
     header = truncate(header)
+    line = 0;
 }
 
 NR == 1 {
-    line1 = truncate($0)
+    line1 = truncate($0);
 }
 
 NR == 2 {
@@ -53,8 +54,10 @@ NR == 2 {
 
 NR >= 2 {
     print truncate($0)
+    line++
 }
 
 END {
-    print equals
+    if (line)
+        print equals
 }
