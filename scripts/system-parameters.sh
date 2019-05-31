@@ -218,7 +218,7 @@ configure_system_defaults() {
     # Set ps command format and command column
 
     if [ -z "${UWSGI_PS-}" ]; then
-	UWSGI_PS="ps axo user,pid,ppid,lstart,tname,command"
+	UWSGI_PS="ps axo user,pid,ppid,lstart,tty,command"
 	UWSGI_PS_COL=10
     fi
 
