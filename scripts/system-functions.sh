@@ -24,6 +24,12 @@ abort_insufficient_permissions() {
     exit 1
 }
 
+awk_ps_uwsgi() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" command=$1
+}
+
 check_permissions() (
     for file; do
 	if [ -e $file -a -w $file ]; then
@@ -100,8 +106,7 @@ EOF
 }
 
 get_service_process() {
-    uwsgi=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" command=$uwsgi
+    $UWSGI_PS | awk_ps_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 }
 
 print_service_log_file() {
