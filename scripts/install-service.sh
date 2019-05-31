@@ -430,6 +430,17 @@ is_tmpfile() {
     printf "%s\n" ${tmpfiles-} | grep $1 >/dev/null
 }
 
+print_status() {
+    if [ -e $APP_PIDFILE ]; then
+	printf "Service started in %s seconds\n" "$total_elapsed"
+	print_service_log_file 1
+	print_service_process 0
+	printf "Service %s installed and started successfully\n" "$APP_NAME"
+    else
+	printf "Service %s installed successfully\n" "$APP_NAME"
+    fi
+}
+
 restart_service() {
     if signal_service $WAIT_SIGNAL HUP; then
 	signal_received=true
@@ -506,17 +517,6 @@ set_start_pending() {
     fi
 }
 
-print_service_status() {
-    if [ -e $APP_PIDFILE ]; then
-	printf "Service started in %s seconds\n" "$total_elapsed"
-	print_service_log_file 1
-	print_service_process 0
-	printf "Service %s installed and started successfully\n" "$APP_NAME"
-    else
-	printf "Service %s installed successfully\n" "$APP_NAME"
-    fi
-}
-
 start_app_service() {
     case "$kernel_name" in
 	(Linux)
@@ -582,4 +582,4 @@ configure_system
 install_service
 initialize_database
 restart_service
-print_service_status
+print_status
