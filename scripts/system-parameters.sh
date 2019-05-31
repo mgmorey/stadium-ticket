@@ -83,6 +83,10 @@ configure_freebsd() {
 
     # Set uWSGI binary file
     UWSGI_BINARY_NAME=uwsgi-3.6
+
+    # Set ps command format and command column
+    UWSGI_PS="ps axo user,pid,ppid,lstart,tty,command"
+    UWSGI_PS_COL=10
 }
 
 configure_linux_debian() {
@@ -158,6 +162,8 @@ configure_openindiana() {
 
     # Control build from source for uWSGI
     UWSGI_SOURCE_ONLY=true
+
+    # Set ps command format and command column
     UWSGI_PS="ps -efo user,pid,ppid,stime,tty,args"
     UWSGI_PS_COL=6
 }
@@ -214,7 +220,6 @@ configure_system_defaults() {
     fi
 
     # Set ps command format and command column
-
     if [ -z "${UWSGI_PS-}" ]; then
 	UWSGI_PS="ps axo user,pid,ppid,lstart,tty,command"
 	UWSGI_PS_COL=10
