@@ -100,8 +100,8 @@ EOF
 }
 
 get_service_process() {
-    command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" command=$command
+    uwsgi=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" command=$uwsgi
 }
 
 print_service_parameters() {
