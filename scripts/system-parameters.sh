@@ -15,7 +15,17 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
-configure_darwin_homebrew() {
+configure_darwin() {
+    configure_darwin_common
+
+    if [ "${UWSGI_SOURCE_ONLY-false}" = true ]; then
+	configure_darwin_source
+    else
+	configure_darwin_native
+    fi
+}
+
+configure_darwin_common() {
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
@@ -29,49 +39,30 @@ configure_darwin_homebrew() {
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
 
-    # Set uWSGI log filename
-    UWSGI_LOGFILE=$UWSGI_PREFIX/var/log/uwsgi.log
-
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
-    UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
-
-    # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/libexec/uwsgi
 
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=python3_plugin.so
 }
 
-configure_darwin_source() {
-    # Set application group and user accounts
-    APP_GID=_www
-    APP_UID=_www
-
-    # Set application directory prefix
-    APP_PREFIX=/usr/local
-
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/usr/local
-
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS="apps-available apps-enabled"
-
+configure_darwin_native() {
     # Set uWSGI top-level directories
-    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
+    UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
 
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
+    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/libexec/uwsgi
+
+    # Set uWSGI log filename
+    UWSGI_LOGFILE=$UWSGI_PREFIX/var/log/uwsgi.log
+}
+
+configure_darwin_source() {
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
     UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/uwsgi/plugins
-
-    # Set uWSGI binary/plugin filenames
-    UWSGI_BINARY_NAME=uwsgi
-    UWSGI_PLUGIN_NAME=python3_plugin.so
-
-    # Build uWSGI from source
-    UWSGI_SOURCE_ONLY=true
 }
 
 configure_freebsd() {
@@ -324,7 +315,9 @@ configure_system() {
 	    esac
 	    ;;
 	(Darwin)
-	    configure_darwin_source
+	    # Build uWSGI from source
+	    UWSGI_SOURCE_ONLY=true
+	    configure_darwin
 	    ;;
 	(FreeBSD)
 	    configure_freebsd
