@@ -93,8 +93,8 @@ configure_freebsd() {
     UWSGI_BINARY_NAME=uwsgi-3.6
 
     # Set uUWGI process status command
-    UWSGI_PS="ps aux"
-    UWSGI_PS_COL=11
+    UWSGI_PS="ps -axO user"
+    UWSGI_PS_COL=6
 }
 
 configure_linux_debian() {
