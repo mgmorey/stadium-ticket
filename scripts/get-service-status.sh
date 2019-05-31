@@ -46,10 +46,12 @@ print_service_status() {
     done
 
     if is_service_running; then
-	printf "Service %s is running\n" "$APP_NAME"
+	status=running
     else
-	printf "Service %s is stopped\n" "$APP_NAME"
+	status=stopped
     fi
+
+    printf "Service %s is %s\n" "$APP_NAME" "$status"
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
