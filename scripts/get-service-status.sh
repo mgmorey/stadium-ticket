@@ -44,6 +44,12 @@ print_service_status() {
 	eval print_service_$item $border
 	border=0
     done
+
+    if is_service_running; then
+	printf "Service %s is running\n" "$APP_NAME"
+    else
+	printf "Service %s is stopped\n" "$APP_NAME"
+    fi
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")

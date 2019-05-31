@@ -431,9 +431,10 @@ is_tmpfile() {
 }
 
 print_status() {
-    if [ -e $APP_PIDFILE ]; then
+    print_service_log_file 1
+
+    if is_service_running; then
 	printf "Service started in %s seconds\n" "$total_elapsed"
-	print_service_log_file 1
 	print_service_process 0
 	printf "Service %s installed and started successfully\n" "$APP_NAME"
     else

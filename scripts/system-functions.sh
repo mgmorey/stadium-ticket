@@ -109,6 +109,17 @@ get_service_process() {
     $UWSGI_PS | awk_ps_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 }
 
+is_service_running() {
+    if [ -e $APP_PIDFILE ]; then
+	pid=$(cat $APP_PIDFILE)
+	if [ -n "$pid" ] && ps -p $pid >/dev/null; then
+	    return 0
+	fi
+    fi
+
+    return 1
+}
+
 print_service_log_file() {
     assert [ $# -le 1 ]
 
