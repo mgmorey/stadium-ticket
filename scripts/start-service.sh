@@ -59,6 +59,10 @@ start_service() {
 
     if signal_service $WAIT_SIGNAL HUP; then
 	abort "Service is running as PID %s\n" "$pid"
+    elif [ -e $APP_LOGFILE -a ! -w $APP_LOGFILE ]; then
+	abort "%s: No write permission\n" "$APP_LOGFILE"
+    elif [ -d $APP_LOGDIR -a ! -w $APP_LOGDIR ]; then
+	abort "%s: No write permission\n" "$APP_LOGDIR"
     else
 	$binary${UWSGI_PLUGIN_DIR+ --plugin-dir $UWSGI_PLUGIN_DIR} --ini $APP_CONFIG
     fi
