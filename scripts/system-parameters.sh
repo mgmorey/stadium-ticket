@@ -84,7 +84,7 @@ configure_freebsd() {
 
 configure_linux() {
     # Set ps command format and command column
-    UWSGI_PS="ps axo user,pid,ppid,lstart,tty,command"
+    UWSGI_PS="ps axo user,pid,ppid,lstart,tty=TTY,command"
     UWSGI_PS_COL=10
 }
 
@@ -389,6 +389,10 @@ validate_parameters_postinstallation() {
 	abort "%s: %s: No such log directory\n" "$0" "$APP_LOGDIR"
     elif [ ! -d $APP_RUNDIR ]; then
 	abort "%s: %s: No such run directory\n" "$0" "$APP_RUNDIR"
+    elif [ -e $APP_LOGFILE -a ! -w $APP_LOGFILE ]; then
+	abort "%s: %s: No write permission\n" "$0" "$APP_LOGFILE"
+    elif [ -e $APP_PIDFILE -a ! -w $APP_PIDFILE ]; then
+	abort "%s: %s: No write permission\n" "$0" "$APP_PIDFILE"
     fi
 }
 
