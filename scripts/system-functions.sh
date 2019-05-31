@@ -100,12 +100,8 @@ EOF
 }
 
 get_service_process() {
-    command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" command=$command
-}
-
-print_service_parameters() {
-    get_service_parameters | print_table "SERVICE PARAMETER: VALUE" ${1-}
+    uwsgi=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" command=$uwsgi
 }
 
 print_service_log_file() {
@@ -118,6 +114,10 @@ print_service_log_file() {
     elif [ -e $APP_LOGFILE ]; then
 	printf "%s: No read permission\n" "$APP_LOGFILE" >&2
     fi
+}
+
+print_service_parameters() {
+    get_service_parameters | print_table "SERVICE PARAMETER: VALUE" ${1-}
 }
 
 print_service_process() {
