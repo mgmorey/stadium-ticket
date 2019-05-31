@@ -15,6 +15,12 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
+configure_bsd() {
+    # Set ps command format and command column
+    UWSGI_PS="ps axo user,pid,ppid,lstart,tty,command"
+    UWSGI_PS_COL=10
+}
+
 configure_darwin() {
     configure_darwin_common
 
@@ -74,7 +80,9 @@ configure_freebsd() {
 
     # Set uWSGI binary file
     UWSGI_BINARY_NAME=uwsgi-3.6
+}
 
+configure_linux() {
     # Set ps command format and command column
     UWSGI_PS="ps axo user,pid,ppid,lstart,tty,command"
     UWSGI_PS_COL=10
@@ -136,9 +144,6 @@ configure_openindiana() {
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
 
-    # Set uWSGI log filename
-    UWSGI_LOGFILE=$UWSGI_PREFIX/var/opt/uwsgi.log
-
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=$UWSGI_PREFIX/opt/etc/uwsgi
     UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
@@ -151,9 +156,14 @@ configure_openindiana() {
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=python3_plugin.so
 
+    # Set uWSGI log filename
+    UWSGI_LOGFILE=$UWSGI_PREFIX/var/opt/uwsgi.log
+
     # Control build from source for uWSGI
     UWSGI_SOURCE_ONLY=true
+}
 
+configure_sunos() {
     # Set ps command format and command column
     UWSGI_PS="ps -efo user,pid,ppid,stime,tty,args"
     UWSGI_PS_COL=6
@@ -188,6 +198,11 @@ configure_system_defaults() {
 
     # Set uWSGI top-level directories
 
+    # Set uWSGI directory prefix
+    if [ -z "${UWSGI_PREFIX-}" ]; then
+	UWSGI_PREFIX=
+    fi
+
     if [ -z "${UWSGI_ETCDIR-}" ]; then
 	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
     fi
@@ -208,12 +223,6 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_PLUGIN_NAME-}" -a -d $UWSGI_PLUGIN_DIR ]; then
 	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin || true)
-    fi
-
-    # Set ps command format and command column
-    if [ -z "${UWSGI_PS-}" ]; then
-	UWSGI_PS="ps axo user,pid,ppid,lstart,tty,command"
-	UWSGI_PS_COL=10
     fi
 
     if [ -z "${UWSGI_SOURCE_ONLY-}" ]; then
@@ -255,6 +264,8 @@ configure_system() {
 
     case "$kernel_name" in
 	(Linux)
+	    configure_linux
+
 	    case "$ID" in
 		(debian)
 		    case "$VERSION_ID" in
@@ -317,12 +328,16 @@ configure_system() {
 	(Darwin)
 	    # Build uWSGI from source
 	    UWSGI_SOURCE_ONLY=true
+	    configure_bsd
 	    configure_darwin
 	    ;;
 	(FreeBSD)
+	    configure_bsd
 	    configure_freebsd
 	    ;;
 	(SunOS)
+	    configure_sunos
+
 	    case $ID in
 		# (openindiana)
 		#     configure_openindiana
