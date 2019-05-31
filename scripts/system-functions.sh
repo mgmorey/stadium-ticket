@@ -78,20 +78,6 @@ control_launch_agent() (
     esac
 )
 
-find_awk() (
-    for awk in gawk awk false; do
-	if $awk --version >/dev/null 2>&1; then
-	    break
-	fi
-    done
-
-    if [ $awk = false ]; then
-	abort "%s\n" "No AWK interpreter found"
-    fi
-
-    printf "%s\n" "$awk"
-)
-
 get_service_parameters() {
     cat <<-EOF
 	             Name: $APP_NAME
@@ -114,9 +100,8 @@ EOF
 }
 
 get_service_process() {
-    awk=$(find_awk)
     command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-    $UWSGI_PS | $awk -v command=$command "$(printf "$AWK_FMT\n" $UWSGI_PS_COL)"
+    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" command=$command
 }
 
 print_service_parameters() {
