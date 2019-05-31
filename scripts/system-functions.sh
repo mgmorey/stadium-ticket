@@ -113,7 +113,7 @@ print_service_log_file() {
 	header="SERVICE LOG $APP_LOGFILE (last $rows lines)"
 	tail -n "$rows" $APP_LOGFILE | print_table "$header" ${1-}
     elif [ -e $APP_LOGFILE ]; then
-	printf "%s: No permission to read file\n" "$APP_LOGFILE" >&2
+	printf "%s: No read permission\n" "$APP_LOGFILE" >&2
     fi
 }
 
