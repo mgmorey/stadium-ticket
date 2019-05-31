@@ -13,7 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-AWK_FMT='NR == 1 || $%s ~ /(^|\/)%s$/ {print $0}\n'
+AWK_FMT='NR == 1 || $10 == command {print $0}'
 
 abort_insufficient_permissions() {
     cat <<-EOF >&2
@@ -78,6 +78,20 @@ control_launch_agent() (
     esac
 )
 
+find_awk() (
+    for awk in gawk awk false; do
+	if $awk --version >/dev/null 2>&1; then
+	    break
+	fi
+    done
+
+    if [ $awk = false ]; then
+	abort "%s\n" "No AWK interpreter found"
+    fi
+
+    printf "%s\n" "$awk"
+)
+
 get_service_parameters() {
     cat <<-EOF
 	             Name: $APP_NAME
@@ -100,7 +114,9 @@ EOF
 }
 
 get_service_process() {
-    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL "$UWSGI_BINARY_NAME")"
+    awk=$(find_awk)
+    command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+    $UWSGI_PS | $awk -v command=$command "$AWK_FMT"
 }
 
 print_service_parameters() {
