@@ -43,10 +43,6 @@ configure_darwin_homebrew() {
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=python3_plugin.so
-
-    # Set uUWGI process status command
-    UWSGI_PS="ps -xO user"
-    UWSGI_PS_COL=6
 }
 
 configure_darwin_source() {
@@ -73,10 +69,6 @@ configure_darwin_source() {
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=python3_plugin.so
-
-    # Set uUWGI process status command
-    UWSGI_PS="ps -xO user"
-    UWSGI_PS_COL=6
 
     # Build uWSGI from source
     UWSGI_SOURCE_ONLY=true
@@ -224,11 +216,11 @@ configure_system_defaults() {
     fi
 
     if [ -z "${UWSGI_PS-}" ]; then
-	UWSGI_PS="ps -ef"
+	UWSGI_PS="ps -O user ax"
     fi
 
     if [ -z "${UWSGI_PS_COL-}" ]; then
-	UWSGI_PS_COL=8
+	UWSGI_PS_COL=6
     fi
 
     if [ -z "${UWSGI_SOURCE_ONLY-}" ]; then
