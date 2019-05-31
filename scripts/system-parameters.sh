@@ -158,6 +158,8 @@ configure_openindiana() {
 
     # Control build from source for uWSGI
     UWSGI_SOURCE_ONLY=true
+    UWSGI_PS="ps -efo user,pid,ppid,stime,tty,args"
+    UWSGI_PS_COL=6
 }
 
 configure_system_defaults() {
