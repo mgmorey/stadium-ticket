@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 
-# print-table: print a table with lines truncated after COLUMNS columns
+# print-table: print a table with lines truncated to WIDTH columns
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -17,18 +17,18 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 function truncate(s) {
-    return substr(s, 1, columns)
+    return substr(s, 1, width)
 }
 
 BEGIN {
-    if (columns < 80)
-        columns = 80;
-    else if (columns > 240)
-        columns = 240;
+    if (width < 80)
+        width = 80;
+    else if (width > 240)
+        width = 240;
 
     equals = dashes = "";
 
-    for (i = 0; i < columns; i++) {
+    for (i = 0; i < width; i++) {
         dashes = dashes "-";
         equals = equals "="
     }
@@ -41,7 +41,9 @@ NR == 1 {
 }
 
 NR == 2 {
-    print equals;
+    if (border)
+        print equals;
+
     print header ? header : line1;
     print dashes;
 
@@ -54,6 +56,5 @@ NR >= 2 {
 }
 
 END {
-    if (footer)
-        print equals
+    print equals
 }
