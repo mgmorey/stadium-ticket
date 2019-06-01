@@ -13,7 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-AWK_FMT='NR == 1 || $%d == binary {print $0}\n'
+AWK_FORMAT='NR == 1 || $%d == binary {print $0}\n'
 
 abort_insufficient_permissions() {
     cat <<-EOF >&2
@@ -25,7 +25,7 @@ abort_insufficient_permissions() {
 }
 
 awk_uwsgi() {
-    awk "$(printf "$AWK_FMT" $PS_COLUMN)" binary="$1"
+    awk "$(printf "$AWK_FORMAT" $PS_COLUMN)" binary="$1"
 }
 
 check_permissions() (
