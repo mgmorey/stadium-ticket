@@ -125,12 +125,9 @@ stop_service() {
 		signal_service $WAIT_SIGNAL INT TERM KILL || true
 		;;
 	    (Darwin)
-		control_launch_agent stop
-		control_launch_agent unload remove_files
+		control_launch_agent unload remove_files || true
 		;;
 	esac
-
-	print_service_log_file
     fi
 }
 
@@ -142,6 +139,7 @@ uninstall_service() {
 	remove_service
     done
 
+    print_service_log_file
     printf "Service %s uninstalled successfully\n" $APP_NAME
 }
 
@@ -159,7 +157,6 @@ usage() {
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
-. "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 

@@ -38,15 +38,29 @@ get_realpath() (
 )
 
 print_service_status() {
-    print_service_parameters 0
-    print_service_log_file 0
-    print_service_process 1
+    border=1
+
+    for item in parameters log_file process; do
+	eval print_service_$item $border
+	border=0
+    done
+
+    if [ -e $APP_CONFIG ]; then
+	if is_service_running; then
+	    status=running
+	else
+	    status=stopped
+	fi
+    else
+	status=uninstalled
+    fi
+
+    printf "Service %s is %s\n" "$APP_NAME" "$status"
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
-. "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 

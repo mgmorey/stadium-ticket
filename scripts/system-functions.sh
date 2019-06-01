@@ -24,6 +24,12 @@ abort_insufficient_permissions() {
     exit 1
 }
 
+awk_ps_uwsgi() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" command=$1
+}
+
 check_permissions() (
     for file; do
 	if [ -e $file -a -w $file ]; then
@@ -100,12 +106,18 @@ EOF
 }
 
 get_service_process() {
-    uwsgi=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-    $UWSGI_PS | awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" command=$uwsgi
+    $UWSGI_PS | awk_ps_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 }
 
-print_service_parameters() {
-    get_service_parameters | print_table "SERVICE PARAMETER: VALUE" ${1-}
+is_service_running() {
+    if [ -e $APP_PIDFILE ]; then
+	pid=$(cat $APP_PIDFILE)
+	if [ -n "$pid" ] && ps -p $pid >/dev/null; then
+	    return 0
+	fi
+    fi
+
+    return 1
 }
 
 print_service_log_file() {
@@ -114,20 +126,24 @@ print_service_log_file() {
     if [ -r $APP_LOGFILE ]; then
 	rows="${ROWS-10}"
 	header="SERVICE LOG $APP_LOGFILE (last $rows lines)"
-	tail -n "$rows" $APP_LOGFILE | print_table "$header" ${1-}
+	tail -n "$rows" $APP_LOGFILE | print_table "${1-1}" "$header"
     elif [ -e $APP_LOGFILE ]; then
 	printf "%s: No read permission\n" "$APP_LOGFILE" >&2
     fi
 }
 
+print_service_parameters() {
+    get_service_parameters | print_table "${1-}" "SERVICE PARAMETER: VALUE"
+}
+
 print_service_process() {
-    get_service_process | print_table "" ${1-}
+    get_service_process | print_table ${1-} ""
 }
 
 print_table() {
-    "$script_dir/print-table.awk" -v header="$1" \
-				  -v footer="${2-1}" \
-				  -v columns="${COLUMNS-96}"
+    "$script_dir/print-table.awk" -v border="${1-1}" \
+				  -v header="${2-}" \
+				  -v width="${COLUMNS-96}"
 }
 
 signal_process_and_poll() {
