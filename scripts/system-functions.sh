@@ -107,6 +107,10 @@ get_service_process() {
     ps_uwsgi $APP_UID,$USER | awk_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 }
 
+is_service_installed() {
+    test -e $APP_CONFIG
+}
+
 is_service_running() {
     if [ -e $APP_PIDFILE ]; then
 	pid=$(cat $APP_PIDFILE)

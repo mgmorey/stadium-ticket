@@ -45,7 +45,7 @@ print_service_status() {
 	border=0
     done
 
-    if [ -e $APP_CONFIG ]; then
+    if is_service_installed; then
 	if is_service_running; then
 	    status=running
 	else
