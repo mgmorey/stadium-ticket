@@ -149,7 +149,7 @@ print_table() {
 }
 
 ps_uwsgi() {
-    ps -o $PS_FORMAT -U "$1"
+    ps -U "$1" -o $PS_FORMAT
 }
 
 signal_process_and_poll() {
