@@ -389,9 +389,9 @@ validate_parameters_postinstallation() {
     elif [ ! -d $APP_RUNDIR ]; then
 	abort "%s: %s: No such run directory\n" "$0" "$APP_RUNDIR"
     elif [ -e $APP_LOGFILE -a ! -w $APP_LOGFILE ]; then
-	abort "%s: %s: No write permission\n" "$0" "$APP_LOGFILE"
+	abort_insufficient_permissions "$APP_LOGFILE"
     elif [ -e $APP_PIDFILE -a ! -w $APP_PIDFILE ]; then
-	abort "%s: %s: No write permission\n" "$0" "$APP_PIDFILE"
+	abort_insufficient_permissions "$APP_PIDFILE"
     fi
 }
 
