@@ -25,7 +25,7 @@ abort_insufficient_permissions() {
 }
 
 awk_uwsgi() {
-    awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" binary="$1"
+    awk "$(printf "$AWK_FMT" $PS_COLUMN)" binary="$1"
 }
 
 check_permissions() (
@@ -145,7 +145,7 @@ print_table() {
 }
 
 ps_uwsgi() {
-    ps $UWSGI_PS_FMT $UWSGI_PS_USR $APP_UID,$USER
+    ps -o $PS_FORMAT -U $APP_UID,$USER
 }
 
 signal_process_and_poll() {
