@@ -15,10 +15,6 @@
 
 GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
 
-abort_not_supported() {
-    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
-}
-
 create_tmpfile() {
     tmpfile=$(mktemp)
     assert [ -n "${tmpfile}" ]

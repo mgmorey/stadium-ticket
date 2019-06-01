@@ -15,6 +15,10 @@
 
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID"
 
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
+}
+
 configure_bsd() {
     # Set ps command format and command column
     UWSGI_PS="ps axo user,pid,ppid,lstart,tty,command"
