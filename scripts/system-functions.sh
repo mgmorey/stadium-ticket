@@ -13,7 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-AWK_FMT='NR == 1 || $%s == command {print $0}'
+AWK_FMT='NR == 1 || $%d == binary {print $0}\n'
 
 abort_insufficient_permissions() {
     cat <<-EOF >&2
@@ -24,10 +24,8 @@ abort_insufficient_permissions() {
     exit 1
 }
 
-awk_ps_uwsgi() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" command=$1
+awk_uwsgi() {
+    awk "$(printf "$AWK_FMT" $UWSGI_PS_COL)" binary="$1"
 }
 
 check_permissions() (
@@ -106,7 +104,7 @@ EOF
 }
 
 get_service_process() {
-    $UWSGI_PS | awk_ps_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+    ps_uwsgi | awk_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 }
 
 is_service_running() {
@@ -144,6 +142,10 @@ print_table() {
     "$script_dir/print-table.awk" -v border="${1-1}" \
 				  -v header="${2-}" \
 				  -v width="${COLUMNS-96}"
+}
+
+ps_uwsgi() {
+    ps $UWSGI_PS_FMT $UWSGI_PS_USR $APP_UID,$USER
 }
 
 signal_process_and_poll() {

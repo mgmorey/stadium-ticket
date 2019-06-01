@@ -21,8 +21,9 @@ abort_not_supported() {
 
 configure_bsd() {
     # Set ps command format and command column
-    UWSGI_PS="ps axo user,pid,ppid,lstart,tty,command"
     UWSGI_PS_COL=10
+    UWSGI_PS_FMT="-o user,pid,ppid,lstart,tty,command"
+    UWSGI_PS_USR="-U"
 }
 
 configure_darwin() {
@@ -88,8 +89,9 @@ configure_freebsd() {
 
 configure_linux() {
     # Set ps command format and command column
-    UWSGI_PS="ps axo user,pid,ppid,lstart,tty=TTY,command"
     UWSGI_PS_COL=10
+    UWSGI_PS_FMT="-o user,pid,ppid,lstart,tty=TTY,command"
+    UWSGI_PS_USR="-U"
 }
 
 configure_linux_debian() {
@@ -166,8 +168,9 @@ configure_openindiana() {
 
 configure_sunos() {
     # Set ps command format and command column
-    UWSGI_PS="ps -efo user,pid,ppid,stime,tty,args"
     UWSGI_PS_COL=6
+    UWSGI_PS_FMT="-o user,pid,ppid,stime,tty,args"
+    UWSGI_PS_USR="-U"
 }
 
 configure_system_defaults() {
