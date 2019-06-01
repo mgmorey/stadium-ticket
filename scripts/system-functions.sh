@@ -104,7 +104,7 @@ EOF
 }
 
 get_service_process() {
-    ps_uwsgi | awk_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+    ps_uwsgi $APP_UID,$USER | awk_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 }
 
 is_service_running() {
@@ -145,7 +145,7 @@ print_table() {
 }
 
 ps_uwsgi() {
-    ps -o $PS_FORMAT -U $APP_UID,$USER
+    ps -o $PS_FORMAT -U "$1"
 }
 
 signal_process_and_poll() {
