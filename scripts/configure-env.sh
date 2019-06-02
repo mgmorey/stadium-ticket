@@ -54,15 +54,14 @@ fi
 file="$1"
 template="$2"
 create_tmpfile
-cp -f $template $tmpfile
+
+if [ -r $file ]; then
+    /bin/cp -f $file $tmpfile
+elif [ -r $template ]; then
+    /bin/cp -f $template $tmpfile
+fi
 
 if $EDITOR $tmpfile; then
-    if [ -r $file ]; then
-	cp -f $file $tmpfile
-    elif [ -r $template ]; then
-	cp -f $template $tmpfile
-    fi
-
-    mv -f $tmpfile $file
+    /bin/mv -f $tmpfile $file
     chgrp $(id -g) $file
 fi
