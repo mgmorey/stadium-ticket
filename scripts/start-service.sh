@@ -50,7 +50,13 @@ print_status() {
 		printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
 	    fi
 
-	    printf "Service %s is %s\n" "$APP_NAME" "$1"
+	    qualified_status=$1
+
+	    if [ $start_requested = false ]; then
+		qualified_status="already $qualified_status"
+	    fi
+
+	    printf "Service %s is %s\n" "$APP_NAME" "$qualified_status"
 	    ;;
 	(*)
 	    printf "Service %s is %s\n" "$APP_NAME" "$1" >&2
@@ -90,7 +96,7 @@ request_start() {
 }
 
 start_service() {
-    start_requested=0
+    start_requested=false
     total_elapsed=0
 
     if ! is_service_installed; then

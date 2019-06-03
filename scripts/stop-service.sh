@@ -43,8 +43,14 @@ print_status() {
     fi
 
     case $1 in
-	(running)
-	    printf "Service %s is %s\n" "$APP_NAME" "$1"
+	(stopped)
+	    qualified_status=$1
+
+	    if [ $stop_requested = false ]; then
+		qualified_status="already $qualified_status"
+	    fi
+
+	    printf "Service %s is %s\n" "$APP_NAME" "$qualified_status"
 	    ;;
 	(*)
 	    printf "Service %s is %s\n" "$APP_NAME" "$1" >&2
