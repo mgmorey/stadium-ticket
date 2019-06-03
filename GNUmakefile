@@ -45,6 +45,9 @@ init-db:
 install:	.env .update
 	$(script_dir)/install-service.sh
 
+pause:
+	$(script_dir)/pause-service.sh
+
 pycode:	.update
 	$(script_dir)/run.sh pycodestyle app tests
 
@@ -73,8 +76,8 @@ uninstall:
 	$(script_dir)/uninstall-service.sh
 
 .PHONY: all build clean clean-venvs client client-debug debug drop-db init-db
-.PHONY: install pycode pylint pytest init-db realclean start status stop stress
-.PHONY: uninstall
+.PHONY: install pause pycode pylint pytest init-db realclean start status stop
+.PHONY: stress uninstall
 
 .env:			.env-template
 	$(script_dir)/configure-env.sh $@ $<
