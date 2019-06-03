@@ -37,6 +37,22 @@ get_realpath() (
     fi
 )
 
+print_status() {
+    print_service_log_file 1
+
+    if is_service_installed; then
+	if is_service_running; then
+	    status=running
+	else
+	    status=stopped
+	fi
+    else
+	status=uninstalled
+    fi
+
+    printf "Service %s is %s\n" "$APP_NAME" "$status"
+}
+
 start_service_directly() {
     validate_parameters_preinstallation
     validate_parameters_postinstallation
@@ -55,19 +71,10 @@ start_service_directly() {
 start_service_indirectly() {
     start_app_service
     total_elapsed=0
+    printf "Waiting for service %s to start\n" "$APP_NAME"
 
-    if [ $start_pending = true -o $signal_received = false ]; then
-	printf "Waiting for service %s to start\n" "$APP_NAME"
-    fi
-
-    if [ $start_pending = true ]; then
-	wait_period=$((WAIT_RESTART - total_elapsed))
-	elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
-    elif [ $signal_received = true ]; then
-	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
-    else
-	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
-    fi
+    wait_period=$((WAIT_RESTART - total_elapsed))
+    elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
 
     total_elapsed=$((total_elapsed + elapsed))
 
@@ -78,8 +85,9 @@ start_service_indirectly() {
 }
 
 start_service() {
-    if is_service_running; then
-	printf "Service is running as PID %s\n" "$pid"
+    if ! is_service_installed; then
+	return 0
+    elif is_service_running; then
 	return 0
     fi
 
@@ -106,3 +114,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 configure_system
 start_service
+print_status

@@ -37,7 +37,7 @@ get_realpath() (
     fi
 )
 
-print_service_status() {
+print_status() {
     border=1
 
     for item in parameters log_file process; do
@@ -65,4 +65,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_system
-print_service_status
+print_status

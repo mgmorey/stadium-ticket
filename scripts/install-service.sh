@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-WAIT_DEFAULT=2
-WAIT_RESTART=10
-
 abort() {
     printf "$@" >&2
     exit 1

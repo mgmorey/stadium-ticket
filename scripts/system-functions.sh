@@ -16,6 +16,9 @@
 APPLE_URL=http://www.apple.com/DTDs/PropertyList-1.0.dtd
 AWK_FORMAT='NR == 1 || $%d == binary {print $0}\n'
 
+WAIT_DEFAULT=2
+WAIT_RESTART=10
+
 abort_insufficient_permissions() {
     cat <<-EOF >&2
 	$0: Write access required to update file or directory: $1
