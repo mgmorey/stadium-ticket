@@ -42,6 +42,12 @@ print_status() {
 
     case $1 in
 	(running)
+	    print_service_processes 0
+
+	    if [ $total_elapsed -gt 0 ]; then
+		printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
+	    fi
+
 	    printf "Service %s is %s\n" "$APP_NAME" "$1"
 	    ;;
 	(*)
@@ -82,6 +88,8 @@ request_start() {
 }
 
 start_service() {
+    total_elapsed=0
+
     if ! is_service_installed; then
 	return 0
     elif is_service_running; then
