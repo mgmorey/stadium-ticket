@@ -37,20 +37,29 @@ get_realpath() (
     fi
 )
 
+get_status() {
+    if is_service_installed; then
+	if is_service_running; then
+	    printf "%s\n" running
+	else
+	    printf "%s\n" stopped
+	fi
+    else
+	printf "%s\n" uninstalled
+    fi
+}
+
 print_status() {
     print_service_log_file 1
 
-    if is_service_installed; then
-	if is_service_running; then
-	    status=running
-	else
-	    status=stopped
-	fi
-    else
-	status=uninstalled
-    fi
-
-    printf "Service %s is %s\n" "$APP_NAME" "$status"
+    case $1 in
+	(running)
+	    printf "Service %s is %s\n" "$APP_NAME" "$1"
+	    ;;
+	(*)
+	    printf "Service %s is %s\n" "$APP_NAME" "$1" >&2
+	    ;;
+    esac
 }
 
 start_service_directly() {
@@ -114,4 +123,15 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 configure_system
 start_service
-print_status
+
+status=$(get_status)
+print_status $status
+
+case $status in
+    (running)
+	exit 0
+	;;
+    (*)
+	exit 1
+	;;
+esac
