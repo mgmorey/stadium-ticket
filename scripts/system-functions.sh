@@ -124,27 +124,6 @@ generate_launch_agent_plist() (
     install_file 644 "$xmlfile" $1
 )
 
-get_service_parameters() {
-    cat <<-EOF
-	             Name: $APP_NAME
-	             Port: $APP_PORT
-	          User ID: $APP_UID
-	         Group ID: $APP_GID
-	    Configuration: $APP_CONFIG
-	   Code directory: $APP_DIR
-	   Data directory: $APP_VARDIR
-	         Log file: $APP_LOGFILE
-	         PID file: $APP_PIDFILE
-	     uWSGI binary: $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-EOF
-
-    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	cat <<-EOF
-	     uWSGI plugin: $UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
-EOF
-    fi
-}
-
 get_service_process() {
     ps_uwsgi $APP_UID,$USER | awk_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 }
@@ -212,10 +191,6 @@ print_service_log_file() {
     elif [ -e $APP_LOGFILE ]; then
 	printf "%s: No read permission\n" "$APP_LOGFILE" >&2
     fi
-}
-
-print_service_parameters() {
-    get_service_parameters | print_table "${1-}" "SERVICE PARAMETER: VALUE"
 }
 
 print_service_processes() {
