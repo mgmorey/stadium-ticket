@@ -50,7 +50,7 @@ start_service() {
 	check_permissions $APP_LOGFILE
 
 	if [ $dryrun = false ]; then
-	    if signal_service $WAIT_SIGNAL HUP; then
+	    if is_service_running; then
 		abort "Service is running as PID %s\n" "$pid"
 	    else
 		$command --ini $APP_CONFIG
