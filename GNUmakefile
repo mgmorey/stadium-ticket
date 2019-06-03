@@ -57,7 +57,7 @@ pytest:	.update init-db
 realclean:	clean clean-venvs
 	@/bin/rm -f .update app/app/*.sqlite
 
-start:		install
+start:
 	$(script_dir)/start-service.sh
 
 status:
