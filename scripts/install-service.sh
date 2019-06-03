@@ -362,16 +362,14 @@ is_installed() (
 )
 
 print_status() {
-    print_service_log_file 1
-
     case "$1" in
-	(installed)
-	    printf "Service %s installed successfully\n" "$APP_NAME"
-	    ;;
 	(running)
 	    print_service_processes 0
 	    printf "Service %s installed and started successfully\n" "$APP_NAME"
 	    printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
+	    ;;
+	(stopped)
+	    printf "Service %s installed successfully\n" "$APP_NAME"
 	    ;;
 	(*)
 	    printf "Service %s is %s\n" "$APP_NAME" "$1" >&2
@@ -380,30 +378,18 @@ print_status() {
 }
 
 restart_service() {
-    if signal_service $WAIT_SIGNAL HUP; then
+    if ! is_service_running; then
+	elapsed=0
+	signal_received=false
+    elif signal_service $WAIT_SIGNAL HUP; then
 	signal_received=true
     else
 	signal_received=false
     fi
 
     total_elapsed=$elapsed
-    set_start_pending
 
-    if [ $start_pending = true ]; then
-	request_service_start
-	total_elapsed=0
-    fi
-
-    if [ $start_pending = true -o $signal_received = false ]; then
-	printf "Waiting for service %s to start\n" "$APP_NAME"
-    fi
-
-    if [ $start_pending = true ]; then
-	wait_period=$((WAIT_RESTART - total_elapsed))
-	elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
-    elif [ $signal_received = true ]; then
-	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
-    else
+    if [ $signal_received = true ]; then
 	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
     fi
 
@@ -412,35 +398,6 @@ restart_service() {
     if [ $total_elapsed -lt $WAIT_DEFAULT ]; then
 	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
 	total_elapsed=$((total_elapsed + elapsed))
-    fi
-}
-
-set_start_pending() {
-    if [ $signal_received = true ]; then
-	case "$kernel_name" in
-	    (*)
-		start_pending=false
-		;;
-	esac
-    else
-	case "$kernel_name" in
-	    (Linux)
-		case "$ID" in
-		    (debian|ubuntu|opensuse-*|fedora|redhat|centos)
-			start_pending=true
-			;;
-		    (*)
-			start_pending=false
-			;;
-		esac
-		;;
-	    (Darwin)
-		start_pending=true
-		;;
-	    (*)
-		start_pending=false
-		;;
-	esac
     fi
 }
 
