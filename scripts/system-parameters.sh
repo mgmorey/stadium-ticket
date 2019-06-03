@@ -22,7 +22,7 @@ abort_not_supported() {
 configure_bsd() {
     # Set ps command format and command column
     PS_COLUMN=10
-    PS_FORMAT=user,pid,ppid,lstart,tty,command
+    PS_FORMAT=pid,ppid,user,tt,lstart,command
 }
 
 configure_darwin() {
