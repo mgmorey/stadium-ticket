@@ -364,13 +364,19 @@ is_installed() (
 print_status() {
     print_service_log_file 1
 
-    if is_service_running; then
-	print_service_processes 0
-	printf "Service %s installed and started successfully\n" "$APP_NAME"
-	printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
-    else
-	printf "Service %s installed successfully\n" "$APP_NAME"
-    fi
+    case "$1" in
+	(installed)
+	    printf "Service %s installed successfully\n" "$APP_NAME"
+	    ;;
+	(running)
+	    print_service_processes 0
+	    printf "Service %s installed and started successfully\n" "$APP_NAME"
+	    printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
+	    ;;
+	(*)
+	    printf "Service %s is %s\n" "$APP_NAME" "$1" >&2
+	    ;;
+    esac
 }
 
 restart_service() {
@@ -455,4 +461,15 @@ configure_system
 install_service
 initialize_database
 restart_service
-print_status
+
+status=$(get_service_status)
+print_status $status
+
+case $status in
+    (installed|running)
+	exit 0
+	;;
+    (*)
+	exit 1
+	;;
+esac
