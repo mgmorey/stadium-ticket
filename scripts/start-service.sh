@@ -62,22 +62,7 @@ print_status() {
     esac
 }
 
-start_service_directly() {
-    validate_parameters_preinstallation
-    validate_parameters_postinstallation
-
-    if [ $dryrun = false ]; then
-	command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-
-	if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
-	    command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
-	fi
-
-	$command --ini $APP_CONFIG
-    fi
-}
-
-start_service_indirectly() {
+request_service_start() {
     start_app_service
     total_elapsed=0
     printf "Waiting for service %s to start\n" "$APP_NAME"
@@ -93,6 +78,21 @@ start_service_indirectly() {
     fi
 }
 
+run_service() {
+    validate_parameters_preinstallation
+    validate_parameters_postinstallation
+
+    if [ $dryrun = false ]; then
+	command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+
+	if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+	    command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
+	fi
+
+	$command --ini $APP_CONFIG
+    fi
+}
+
 start_service() {
     if ! is_service_installed; then
 	return 0
@@ -103,11 +103,11 @@ start_service() {
     for dryrun in true false; do
 	case "$kernel_name" in
 	    (FreeBSD)
-		start_service_directly
+		run_service
 		;;
 	    (*)
 		if [ $dryrun = false ]; then
-		    start_service_indirectly
+		    request_service_start
 		fi
 		;;
 	esac
