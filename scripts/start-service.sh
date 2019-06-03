@@ -37,31 +37,70 @@ get_realpath() (
     fi
 )
 
-start_service() {
+start_service_directly() {
     validate_parameters_preinstallation
     validate_parameters_postinstallation
-    command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 
-    if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
-	command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
+    if [ $dryrun = false ]; then
+	command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+
+	if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+	    command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
+	fi
+
+	$command --ini $APP_CONFIG
+    fi
+}
+
+start_service_indirectly() {
+    start_app_service
+    total_elapsed=0
+
+    if [ $start_pending = true -o $signal_received = false ]; then
+	printf "Waiting for service %s to start\n" "$APP_NAME"
+    fi
+
+    if [ $start_pending = true ]; then
+	wait_period=$((WAIT_RESTART - total_elapsed))
+	elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
+    elif [ $signal_received = true ]; then
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
+    else
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
+    fi
+
+    total_elapsed=$((total_elapsed + elapsed))
+
+    if [ $total_elapsed -lt $WAIT_DEFAULT ]; then
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
+	total_elapsed=$((total_elapsed + elapsed))
+    fi
+}
+
+start_service() {
+    if is_service_running; then
+	printf "Service is running as PID %s\n" "$pid"
+	return 0
     fi
 
     for dryrun in true false; do
-	check_permissions $APP_LOGFILE
-
-	if [ $dryrun = false ]; then
-	    if is_service_running; then
-		abort "Service is running as PID %s\n" "$pid"
-	    else
-		$command --ini $APP_CONFIG
-	    fi
-	fi
+	case "$kernel_name" in
+	    (FreeBSD)
+		start_service_directly
+		;;
+	    (*)
+		if [ $dryrun = false ]; then
+		    start_service_indirectly
+		fi
+		;;
+	esac
     done
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
+. "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 

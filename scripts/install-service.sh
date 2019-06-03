@@ -234,28 +234,6 @@ install_app_files() (
     done
 )
 
-install_file() {
-    assert [ $# -eq 3 ]
-    assert [ -n "$3" ]
-
-    if [ $dryrun = true ]; then
-	check_permissions $3
-    else
-	assert [ -n "$1" ]
-	assert [ -n "$2" ]
-	assert [ -r $2 ]
-
-	if is_tmpfile $2; then
-	    printf "Generating file %s\n" "$3"
-	else
-	    printf "Installing file %s as %s\n" "$2" "$3"
-	fi
-
-	install -d -m 755 "$(dirname "$3")"
-	install -C -m $1 $2 $3
-    fi
-}
-
 install_service() {
     cd "$source_dir"
 
@@ -386,10 +364,6 @@ is_installed() (
     esac
 )
 
-is_tmpfile() {
-    printf "%s\n" ${tmpfiles-} | grep $1 >/dev/null
-}
-
 print_status() {
     print_service_log_file 1
 
@@ -399,6 +373,42 @@ print_status() {
 	printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
     else
 	printf "Service %s installed successfully\n" "$APP_NAME"
+    fi
+}
+
+restart_service() {
+    if signal_service $WAIT_SIGNAL HUP; then
+	signal_received=true
+    else
+	signal_received=false
+    fi
+
+    total_elapsed=$elapsed
+    set_start_pending
+
+    if [ $start_pending = true ]; then
+	start_app_service
+	total_elapsed=0
+    fi
+
+    if [ $start_pending = true -o $signal_received = false ]; then
+	printf "Waiting for service %s to start\n" "$APP_NAME"
+    fi
+
+    if [ $start_pending = true ]; then
+	wait_period=$((WAIT_RESTART - total_elapsed))
+	elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
+    elif [ $signal_received = true ]; then
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
+    else
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
+    fi
+
+    total_elapsed=$((total_elapsed + elapsed))
+
+    if [ $total_elapsed -lt $WAIT_DEFAULT ]; then
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
+	total_elapsed=$((total_elapsed + elapsed))
     fi
 }
 
