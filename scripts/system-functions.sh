@@ -225,7 +225,7 @@ print_service_processes() {
 print_table() {
     "$script_dir/print-table.awk" -v border="${1-1}" \
 				  -v header="${2-}" \
-				  -v width="${COLUMNS-96}"
+				  -v width="${COLUMNS-80}"
 }
 
 ps_uwsgi() {
