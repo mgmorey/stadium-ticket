@@ -85,7 +85,7 @@ parse_arguments() {
     fi
 }
 
-remove_app_service() {
+remove_service() {
     files="$APP_ETCDIR $APP_DIR"
 
     if [ $purge = true ]; then
@@ -113,8 +113,8 @@ uninstall_service() {
     parse_arguments "$@"
 
     for dryrun in true false; do
-	stop_app_service
-	remove_app_service
+	request_service_stop
+	remove_service
     done
 
     print_service_log_file

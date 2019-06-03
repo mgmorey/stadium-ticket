@@ -384,7 +384,7 @@ restart_service() {
     set_start_pending
 
     if [ $start_pending = true ]; then
-	start_app_service
+	request_service_start
 	total_elapsed=0
     fi
 

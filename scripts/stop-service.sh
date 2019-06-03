@@ -39,7 +39,7 @@ get_realpath() (
 
 stop_service() {
     for dryrun in true false; do
-	stop_app_service
+	request_service_stop
     done
 
     print_service_log_file

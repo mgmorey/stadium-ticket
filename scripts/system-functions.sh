@@ -190,19 +190,6 @@ is_tmpfile() {
     printf "%s\n" ${tmpfiles-} | grep $1 >/dev/null
 }
 
-pause_app_service() {
-    if [ $dryrun = false ]; then
-	case "$kernel_name" in
-	    (Linux)
-		systemctl stop uwsgi
-		;;
-	    (Darwin)
-		control_launch_agent stop
-		;;
-	esac
-    fi
-}
-
 print_service_log_file() {
     assert [ $# -le 1 ]
 
@@ -328,7 +315,7 @@ signal_service() {
     return 1
 }
 
-start_app_service() {
+request_service_start() {
     case "$kernel_name" in
 	(Linux)
 	    systemctl enable uwsgi
@@ -344,7 +331,7 @@ start_app_service() {
     esac
 }
 
-stop_app_service() {
+request_service_stop() {
     if [ $dryrun = false ]; then
 	case "$kernel_name" in
 	    (Linux)

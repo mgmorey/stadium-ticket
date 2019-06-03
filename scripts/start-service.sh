@@ -62,8 +62,8 @@ print_status() {
     esac
 }
 
-request_service_start() {
-    start_app_service
+request_start() {
+    request_service_start
     total_elapsed=0
     printf "Waiting for service %s to start\n" "$APP_NAME"
 
@@ -107,7 +107,7 @@ start_service() {
 		;;
 	    (*)
 		if [ $dryrun = false ]; then
-		    request_service_start
+		    request_start
 		fi
 		;;
 	esac
