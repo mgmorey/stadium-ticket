@@ -57,7 +57,7 @@ pytest:	.update init-db
 realclean:	clean clean-venvs
 	@/bin/rm -f .update app/app/*.sqlite
 
-start:
+start:		install
 	$(script_dir)/start-service.sh
 
 status:
@@ -69,7 +69,7 @@ stop:
 stress:
 	$(script_dir)/load-test.sh
 
-uninstall:
+uninstall:	stop
 	$(script_dir)/uninstall-service.sh
 
 .PHONY: all build clean clean-venvs client client-debug debug drop-db init-db
