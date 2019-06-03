@@ -57,8 +57,14 @@ pytest:	.update init-db
 realclean:	clean clean-venvs
 	@/bin/rm -f .update app/app/*.sqlite
 
+start:
+	$(script_dir)/start-service.sh
+
 status:
 	$(script_dir)/get-service-status.sh
+
+stop:
+	$(script_dir)/stop-service.sh
 
 stress:
 	$(script_dir)/load-test.sh
@@ -67,7 +73,8 @@ uninstall:
 	$(script_dir)/uninstall-service.sh
 
 .PHONY: all build clean clean-venvs client client-debug debug drop-db init-db
-.PHONY: install pycode pylint pytest init-db realclean status stress uninstall
+.PHONY: install pycode pylint pytest init-db realclean start status stop stress
+.PHONY: uninstall
 
 .env:			.env-template
 	$(script_dir)/configure-env.sh $@ $<
