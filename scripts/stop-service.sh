@@ -83,7 +83,7 @@ status=$(get_service_status)
 print_status $status
 
 case $status in
-    (stopped)
+    (uninstalled|stopped)
 	exit 0
 	;;
     (*)
