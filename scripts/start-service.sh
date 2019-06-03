@@ -38,7 +38,9 @@ get_realpath() (
 )
 
 print_status() {
-    print_service_log_file 1
+    if [ $start_requested = true ]; then
+	print_service_log_file 1
+    fi
 
     case $1 in
 	(running)
@@ -88,6 +90,7 @@ request_start() {
 }
 
 start_service() {
+    start_requested=0
     total_elapsed=0
 
     if ! is_service_installed; then
@@ -104,6 +107,7 @@ start_service() {
 	    (*)
 		if [ $dryrun = false ]; then
 		    request_start
+		    start_requested=true
 		fi
 		;;
 	esac
