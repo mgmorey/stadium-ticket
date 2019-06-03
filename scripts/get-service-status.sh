@@ -40,7 +40,7 @@ get_realpath() (
 print_status() {
     border=1
 
-    for item in parameters log_file process; do
+    for item in parameters log_file processes; do
 	eval print_service_$item $border
 	border=0
     done

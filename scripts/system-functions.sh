@@ -218,7 +218,7 @@ print_service_parameters() {
     get_service_parameters | print_table "${1-}" "SERVICE PARAMETER: VALUE"
 }
 
-print_service_process() {
+print_service_processes() {
     get_service_process | print_table ${1-} ""
 }
 

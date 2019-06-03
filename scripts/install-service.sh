@@ -365,7 +365,7 @@ print_status() {
     print_service_log_file 1
 
     if is_service_running; then
-	print_service_process 0
+	print_service_processes 0
 	printf "Service %s installed and started successfully\n" "$APP_NAME"
 	printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
     else
