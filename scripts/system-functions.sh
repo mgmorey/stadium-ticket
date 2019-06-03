@@ -241,17 +241,6 @@ remove_files() {
     fi
 }
 
-run_unpriv() (
-    assert [ $# -ge 1 ]
-
-    if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	setpriv=$(get_setpriv_command $SUDO_USER || true)
-	eval ${setpriv:-/usr/bin/su -l $SUDO_USER} "$@"
-    else
-	eval "$@"
-    fi
-)
-
 request_service_start() {
     case "$kernel_name" in
 	(Linux)
