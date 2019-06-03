@@ -38,7 +38,9 @@ get_realpath() (
 )
 
 print_status() {
-    print_service_log_file 1
+    if [ $stop_requested = true ]; then
+	print_service_log_file 1
+    fi
 
     case $1 in
 	(running)
@@ -55,6 +57,10 @@ stop_service() {
 	for dryrun in true false; do
 	    request_service_stop
 	done
+
+	stop_requested=true
+    else
+	stop_requested=false
     fi
 }
 
