@@ -45,17 +45,7 @@ print_status() {
 	border=0
     done
 
-    if is_service_installed; then
-	if is_service_running; then
-	    status=running
-	else
-	    status=stopped
-	fi
-    else
-	status=uninstalled
-    fi
-
-    printf "Service %s is %s\n" "$APP_NAME" "$status"
+    printf "Service %s is %s\n" "$APP_NAME" "$1"
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
@@ -65,4 +55,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_system
-print_status
+
+status=$(get_service_status)
+print_status $status
