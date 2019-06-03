@@ -466,7 +466,7 @@ status=$(get_service_status)
 print_status $status
 
 case $status in
-    (installed|running)
+    (running|stopped)
 	exit 0
 	;;
     (*)
