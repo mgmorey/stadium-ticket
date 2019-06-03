@@ -152,6 +152,82 @@ ps_uwsgi() {
     ps -U "$1" -o $PS_FORMAT
 }
 
+restart_service() {
+    if signal_service $WAIT_SIGNAL HUP; then
+	signal_received=true
+    else
+	signal_received=false
+    fi
+
+    total_elapsed=$elapsed
+    set_start_pending
+
+    if [ $start_pending = true ]; then
+	start_app_service
+	total_elapsed=0
+    fi
+
+    if [ $start_pending = true -o $signal_received = false ]; then
+	printf "Waiting for service %s to start\n" "$APP_NAME"
+    fi
+
+    if [ $start_pending = true ]; then
+	wait_period=$((WAIT_RESTART - total_elapsed))
+	elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
+    elif [ $signal_received = true ]; then
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
+    else
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
+    fi
+
+    total_elapsed=$((total_elapsed + elapsed))
+
+    if [ $total_elapsed -lt $WAIT_DEFAULT ]; then
+	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
+	total_elapsed=$((total_elapsed + elapsed))
+    fi
+}
+
+run_unpriv() (
+    assert [ $# -ge 1 ]
+
+    if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
+	setpriv=$(get_setpriv_command $SUDO_USER || true)
+	eval ${setpriv:-/usr/bin/su -l $SUDO_USER} "$@"
+    else
+	eval "$@"
+    fi
+)
+
+set_start_pending() {
+    if [ $signal_received = true ]; then
+	case "$kernel_name" in
+	    (*)
+		start_pending=false
+		;;
+	esac
+    else
+	case "$kernel_name" in
+	    (Linux)
+		case "$ID" in
+		    (debian|ubuntu|opensuse-*|fedora|redhat|centos)
+			start_pending=true
+			;;
+		    (*)
+			start_pending=false
+			;;
+		esac
+		;;
+	    (Darwin)
+		start_pending=true
+		;;
+	    (*)
+		start_pending=false
+		;;
+	esac
+    fi
+}
+
 signal_process_and_poll() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" ]
@@ -225,4 +301,51 @@ signal_service() {
     done
 
     return 1
+}
+
+start_app_service() {
+    case "$kernel_name" in
+	(Linux)
+	    systemctl enable uwsgi
+	    systemctl restart uwsgi
+	    ;;
+	(Darwin)
+	    if [ $UWSGI_SOURCE_ONLY = true ]; then
+		control_launch_agent load generate_launch_agent_plist
+	    else
+		brew services restart uwsgi
+	    fi
+	    ;;
+    esac
+}
+
+wait_for_service() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" -a -n "$2" ]
+    i=0
+
+    if [ $2 -gt 0 ]; then
+	while [ ! -e $1 -a $i -lt $2 ]; do
+	    sleep 1
+	    i=$((i + 1))
+	done
+    fi
+
+    if [ $i -ge $2 ]; then
+	printf "Service failed to start within %s seconds\n" $2 >&2
+    fi
+
+    printf "%s\n" "$i"
+}
+
+wait_for_timeout() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ $1 -gt 0 ]; then
+	sleep $1
+	printf "%s\n" "$1"
+    else
+	printf "%s\n" 0
+    fi
 }
