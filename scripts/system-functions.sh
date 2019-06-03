@@ -13,6 +13,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+APPLE_URL=http://www.apple.com/DTDs/PropertyList-1.0.dtd
 AWK_FORMAT='NR == 1 || $%d == binary {print $0}\n'
 
 abort_insufficient_permissions() {
@@ -80,6 +81,44 @@ control_launch_agent() (
 	    $2 $agent_target
 	    ;;
     esac
+)
+
+generate_launch_agent_plist() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ $dryrun = false ]; then
+	create_tmpfile
+	xmlfile=$tmpfile
+	cat <<-EOF >$xmlfile
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "$APPLE_URL">
+	<plist version="1.0">
+	  <dict>
+	    <key>Label</key>
+	    <string>local.$APP_NAME</string>
+	    <key>RunAtLoad</key>
+	    <true/>
+	    <key>KeepAlive</key>
+	    <true/>
+	    <key>ProgramArguments</key>
+	    <array>
+	        <string>$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME</string>
+	        <string>--plugin-dir</string>
+	        <string>$UWSGI_PLUGIN_DIR</string>
+	        <string>--ini</string>
+	        <string>$APP_CONFIG</string>
+	    </array>
+	    <key>WorkingDirectory</key>
+	    <string>$APP_VARDIR</string>
+	  </dict>
+	</plist>
+	EOF
+    else
+	xmlfile=
+    fi
+
+    install_file 644 "$xmlfile" $1
 )
 
 get_service_parameters() {

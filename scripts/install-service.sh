@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-APPLE_URL=http://www.apple.com/DTDs/PropertyList-1.0.dtd
-
 WAIT_DEFAULT=2
 WAIT_RESTART=10
 
@@ -120,44 +118,6 @@ fetch_uwsgi_source() {
 	git clone https://github.com/unbit/uwsgi.git
     fi
 }
-
-generate_launch_agent_plist() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    if [ $dryrun = false ]; then
-	create_tmpfile
-	xmlfile=$tmpfile
-	cat <<-EOF >$xmlfile
-	<?xml version="1.0" encoding="UTF-8"?>
-	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "$APPLE_URL">
-	<plist version="1.0">
-	  <dict>
-	    <key>Label</key>
-	    <string>local.$APP_NAME</string>
-	    <key>RunAtLoad</key>
-	    <true/>
-	    <key>KeepAlive</key>
-	    <true/>
-	    <key>ProgramArguments</key>
-	    <array>
-	        <string>$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME</string>
-	        <string>--plugin-dir</string>
-	        <string>$UWSGI_PLUGIN_DIR</string>
-	        <string>--ini</string>
-	        <string>$APP_CONFIG</string>
-	    </array>
-	    <key>WorkingDirectory</key>
-	    <string>$APP_VARDIR</string>
-	  </dict>
-	</plist>
-	EOF
-    else
-	xmlfile=
-    fi
-
-    install_file 644 "$xmlfile" $1
-)
 
 generate_sed_program() (
     assert [ $# -ge 1 ]
