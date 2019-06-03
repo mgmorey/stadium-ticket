@@ -409,6 +409,35 @@ restart_service() {
     fi
 }
 
+set_start_pending() {
+    if [ $signal_received = true ]; then
+	case "$kernel_name" in
+	    (*)
+		start_pending=false
+		;;
+	esac
+    else
+	case "$kernel_name" in
+	    (Linux)
+		case "$ID" in
+		    (debian|ubuntu|opensuse-*|fedora|redhat|centos)
+			start_pending=true
+			;;
+		    (*)
+			start_pending=false
+			;;
+		esac
+		;;
+	    (Darwin)
+		start_pending=true
+		;;
+	    (*)
+		start_pending=false
+		;;
+	esac
+    fi
+}
+
 if [ $# -gt 0 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi

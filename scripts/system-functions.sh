@@ -253,35 +253,6 @@ run_unpriv() (
     fi
 )
 
-set_start_pending() {
-    if [ $signal_received = true ]; then
-	case "$kernel_name" in
-	    (*)
-		start_pending=false
-		;;
-	esac
-    else
-	case "$kernel_name" in
-	    (Linux)
-		case "$ID" in
-		    (debian|ubuntu|opensuse-*|fedora|redhat|centos)
-			start_pending=true
-			;;
-		    (*)
-			start_pending=false
-			;;
-		esac
-		;;
-	    (Darwin)
-		start_pending=true
-		;;
-	    (*)
-		start_pending=false
-		;;
-	esac
-    fi
-}
-
 signal_process_and_poll() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" ]
