@@ -94,7 +94,7 @@ remove_files() {
     fi
 }
 
-remove_service() {
+remove_app_service() {
     files="$APP_ETCDIR $APP_DIR"
 
     if [ $purge = true ]; then
@@ -118,25 +118,12 @@ remove_service() {
     remove_files $(get_config_files) $files
 }
 
-stop_service() {
-    if [ $dryrun = false ]; then
-	case "$kernel_name" in
-	    (Linux)
-		signal_service $WAIT_SIGNAL INT TERM KILL || true
-		;;
-	    (Darwin)
-		control_launch_agent unload remove_files || true
-		;;
-	esac
-    fi
-}
-
 uninstall_service() {
     parse_arguments "$@"
 
     for dryrun in true false; do
-	stop_service
-	remove_service
+	stop_app_service
+	remove_app_service
     done
 
     print_service_log_file

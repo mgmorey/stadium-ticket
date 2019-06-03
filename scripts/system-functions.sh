@@ -319,6 +319,19 @@ start_app_service() {
     esac
 }
 
+stop_app_service() {
+    if [ $dryrun = false ]; then
+	case "$kernel_name" in
+	    (Linux)
+		signal_service $WAIT_SIGNAL INT TERM KILL || true
+		;;
+	    (Darwin)
+		control_launch_agent unload remove_files || true
+		;;
+	esac
+    fi
+}
+
 wait_for_service() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" -a -n "$2" ]
