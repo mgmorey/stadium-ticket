@@ -117,7 +117,6 @@ uninstall_service() {
 	remove_service
     done
 
-    print_service_log_file
     printf "Service %s uninstalled successfully\n" $APP_NAME
 }
 
