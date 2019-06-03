@@ -152,6 +152,15 @@ ps_uwsgi() {
     ps -U "$1" -o $PS_FORMAT
 }
 
+remove_files() {
+    if [ $dryrun = true ]; then
+	check_permissions "$@"
+    else
+	printf "Removing %s\n" $(printf "%s\n" "$@" | sort -u)
+	/bin/rm -rf "$@"
+    fi
+}
+
 restart_service() {
     if signal_service $WAIT_SIGNAL HUP; then
 	signal_received=true

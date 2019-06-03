@@ -85,15 +85,6 @@ parse_arguments() {
     fi
 }
 
-remove_files() {
-    if [ $dryrun = true ]; then
-	check_permissions "$@"
-    else
-	printf "Removing %s\n" $(printf "%s\n" "$@" | sort -u)
-	/bin/rm -rf "$@"
-    fi
-}
-
 remove_app_service() {
     files="$APP_ETCDIR $APP_DIR"
 
