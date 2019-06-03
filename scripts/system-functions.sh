@@ -149,6 +149,18 @@ get_service_process() {
     ps_uwsgi $APP_UID,$USER | awk_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 }
 
+get_service_status() {
+    if is_service_installed; then
+	if is_service_running; then
+	    printf "%s\n" running
+	else
+	    printf "%s\n" stopped
+	fi
+    else
+	printf "%s\n" uninstalled
+    fi
+}
+
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$3" ]
@@ -240,6 +252,35 @@ run_unpriv() (
     fi
 )
 
+request_service_start() {
+    case "$kernel_name" in
+	(Linux)
+	    systemctl enable uwsgi
+	    systemctl restart uwsgi
+	    ;;
+	(Darwin)
+	    if [ $UWSGI_SOURCE_ONLY = true ]; then
+		control_launch_agent load generate_launch_agent_plist
+	    else
+		brew services restart uwsgi
+	    fi
+	    ;;
+    esac
+}
+
+request_service_stop() {
+    if [ $dryrun = false ]; then
+	case "$kernel_name" in
+	    (Linux)
+		signal_service $WAIT_SIGNAL INT TERM KILL || true
+		;;
+	    (Darwin)
+		control_launch_agent unload remove_files || true
+		;;
+	esac
+    fi
+}
+
 signal_process_and_poll() {
     assert [ $# -eq 3 ]
     assert [ -n "$1" ]
@@ -313,35 +354,6 @@ signal_service() {
     done
 
     return 1
-}
-
-request_service_start() {
-    case "$kernel_name" in
-	(Linux)
-	    systemctl enable uwsgi
-	    systemctl restart uwsgi
-	    ;;
-	(Darwin)
-	    if [ $UWSGI_SOURCE_ONLY = true ]; then
-		control_launch_agent load generate_launch_agent_plist
-	    else
-		brew services restart uwsgi
-	    fi
-	    ;;
-    esac
-}
-
-request_service_stop() {
-    if [ $dryrun = false ]; then
-	case "$kernel_name" in
-	    (Linux)
-		signal_service $WAIT_SIGNAL INT TERM KILL || true
-		;;
-	    (Darwin)
-		control_launch_agent unload remove_files || true
-		;;
-	esac
-    fi
 }
 
 wait_for_service() {

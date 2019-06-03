@@ -37,13 +37,23 @@ get_realpath() (
     fi
 )
 
+print_status() {
+    print_service_log_file 1
+
+    case $1 in
+	(running)
+	    printf "Service %s is %s\n" "$APP_NAME" "$1"
+	    ;;
+	(*)
+	    printf "Service %s is %s\n" "$APP_NAME" "$1" >&2
+	    ;;
+    esac
+}
+
 stop_service() {
     for dryrun in true false; do
 	request_service_stop
     done
-
-    print_service_log_file
-    printf "Service %s is stopped\n" $APP_NAME
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
@@ -54,3 +64,15 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 configure_system
 stop_service
+
+status=$(get_service_status)
+print_status $status
+
+case $status in
+    (stopped)
+	exit 0
+	;;
+    (*)
+	exit 1
+	;;
+esac

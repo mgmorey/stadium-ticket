@@ -37,18 +37,6 @@ get_realpath() (
     fi
 )
 
-get_status() {
-    if is_service_installed; then
-	if is_service_running; then
-	    printf "%s\n" running
-	else
-	    printf "%s\n" stopped
-	fi
-    else
-	printf "%s\n" uninstalled
-    fi
-}
-
 print_status() {
     print_service_log_file 1
 
@@ -60,6 +48,21 @@ print_status() {
 	    printf "Service %s is %s\n" "$APP_NAME" "$1" >&2
 	    ;;
     esac
+}
+
+run_service() {
+    validate_parameters_preinstallation
+    validate_parameters_postinstallation
+
+    if [ $dryrun = false ]; then
+	command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+
+	if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+	    command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
+	fi
+
+	$command --ini $APP_CONFIG
+    fi
 }
 
 request_start() {
@@ -75,21 +78,6 @@ request_start() {
     if [ $total_elapsed -lt $WAIT_DEFAULT ]; then
 	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
 	total_elapsed=$((total_elapsed + elapsed))
-    fi
-}
-
-run_service() {
-    validate_parameters_preinstallation
-    validate_parameters_postinstallation
-
-    if [ $dryrun = false ]; then
-	command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-
-	if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
-	    command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
-	fi
-
-	$command --ini $APP_CONFIG
     fi
 }
 
@@ -124,7 +112,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 configure_system
 start_service
 
-status=$(get_status)
+status=$(get_service_status)
 print_status $status
 
 case $status in
