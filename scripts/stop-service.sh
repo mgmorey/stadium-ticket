@@ -51,9 +51,11 @@ print_status() {
 }
 
 stop_service() {
-    for dryrun in true false; do
-	request_service_stop
-    done
+    if is_service_running; then
+	for dryrun in true false; do
+	    request_service_stop
+	done
+    fi
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
