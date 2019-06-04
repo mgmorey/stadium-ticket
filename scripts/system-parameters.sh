@@ -46,19 +46,17 @@ configure_darwin_common() {
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS="apps-available apps-enabled"
-
-    # Set uWSGI top-level directories
-    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
-
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=python3_plugin.so
 }
 
 configure_darwin_native() {
+    # Set uWSGI configuration directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
+
     # Set uWSGI top-level directories
+    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
     UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
 
     # Set uWSGI binary/plugin directories
