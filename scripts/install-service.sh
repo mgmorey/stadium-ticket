@@ -387,6 +387,7 @@ restart_service() {
     fi
 
     total_elapsed=$elapsed
+    printf "Waiting for service %s to start\n" "$APP_NAME"
 
     if [ $signal_received = true ]; then
 	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
