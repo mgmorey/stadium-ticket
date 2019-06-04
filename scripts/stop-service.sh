@@ -58,6 +58,24 @@ print_status() {
     esac
 }
 
+remove_symlinks() (
+    assert [ $# -ge 0 ]
+
+    if [ -z "${UWSGI_ETCDIR-}" ]; then
+	return 0
+    fi
+
+    files=
+
+    for dir; do
+	files="${files+$files }$UWSGI_ETCDIR/$dir/$APP_NAME.ini"
+    done
+
+    if [ -n "${files=}" ]; then
+	remove_files $files
+    fi
+)
+
 stop_service() {
     if is_service_running; then
 	for dryrun in true false; do
