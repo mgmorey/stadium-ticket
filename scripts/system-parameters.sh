@@ -89,7 +89,7 @@ configure_freebsd() {
 configure_linux() {
     # Set ps command format and command column
     PS_COLUMN=10
-    PS_FORMAT=user,pid,ppid,lstart,tty=TTY,command
+    PS_FORMAT=pid,ppid,user,tt,lstart,command
 }
 
 configure_linux_debian() {
