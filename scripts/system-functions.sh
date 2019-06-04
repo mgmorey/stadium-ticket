@@ -140,6 +140,20 @@ get_service_status() {
     fi
 }
 
+get_symlinks() (
+    if [ -z "${UWSGI_APPDIRS-}" ]; then
+	return 0
+    elif [ -z "${UWSGI_ETCDIR-}" ]; then
+	return 0
+    elif [ ! -d $UWSGI_ETCDIR ]; then
+	return 0
+    else
+	for dir in $UWSGI_APPDIRS; do
+	    printf "%s\n" $UWSGI_ETCDIR/$dir/$APP_NAME.ini
+	done
+    fi
+)
+
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$3" ]
@@ -208,6 +222,10 @@ ps_uwsgi() {
 }
 
 remove_files() {
+    if [ $# -eq 0 ]; then
+	return 0
+    fi
+
     if [ $dryrun = true ]; then
 	check_permissions "$@"
     else

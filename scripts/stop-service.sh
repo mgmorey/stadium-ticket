@@ -58,35 +58,17 @@ print_status() {
     esac
 }
 
-remove_symlinks() (
-    assert [ $# -ge 0 ]
-
-    if [ -z "${UWSGI_ETCDIR-}" ]; then
-	return 0
-    fi
-
-    files=
-
-    for dir; do
-	files="${files+$files }$UWSGI_ETCDIR/$dir/$APP_NAME.ini"
-    done
-
-    if [ -n "${files=}" ]; then
-	remove_files $files
-    fi
-)
-
 stop_service() {
-    if is_service_running; then
-	for dryrun in true false; do
+    for dryrun in true false; do
+	if is_service_running; then
 	    request_service_stop
-	done
+	    stop_requested=true
+	else
+	    stop_requested=false
+	fi
 
-	remove_symlinks ${UWSGI_APPDIRS-}
-	stop_requested=true
-    else
-	stop_requested=false
-    fi
+	remove_files $(get_symlinks)
+    done
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
