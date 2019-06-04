@@ -44,7 +44,7 @@ get_service_parameters() {
 	          User ID: $APP_UID
 	         Group ID: $APP_GID
 	    Configuration: $APP_CONFIG
-	   Code directory: $APP_DIR
+	    App directory: $APP_DIR
 	   Data directory: $APP_VARDIR
 	         Log file: $APP_LOGFILE
 	         PID file: $APP_PIDFILE
