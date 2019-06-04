@@ -378,13 +378,12 @@ print_status() {
 }
 
 restart_service() {
+    signal_received=false
+
     if ! is_service_running; then
 	elapsed=0
-	signal_received=false
     elif signal_process $WAIT_SIGNAL HUP; then
 	signal_received=true
-    else
-	signal_received=false
     fi
 
     total_elapsed=$elapsed
