@@ -38,13 +38,12 @@ get_realpath() (
 )
 
 print_status() {
-    if [ $start_requested = true ]; then
-	print_service_log_file 1
-    fi
-
     case $1 in
 	(running)
-	    print_service_processes 0
+	    if [ $start_requested = true ]; then
+		print_service_log_file 1
+		print_service_processes 0
+	    fi
 
 	    if [ $total_elapsed -gt 0 ]; then
 		printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
