@@ -236,13 +236,92 @@ request_service_stop() {
     if [ $dryrun = false ]; then
 	case "$kernel_name" in
 	    (Linux)
-		signal_service $WAIT_SIGNAL INT TERM KILL || true
+		if ! is_service_running; then
+		    elapsed=0
+		else
+		    signal_process $WAIT_SIGNAL INT TERM KILL || true
+		fi
 		;;
 	    (Darwin)
 		control_launch_agent unload remove_files || true
 		;;
 	esac
     fi
+}
+
+signal_process() {
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+    assert [ $1 -gt 0 ]
+    elapsed=0
+    wait=$1
+    shift
+
+    pid=$(cat $APP_PIDFILE 2>/dev/null)
+
+    if [ -z "$pid" ]; then
+	return 1
+    fi
+
+    for signal in "$@"; do
+	printf "Sending SIG%s to process (PID: %s)\n" $signal $pid
+
+	case $signal in
+	    (HUP)
+		if signal_process_and_wait $pid $signal $wait; then
+		    return 0
+		fi
+		;;
+	    (*)
+		if signal_process_and_poll $pid $signal $wait; then
+		    return 0
+		fi
+		;;
+	esac
+    done
+
+    return 1
+}
+
+signal_process_and_poll() {
+    assert [ $# -eq 3 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    assert [ -n "$3" ]
+    assert [ $3 -ge 0 ]
+    i=0
+
+    while kill -s $2 $1 2>/dev/null && [ $i -lt $3 ]; do
+	if [ $i -eq 0 ]; then
+	    printf "%s\n" "Waiting for process to exit"
+	fi
+
+	sleep 1
+	i=$((i + 1))
+    done
+
+    elapsed=$((elapsed + i))
+    test $i -lt $3
+    return $?
+}
+
+signal_process_and_wait() {
+    assert [ $# -eq 3 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    assert [ -n "$3" ]
+    assert [ $3 -ge 0 ]
+
+    if kill -s $2 $1 2>/dev/null; then
+	printf "Waiting for process to handle SIG%s\n" "$2"
+	sleep $3
+	elapsed=$((elapsed + $3))
+	result=0
+    else
+	result=1
+    fi
+
+    return $result
 }
 
 wait_for_service() {
