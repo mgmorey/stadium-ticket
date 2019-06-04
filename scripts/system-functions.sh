@@ -86,6 +86,39 @@ control_launch_agent() (
     esac
 )
 
+create_symlink() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$2" ]
+
+    if [ $dryrun = true ]; then
+	check_permissions "$2"
+    else
+	assert [ -n "$1" ]
+	assert [ -r $1 ]
+
+	if [ $1 != $2 -a ! -e $2 ]; then
+	    printf "Creating link %s\n" "$2"
+	    mkdir -p $(dirname $2)
+	    /bin/ln -s $1 $2
+	fi
+    fi
+}
+
+create_symlinks() (
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+    file=$1
+    shift
+
+    if [ -z "${UWSGI_ETCDIR-}" ]; then
+	return 0
+    fi
+
+    for dir in "$@"; do
+	create_symlink $file $UWSGI_ETCDIR/$dir/$APP_NAME.ini
+    done
+)
+
 generate_launch_agent_plist() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
