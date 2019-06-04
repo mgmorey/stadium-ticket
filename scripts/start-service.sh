@@ -110,6 +110,8 @@ start_service() {
 		run_service
 		;;
 	    (*)
+		create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
+
 		if [ $dryrun = false ]; then
 		    request_start
 		    start_requested=true

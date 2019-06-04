@@ -249,6 +249,24 @@ remove_files() {
     fi
 }
 
+remove_symlinks() (
+    assert [ $# -ge 0 ]
+
+    if [ -z "${UWSGI_ETCDIR-}" ]; then
+	return 0
+    fi
+
+    files=
+
+    for dir; do
+	files="${files+$files }$UWSGI_ETCDIR/$dir/$APP_NAME.ini"
+    done
+
+    if [ -n "${files=}" ]; then
+	remove_files $files
+    fi
+)
+
 request_service_start() {
     case "$kernel_name" in
 	(Linux)

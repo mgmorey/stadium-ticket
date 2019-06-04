@@ -64,6 +64,7 @@ stop_service() {
 	    request_service_stop
 	done
 
+	remove_symlinks ${UWSGI_APPDIRS-}
 	stop_requested=true
     else
 	stop_requested=false
