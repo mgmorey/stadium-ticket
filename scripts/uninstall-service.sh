@@ -90,7 +90,7 @@ remove_service() {
 	files="$files $UWSGI_ETCDIR $binary ${plugin-}"
     fi
 
-    remove_files $(get_symlinks) $APP_CONFIG $files
+    remove_files $(get_symlinks) $files
 }
 
 uninstall_service() {
