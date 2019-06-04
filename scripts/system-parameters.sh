@@ -167,7 +167,7 @@ configure_openindiana() {
 configure_sunos() {
     # Set ps command format and command column
     PS_COLUMN=6
-    PS_FORMAT=user,pid,ppid,stime,tty,args
+    PS_FORMAT=pid,ppid,user,tty,stime,args
 }
 
 configure_system_defaults() {
