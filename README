@@ -42,10 +42,18 @@ Tumbleweed 20190529 and Fedora 30.
 
     scripts/install-service.sh (or "make install")
 
-9.  To uninstall the app as a service (may require sudo):
+9.  To start the app running as a service (may require sudo):
+
+    scripts/start-service.sh (or "make start")
+
+10. To stop the app running as a service (may require sudo):
+
+    scripts/stop-service.sh (or "make stop")
+
+11. To uninstall the app as a service (may require sudo):
 
     scripts/uninstall-service.sh (or "make uninstall")
 
-10. To report the current service status:
+12. To report the current app as a service status:
 
     scripts/get-service-status.sh (or "make status")
