@@ -357,12 +357,6 @@ restart_service() {
 
     if [ $signal_received = true ]; then
 	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
-    fi
-
-    total_elapsed=$((total_elapsed + elapsed))
-
-    if [ $total_elapsed -lt $WAIT_DEFAULT ]; then
-	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
 	total_elapsed=$((total_elapsed + elapsed))
     fi
 }
