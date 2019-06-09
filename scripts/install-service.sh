@@ -227,11 +227,6 @@ install_uwsgi_from_package() (
 
 install_uwsgi_from_source() (
     dir=$(get_home_directory ${SUDO_USER-$USER})
-
-    if [ ! -d $dir/git/uwsgi ]; then
-	return 1
-    fi
-
     cd $dir/git/uwsgi
 
     for binary; do
