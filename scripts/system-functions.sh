@@ -125,7 +125,7 @@ generate_launch_agent_plist() (
 )
 
 get_service_process() {
-    ps_uwsgi $APP_UID,$USER | awk_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+    ps_uwsgi $APP_UID,$USER,root | awk_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 }
 
 get_service_status() {
