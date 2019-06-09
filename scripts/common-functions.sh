@@ -37,7 +37,7 @@ find_bootstrap_python() (
 )
 
 find_system_python() (
-    for prefix in /usr /usr/local; do
+    for prefix in /usr/local /usr; do
 	python_dir=$prefix/bin
 
 	if [ -d $python_dir ]; then
