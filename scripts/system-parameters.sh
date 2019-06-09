@@ -302,11 +302,11 @@ configure_system() {
 	    case "$ID" in
 		(debian)
 		    case "$VERSION_ID" in
-			(9)
-			    # Build uWSGI from source
-			    UWSGI_IS_SOURCE_ONLY=true
-			    configure_linux_debian_source
-			    ;;
+			# (9)
+			#     # Build uWSGI from source
+			#     UWSGI_IS_SOURCE_ONLY=true
+			#     configure_linux_debian_source
+			#     ;;
 			(10)
 			    configure_linux_debian_native
 			    ;;
