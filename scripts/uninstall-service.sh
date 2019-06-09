@@ -80,7 +80,7 @@ remove_service() {
 	fi
     fi
 
-    if [ $UWSGI_SOURCE_ONLY = true ]; then
+    if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
 	binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 
 	if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
