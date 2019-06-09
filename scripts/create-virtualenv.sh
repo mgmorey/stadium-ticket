@@ -79,6 +79,8 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
+eval $("$script_dir/get-os-release.sh" -X)
+
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/user-functions.sh"
