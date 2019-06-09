@@ -28,7 +28,7 @@ configure_bsd() {
 configure_darwin() {
     configure_darwin_common
 
-    if [ "${UWSGI_SOURCE_ONLY-false}" = true ]; then
+    if [ "${UWSGI_IS_SOURCE_ONLY-false}" = true ]; then
 	configure_darwin_source
     else
 	configure_darwin_native
@@ -82,6 +82,9 @@ configure_freebsd() {
 
     # Set uWSGI binary file
     UWSGI_BINARY_NAME=uwsgi-3.6
+
+    # Set uWSGI run service
+    UWSGI_RUN_AS_SERVICE=false
 }
 
 configure_linux() {
@@ -90,7 +93,13 @@ configure_linux() {
     PS_FORMAT=pid,ppid,user,tt,lstart,command
 }
 
-configure_linux_debian() {
+configure_linux_debian_common() {
+    :
+}
+
+configure_linux_debian_native() {
+    configure_linux_debian_common
+
     # Set application group and user accounts
     APP_GID=www-data
     APP_UID=www-data
@@ -105,6 +114,27 @@ configure_linux_debian() {
     # Set additional parameters from app directories
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/socket
+}
+
+configure_linux_debian_source() {
+    configure_linux_debian_common
+
+    # Set application group and user accounts
+    APP_GID=www-data
+    APP_UID=www-data
+
+    # Set application directory prefix
+    APP_PREFIX=/usr/local
+
+    # Set uWSGI configuration directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
+    # Set uWSGI binary/plugin filenames
+    UWSGI_BINARY_NAME=uwsgi
+    UWSGI_PLUGIN_NAME=python3_plugin.so
 }
 
 configure_linux_opensuse() {
@@ -224,8 +254,12 @@ configure_system_defaults() {
 	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin || true)
     fi
 
-    if [ -z "${UWSGI_SOURCE_ONLY-}" ]; then
-	UWSGI_SOURCE_ONLY=false
+    if [ -z "${UWSGI_IS_SOURCE_ONLY-}" ]; then
+	UWSGI_IS_SOURCE_ONLY=false
+    fi
+
+    if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
+	UWSGI_RUN_AS_SERVICE=true
     fi
 
     # Set app plugin from uWSGI plugin filename
@@ -268,13 +302,18 @@ configure_system() {
 	    case "$ID" in
 		(debian)
 		    case "$VERSION_ID" in
+			(9)
+			    # Build uWSGI from source
+			    UWSGI_IS_SOURCE_ONLY=true
+			    configure_linux_debian_source
+			    ;;
 			(10)
-			    configure_linux_debian
+			    configure_linux_debian_native
 			    ;;
 			('')
 			    case "$(cat /etc/debian_version)" in
 				(buster/sid)
-				    configure_linux_debian
+				    configure_linux_debian_native
 				    ;;
 				(*)
 				    abort_not_supported Release
@@ -289,7 +328,7 @@ configure_system() {
 		(ubuntu)
 		    case "$VERSION_ID" in
 			(18.*|19.04)
-			    configure_linux_debian
+			    configure_linux_debian_native
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -326,7 +365,7 @@ configure_system() {
 	    ;;
 	(Darwin)
 	    # Build uWSGI from source
-	    UWSGI_SOURCE_ONLY=true
+	    UWSGI_IS_SOURCE_ONLY=true
 	    configure_bsd
 	    configure_darwin
 	    ;;
@@ -340,7 +379,7 @@ configure_system() {
 	    case $ID in
 		# (openindiana)
 		#     # Build uWSGI from source
-		#     UWSGI_SOURCE_ONLY=true
+		#     UWSGI_IS_SOURCE_ONLY=true
 		#     configure_openindiana
 		#     ;;
 		(*)

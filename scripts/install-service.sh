@@ -178,7 +178,7 @@ install_service() {
     cd "$source_dir"
 
     for dryrun in true false; do
-	if [ $UWSGI_SOURCE_ONLY = true ]; then
+	if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
 	    install_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	else
 	    install_uwsgi_from_package

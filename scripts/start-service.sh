@@ -138,20 +138,21 @@ start_service() {
     fi
 
     for dryrun in true false; do
-	case "$kernel_name" in
-	    (FreeBSD)
-		run_service
-		;;
-	    (*)
-		create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
-
-		if [ $dryrun = false ]; then
-		    request_start
-		    start_requested=true
-		fi
-		;;
-	esac
+	if [ $UWSGI_RUN_AS_SERVICE = true ]; then
+	    start_uwsgi_service
+	else
+	    run_service
+	fi
     done
+}
+
+start_uwsgi_service() {
+    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
+
+    if [ $dryrun = false ]; then
+	request_start
+	start_requested=true
+    fi
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
