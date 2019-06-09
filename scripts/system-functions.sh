@@ -241,7 +241,7 @@ request_service_start() {
 	    systemctl restart uwsgi
 	    ;;
 	(Darwin)
-	    if [ $UWSGI_SOURCE_ONLY = true ]; then
+	    if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
 		control_launch_agent load generate_launch_agent_plist
 	    else
 		brew services restart uwsgi
