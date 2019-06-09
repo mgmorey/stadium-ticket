@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# install-app.sh: install application as a uWSGI service
+# install-service.sh: install application as a uWSGI service
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -23,23 +23,6 @@ abort() {
 
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
-}
-
-build_uwsgi_binary() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    if [ -x $1 ]; then
-	return 0
-    fi
-
-    case $1 in
-	(python3*)
-	    $python uwsgiconfig.py --plugin plugins/python core ${1%_*}
-	    ;;
-	(uwsgi)
-	    $python uwsgiconfig.py --build core
-    esac
 }
 
 change_owner() {
@@ -73,13 +56,6 @@ create_dirs() {
 create_service_virtualenv() {
     if ! run_unpriv '"$script_dir/create-virtualenv.sh"' "$@"; then
 	abort "%s: Unable to create virtual environment\n" "$0"
-    fi
-}
-
-fetch_uwsgi_source() {
-    if [ ! -d $HOME/git/uwsgi ]; then
-	cd && mkdir -p git && cd git
-	git clone https://github.com/unbit/uwsgi.git
     fi
 }
 
@@ -229,20 +205,6 @@ install_service() {
     validate_parameters_postinstallation
 }
 
-install_uwsgi_binary() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    case $1 in
-	(*_plugin.so)
-	    install_file 755 $1 $UWSGI_PLUGIN_DIR/$1
-	    ;;
-	(uwsgi)
-	    install_file 755 $1 $UWSGI_BINARY_DIR/$1
-	    ;;
-    esac
-}
-
 install_uwsgi_from_package() (
     if [ $dryrun = true ]; then
 	return 0
@@ -264,21 +226,23 @@ install_uwsgi_from_package() (
 )
 
 install_uwsgi_from_source() (
-    if [ $dryrun = false ]; then
-	fetch_uwsgi_source
+    dir=$(get_home_directory $SUDO_USER)
+
+    if [ ! -d $dir/git/uwsgi ]; then
+	return 1
     fi
 
-    if [ $dryrun = false ]; then
-	cd $HOME/git/uwsgi
-	python=$(find_system_python)
-
-	for binary; do
-	    build_uwsgi_binary $binary
-	done
-    fi
+    cd $dir/git/uwsgi
 
     for binary; do
-	install_uwsgi_binary $binary
+	case $binary in
+	    (*_plugin.so)
+		install_file 755 $binary $UWSGI_PLUGIN_DIR/$binary
+		;;
+	    (uwsgi)
+		install_file 755 $binary $UWSGI_BINARY_DIR/$binary
+		;;
+	esac
     done
 )
 
