@@ -226,7 +226,7 @@ install_uwsgi_from_package() (
 )
 
 install_uwsgi_from_source() (
-    dir=$(get_home_directory $SUDO_USER)
+    dir=$(get_home_directory ${SUDO_USER-$USER})
 
     if [ ! -d $dir/git/uwsgi ]; then
 	return 1
@@ -348,6 +348,7 @@ source_dir=$script_dir/..
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
+. "$script_dir/user-functions.sh"
 
 configure_system
 install_service
