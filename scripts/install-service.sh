@@ -255,37 +255,6 @@ install_virtualenv() {
     fi
 }
 
-is_installed() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    case "$kernel_name" in
-	(Linux)
-	    case "$ID" in
-		(debian|ubuntu)
-		    status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
-		    test "$status" = "install ok installed"
-		    ;;
-		(opensuse-*|fedora|redhat|centos)
-		    rpm --query $1 >/dev/null 2>&1
-		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
-	    esac
-	    ;;
-	(Darwin)
-	    brew list 2>/dev/null | grep -E '^'"$1"'$' >/dev/null
-	    ;;
-	(FreeBSD)
-	    pkg query %n "$1" >/dev/null 2>&1
-	    ;;
-	(*)
-	    false
-	    ;;
-    esac
-)
-
 print_status() {
     case "$1" in
 	(running)
