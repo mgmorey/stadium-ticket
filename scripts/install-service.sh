@@ -25,6 +25,14 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+build_uwsgi_from_source() {
+    if [ $dryrun = true ]; then
+	:
+    elif ! run_unpriv '"$script_dir/build-uwsgi.sh"' "$@"; then
+	abort "%s: Unable to build uWSGI from source\n" "$0"
+    fi
+}
+
 change_owner() {
     assert [ $# -ge 1 ]
 
@@ -179,6 +187,7 @@ install_service() {
 
     for dryrun in true false; do
 	if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
+	    build_uwsgi_from_source
 	    install_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	else
 	    install_uwsgi_from_package
