@@ -76,11 +76,14 @@ create_virtualenv() {
 }
 
 get_home_directory() {
-    if [ "$kernel_name" = Darwin -a "$1" = $USER ]; then
-	printf "%s\n" "$HOME"
-    else
-	getent passwd ${1-$USER} | awk -F: '{print $6}'
-    fi
+    case "$kernel_name" in
+	(Darwin)
+	    printf "/Users/%s\n" "${1-USER}"
+	    ;;
+	(*)
+	    getent passwd ${1-$USER} | awk -F: '{print $6}'
+	    ;;
+    esac
 }
 
 get_pip_upgrade_options() {
