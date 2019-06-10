@@ -94,15 +94,13 @@ configure_linux() {
 }
 
 configure_linux_debian_common() {
-    :
+    # Set application group and user accounts
+    APP_GID=www-data
+    APP_UID=www-data
 }
 
 configure_linux_debian_native() {
     configure_linux_debian_common
-
-    # Set application group and user accounts
-    APP_GID=www-data
-    APP_UID=www-data
 
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
@@ -118,10 +116,6 @@ configure_linux_debian_native() {
 
 configure_linux_debian_source() {
     configure_linux_debian_common
-
-    # Set application group and user accounts
-    APP_GID=www-data
-    APP_UID=www-data
 
     # Set application directory prefix
     APP_PREFIX=/usr/local
