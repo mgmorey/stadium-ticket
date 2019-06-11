@@ -118,7 +118,6 @@ request_start() {
 
     wait_period=$((WAIT_RESTART - total_elapsed))
     elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
-
     total_elapsed=$((total_elapsed + elapsed))
 
     if [ $total_elapsed -lt $WAIT_DEFAULT ]; then
