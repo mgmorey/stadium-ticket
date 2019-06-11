@@ -241,10 +241,13 @@ print_status() {
 }
 
 restart_service() {
+    total_elapsed=0
+
     if is_service_running && signal_process $WAIT_SIGNAL HUP; then
-	total_elapsed=$(wait_for_timeout $WAIT_DEFAULT)
-    else
-	total_elapsed=0
+	total_elapsed=$((total_elapsed + elapsed))
+	wait_period=$((WAIT_RESTART - elapsed))
+	elapsed=$(wait_for_timeout $wait_period)
+	total_elapsed=$((total_elapsed + elapsed))
     fi
 }
 
