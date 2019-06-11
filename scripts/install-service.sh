@@ -129,26 +129,24 @@ get_realpath() (
 get_setpriv_command() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    options="--clear-groups"
-    regid="--regid $(id -g $1)"
-    reuid="--reuid $(id -u $1)"
-    setpriv="setpriv $reuid $regid"
+    setpriv="setpriv --reuid $(id -u $1) --regid $(id -g $1)"
     version="$(setpriv --version 2>/dev/null)"
 
     case "${version##* }" in
-	(2.3[012].*)
-	    options="--init-groups"
-	    ;;
-	(2.[12][0-9].*)
-	    :
-	    ;;
-	(2.[0-9].*)
-	    :
+	('')
+	    return 1
 	    ;;
 	([01].*)
-	    :
+	    options="--clear-groups"
 	    ;;
-	('')
+	(2.[0-9].*)
+	    options="--clear-groups"
+	    ;;
+	(2.[12][0-9].*)
+	    options="--clear-groups"
+	    ;;
+	(2.3[012].*)
+	    options="--init-groups"
 	    ;;
 	(*)
 	    options="--init-groups --reset-env"
@@ -162,11 +160,13 @@ get_setpriv_command() (
 get_su_command() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
+    options=-
 
     case "$kernel_name" in
 	(Linux)
-	    get_setpriv_command "$1"
-	    return 0
+	    if get_setpriv_command $1; then
+		return 0
+	    fi
 	    ;;
 	(Darwin)
 	    options=-l
