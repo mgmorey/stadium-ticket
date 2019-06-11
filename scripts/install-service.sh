@@ -127,9 +127,9 @@ get_realpath() (
 )
 
 get_setpriv_command() (
+    assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     username=$1
-    shift
 
     case "$kernel_name" in
 	(Linux)
@@ -159,13 +159,38 @@ get_setpriv_command() (
 		    ;;
 	    esac
 
-	    printf "$setpriv %s %s\n" "$options" "$*"
+	    printf "$setpriv %s %s\n" "$options"
 	    return 0
 	    ;;
 	(*)
 	    return 1
 	    ;;
     esac
+)
+
+get_su_command() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    username=$1
+
+    case "$kernel_name" in
+	(Linux)
+	    get_set_priv_command "$username"
+	    return 0
+	    ;;
+	(Darwin)
+	    options=-l
+	    ;;
+	(FreeBSD)
+	    options=-l
+	    ;;
+	(SunOS)
+	    options=-
+	    ;;
+    esac
+
+    printf "su %s %s\n" "$options" "$username"
+    return 0
 )
 
 initialize_database() (
@@ -304,8 +329,7 @@ run_unpriv() (
     assert [ $# -ge 1 ]
 
     if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	setpriv=$(get_setpriv_command $SUDO_USER || true)
-	eval ${setpriv:-/usr/bin/su -l $SUDO_USER} "$@"
+	eval $(get_su_command $SUDO_USER) "$@"
     else
 	eval "$@"
     fi
