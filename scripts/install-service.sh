@@ -129,53 +129,43 @@ get_realpath() (
 get_setpriv_command() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    username=$1
+    options="--clear-groups"
+    regid="--regid $(id -g $1)"
+    reuid="--reuid $(id -u $1)"
+    setpriv="setpriv $reuid $regid"
+    version="$(setpriv --version 2>/dev/null)"
 
-    case "$kernel_name" in
-	(Linux)
-	    options="--clear-groups"
-	    regid="--regid $(id -g $username)"
-	    reuid="--reuid $(id -u $username)"
-	    setpriv="setpriv $reuid $regid"
-	    version="$(setpriv --version 2>/dev/null)"
-
-	    case "${version##* }" in
-		(2.3[012].*)
-		    options="--init-groups"
-		    ;;
-		(2.[12][0-9].*)
-		    :
-		    ;;
-		(2.[0-9].*)
-		    :
-		    ;;
-		([01].*)
-		    :
-		    ;;
-		('')
-		    ;;
-		(*)
-		    options="--init-groups --reset-env"
-		    ;;
-	    esac
-
-	    printf "$setpriv %s %s\n" "$options"
-	    return 0
+    case "${version##* }" in
+	(2.3[012].*)
+	    options="--init-groups"
+	    ;;
+	(2.[12][0-9].*)
+	    :
+	    ;;
+	(2.[0-9].*)
+	    :
+	    ;;
+	([01].*)
+	    :
+	    ;;
+	('')
 	    ;;
 	(*)
-	    return 1
+	    options="--init-groups --reset-env"
 	    ;;
     esac
+
+    printf "$setpriv %s %s\n" "$options"
+    return 0
 )
 
 get_su_command() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    username=$1
 
     case "$kernel_name" in
 	(Linux)
-	    get_setpriv_command "$username"
+	    get_setpriv_command "$1"
 	    return 0
 	    ;;
 	(Darwin)
@@ -189,7 +179,7 @@ get_su_command() (
 	    ;;
     esac
 
-    printf "su %s %s\n" "$options" "$username"
+    printf "su %s %s\n" "$options" "$1"
     return 0
 )
 
