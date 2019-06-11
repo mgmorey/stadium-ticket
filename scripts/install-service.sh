@@ -160,12 +160,13 @@ get_setpriv_command() (
 get_su_command() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    options=-
 
     case "$kernel_name" in
 	(Linux)
 	    if get_setpriv_command $1; then
 		return 0
+	    else
+		options=-
 	    fi
 	    ;;
 	(Darwin)
@@ -174,7 +175,7 @@ get_su_command() (
 	(FreeBSD)
 	    options=-l
 	    ;;
-	(SunOS)
+	(*)
 	    options=-
 	    ;;
     esac
