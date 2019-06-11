@@ -37,11 +37,11 @@ find_bootstrap_python() (
 )
 
 find_system_python() (
-    for prefix in /usr/local /usr; do
-	python_dir=$prefix/bin
+    for version in $PYTHON_VERSIONS; do
+	for prefix in /usr /usr/local; do
+	    python_dir=$prefix/bin
 
-	if [ -d $python_dir ]; then
-	    for version in $PYTHON_VERSIONS; do
+	    if [ -d $python_dir ]; then
 		python=$python_dir/python$version
 
 		if [ -x $python ]; then
@@ -50,8 +50,8 @@ find_system_python() (
 			return 0
 		    fi
 		fi
-	    done
-	fi
+	    fi
+	done
     done
 
     return 1
