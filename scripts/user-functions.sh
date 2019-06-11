@@ -97,7 +97,7 @@ get_pip_upgrade_options() {
     esac
 }
 
-reset_home_directory() {
+set_unpriv_environment() {
     if [ -z "${SUDO_USER-}" ]; then
 	return 0
     fi
@@ -106,6 +106,10 @@ reset_home_directory() {
 
     if [ "$HOME" != "$home_dir" ]; then
 	export HOME="$home_dir"
+
+	if [ -z "${LD_LIBRARY_PATH-}" -a -d /usr/local/lib ]; then
+	    export LD_LIBRARY_PATH=/usr/local/lib
+	fi
     fi
 }
 

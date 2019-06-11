@@ -129,6 +129,9 @@ configure_linux_debian_source() {
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=python3_plugin.so
+
+    # Set uWSGI run service
+    UWSGI_RUN_AS_SERVICE=false
 }
 
 configure_linux_opensuse() {
@@ -296,11 +299,11 @@ configure_system() {
 	    case "$ID" in
 		(debian)
 		    case "$VERSION_ID" in
-			# (9)
-			#     # Build uWSGI from source
-			#     UWSGI_IS_SOURCE_ONLY=true
-			#     configure_linux_debian_source
-			#     ;;
+			(9)
+			    # Build uWSGI from source
+			    UWSGI_IS_SOURCE_ONLY=true
+			    configure_linux_debian_source
+			    ;;
 			(10)
 			    configure_linux_debian_native
 			    ;;

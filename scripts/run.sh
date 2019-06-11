@@ -107,5 +107,5 @@ eval $("$script_dir/get-os-release.sh" -X)
 . "$script_dir/common-functions.sh"
 . "$script_dir/user-functions.sh"
 
-reset_home_directory
+set_unpriv_environment
 run_in_virtualenv "$@"

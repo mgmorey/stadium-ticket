@@ -33,7 +33,7 @@ build_uwsgi_binary() {
 	return 0
     fi
 
-    export APPEND_CFLAGS=-fPIC
+    export CFLAGS=-fPIC
     export UWSGI_PLUGINS_BUILDER_CFLAGS=-fPIC
 
     case $1 in
@@ -90,6 +90,8 @@ source_dir=$script_dir/..
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
+. "$script_dir/user-functions.sh"
 
 configure_system
+set_unpriv_environment
 build_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME

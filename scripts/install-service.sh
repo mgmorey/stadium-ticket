@@ -235,8 +235,10 @@ install_uwsgi_from_package() (
 )
 
 install_uwsgi_from_source() (
-    dir=$(get_home_directory ${SUDO_USER-$USER})
-    cd $dir/git/uwsgi
+    if [ $dryrun = false ]; then
+	dir=$(get_home_directory ${SUDO_USER-$USER})
+	cd $dir/git/uwsgi
+    fi
 
     for binary; do
 	case $binary in
