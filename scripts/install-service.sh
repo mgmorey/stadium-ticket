@@ -227,7 +227,7 @@ install_virtualenv() {
 print_status() {
     case "$1" in
 	(running)
-	    print_service_processes 0
+	    print_service_processes 1
 	    printf "Service %s installed and started successfully\n" "$APP_NAME"
 	    printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
 	    ;;
@@ -241,20 +241,10 @@ print_status() {
 }
 
 restart_service() {
-    signal_received=false
-
-    if ! is_service_running; then
-	elapsed=0
-    elif signal_process $WAIT_SIGNAL HUP; then
-	signal_received=true
-    fi
-
-    total_elapsed=$elapsed
-    printf "Waiting for service %s to start\n" "$APP_NAME"
-
-    if [ $signal_received = true ]; then
-	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
-	total_elapsed=$((total_elapsed + elapsed))
+    if is_service_running && signal_process $WAIT_SIGNAL HUP; then
+	total_elapsed=$(wait_for_timeout $WAIT_DEFAULT)
+    else
+	total_elapsed=0
     fi
 }
 
