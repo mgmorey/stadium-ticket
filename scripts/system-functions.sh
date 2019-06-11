@@ -432,19 +432,19 @@ signal_process_and_wait() {
 }
 
 wait_for_service() {
-    assert [ $# -eq 2 ]
-    assert [ -n "$1" -a -n "$2" ]
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
     i=0
 
-    if [ $2 -gt 0 ]; then
-	while [ ! -e $1 -a $i -lt $2 ]; do
+    if [ $1 -gt 0 ]; then
+	while [ ! -e $APP_PIDFILE -a $i -lt $1 ]; do
 	    sleep 1
 	    i=$((i + 1))
 	done
     fi
 
-    if [ $i -ge $2 ]; then
-	printf "Service failed to start within %s seconds\n" $2 >&2
+    if [ $i -ge $1 ]; then
+	printf "Service failed to start within %s seconds\n" $1 >&2
     fi
 
     printf "%s\n" "$i"

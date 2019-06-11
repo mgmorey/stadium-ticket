@@ -78,8 +78,8 @@ print_status() {
 		print_service_processes 0
 	    fi
 
-	    if [ $total_elapsed -gt 0 ]; then
-		printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
+	    if [ $elapsed -gt 0 ]; then
+		printf "Service %s started in %d seconds\n" "$APP_NAME" "$elapsed"
 	    fi
 
 	    qualified_status=$1
@@ -113,22 +113,17 @@ run_service() {
 
 request_start() {
     request_service_start
-    total_elapsed=0
     printf "Waiting for service %s to start\n" "$APP_NAME"
+    elapsed=$((elapsed + $(wait_for_service $((WAIT_RESTART - elapsed)))))
 
-    wait_period=$((WAIT_RESTART - total_elapsed))
-    elapsed=$(wait_for_service $APP_PIDFILE $wait_period)
-    total_elapsed=$((total_elapsed + elapsed))
-
-    if [ $total_elapsed -lt $WAIT_DEFAULT ]; then
-	elapsed=$(wait_for_timeout $((WAIT_DEFAULT - total_elapsed)))
-	total_elapsed=$((total_elapsed + elapsed))
+    if [ $elapsed -lt $WAIT_DEFAULT ]; then
+	elapsed=$((elapsed + $(wait_for_timeout $((WAIT_DEFAULT - elapsed)))))
     fi
 }
 
 start_service() {
     start_requested=false
-    total_elapsed=0
+    elapsed=0
 
     if ! is_service_installed; then
 	return 0

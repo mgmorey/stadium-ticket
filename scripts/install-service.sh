@@ -229,7 +229,7 @@ print_status() {
 	(running)
 	    print_service_processes 1
 	    printf "Service %s installed and started successfully\n" "$APP_NAME"
-	    printf "Service %s started in %d seconds\n" "$APP_NAME" "$total_elapsed"
+	    printf "Service %s started in %d seconds\n" "$APP_NAME" "$elapsed"
 	    ;;
 	(stopped)
 	    printf "Service %s installed successfully\n" "$APP_NAME"
@@ -241,13 +241,10 @@ print_status() {
 }
 
 restart_service() {
-    total_elapsed=0
+    elapsed=0
 
     if is_service_running && signal_process $WAIT_SIGNAL HUP; then
-	total_elapsed=$((total_elapsed + elapsed))
-	wait_period=$((WAIT_RESTART - elapsed))
-	elapsed=$(wait_for_timeout $wait_period)
-	total_elapsed=$((total_elapsed + elapsed))
+	elapsed=$((elapsed + $(wait_for_timeout $((WAIT_RESTART - elapsed)))))
     fi
 }
 
