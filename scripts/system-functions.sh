@@ -140,6 +140,64 @@ get_service_status() {
     fi
 }
 
+get_setpriv_command() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    setpriv="setpriv --reuid $(id -u $1) --regid $(id -g $1)"
+    version="$(setpriv --version 2>/dev/null)"
+
+    case "${version##* }" in
+	('')
+	    return 1
+	    ;;
+	([01].*)
+	    options="--clear-groups"
+	    ;;
+	(2.[0-9].*)
+	    options="--clear-groups"
+	    ;;
+	(2.[12][0-9].*)
+	    options="--clear-groups"
+	    ;;
+	(2.3[012].*)
+	    options="--init-groups"
+	    ;;
+	(*)
+	    options="--init-groups --reset-env"
+	    ;;
+    esac
+
+    printf "$setpriv %s %s\n" "$options"
+    return 0
+)
+
+get_su_command() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case "$kernel_name" in
+	(Linux)
+	    if get_setpriv_command $1; then
+		return 0
+	    else
+		options=-
+	    fi
+	    ;;
+	(Darwin)
+	    options=-l
+	    ;;
+	(FreeBSD)
+	    options=-l
+	    ;;
+	(*)
+	    options=-
+	    ;;
+    esac
+
+    printf "su %s %s\n" "$options" "$1"
+    return 0
+)
+
 get_symlinks() (
     if [ -z "${UWSGI_APPDIRS-}" ]; then
 	return 0
