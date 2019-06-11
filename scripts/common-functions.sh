@@ -99,7 +99,8 @@ find_user_python() (
 
 find_pyenv_python() (
     assert [ $# -eq 2 ]
-    assert [ -n "$1" -a -n "$2" ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
     pythons="$(ls $1/versions/$2.*/bin/python 2>/dev/null | sort -Vr)"
 
     for python in $pythons; do
