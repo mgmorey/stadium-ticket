@@ -127,7 +127,7 @@ get_realpath() (
 )
 
 get_setpriv_command() (
-    assert [ $# -eq 2 ]
+    assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     username=$1
 
@@ -175,7 +175,7 @@ get_su_command() (
 
     case "$kernel_name" in
 	(Linux)
-	    get_set_priv_command "$username"
+	    get_setpriv_command "$username"
 	    return 0
 	    ;;
 	(Darwin)
