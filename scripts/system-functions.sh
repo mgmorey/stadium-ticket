@@ -180,7 +180,7 @@ get_su_command() (
 	    if get_setpriv_command $1; then
 		return 0
 	    else
-		options=-
+		options=-l
 	    fi
 	    ;;
 	(Darwin)
