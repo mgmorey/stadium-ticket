@@ -398,9 +398,10 @@ find_uwsgi_plugin() (
 	return 1
     elif [ ! -d $UWSGI_PLUGIN_DIR ]; then
 	return 1
+    elif [ ! cd $UWSGI_PLUGIN_DIR ]; then
+	return 1
     fi
 
-    cd $UWSGI_PLUGIN_DIR
     versions=$(printf "%s\n" $PYTHON_VERSIONS | tr -d .)
     plugins=$(printf "python%s_plugin.so\n" $versions)
     ls $plugins 2>/dev/null | sort -Vr | head -n 1
