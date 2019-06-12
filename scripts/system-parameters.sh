@@ -401,17 +401,9 @@ find_uwsgi_plugin() (
     fi
 
     cd $UWSGI_PLUGIN_DIR
-
-    for version in $(printf "%s\n" $PYTHON_VERSIONS | tr -d .); do
-	plugins=$(ls python${version}*_plugin.so 2>/dev/null | sort -Vr)
-
-	for plugin in $plugins; do
-	    printf "%s\n" "$(basename $plugin)"
-	    return 0
-	done
-    done
-
-    return 1
+    versions=$(printf "%s\n" $PYTHON_VERSIONS | tr -d .)
+    plugins=$(printf "python%s_plugin.so\n" $versions)
+    ls $plugins 2>/dev/null | sort -Vr | head -n 1
 )
 
 validate_parameters_postinstallation() {
