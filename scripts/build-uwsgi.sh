@@ -48,7 +48,10 @@ build_uwsgi_binary() {
 build_uwsgi_from_source() (
     fetch_uwsgi_source
 
-    cd "$HOME/git/uwsgi"
+    if ! cd "$HOME/git/uwsgi"; then
+	return 1
+    fi
+
     python=$(find_system_python)
 
     for binary; do
@@ -57,10 +60,12 @@ build_uwsgi_from_source() (
 )
 
 fetch_uwsgi_source() {
-    if [ ! -d "$HOME/git/uwsgi" ]; then
-	cd && mkdir -p git && cd git
-	git clone https://github.com/unbit/uwsgi.git
+    if [ -d "$HOME/git/uwsgi" ]; then
+	return 0
     fi
+
+    cd && mkdir -p git && cd git
+    git clone https://github.com/unbit/uwsgi.git
 }
 
 get_realpath() (
