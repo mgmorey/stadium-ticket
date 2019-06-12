@@ -400,8 +400,10 @@ find_uwsgi_plugin() (
 	return 1
     fi
 
+    cd $UWSGI_PLUGIN_DIR
+
     for version in $(printf "%s\n" $PYTHON_VERSIONS | tr -d .); do
-	plugins=$(ls $UWSGI_PLUGIN_DIR/python${version}*_plugin.so | sort -Vr)
+	plugins=$(ls python${version}*_plugin.so 2>/dev/null | sort -Vr)
 
 	for plugin in $plugins; do
 	    printf "%s\n" "$(basename $plugin)"
