@@ -26,9 +26,7 @@ assert() {
 }
 
 build_uwsgi_from_source() {
-    if [ $dryrun = true ]; then
-	:
-    elif ! run_unpriv '"$script_dir/build-uwsgi.sh"' "$@"; then
+    if ! run_unpriv '"$script_dir/build-uwsgi.sh"' "$@"; then
 	abort "%s: Unable to build uWSGI from source\n" "$0"
     fi
 }
@@ -145,7 +143,6 @@ install_service() {
 
     for dryrun in true false; do
 	if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
-	    build_uwsgi_from_source
 	    install_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	else
 	    install_uwsgi_from_package
@@ -194,8 +191,12 @@ install_uwsgi_from_package() (
 
 install_uwsgi_from_source() (
     if [ $dryrun = false ]; then
+	build_uwsgi_from_source
 	dir=$(get_home_directory ${SUDO_USER-$USER})
-	cd $dir/git/uwsgi
+
+	if ! cd $dir/git/uwsgi; then
+	    return 1
+	fi
     fi
 
     for binary; do
