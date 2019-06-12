@@ -48,7 +48,7 @@ check_python() (
     fi
 )
 
-create_virtualenv() {
+create_virtualenv() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
@@ -73,7 +73,7 @@ create_virtualenv() {
     else
 	abort "%s: No virtualenv nor pyenv/venv command found\n" "$0"
     fi
-}
+)
 
 get_home_directory() {
     case "$kernel_name" in
