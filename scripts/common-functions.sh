@@ -23,17 +23,14 @@ create_tmpfile() {
 }
 
 find_bootstrap_python() (
-    for python in python3 python2 python false; do
+    for python in python3 python2 python; do
 	if $python --version >/dev/null 2>&1; then
-	    break
+	    printf "%s\n" "$python"
+	    return 0
 	fi
     done
 
-    if [ $python = false ]; then
-	abort "%s\n" "No Python interpreter found"
-    fi
-
-    printf "%s\n" "$python"
+    abort "%s\n" "No Python interpreter found in PATH"
 )
 
 find_system_python() (
