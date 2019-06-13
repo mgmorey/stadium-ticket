@@ -59,14 +59,14 @@ def get_minimum_version():
 
 
 def parse_args():
-    description='Check Python interpreter version against Pipfile'
+    description = 'Check Python interpreter version against Pipfile'
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('--delimiter',
                         const='_',
                         default='.',
                         metavar='TEXT',
                         nargs='?',
-                        help='use TEXT to delimit elements of version in output')
+                        help='use TEXT to delimit parts of version in output')
     parser.add_argument('version',
                         metavar='VERSION',
                         nargs='?',
@@ -83,7 +83,7 @@ def parse_version(s):
 
 def print_versions(s, delimiter):
     components = s.split('.')
-    versions=[]
+    versions = []
 
     for n in range(len(components), 0, -1):
         versions.append(delimiter.join(components[:n]))
@@ -125,11 +125,11 @@ def main():
 
             if difference >= 0:
                 message = "Python {} interpreter meets {} requirement"
-                output=sys.stdout
+                output = sys.stdout
                 status = 0
             else:
                 message = "Python {} interpreter does not meet {} requirement"
-                output=sys.stderr
+                output = sys.stderr
                 status = 1
 
             print(message.format(actual, INPUT), file=output)
