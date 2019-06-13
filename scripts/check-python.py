@@ -126,15 +126,12 @@ def main():
             exit(status)
         else:
             components = minimum.split('.')
-            versions=''
+            versions=[]
 
             for n in range(len(components), 0, -1):
-                versions += args.delimiter.join(components[:n])
+                versions.append(args.delimiter.join(components[:n]))
 
-                if n > 1:
-                    versions += ' '
-
-            print(versions)
+            print(' '.join(versions))
             exit(0)
 
 
