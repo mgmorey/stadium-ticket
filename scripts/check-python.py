@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+"""Check given Python version string against Pipfile requirement."""
+
 from __future__ import print_function
 import argparse
 import os
@@ -37,16 +39,18 @@ QUOTED_REGEX = r'^"([^"]+)"$'
 
 
 class ParseError(Exception):
-    pass
+    """Represent error parsing text."""
 
 
 def get_filepath():
+    """Return the fully-qualified path name of the input file."""
     script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
     source_dir = os.path.dirname(script_dir)
     return os.path.join(source_dir, INPUT)
 
 
 def get_minimum_version():
+    """Return the minimum Python version requirement."""
     config = ConfigParser()
     path = get_filepath()
     config.read(path)
@@ -59,6 +63,7 @@ def get_minimum_version():
 
 
 def parse_args():
+    """Parse script arguments."""
     description = 'Check Python interpreter version against Pipfile'
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('--delimiter',
@@ -75,6 +80,7 @@ def parse_args():
 
 
 def parse_version(s):
+    """Parse quoted Python version string."""
     try:
         return re.search(PYTHON_VERSION_REGEX, s).group(1)
     except AttributeError as e:
@@ -82,6 +88,7 @@ def parse_version(s):
 
 
 def print_versions(s, delimiter):
+    """Print Python version string with given delimiter."""
     components = s.split('.')
     versions = []
 
@@ -92,6 +99,7 @@ def print_versions(s, delimiter):
 
 
 def unquote(s):
+    """Parse a quoted string, stripping quotes."""
     try:
         return re.search(QUOTED_REGEX, s).group(1)
     except AttributeError as e:
@@ -99,6 +107,7 @@ def unquote(s):
 
 
 def version_str_to_int(s):
+    """Return the integer equivalent of a dotted decimal version string."""
     result = 0
     v = s.split('.')
 
@@ -110,6 +119,7 @@ def version_str_to_int(s):
 
 
 def main():
+    """Main program of script."""
     args = parse_args()
 
     try:
