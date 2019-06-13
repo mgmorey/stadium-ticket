@@ -95,7 +95,6 @@ source_dir=$script_dir/..
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
-. "$script_dir/user-functions.sh"
 
 configure_system
 set_unpriv_environment

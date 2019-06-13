@@ -129,6 +129,5 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
-. "$script_dir/user-functions.sh"
 
 update_virtualenv

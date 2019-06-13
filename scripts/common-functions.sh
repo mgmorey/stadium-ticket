@@ -14,6 +14,40 @@
 # GNU General Public License for more details.
 
 GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
+PIP_9_UPGRADE_OPTS="--no-cache-dir"
+PIP_10_UPGRADE_OPTS="--no-cache-dir --no-warn-script-location"
+
+abort_no_python() {
+    abort "%s\n" "No suitable Python interpreter found"
+}
+
+activate_virtualenv() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ -d $1/bin -a -r $1/bin/activate ]
+    printf "%s\n" "Activating virtual environment"
+    set +u
+    . "$1/bin/activate"
+    set -u
+}
+
+check_python() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ -x $1 ]
+    python_output="$($1 --version || true)"
+
+    if [ -z "$python_output" ]; then
+	abort_no_python
+    fi
+
+    version="${python_output#Python }"
+    printf "Python %s interpreter found: %s\n" "$version" "$1"
+
+    if ! $1 "$script_dir/check-python.py" "$version"; then
+	abort_no_python
+    fi
+)
 
 create_tmpfile() {
     tmpfile=$(mktemp)
@@ -21,6 +55,33 @@ create_tmpfile() {
     tmpfiles="${tmpfiles+$tmpfiles }$tmpfile"
     trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
 }
+
+create_virtualenv() (
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+    virtualenv=$("$script_dir/get-python-command.sh" virtualenv)
+
+    if [ "$virtualenv" = false ]; then
+	pyvenv=$("$script_dir/get-python-command.sh" pyvenv)
+    fi
+
+    if [ "$virtualenv" != false ]; then
+	if [ -z "${python-${2-}}" ]; then
+	    python=$(find_user_python)
+	fi
+    fi
+
+    check_python $python
+    printf "%s\n" "Creating virtual environment"
+
+    if [ "$virtualenv" != false ]; then
+	$virtualenv -p $python $1
+    elif [ "$pyvenv" != false ]; then
+	$pyvenv $1
+    else
+	abort "%s: No virtualenv nor pyenv/venv command found\n" "$0"
+    fi
+)
 
 find_bootstrap_python() (
     for python in python3 python2 python; do
@@ -110,6 +171,28 @@ find_pyenv_python() (
     return 1
 )
 
+get_home_directory() {
+    case "$kernel_name" in
+	(Darwin)
+	    printf "/Users/%s\n" "${1-USER}"
+	    ;;
+	(*)
+	    getent passwd ${1-$USER} | awk -F: '{print $6}'
+	    ;;
+    esac
+}
+
+get_pip_upgrade_options() {
+    case "$($pip --version | awk '{print $2}')" in
+	([0-9].*)
+	    printf "%s\n" "$PIP_9_UPGRADE_OPTS"
+	    ;;
+	(*)
+	    printf "%s\n" "$PIP_10_UPGRADE_OPTS"
+	    ;;
+    esac
+}
+
 get_pyenv_versions() {
     pyenv install --list | awk 'NR > 1 {print $1}' | grep_pyenv_version ${1-}
 }
@@ -143,4 +226,74 @@ install_python_version() (
     if [ -n "$version" ]; then
 	pyenv install -s $version
     fi
+)
+
+set_unpriv_environment() {
+    if [ -z "${SUDO_USER-}" ]; then
+	return 0
+    fi
+
+    home_dir="$(get_home_directory $SUDO_USER)"
+
+    if [ "$HOME" != "$home_dir" ]; then
+	export HOME="$home_dir"
+
+	if [ -z "${LD_LIBRARY_PATH-}" -a -d /usr/local/lib ]; then
+	    export LD_LIBRARY_PATH=/usr/local/lib
+	fi
+    fi
+}
+
+sync_requirements_via_pip() {
+    printf "%s\n" "Installing required packages via pip"
+    $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
+}
+
+sync_virtualenv_via_pip() {
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+
+    if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
+	stats_1="$(stat -Lf "%d %i" "$VIRTUAL_ENV")"
+	stats_2="$(stat -Lf "%d %i" "$1")"
+
+	if [ "$stats_1" = "$stats_2" ]; then
+	    abort "%s: Must not be run within the virtual environment\n" "$0"
+	fi
+    fi
+
+    if [ -d $1 ]; then
+	sync=false
+    else
+	sync=true
+    fi
+
+    if [ $sync = true ]; then
+	upgrade_via_pip pip virtualenv
+	create_virtualenv "$@"
+    fi
+
+    if [ -r $1/bin/activate ]; then
+	activate_virtualenv $1
+	assert [ -n "${VIRTUAL_ENV:-}" ]
+
+	if [ "${venv_force_sync:-$sync}" = true ]; then
+	    sync_requirements_via_pip
+	fi
+    elif [ -d $1 ]; then
+	abort "%s: Unable to activate environment\n" "$0"
+    else
+	abort "%s: No virtual environment\n" "$0"
+    fi
+}
+
+upgrade_via_pip() (
+    pip=$("$script_dir/get-python-command.sh" pip)
+
+    if [ "$pip" = false ]; then
+	return
+    fi
+
+    printf "%s\n" "Upgrading user packages via pip"
+    $pip install $(get_pip_upgrade_options) --upgrade --user "$@"
 )
