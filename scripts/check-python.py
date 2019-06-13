@@ -40,9 +40,15 @@ class ParseError(Exception):
     pass
 
 
+def get_filepath():
+    script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+    source_dir = os.path.dirname(script_dir)
+    return os.path.join(source_dir, INPUT)
+
+
 def get_minimum_version():
     config = ConfigParser()
-    path = get_pipfile()
+    path = get_filepath()
     config.read(path)
 
     try:
@@ -52,10 +58,20 @@ def get_minimum_version():
         raise ParseError("{}: Unable to parse: {}".format(path, e))
 
 
-def get_pipfile():
-    script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-    source_dir = os.path.dirname(script_dir)
-    return os.path.join(source_dir, INPUT)
+def parse_args():
+    description='Check Python interpreter version against Pipfile'
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('--delimiter',
+                        const='_',
+                        default='.',
+                        metavar='TEXT',
+                        nargs='?',
+                        help='use TEXT to delimit elements of version in output')
+    parser.add_argument('version',
+                        metavar='VERSION',
+                        nargs='?',
+                        help='Check Python version VERSION')
+    return parser.parse_args()
 
 
 def parse_version(s):
@@ -84,19 +100,7 @@ def version_str_to_int(s):
 
 
 def main():
-    description='Check Python interpreter version against Pipfile'
-    parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('--delimiter',
-                        const='_',
-                        default='.',
-                        metavar='TEXT',
-                        nargs='?',
-                        help='use TEXT to delimit elements of version in output')
-    parser.add_argument('version',
-                        metavar='VERSION',
-                        nargs='?',
-                        help='Check Python version VERSION')
-    args = parser.parse_args()
+    args = parse_args()
 
     try:
         actual = parse_version(args.version) if args.version else None
