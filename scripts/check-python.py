@@ -78,7 +78,7 @@ def parse_version(s):
     try:
         return re.search(PYTHON_VERSION_REGEX, s).group(1)
     except AttributeError as e:
-        raise ParseError("Invalid version string '{}'".format(s))
+        raise ParseError("Invalid quoted string '{}': {}".format(s, e))
 
 
 def print_versions(s, delimiter):
@@ -95,7 +95,7 @@ def unquote(s):
     try:
         return re.search(QUOTED_REGEX, s).group(1)
     except AttributeError as e:
-        raise ParseError("Invalid quoted string '{}'".format(s))
+        raise ParseError("Invalid quoted string '{}': {}".format(s, e))
 
 
 def version_str_to_int(s):
