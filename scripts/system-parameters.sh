@@ -398,7 +398,7 @@ find_uwsgi_plugin() (
 	return 1
     elif [ ! -d $UWSGI_PLUGIN_DIR ]; then
 	return 1
-    elif [ ! cd $UWSGI_PLUGIN_DIR ]; then
+    elif ! cd $UWSGI_PLUGIN_DIR; then
 	return 1
     fi
 
