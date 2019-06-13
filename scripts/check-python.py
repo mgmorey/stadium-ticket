@@ -81,6 +81,16 @@ def parse_version(s):
         raise ParseError("Invalid version string '{}'".format(s))
 
 
+def print_versions(s, delimiter):
+    components = s.split('.')
+    versions=[]
+
+    for n in range(len(components), 0, -1):
+        versions.append(delimiter.join(components[:n]))
+
+    print(' '.join(versions))
+
+
 def unquote(s):
     try:
         return re.search(QUOTED_REGEX, s).group(1)
@@ -125,13 +135,7 @@ def main():
             print(message.format(actual, INPUT), file=output)
             exit(status)
         else:
-            components = minimum.split('.')
-            versions=[]
-
-            for n in range(len(components), 0, -1):
-                versions.append(args.delimiter.join(components[:n]))
-
-            print(' '.join(versions))
+            print_versions(minimum, args.delimiter)
             exit(0)
 
 
