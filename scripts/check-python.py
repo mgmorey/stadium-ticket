@@ -88,14 +88,10 @@ def parse_version(s):
 
 
 def print_versions(s, delimiter):
-    """Print Python version string with given delimiter."""
-    components = s.split('.')
-    versions = []
-
-    for n in range(len(components), 0, -1):
-        versions.append(delimiter.join(components[:n]))
-
-    print(' '.join(versions))
+    """Print Python version strings using a given delimiter."""
+    parts = s.split('.')
+    words = [delimiter.join(parts[:n]) for n in range(len(parts), 0, -1)]
+    print(' '.join(words))
 
 
 def unquote(s):
