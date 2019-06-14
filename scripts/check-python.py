@@ -62,6 +62,12 @@ def get_minimum_version():
         raise ParseError("{}: Unable to parse: {}".format(path, e))
 
 
+def get_versions(version, delimiter):
+    """Return list of version numbers of increasing generality."""
+    parts = version.split('.')
+    return [delimiter.join(parts[:n]) for n in range(len(parts), 0, -1)]
+
+
 def parse_args():
     """Parse script arguments."""
     description = 'Check Python interpreter version against Pipfile'
@@ -89,9 +95,7 @@ def parse_version(s):
 
 def print_versions(s, delimiter):
     """Print Python version strings using a given delimiter."""
-    parts = s.split('.')
-    words = [delimiter.join(parts[:n]) for n in range(len(parts), 0, -1)]
-    print(' '.join(words))
+    print(' '.join(get_versions(s, delimiter)))
 
 
 def unquote(s):
