@@ -33,9 +33,6 @@ build_uwsgi_binary() {
 	return 0
     fi
 
-    export CFLAGS=-fPIC
-    export UWSGI_PLUGINS_BUILDER_CFLAGS=-fPIC
-
     case $1 in
 	(python3*)
 	    $python uwsgiconfig.py --plugin plugins/python core ${1%_*}
