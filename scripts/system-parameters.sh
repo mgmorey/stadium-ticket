@@ -129,7 +129,6 @@ configure_linux_debian_source() {
 
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
-    # UWSGI_PLUGIN_NAME=python3_plugin.so
 
     # Set uWSGI run service
     UWSGI_RUN_AS_SERVICE=false
@@ -400,9 +399,26 @@ find_uwsgi_plugin() {
 find_uwsgi_plugins() (
     plugins=$(list_uwsgi_available_plugins)
 
-    if ! list_uwsgi_installed_plugins $plugins; then
-	printf "%s\n" $plugins
+    if list_uwsgi_installed_plugins $plugins; then
+	return 0
     fi
+
+    for version in $PYTHON_VERSIONS; do
+	for prefix in /usr /usr/local; do
+	    python_dir=$prefix/bin
+
+	    if [ -d $python_dir ]; then
+		python=$python_dir/python$version
+
+		if [ -x $python ]; then
+		    if $python --version >/dev/null 2>&1; then
+			plugin_version=$(printf "%s\n" $version | tr -d .)
+			printf "python%s_plugin.so\n" "$plugin_version"
+		    fi
+		fi
+	    fi
+	done
+    done
 )
 
 list_uwsgi_available_plugins() (
