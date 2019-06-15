@@ -129,7 +129,7 @@ configure_linux_debian_source() {
 
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
-    UWSGI_PLUGIN_NAME=python3_plugin.so
+    # UWSGI_PLUGIN_NAME=python3_plugin.so
 
     # Set uWSGI run service
     UWSGI_RUN_AS_SERVICE=false
@@ -248,8 +248,8 @@ configure_system_defaults() {
 	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
     fi
 
-    if [ -z "${UWSGI_PLUGIN_NAME-}" -a -d $UWSGI_PLUGIN_DIR ]; then
-	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin || true)
+    if [ -z "${UWSGI_PLUGIN_NAME-}" ]; then
+	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin)
     fi
 
     if [ -z "${UWSGI_IS_SOURCE_ONLY-}" ]; then
@@ -393,19 +393,31 @@ configure_system() {
     configure_system_defaults
 }
 
-find_uwsgi_plugin() (
-    if [ -z "$UWSGI_PLUGIN_DIR" ]; then
-	return 1
-    elif [ ! -d $UWSGI_PLUGIN_DIR ]; then
-	return 1
-    elif ! cd $UWSGI_PLUGIN_DIR; then
+find_uwsgi_plugin() {
+    find_uwsgi_plugins | sort -Vr | head -n 1
+}
+
+find_uwsgi_plugins() (
+    plugins=$(list_uwsgi_available_plugins)
+
+    if ! list_uwsgi_installed_plugins $plugins; then
+	printf "%s\n" $plugins
+    fi
+)
+
+list_uwsgi_available_plugins() (
+    versions=$(printf "%s\n" $PYTHON_VERSIONS | tr -d .)
+    printf "python%s_plugin.so\n" $versions
+)
+
+list_uwsgi_installed_plugins() {
+    if [ -n "$UWSGI_PLUGIN_DIR" ] && cd $UWSGI_PLUGIN_DIR 2>/dev/null; then
+	ls "$@" 2>/dev/null
+	return 0
+    else
 	return 1
     fi
-
-    versions=$(printf "%s\n" $PYTHON_VERSIONS | tr -d .)
-    plugins=$(printf "python%s_plugin.so\n" $versions)
-    ls $plugins 2>/dev/null | sort -Vr | head -n 1
-)
+}
 
 validate_parameters_postinstallation() {
     if [ ! -d $APP_ETCDIR ]; then
