@@ -237,10 +237,6 @@ set_unpriv_environment() {
 
     if [ "$HOME" != "$home_dir" ]; then
 	export HOME="$home_dir"
-
-	if [ -z "${LD_LIBRARY_PATH-}" -a -d /usr/local/lib ]; then
-	    export LD_LIBRARY_PATH=/usr/local/lib
-	fi
     fi
 }
 
