@@ -238,11 +238,11 @@
         },
         "pylint-sqlalchemy": {
             "hashes": [
-                "sha256:18ae35668aa61f91e908bc1c802267d91e686f35cd1d4b52b9e795ce6abe2cc8",
-                "sha256:1f9382fb1ced28cb21e77cf4b8c9ef74ff0908638ee6da67a7d97fefef0337fc"
+                "sha256:aaf6cb96ac66467d26c92b3ef70bd70d9af201c1066c45b9e690961e7edc8282",
+                "sha256:e5872c5e345f958e24fd6accca25ef8c54066158ecdd4666f587ce27bddd3a17"
             ],
             "index": "pypi",
-            "version": "==0.1.0"
+            "version": "==0.2.0"
         },
         "pyparsing": {
             "hashes": [
