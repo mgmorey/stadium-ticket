@@ -440,5 +440,6 @@ validate_parameters_preinstallation() {
 	    abort "%s: %s: No read permission\n" "$0" "$plugin"
 	elif [ ! -e $plugin ]; then
 	    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
+	fi
     fi
 }
