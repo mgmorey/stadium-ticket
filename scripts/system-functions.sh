@@ -111,13 +111,28 @@ find_system_pythons() (
 )
 
 find_uwsgi_plugin() {
-    find_uwsgi_available_plugins | sort -Vr | head -n 1
+    find_uwsgi_plugins | head -n 1
 }
+
+find_uwsgi_plugins() (
+    available_plugins="$(find_uwsgi_available_plugins)"
+    installed_plugins="$(find_uwsgi_installed_plugins $available_plugins)"
+
+    if [ -n "$installed_plugins" ]; then
+	printf "%s\n" $installed_plugins
+    else
+	printf "%s\n" $available_plugins
+    fi
+)
 
 find_uwsgi_available_plugins() (
     plugin_versions=$(find_system_pythons | awk '{print $2}' | tr -d .)
     printf "python%s_plugin.so\n" $plugin_versions
 )
+
+find_uwsgi_installed_plugins() {
+    cd $UWSGI_PLUGIN_DIR 2>/dev/null && ls "$@" 2>/dev/null || true
+}
 
 generate_launch_agent_plist() (
     assert [ $# -eq 1 ]
