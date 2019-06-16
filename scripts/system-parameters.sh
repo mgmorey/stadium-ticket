@@ -60,7 +60,7 @@ configure_darwin_native() {
     UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
     UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/libexec/uwsgi
 
-    # Set uWSGI log filename
+    # Set other uWSGI parameters
     UWSGI_LOGFILE=$UWSGI_PREFIX/var/log/uwsgi.log
 }
 
@@ -80,7 +80,8 @@ configure_freebsd() {
     # Set uWSGI binary file
     UWSGI_BINARY_NAME=uwsgi-3.6
 
-    # Set uWSGI run service
+    # Set other uWSGI parameters
+    UWSGI_HAS_PLUGIN=false
     UWSGI_RUN_AS_SERVICE=false
 }
 
@@ -123,7 +124,7 @@ configure_linux_debian_source() {
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
-    # Set uWSGI run service
+    # Set other uWSGI parameters
     UWSGI_RUN_AS_SERVICE=false
 }
 
@@ -178,7 +179,7 @@ configure_openindiana() {
     UWSGI_BINARY_NAME=uwsgi
     UWSGI_PLUGIN_NAME=python3_plugin.so
 
-    # Set uWSGI log filename
+    # Set other uWSGI parameters
     UWSGI_LOGFILE=$UWSGI_PREFIX/var/opt/uwsgi.log
 }
 
@@ -226,7 +227,7 @@ configure_system_defaults() {
 	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
     fi
 
-    # Set uWSGI binary/plugin directories
+    # Set uWSGI-related parameters
 
     if [ -z "${UWSGI_BINARY_DIR-}" ]; then
 	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
@@ -242,6 +243,10 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_PLUGIN_NAME-}" ]; then
 	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin)
+    fi
+
+    if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
+	UWSGI_HAS_PLUGIN=true
     fi
 
     if [ -z "${UWSGI_IS_SOURCE_ONLY-}" ]; then
