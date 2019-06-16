@@ -321,8 +321,12 @@ is_service_running() {
     if [ -r $APP_PIDFILE ]; then
 	pid=$(cat $APP_PIDFILE)
 
-	if [ -n "$pid" ] && ps -p $pid >/dev/null; then
-	    return 0
+	if [ -n "$pid" ]; then
+	    if ps -p $pid >/dev/null; then
+		return 0
+	    else
+		pid=
+	    fi
 	fi
     else
 	pid=
