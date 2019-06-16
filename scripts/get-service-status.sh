@@ -38,6 +38,14 @@ get_realpath() (
 )
 
 get_service_parameters() {
+    binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+
+    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
+	plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
+    else
+	plugin=
+    fi
+
     cat <<-EOF
 	             Name: $APP_NAME
 	             Port: $APP_PORT
@@ -48,15 +56,13 @@ get_service_parameters() {
 	   Data directory: $APP_VARDIR
 	         Log file: $APP_LOGFILE
 	         PID file: $APP_PIDFILE
-	     uWSGI binary: $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+	     uWSGI binary: $binary
 EOF
 
-    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	if [ -d "${UWSGI_PLUGIN_DIR-}/${UWSGI_PLUGIN_NAME-}" ]; then
-	    cat <<-EOF
+    if [ -n "${plugin-}" ] && [ -e $plugin ]; then
+	cat <<-EOF
 	     uWSGI plugin: $UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
 EOF
-	fi
     fi
 }
 
