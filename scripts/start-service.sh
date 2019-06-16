@@ -103,7 +103,7 @@ run_service() {
     if [ $dryrun = false ]; then
 	command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 
-	if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
+	if [ -d "${UWSGI_PLUGIN_DIR-}" ]; then
 	    command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
 	fi
 
