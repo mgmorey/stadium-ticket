@@ -400,27 +400,13 @@ find_uwsgi_plugins() (
 	return 0
     fi
 
-    for version in $PYTHON_VERSIONS; do
-	for prefix in /usr /usr/local; do
-	    python_dir=$prefix/bin
-
-	    if [ -d $python_dir ]; then
-		python=$python_dir/python$version
-
-		if [ -x $python ]; then
-		    if $python --version >/dev/null 2>&1; then
-			plugin_version=$(printf "%s\n" $version | tr -d .)
-			printf "python%s_plugin.so\n" "$plugin_version"
-		    fi
-		fi
-	    fi
-	done
-    done
+    plugin_versions=$(find_system_pythons | awk '{print $2}' | tr -d .)
+    printf "python%s_plugin.so\n" $plugin_versions
 )
 
 list_uwsgi_available_plugins() (
-    versions=$(printf "%s\n" $PYTHON_VERSIONS | tr -d .)
-    printf "python%s_plugin.so\n" $versions
+    plugin_versions=$(printf "%s\n" $PYTHON_VERSIONS | tr -d .)
+    printf "python%s_plugin.so\n" $plugin_versions
 )
 
 list_uwsgi_installed_plugins() {

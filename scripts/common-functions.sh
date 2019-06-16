@@ -95,17 +95,20 @@ find_bootstrap_python() (
 )
 
 find_system_python() (
-    for version in $PYTHON_VERSIONS; do
+    find_system_pythons | awk 'NR == 1 {print $1}'
+)
+
+find_system_pythons() (
+    for python_version in $PYTHON_VERSIONS; do
 	for prefix in /usr /usr/local; do
 	    python_dir=$prefix/bin
 
 	    if [ -d $python_dir ]; then
-		python=$python_dir/python$version
+		python=$python_dir/python$python_version
 
 		if [ -x $python ]; then
 		    if $python --version >/dev/null 2>&1; then
-			printf "%s\n" "$python"
-			return 0
+			printf "%s %s\n" "$python" "$python_version"
 		    fi
 		fi
 	    fi
