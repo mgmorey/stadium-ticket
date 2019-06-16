@@ -253,8 +253,12 @@ configure_system_defaults() {
     fi
 
     # Set app plugin from uWSGI plugin filename
-    if [ -z "${APP_PLUGIN-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
+    if [ -z "${APP_PLUGIN-}" ]; then
+	if [ -n "${UWSGI_PLUGIN_NAME-}" ]; then
+	    if [ -e "${UWSGI_PLUGIN_DIR}/${UWSGI_PLUGIN_NAME-}" ]; then
+		APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
+	    fi
+	fi
     fi
 
     # Set additional app directory parameters
@@ -453,10 +457,6 @@ validate_parameters_postinstallation() {
 validate_parameters_preinstallation() {
     binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 
-    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
-    fi
-
     if [ ! -d $UWSGI_BINARY_DIR ]; then
 	abort "%s: %s: No such binary directory\n" "$0" "$UWSGI_BINARY_DIR"
     elif [ ! -e $binary ]; then
@@ -465,13 +465,5 @@ validate_parameters_preinstallation() {
 	abort "%s: %s: No execute permission\n" "$0" "$binary"
     elif ! $binary --version >/dev/null 2>&1; then
 	abort "%s: %s: Unable to query version\n" "$0" "$binary"
-    elif [ -n "${plugin-}" ]; then
-	if [ ! -d $UWSGI_PLUGIN_DIR ]; then
-	    abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
-	elif [ ! -e $plugin ]; then
-	    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
-	elif [ ! -r $plugin ]; then
-	    abort "%s: %s: No read permission\n" "$0" "$plugin"
-	fi
     fi
 }
