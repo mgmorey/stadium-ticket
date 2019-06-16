@@ -390,12 +390,8 @@ request_service_start() {
 request_service_stop() {
     if [ $dryrun = false ]; then
 	case "$kernel_name" in
-	    (Linux)
-		if ! is_service_running; then
-		    elapsed=0
-		else
-		    signal_process $WAIT_SIGNAL INT TERM KILL || true
-		fi
+	    (Linux|FreeBSD)
+		signal_process $WAIT_SIGNAL INT TERM KILL || true
 		;;
 	    (Darwin)
 		control_launch_agent unload remove_files || true
