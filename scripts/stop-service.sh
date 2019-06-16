@@ -60,11 +60,13 @@ print_status() {
 
 stop_service() {
     for dryrun in true false; do
-	if is_service_running; then
-	    request_service_stop
-	    stop_requested=true
-	else
-	    stop_requested=false
+	if [ $dryrun = false ]; then
+	    if is_service_running; then
+		request_service_stop
+		stop_requested=true
+	    else
+		stop_requested=false
+	    fi
 	fi
 
 	remove_files $(get_symlinks)
