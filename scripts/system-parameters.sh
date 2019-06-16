@@ -419,13 +419,26 @@ validate_parameters_postinstallation() {
 validate_parameters_preinstallation() {
     binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
 
+    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
+	plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
+    else
+	plugin=
+    fi
+
     if [ ! -d $UWSGI_BINARY_DIR ]; then
 	abort "%s: %s: No such binary directory\n" "$0" "$UWSGI_BINARY_DIR"
-    elif [ ! -e $binary ]; then
-	abort "%s: %s: No such binary file\n" "$0" "$binary"
     elif [ ! -x $binary ]; then
 	abort "%s: %s: No execute permission\n" "$0" "$binary"
+    elif [ ! -e $binary ]; then
+	abort "%s: %s: No such binary file\n" "$0" "$binary"
     elif ! $binary --version >/dev/null 2>&1; then
 	abort "%s: %s: Unable to query version\n" "$0" "$binary"
+    elif [ $UWSGI_HAS_PLUGIN = true ]; then
+	if [ ! -d $UWSGI_PLUGIN_DIR ]; then
+	    abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
+	elif [ ! -r $plugin ]; then
+	    abort "%s: %s: No read permission\n" "$0" "$plugin"
+	elif [ ! -e $plugin ]; then
+	    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
     fi
 }
