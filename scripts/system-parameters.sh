@@ -70,7 +70,22 @@ configure_darwin_source() {
     UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/uwsgi/plugins
 }
 
-configure_freebsd() {
+configure_freebsd_11() {
+    # Set application directory prefix
+    APP_PREFIX=/usr/local
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
+    # Set uWSGI binary file
+    UWSGI_BINARY_NAME=uwsgi-3.6
+
+    # Set other uWSGI parameters
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_RUN_AS_SERVICE=false
+}
+
+configure_freebsd_12() {
     # Set application directory prefix
     APP_PREFIX=/usr/local
 
@@ -370,7 +385,15 @@ configure_system() {
 	    ;;
 	(FreeBSD)
 	    configure_bsd
-	    configure_freebsd
+
+	    case "$VERSION_ID" in
+		(11.*)
+		    configure_freebsd_11
+		    ;;
+		(12.*)
+		    configure_freebsd_12
+		    ;;
+	    esac
 	    ;;
 	(SunOS)
 	    configure_sunos
