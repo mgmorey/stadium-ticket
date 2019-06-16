@@ -318,11 +318,14 @@ is_service_installed() {
 }
 
 is_service_running() {
-    if [ -e $APP_PIDFILE ]; then
+    if [ -r $APP_PIDFILE ]; then
 	pid=$(cat $APP_PIDFILE)
+
 	if [ -n "$pid" ] && ps -p $pid >/dev/null; then
 	    return 0
 	fi
+    else
+	pid=
     fi
 
     return 1
@@ -408,7 +411,13 @@ signal_process() {
     wait=$1
     shift
 
-    pid=$(cat $APP_PIDFILE 2>/dev/null)
+    if [ -z "${pid-}" ]; then
+	if [ -r $APP_PIDFILE ]; then
+	    pid=$(cat $APP_PIDFILE 2>/dev/null)
+	else
+	    pid=
+	fi
+    fi
 
     if [ -z "$pid" ]; then
 	return 1
