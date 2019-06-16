@@ -112,6 +112,7 @@ run_service() {
 }
 
 request_start() {
+    printf "Starting service %s\n" "$APP_NAME"
     request_service_start
     printf "Waiting for service %s to start\n" "$APP_NAME"
     elapsed=$((elapsed + $(wait_for_service $((WAIT_RESTART - elapsed)))))
