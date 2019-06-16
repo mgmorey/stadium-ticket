@@ -86,6 +86,39 @@ control_launch_agent() (
     esac
 )
 
+find_system_python() (
+    find_system_pythons | awk 'NR == 1 {print $1}'
+)
+
+find_system_pythons() (
+    for python_version in $PYTHON_VERSIONS; do
+	for prefix in /usr /usr/local; do
+	    python_dir=$prefix/bin
+
+	    if [ -d $python_dir ]; then
+		python=$python_dir/python$python_version
+
+		if [ -x $python ]; then
+		    if $python --version >/dev/null 2>&1; then
+			printf "%s %s\n" "$python" "$python_version"
+		    fi
+		fi
+	    fi
+	done
+    done
+
+    return 1
+)
+
+find_uwsgi_plugin() {
+    find_uwsgi_available_plugins | sort -Vr | head -n 1
+}
+
+find_uwsgi_available_plugins() (
+    plugin_versions=$(find_system_pythons | awk '{print $2}' | tr -d .)
+    printf "python%s_plugin.so\n" $plugin_versions
+)
+
 generate_launch_agent_plist() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]

@@ -389,35 +389,6 @@ configure_system() {
     configure_system_defaults
 }
 
-find_uwsgi_plugin() {
-    find_uwsgi_plugins | sort -Vr | head -n 1
-}
-
-find_uwsgi_plugins() (
-    plugins=$(list_uwsgi_available_plugins)
-
-    if list_uwsgi_installed_plugins $plugins; then
-	return 0
-    fi
-
-    plugin_versions=$(find_system_pythons | awk '{print $2}' | tr -d .)
-    printf "python%s_plugin.so\n" $plugin_versions
-)
-
-list_uwsgi_available_plugins() (
-    plugin_versions=$(printf "%s\n" $PYTHON_VERSIONS | tr -d .)
-    printf "python%s_plugin.so\n" $plugin_versions
-)
-
-list_uwsgi_installed_plugins() {
-    if [ -n "$UWSGI_PLUGIN_DIR" ] && cd $UWSGI_PLUGIN_DIR 2>/dev/null; then
-	ls "$@" 2>/dev/null
-	return 0
-    else
-	return 1
-    fi
-}
-
 validate_parameters_postinstallation() {
     if [ ! -d $APP_ETCDIR ]; then
 	abort "%s: %s: No such configuration directory\n" "$0" "$APP_ETCDIR"

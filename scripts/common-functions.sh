@@ -94,30 +94,6 @@ find_bootstrap_python() (
     abort "%s\n" "No Python interpreter found in PATH"
 )
 
-find_system_python() (
-    find_system_pythons | awk 'NR == 1 {print $1}'
-)
-
-find_system_pythons() (
-    for python_version in $PYTHON_VERSIONS; do
-	for prefix in /usr /usr/local; do
-	    python_dir=$prefix/bin
-
-	    if [ -d $python_dir ]; then
-		python=$python_dir/python$python_version
-
-		if [ -x $python ]; then
-		    if $python --version >/dev/null 2>&1; then
-			printf "%s %s\n" "$python" "$python_version"
-		    fi
-		fi
-	    fi
-	done
-    done
-
-    return 1
-)
-
 find_user_python() (
     bootstrap_python=$(find_bootstrap_python)
     python_versions=$($bootstrap_python "$script_dir/check-python.py")
