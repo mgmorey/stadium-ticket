@@ -70,7 +70,9 @@ get_realpath() (
     fi
 )
 
-print_status() {
+print_status() (
+    status=$1
+
     case $1 in
 	(running)
 	    if [ $start_requested = true ]; then
@@ -82,19 +84,17 @@ print_status() {
 		printf "Service %s started in %d seconds\n" "$APP_NAME" "$elapsed"
 	    fi
 
-	    qualified_status=$1
-
 	    if [ $start_requested = false ]; then
-		qualified_status="already $qualified_status"
+		status="already $status"
 	    fi
-
-	    printf "Service %s is %s\n" "$APP_NAME" "$qualified_status"
 	    ;;
 	(*)
-	    printf "Service %s is %s\n" "$APP_NAME" "$1" >&2
+	    exec >&2
 	    ;;
     esac
-}
+
+    printf "Service %s is %s\n" "$APP_NAME" "$status"
+)
 
 run_service() {
     validate_parameters_preinstallation
