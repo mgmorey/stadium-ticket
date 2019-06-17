@@ -34,7 +34,7 @@ assert() {
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ -d "$1" ]
+    assert [ -d $1 ]
     realpath=$(which realpath)
 
     if [ -n "$realpath" ]; then
