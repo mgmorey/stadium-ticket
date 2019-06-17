@@ -101,7 +101,7 @@ run_service() {
     validate_parameters_postinstallation
 
     if [ $dryrun = false ]; then
-	command=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+	command=$(get_uwsgi_binary_path)
 
 	if [ -d "${UWSGI_PLUGIN_DIR-}" ]; then
 	    command="$command --plugin-dir $UWSGI_PLUGIN_DIR"

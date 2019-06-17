@@ -154,7 +154,7 @@ generate_launch_agent_plist() (
 	    <true/>
 	    <key>ProgramArguments</key>
 	    <array>
-	        <string>$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME</string>
+	        <string>$(get_uwsgi_binary_path)</string>
 	        <string>--plugin-dir</string>
 	        <string>$UWSGI_PLUGIN_DIR</string>
 	        <string>--ini</string>
@@ -173,7 +173,7 @@ generate_launch_agent_plist() (
 )
 
 get_service_process() {
-    ps_uwsgi $APP_UID,$USER,root | awk_uwsgi $UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
+    ps_uwsgi $APP_UID,$USER,root | awk_uwsgi $(get_uwsgi_binary_path)
 }
 
 get_service_status() {

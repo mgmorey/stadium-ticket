@@ -275,7 +275,7 @@ configure_system_defaults() {
     # Set app plugin from uWSGI plugin filename
     if [ -z "${APP_PLUGIN-}" ]; then
 	if [ -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	    if [ -e "${UWSGI_PLUGIN_DIR}/${UWSGI_PLUGIN_NAME-}" ]; then
+	    if [ -e "$(uwsgi_plugin_path)" ]; then
 		APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
 	    fi
 	fi

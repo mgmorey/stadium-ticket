@@ -205,13 +205,13 @@ install_uwsgi_from_source() (
 	fi
     fi
 
-    for binary; do
-	case $binary in
+    for file; do
+	case $file in
 	    (*_plugin.so)
-		install_file 755 $binary $UWSGI_PLUGIN_DIR/$binary
+		install_file 755 $file $UWSGI_PLUGIN_DIR/$file
 		;;
 	    (uwsgi)
-		install_file 755 $binary $UWSGI_BINARY_DIR/$binary
+		install_file 755 $file $UWSGI_BINARY_DIR/$file
 		;;
 	esac
     done
