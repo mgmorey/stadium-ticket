@@ -175,12 +175,12 @@ usage() {
 	printf "%s\n" "" >&2
     fi
 
-    cat <<-EOM >&2
+    cat <<-EOF >&2
 	Usage: $0: [-i] [-k] [-n] [-p] [-r] [-v]
 	       $0: -x
 	       $0: -X
 	       $0: -h
-	EOM
+	EOF
 }
 
 parse_arguments "$@"
