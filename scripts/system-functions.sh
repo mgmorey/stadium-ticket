@@ -19,6 +19,7 @@ PLUGIN_FORMAT="python%s_plugin.so\n"
 
 WAIT_DEFAULT=2
 WAIT_RESTART=10
+WAIT_SIGNAL=10
 
 abort_insufficient_permissions() {
     cat <<-EOF >&2
