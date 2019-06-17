@@ -87,6 +87,25 @@ control_launch_agent() (
     esac
 )
 
+find_available_plugins() {
+    printf $PLUGIN_FORMAT $(find_system_pythons | awk '{print $2}' | tr -d .)
+}
+
+find_installed_plugins() {
+    cd $UWSGI_PLUGIN_DIR 2>/dev/null && ls "$@" 2>/dev/null || true
+}
+
+find_plugins() (
+    available_plugins="$(find_available_plugins)"
+    installed_plugins="$(find_installed_plugins $available_plugins)"
+
+    if [ -n "$installed_plugins" ]; then
+	printf "%s\n" $installed_plugins
+    else
+	printf "%s\n" $available_plugins
+    fi
+)
+
 find_system_python() (
     find_system_pythons | awk 'NR == 1 {print $1}'
 )
@@ -112,26 +131,7 @@ find_system_pythons() (
 )
 
 find_uwsgi_plugin() {
-    find_uwsgi_plugins | head -n 1
-}
-
-find_uwsgi_plugins() (
-    available_plugins="$(find_uwsgi_available_plugins)"
-    installed_plugins="$(find_uwsgi_installed_plugins $available_plugins)"
-
-    if [ -n "$installed_plugins" ]; then
-	printf "%s\n" $installed_plugins
-    else
-	printf "%s\n" $available_plugins
-    fi
-)
-
-find_uwsgi_available_plugins() {
-    printf $PLUGIN_FORMAT $(find_system_pythons | awk '{print $2}' | tr -d .)
-}
-
-find_uwsgi_installed_plugins() {
-    cd $UWSGI_PLUGIN_DIR 2>/dev/null && ls "$@" 2>/dev/null || true
+    find_plugins | head -n 1
 }
 
 generate_launch_agent_plist() (
