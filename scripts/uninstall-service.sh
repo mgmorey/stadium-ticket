@@ -93,8 +93,10 @@ uninstall_service() {
     parse_arguments "$@"
 
     for dryrun in true false; do
-	if is_service_running; then
-	    request_service_stop
+	if [ $dryrun = false ]; then
+	    if is_service_running; then
+		request_service_stop
+	    fi
 	fi
 
 	remove_service
