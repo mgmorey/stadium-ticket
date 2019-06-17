@@ -48,7 +48,7 @@ get_service_parameters() {
 	   Data directory: $APP_VARDIR
 	         Log file: $APP_LOGFILE
 	         PID file: $APP_PIDFILE
-	     uWSGI binary: $(get_uwsgi_binary_path)
+	     uWSGI binary: $(print_parameter "$(get_uwsgi_binary_path)")
 	     uWSGI plugin: $(print_parameter "$(get_uwsgi_plugin_path)")
 	   uWSGI Log file: $(print_parameter "${UWSGI_LOGFILE-}")
 	EOF
