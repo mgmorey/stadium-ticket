@@ -93,7 +93,10 @@ generate_sed_program() (
 
 generate_service_ini() {
     assert [ $# -eq 3 ]
-    assert [ -n "$2" -a -r "$2" -a -n "$3" ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    assert [ -n "$3" ]
+    assert [ -r $2 ]
 
     if [ $dryrun = false ]; then
 	create_tmpfile
@@ -131,7 +134,10 @@ initialize_database() (
 
 install_app_files() (
     assert [ $# -eq 3 ]
-    assert [ -n "$1" -a -n "$2" -a -d "$2" -a -n "$3" ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    assert [ -n "$3" ]
+    assert [ -d $2 ]
 
     for source in $(find $2 -type f ! -name '*.pyc' -print | sort); do
 	install_file $1 $source $3/$source
@@ -213,7 +219,8 @@ install_uwsgi_from_source() (
 
 install_virtualenv() {
     assert [ $# -eq 2 ]
-    assert [ -n "$1" -a -n "$2" ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
 
     if [ $dryrun = true ]; then
 	check_permissions "$2"
