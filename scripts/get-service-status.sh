@@ -51,12 +51,16 @@ get_service_parameters() {
 	         Log file: $APP_LOGFILE
 	         PID file: $APP_PIDFILE
 	     uWSGI binary: $binary
-EOF
+	EOF
 
     if [ -n "${plugin-}" ] && [ -e $plugin ]; then
 	cat <<-EOF
-	     uWSGI plugin: $UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
-EOF
+	     uWSGI plugin: $plugin
+	EOF
+    else
+	cat <<-EOF
+	     uWSGI plugin: <none>
+	EOF
     fi
 }
 
