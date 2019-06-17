@@ -96,6 +96,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_system
-
-status=$(get_service_status)
-print_status $status
+print_status $(get_service_status)
