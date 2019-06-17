@@ -71,21 +71,15 @@ configure_darwin_source() {
 }
 
 configure_freebsd_11() {
-    # Set application directory prefix
-    APP_PREFIX=/usr/local
-
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/usr/local
-
-    # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.6
-
-    # Set other uWSGI parameters
-    UWSGI_HAS_PLUGIN=false
-    UWSGI_RUN_AS_SERVICE=false
+    configure_freebsd_common
 }
 
 configure_freebsd_12() {
+    configure_freebsd_common
+}
+
+configure_freebsd_common() {
+
     # Set application directory prefix
     APP_PREFIX=/usr/local
 
