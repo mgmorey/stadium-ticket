@@ -260,6 +260,16 @@ get_symlinks() (
     fi
 )
 
+get_uwsgi_binary_path() {
+    printf "%s/%s\n" "$UWSGI_BINARY_DIR" "$UWSGI_BINARY_NAME"
+}
+
+get_uwsgi_plugin_path() {
+    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
+	printf "%s/%s\n" "$UWSGI_PLUGIN_DIR" "$UWSGI_PLUGIN_NAME"
+    fi
+}
+
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$3" ]

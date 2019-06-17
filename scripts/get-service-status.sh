@@ -38,14 +38,8 @@ get_realpath() (
 )
 
 get_service_parameters() {
-    binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-
-    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
-    else
-	plugin=
-    fi
-
+    binary=$(get_uwsgi_binary_path)
+    plugin=$(get_uwsgi_plugin_path)
     cat <<-EOF
 	             Name: $APP_NAME
 	             Port: $APP_PORT

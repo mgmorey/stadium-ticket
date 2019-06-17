@@ -81,12 +81,8 @@ remove_service() {
     fi
 
     if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
-	binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-
-	if [ -n "${UWSGI_PLUGIN_DIR-}" ]; then
-	    plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
-	fi
-
+	binary=$(get_uwsgi_binary_path)
+	plugin=$(get_uwsgi_plugin_path)
 	files="$files $UWSGI_ETCDIR $binary ${plugin-}"
     fi
 

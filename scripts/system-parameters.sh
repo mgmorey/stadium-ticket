@@ -440,13 +440,8 @@ validate_parameters_postinstallation() {
 }
 
 validate_parameters_preinstallation() {
-    binary=$UWSGI_BINARY_DIR/$UWSGI_BINARY_NAME
-
-    if [ -n "${UWSGI_PLUGIN_DIR-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	plugin=$UWSGI_PLUGIN_DIR/$UWSGI_PLUGIN_NAME
-    else
-	plugin=
-    fi
+    binary=$(get_uwsgi_binary_path)
+    plugin=$(get_uwsgi_plugin_path)
 
     if [ ! -d $UWSGI_BINARY_DIR ]; then
 	abort "%s: %s: No such binary directory\n" "$0" "$UWSGI_BINARY_DIR"
