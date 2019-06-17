@@ -38,8 +38,6 @@ get_realpath() (
 )
 
 get_service_parameters() {
-    binary=$(get_uwsgi_binary_path)
-    plugin=$(get_uwsgi_plugin_path)
     cat <<-EOF
 	             Name: $APP_NAME
 	             Port: $APP_PORT
@@ -50,27 +48,17 @@ get_service_parameters() {
 	   Data directory: $APP_VARDIR
 	         Log file: $APP_LOGFILE
 	         PID file: $APP_PIDFILE
-	     uWSGI binary: $binary
+	     uWSGI binary: $(get_uwsgi_binary_path)
+	     uWSGI plugin: $(print_parameter "$(get_uwsgi_plugin_path)")
+	   uWSGI Log file: $(print_parameter "${UWSGI_LOGFILE-}")
 	EOF
+}
 
-    if [ -n "${plugin-}" ] && [ -e $plugin ]; then
-	cat <<-EOF
-	     uWSGI plugin: $plugin
-	EOF
+print_parameter() {
+    if [ -n "${1-}" ] && [ -e $1 ]; then
+	printf "%s\n" "$1"
     else
-	cat <<-EOF
-	     uWSGI plugin: <none>
-	EOF
-    fi
-
-    if [ -n "${UWSGI_LOGFILE-}" ] && [ -e $UWSGI_LOGFILE ]; then
-	cat <<-EOF
-	   uWSGI Log file: $UWSGI_LOGFILE
-	EOF
-    else
-	cat <<-EOF
-	   uWSGI Log file: <none>
-	EOF
+	printf "%s\n" "<none>"
     fi
 }
 
