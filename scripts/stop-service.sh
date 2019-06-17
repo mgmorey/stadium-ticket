@@ -37,26 +37,26 @@ get_realpath() (
     fi
 )
 
-print_status() {
+print_status() (
     if [ $stop_requested = true ]; then
 	print_service_log_file 1
     fi
 
+    status=$1
+
     case $1 in
 	(stopped)
-	    qualified_status=$1
-
 	    if [ $stop_requested = false ]; then
-		qualified_status="already $qualified_status"
+		status="already $status"
 	    fi
-
-	    printf "Service %s is %s\n" "$APP_NAME" "$qualified_status"
 	    ;;
 	(*)
-	    printf "Service %s is %s\n" "$APP_NAME" "$1" >&2
+	    exec >&2
 	    ;;
     esac
-}
+
+    printf "Service %s is %s\n" "$APP_NAME" "$status"
+)
 
 stop_service() {
     for dryrun in true false; do
