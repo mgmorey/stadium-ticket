@@ -15,6 +15,7 @@
 
 APPLE_URL=http://www.apple.com/DTDs/PropertyList-1.0.dtd
 AWK_FORMAT='NR == 1 || $%d == binary {print $0}\n'
+PLUGIN_FORMAT="python%s_plugin.so\n"
 
 WAIT_DEFAULT=2
 WAIT_RESTART=10
@@ -125,10 +126,9 @@ find_uwsgi_plugins() (
     fi
 )
 
-find_uwsgi_available_plugins() (
-    plugin_versions=$(find_system_pythons | awk '{print $2}' | tr -d .)
-    printf "python%s_plugin.so\n" $plugin_versions
-)
+find_uwsgi_available_plugins() {
+    printf $PLUGIN_FORMAT $(find_system_pythons | awk '{print $2}' | tr -d .)
+}
 
 find_uwsgi_installed_plugins() {
     cd $UWSGI_PLUGIN_DIR 2>/dev/null && ls "$@" 2>/dev/null || true
