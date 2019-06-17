@@ -43,17 +43,17 @@ collect_data() {
 	    . $FILE_OS
 	    ;;
 
+	(Darwin)
+	    NAME=$(sw_vers -productName)
+	    VERSION=$(sw_vers -productVersion)
+	    ID=macos
+	    ;;
+
 	(SunOS)
 	    input=$(awk 'NR == 1 {printf("%s %s:%s\n", $1, $2, $3)}' $FILE)
 	    NAME=${input%:*}
 	    VERSION=${input#*:}
 	    ID=$(printf "%s\n" "${NAME% *}" | $LOWERCASE)
-	    ;;
-
-	(Darwin)
-	    NAME=$(sw_vers -productName)
-	    VERSION=$(sw_vers -productVersion)
-	    ID=macos
 	    ;;
 
 	(CYGWIN_NT-*)
