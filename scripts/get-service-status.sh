@@ -62,6 +62,16 @@ get_service_parameters() {
 	     uWSGI plugin: <none>
 	EOF
     fi
+
+    if [ -n "${UWSGI_LOGFILE-}" ] && [ -e $UWSGI_LOGFILE ]; then
+	cat <<-EOF
+	   uWSGI Log file: $UWSGI_LOGFILE
+	EOF
+    else
+	cat <<-EOF
+	   uWSGI Log file: <none>
+	EOF
+    fi
 }
 
 print_service_parameters() {
