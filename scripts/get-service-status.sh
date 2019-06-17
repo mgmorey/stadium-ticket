@@ -50,7 +50,7 @@ get_service_parameters() {
 	         PID file: $APP_PIDFILE
 	     uWSGI binary: $(print_parameter "$(get_uwsgi_binary_path)")
 	     uWSGI plugin: $(print_parameter "$(get_uwsgi_plugin_path)")
-	   uWSGI Log file: $(print_parameter "${UWSGI_LOGFILE-}")
+	   uWSGI log file: $(print_parameter "${UWSGI_LOGFILE-}")
 	EOF
 }
 
