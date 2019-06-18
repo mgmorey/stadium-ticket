@@ -444,7 +444,7 @@ find_uwsgi_plugin() {
     find_plugins | head -n 1
 }
 
-generate_launch_agent_plist() (
+generate_launch_agent() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
@@ -579,7 +579,7 @@ request_service_start() {
 	(Darwin)
 	    if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
 		target=$(get_launch_agent_target)
-		control_launch_agent load generate_launch_agent_plist $target
+		control_launch_agent load generate_launch_agent $target
 	    else
 		brew services restart uwsgi
 	    fi
