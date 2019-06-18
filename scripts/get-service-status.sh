@@ -41,20 +41,28 @@ get_service_parameters() {
     cat <<-EOF
 	             Name: $APP_NAME
 	             Port: $APP_PORT
-	          User ID: $APP_UID
-	         Group ID: $APP_GID
-	    Configuration: $(print_parameter $APP_CONFIG)
-	    App directory: $(print_parameter $APP_DIR)
-	   Data directory: $(print_parameter $APP_VARDIR)
-	         Log file: $(print_parameter $APP_LOGFILE)
-	         PID file: $(print_parameter $APP_PIDFILE)
-	     uWSGI binary: $(print_parameter "$(get_uwsgi_binary_path)")
-	     uWSGI plugin: $(print_parameter "$(get_uwsgi_plugin_path)")
-	   uWSGI log file: $(print_parameter "${UWSGI_LOGFILE-}")
+	    User/Group ID: $APP_UID/$APP_GID
+	    Configuration: $(print_path $APP_CONFIG)
+	    App directory: $(print_path $APP_DIR)
+	   Data directory: $(print_path $APP_VARDIR)
+	         Log file: $(print_path $APP_LOGFILE)
+	         PID file: $(print_path $APP_PIDFILE)
+	    uWSGI version: $(print_parameter "$(get_uwsgi_version)")
+	uWSGI binary file: $(print_path "$(get_uwsgi_binary_path)")
+	uWSGI plugin file: $(print_path "$(get_uwsgi_plugin_path)")
+	   uWSGI log file: $(print_path "${UWSGI_LOGFILE-}")
 	EOF
 }
 
 print_parameter() {
+    if [ -n "${1-}" ]; then
+	printf "%s\n" "$1"
+    else
+	printf "%s\n" "<none>"
+    fi
+}
+
+print_path() {
     if [ -n "${1-}" ] && [ -e $1 ]; then
 	printf "%s\n" "$1"
     else

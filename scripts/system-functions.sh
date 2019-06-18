@@ -271,6 +271,16 @@ get_uwsgi_plugin_path() {
     fi
 }
 
+get_uwsgi_version() {
+    uwsgi=$(get_uwsgi_binary_path)
+
+    if [ -n "$uwsgi" ]; then
+	$uwsgi --version
+    else
+	printf "%s\n" "<none>"
+    fi
+}
+
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$3" ]
