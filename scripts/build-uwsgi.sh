@@ -61,8 +61,10 @@ fetch_uwsgi_source() {
 	return 0
     fi
 
-    cd && mkdir -p git && cd git
-    git clone https://github.com/unbit/uwsgi.git
+    cd
+    mkdir -p git
+    cd git
+    git clone -b $UWSGI_BRANCH $UWSGI_URL
 }
 
 get_realpath() (

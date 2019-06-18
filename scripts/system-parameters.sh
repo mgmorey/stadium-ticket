@@ -16,6 +16,9 @@
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID \
 APP_VARDIR"
 
+UWSGI_BRANCH=uwsgi-2.0
+UWSGI_URL=https://github.com/unbit/uwsgi.git
+
 abort_not_supported() {
     abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
