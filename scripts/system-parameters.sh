@@ -79,7 +79,6 @@ configure_freebsd_12() {
 }
 
 configure_freebsd_common() {
-
     # Set application directory prefix
     APP_PREFIX=/usr/local
 
