@@ -143,9 +143,9 @@ start_service() {
 
 start_uwsgi_service() {
     create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
+    request_start
 
     if [ $dryrun = false ]; then
-	request_start
 	start_requested=true
     fi
 }
