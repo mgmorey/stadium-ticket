@@ -57,14 +57,6 @@ control_launch_agent() (
 		launchctl load $3
 	    fi
 	    ;;
-	(start|stop)
-	    assert [ $# -eq 2 ]
-	    assert [ -n "$2" ]
-
-	    if [ $dryrun = false -a $1 = start -o -e $4 ]; then
-		launchctl $1 $2
-	    fi
-	    ;;
 	(unload)
 	    assert [ $# -eq 3 ]
 	    assert [ -n "$2" ]
