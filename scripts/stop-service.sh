@@ -62,7 +62,7 @@ stop_service() {
     for dryrun in true false; do
 	if [ $dryrun = false ]; then
 	    if is_service_running; then
-		request_service_stop
+		control_service stop
 		stop_requested=true
 	    else
 		stop_requested=false

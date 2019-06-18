@@ -112,13 +112,19 @@ run_service() {
 }
 
 request_start() {
-    printf "Starting service %s\n" "$APP_NAME"
-    request_service_start
-    printf "Waiting for service %s to start\n" "$APP_NAME"
-    elapsed=$((elapsed + $(wait_for_service $((WAIT_RESTART - elapsed)))))
+    if [ $dryrun = false ]; then
+	printf "Starting service %s\n" "$APP_NAME"
+    fi
 
-    if [ $elapsed -lt $WAIT_DEFAULT ]; then
-	elapsed=$((elapsed + $(wait_for_timeout $((WAIT_DEFAULT - elapsed)))))
+    control_service start
+
+    if [ $dryrun = false ]; then
+	printf "Waiting for service %s to start\n" "$APP_NAME"
+	elapsed=$((elapsed + $(wait_for_service $((WAIT_RESTART - elapsed)))))
+
+	if [ $elapsed -lt $WAIT_DEFAULT ]; then
+	    elapsed=$((elapsed + $(wait_for_timeout $((WAIT_DEFAULT - elapsed)))))
+	fi
     fi
 }
 
