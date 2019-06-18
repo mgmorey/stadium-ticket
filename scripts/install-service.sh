@@ -251,7 +251,7 @@ print_status() {
 restart_service() {
     elapsed=0
 
-    if is_service_running && signal_process $WAIT_SIGNAL HUP; then
+    if is_service_running && signal_service $WAIT_SIGNAL HUP; then
 	elapsed=$((elapsed + $(wait_for_timeout $((WAIT_RESTART - elapsed)))))
     fi
 }

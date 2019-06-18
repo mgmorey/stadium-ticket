@@ -578,13 +578,13 @@ ps_uwsgi() {
     ps -U "$1" -o $PS_FORMAT
 }
 
-signal_process() {
+signal_service() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     assert [ $1 -gt 0 ]
-    elapsed=0
     wait=$1
     shift
+    elapsed=0
 
     if [ -z "${pid-}" ]; then
 	if [ -r $APP_PIDFILE ]; then
@@ -599,20 +599,9 @@ signal_process() {
     fi
 
     for signal in "$@"; do
-	printf "Sending SIG%s to process (PID: %s)\n" $signal $pid
-
-	case $signal in
-	    (HUP)
-		if signal_process_and_wait $pid $signal $wait; then
-		    return 0
-		fi
-		;;
-	    (*)
-		if signal_process_and_poll $pid $signal $wait; then
-		    return 0
-		fi
-		;;
-	esac
+	if signal_process "$pid" "$wait" "$signal"; then
+	    return 0
+	fi
     done
 
     return 1
