@@ -1,6 +1,6 @@
 # -*- Mode: Shell-script -*-
 
-# system-parameters.sh: system configuration parameters
+# system-parameters.sh: system configuration functions and parameters
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
