@@ -421,90 +421,12 @@ configure_system() {
     configure_system_defaults
 }
 
-control_agent_service() {
-    target=$(get_launch_agent_target)
-
-    if [ $dryrun = true ]; then
-	check_permissions $target
-    else
-	case $1 in
-	    (start)
-		control_launch_agent load generate_launch_agent $target
-		;;
-	    (stop)
-		control_launch_agent unload remove_files $target || true
-		;;
-	esac
-    fi
-}
-
-control_brew_service() {
-    if [ $dryrun = true ]; then
-	return 0
-    fi
-
-    case $1 in
-	(start)
-	    brew services restart uwsgi
-	    ;;
-	(stop)
-	    brew services stop uwsgi
-	    ;;
-    esac
-}
-
 control_darwin_service() {
     if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
 	control_agent_service $1
     else
 	control_brew_service $1
     fi
-}
-
-control_freebsd_service() {
-    if [ $dryrun = true ]; then
-	return 0
-    fi
-
-    case $1 in
-	(stop)
-	    signal_process $WAIT_SIGNAL INT TERM KILL || true
-	    ;;
-    esac
-}
-
-control_linux_service() {
-    if [ $dryrun = true ]; then
-	return 0
-    fi
-
-    case $1 in
-	(start)
-	    systemctl enable uwsgi
-	    systemctl restart uwsgi
-	    ;;
-	(stop)
-	    signal_process $WAIT_SIGNAL INT TERM KILL || true
-	    ;;
-    esac
-}
-
-control_service() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    assert [ $1 = start -o $1 = stop ]
-
-    case "$kernel_name" in
-	(Linux)
-	    control_linux_service $1
-	    ;;
-	(Darwin)
-	    control_darwin_service $1
-	    ;;
-	(FreeBSD)
-	    control_freebsd_service $1
-	    ;;
-    esac
 }
 
 find_available_plugins() {

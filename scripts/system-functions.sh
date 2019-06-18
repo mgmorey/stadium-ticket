@@ -42,7 +42,7 @@ check_permissions() (
     done
 )
 
-control_launch_agent() (
+control_agent() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
 
@@ -70,6 +70,84 @@ control_launch_agent() (
 	    ;;
     esac
 )
+
+control_agent_service() {
+    target=$(get_launch_agent_target)
+
+    if [ $dryrun = true ]; then
+	check_permissions $target
+    else
+	case $1 in
+	    (start)
+		control_agent load generate_launch_agent $target
+		;;
+	    (stop)
+		control_agent unload remove_files $target || true
+		;;
+	esac
+    fi
+}
+
+control_brew_service() {
+    if [ $dryrun = true ]; then
+	return 0
+    fi
+
+    case $1 in
+	(start)
+	    brew services restart uwsgi
+	    ;;
+	(stop)
+	    brew services stop uwsgi
+	    ;;
+    esac
+}
+
+control_freebsd_service() {
+    if [ $dryrun = true ]; then
+	return 0
+    fi
+
+    case $1 in
+	(stop)
+	    signal_process $WAIT_SIGNAL INT TERM KILL || true
+	    ;;
+    esac
+}
+
+control_linux_service() {
+    if [ $dryrun = true ]; then
+	return 0
+    fi
+
+    case $1 in
+	(start)
+	    systemctl enable uwsgi
+	    systemctl restart uwsgi
+	    ;;
+	(stop)
+	    signal_process $WAIT_SIGNAL INT TERM KILL || true
+	    ;;
+    esac
+}
+
+control_service() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ $1 = start -o $1 = stop ]
+
+    case "$kernel_name" in
+	(Linux)
+	    control_linux_service $1
+	    ;;
+	(Darwin)
+	    control_darwin_service $1
+	    ;;
+	(FreeBSD)
+	    control_freebsd_service $1
+	    ;;
+    esac
+}
 
 find_system_python() (
     find_system_pythons | awk 'NR == 1 {print $1}'
