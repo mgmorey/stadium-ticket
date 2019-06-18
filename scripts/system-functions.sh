@@ -274,7 +274,7 @@ get_uwsgi_plugin_path() {
 get_uwsgi_version() {
     uwsgi=$(get_uwsgi_binary_path)
 
-    if [ -n "$uwsgi" ]; then
+    if [ -n "$uwsgi" ] && [ -x $uwsgi ]; then
 	$uwsgi --version
     else
 	printf "%s\n" "<none>"
