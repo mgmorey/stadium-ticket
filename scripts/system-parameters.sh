@@ -421,44 +421,6 @@ configure_system() {
     configure_system_defaults
 }
 
-control_launch_agent() (
-    assert [ $# -ge 1 ]
-    assert [ -n "$1" ]
-    agent_label=local.$APP_NAME
-    agent_target=$HOME/Library/LaunchAgents/$agent_label.plist
-
-    case $1 in
-	(load)
-	    assert [ $# -eq 2 ]
-	    assert [ -n "$2" ]
-	    $2 $agent_target
-
-	    if [ $dryrun = false ]; then
-		launchctl load $agent_target
-	    fi
-	    ;;
-	(restart)
-	    control_launch_agent stop
-	    control_launch_agent start
-	    ;;
-	(start|stop)
-	    if [ $dryrun = false -a $1 = start -o -e $agent_target ]; then
-		launchctl $1 $agent_label
-	    fi
-	    ;;
-	(unload)
-	    assert [ $# -eq 2 ]
-	    assert [ -n "$2" ]
-
-	    if [ $dryrun = false -a -e $agent_target ]; then
-		launchctl unload $agent_target
-	    fi
-
-	    $2 $agent_target
-	    ;;
-    esac
-)
-
 find_available_plugins() {
     printf $PLUGIN_FORMAT $(find_system_pythons | awk '{print $2}' | tr -d .)
 }
@@ -519,6 +481,14 @@ generate_launch_agent_plist() (
 
     install_file 644 "$xmlfile" $1
 )
+
+get_launch_agent_label() {
+    printf "%s\n" "local.$APP_NAME"
+}
+
+get_launch_agent_target() {
+    printf "%s\n" "$HOME/Library/LaunchAgents/$(get_launch_agent_label).plist"
+}
 
 get_service_process() {
     ps_uwsgi $APP_UID,$USER,root | awk_uwsgi $(get_uwsgi_binary_path)
@@ -608,7 +578,8 @@ request_service_start() {
 	    ;;
 	(Darwin)
 	    if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
-		control_launch_agent load generate_launch_agent_plist
+		target=$(get_launch_agent_target)
+		control_launch_agent load generate_launch_agent_plist $target
 	    else
 		brew services restart uwsgi
 	    fi
@@ -623,7 +594,12 @@ request_service_stop() {
 		signal_process $WAIT_SIGNAL INT TERM KILL || true
 		;;
 	    (Darwin)
-		control_launch_agent unload remove_files || true
+		if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
+		    target=$(get_launch_agent_target)
+		    control_launch_agent unload remove_files $target || true
+		else
+		    brew services stop uwsgi
+		fi
 		;;
 	esac
     fi

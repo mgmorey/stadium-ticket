@@ -42,6 +42,43 @@ check_permissions() (
     done
 )
 
+control_launch_agent() (
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+
+    case $1 in
+	(load)
+	    assert [ $# -eq 3 ]
+	    assert [ -n "$2" ]
+	    assert [ -n "$3" ]
+	    $2 $3
+
+	    if [ $dryrun = false ]; then
+		launchctl load $3
+	    fi
+	    ;;
+	(start|stop)
+	    assert [ $# -eq 2 ]
+	    assert [ -n "$2" ]
+
+	    if [ $dryrun = false -a $1 = start -o -e $4 ]; then
+		launchctl $1 $2
+	    fi
+	    ;;
+	(unload)
+	    assert [ $# -eq 3 ]
+	    assert [ -n "$2" ]
+	    assert [ -n "$3" ]
+
+	    if [ $dryrun = false -a -e $3 ]; then
+		launchctl unload $3
+	    fi
+
+	    $2 $3
+	    ;;
+    esac
+)
+
 find_system_python() (
     find_system_pythons | awk 'NR == 1 {print $1}'
 )
