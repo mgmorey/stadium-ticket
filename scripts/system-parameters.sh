@@ -571,6 +571,10 @@ ps_uwsgi() {
 }
 
 request_service_start() {
+    if [ $dryrun = true ]; then
+	return 0
+    fi
+
     case "$kernel_name" in
 	(Linux)
 	    systemctl enable uwsgi
@@ -588,21 +592,23 @@ request_service_start() {
 }
 
 request_service_stop() {
-    if [ $dryrun = false ]; then
-	case "$kernel_name" in
-	    (Linux|FreeBSD)
-		signal_process $WAIT_SIGNAL INT TERM KILL || true
-		;;
-	    (Darwin)
-		if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
-		    target=$(get_launch_agent_target)
-		    control_launch_agent unload remove_files $target || true
-		else
-		    brew services stop uwsgi
-		fi
-		;;
-	esac
+    if [ $dryrun = true ]; then
+	return 0
     fi
+
+    case "$kernel_name" in
+	(Linux|FreeBSD)
+	    signal_process $WAIT_SIGNAL INT TERM KILL || true
+	    ;;
+	(Darwin)
+	    if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
+		target=$(get_launch_agent_target)
+		control_launch_agent unload remove_files $target || true
+	    else
+		brew services stop uwsgi
+	    fi
+	    ;;
+    esac
 }
 
 signal_process() {
