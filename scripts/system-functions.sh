@@ -355,7 +355,7 @@ signal_process_and_poll() {
     assert [ $2 -ge 0 ]
     i=0
 
-    while kill -s $3 $1 2>/dev/null && [ $i -lt $2 ]; do
+    while kill -s $3 $1 && [ $i -lt $2 ]; do
 	if [ $i -eq 0 ]; then
 	    printf "%s\n" "Waiting for process to exit"
 	fi
@@ -376,7 +376,7 @@ signal_process_and_wait() {
     assert [ -n "$3" ]
     assert [ $2 -ge 0 ]
 
-    if kill -s $3 $1 2>/dev/null; then
+    if kill -s $3 $1; then
 	printf "Waiting for process to handle SIG%s\n" "$3"
 	sleep $2
 	elapsed=$((elapsed + $2))
