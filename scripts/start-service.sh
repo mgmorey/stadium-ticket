@@ -116,7 +116,7 @@ request_start() {
 	printf "Starting service %s\n" "$APP_NAME"
     fi
 
-    control_service start
+    control_service start $UWSGI_IS_SOURCE_ONLY
 
     if [ $dryrun = false ]; then
 	printf "Waiting for service %s to start\n" "$APP_NAME"

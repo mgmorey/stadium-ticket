@@ -62,7 +62,7 @@ stop_service() {
     for dryrun in true false; do
 	if [ $dryrun = false ]; then
 	    if is_service_running; then
-		control_service stop
+		control_service stop $UWSGI_IS_SOURCE_ONLY
 		stop_requested=true
 	    else
 		stop_requested=false

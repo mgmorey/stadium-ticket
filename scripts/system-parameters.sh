@@ -425,18 +425,6 @@ configure_system() {
     configure_system_defaults
 }
 
-control_darwin_service() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
-
-    if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
-	control_agent_service $1
-    else
-	control_brew_service $1
-    fi
-}
-
 find_available_plugins() {
     printf $PLUGIN_FORMAT $(find_system_pythons | awk '{print $2}' | tr -d .)
 }

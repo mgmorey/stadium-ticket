@@ -116,10 +116,26 @@ control_brew_service() {
     esac
 }
 
-control_freebsd_service() {
-    assert [ $# -eq 1 ]
+control_darwin_service() {
+    assert [ $# -eq 2 ]
     assert [ -n "$1" ]
+    assert [ -n "$2" ]
     assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
+    assert [ $2 = false -o $2 = true ]
+
+    if [ $2 = true ]; then
+	control_agent_service $1
+    else
+	control_brew_service $1
+    fi
+}
+
+control_freebsd_service() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
+    assert [ $2 = false -o $2 = true ]
 
     if [ $dryrun = true ]; then
 	return 0
@@ -133,9 +149,11 @@ control_freebsd_service() {
 }
 
 control_linux_service() {
-    assert [ $# -eq 1 ]
+    assert [ $# -eq 2 ]
     assert [ -n "$1" ]
+    assert [ -n "$2" ]
     assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
+    assert [ $2 = false -o $2 = true ]
 
     if [ $dryrun = true ]; then
 	return 0
@@ -158,19 +176,21 @@ control_linux_service() {
 }
 
 control_service() {
-    assert [ $# -eq 1 ]
+    assert [ $# -eq 2 ]
     assert [ -n "$1" ]
+    assert [ -n "$2" ]
     assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
+    assert [ $2 = false -o $2 = true ]
 
     case "$kernel_name" in
 	(Linux)
-	    control_linux_service $1
+	    control_linux_service $1 $2
 	    ;;
 	(Darwin)
-	    control_darwin_service $1
+	    control_darwin_service $1 $2
 	    ;;
 	(FreeBSD)
-	    control_freebsd_service $1
+	    control_freebsd_service $1 $2
 	    ;;
     esac
 }

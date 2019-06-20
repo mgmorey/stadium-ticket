@@ -30,7 +30,7 @@ disable_service() {
     fi
 
     for dryrun in false; do
-	control_service disable
+	control_service disable $UWSGI_IS_SOURCE_ONLY
     done
 }
 
