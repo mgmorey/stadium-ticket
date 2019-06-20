@@ -45,6 +45,7 @@ check_permissions() (
 control_agent() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
+    assert [ $1 = load -o $1 = unload ]
 
     case $1 in
 	(load)
@@ -72,6 +73,10 @@ control_agent() (
 )
 
 control_agent_service() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ $1 = start -o $1 = stop ]
+
     target=$(get_launch_agent_target)
 
     if [ $dryrun = true ]; then
@@ -89,6 +94,10 @@ control_agent_service() {
 }
 
 control_brew_service() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ $1 = start -o $1 = stop ]
+
     if [ $dryrun = true ]; then
 	return 0
     fi
@@ -104,6 +113,10 @@ control_brew_service() {
 }
 
 control_freebsd_service() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ $1 = start -o $1 = stop ]
+
     if [ $dryrun = true ]; then
 	return 0
     fi
@@ -116,6 +129,10 @@ control_freebsd_service() {
 }
 
 control_linux_service() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ $1 = start -o $1 = stop ]
+
     if [ $dryrun = true ]; then
 	return 0
     fi
