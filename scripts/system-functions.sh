@@ -145,7 +145,6 @@ control_linux_service() {
 	    systemctl enable uwsgi
 	    ;;
 	(start)
-	    systemctl enable uwsgi
 	    systemctl start uwsgi
 	    ;;
 	(stop)
