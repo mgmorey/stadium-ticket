@@ -104,7 +104,7 @@ control_brew_service() {
 
     case $1 in
 	(start)
-	    brew services restart uwsgi
+	    brew services start uwsgi
 	    ;;
 	(stop)
 	    brew services stop uwsgi
@@ -146,7 +146,7 @@ control_linux_service() {
 	    ;;
 	(start)
 	    systemctl enable uwsgi
-	    systemctl restart uwsgi
+	    systemctl start uwsgi
 	    ;;
 	(stop)
 	    signal_service $WAIT_SIGNAL INT TERM KILL || true
