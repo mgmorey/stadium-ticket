@@ -625,9 +625,9 @@ validate_parameters_postinstallation() {
     elif [ ! -e $APP_CONFIG ]; then
 	abort "%s: %s: No such configuration file\n" "$0" "$APP_CONFIG"
     elif [ ! -d $APP_DIR ]; then
-	abort "%s: %s: No such app directory\n" "$0" "$APP_DIR"
+	abort "%s: %s: No such program directory\n" "$0" "$APP_DIR"
     elif [ ! -d $APP_VARDIR ]; then
-	abort "%s: %s: No such var directory\n" "$0" "$APP_VARDIR"
+	abort "%s: %s: No such working directory\n" "$0" "$APP_VARDIR"
     elif [ ! -d $APP_LOGDIR ]; then
 	abort "%s: %s: No such log directory\n" "$0" "$APP_LOGDIR"
     elif [ ! -d $APP_RUNDIR ]; then
