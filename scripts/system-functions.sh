@@ -138,6 +138,12 @@ control_linux_service() {
     fi
 
     case $1 in
+	(disable)
+	    systemctl disable uwsgi
+	    ;;
+	(enable)
+	    systemctl enable uwsgi
+	    ;;
 	(start)
 	    systemctl enable uwsgi
 	    systemctl restart uwsgi
