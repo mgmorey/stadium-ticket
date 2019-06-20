@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# restart-service.sh: run application as a service using uWSGI
+# restart-service.sh: restart uWSGI service for application
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
