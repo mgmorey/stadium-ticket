@@ -248,6 +248,18 @@ configure_system_defaults() {
 
     # Set uWSGI-related parameters
 
+    if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
+	UWSGI_HAS_PLUGIN=true
+    fi
+
+    if [ -z "${UWSGI_IS_SOURCE_ONLY-}" ]; then
+	UWSGI_IS_SOURCE_ONLY=false
+    fi
+
+    if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
+	UWSGI_RUN_AS_SERVICE=true
+    fi
+
     if [ -z "${UWSGI_BINARY_DIR-}" ]; then
 	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
     fi
@@ -266,18 +278,6 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_PYTHON_VERSION-}" ]; then
 	UWSGI_PYTHON_VERSION=$(get_system_python_version)
-    fi
-
-    if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
-	UWSGI_HAS_PLUGIN=true
-    fi
-
-    if [ -z "${UWSGI_IS_SOURCE_ONLY-}" ]; then
-	UWSGI_IS_SOURCE_ONLY=false
-    fi
-
-    if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
-	UWSGI_RUN_AS_SERVICE=true
     fi
 
     # Set app plugin from uWSGI plugin filename
