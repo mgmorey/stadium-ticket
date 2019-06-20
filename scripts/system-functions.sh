@@ -123,7 +123,7 @@ control_darwin_service() {
     assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
     assert [ $2 = false -o $2 = true ]
 
-    if [ $2 = true ]; then
+    if [ $2 = false ]; then
 	control_agent_service $1
     else
 	control_brew_service $1
