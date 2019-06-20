@@ -173,6 +173,10 @@ find_system_pythons() (
     return 1
 )
 
+get_system_python_version() {
+    $(find_system_python) --version | awk '{print $2}'
+}
+
 get_service_status() {
     if is_service_installed; then
 	if is_service_running; then

@@ -43,14 +43,14 @@ get_service_parameters() {
 	             Port: $APP_PORT
 	    User/Group ID: $APP_UID/$APP_GID
 	    Configuration: $(print_path $APP_CONFIG)
-	    App directory: $(print_path $APP_DIR)
-	   Data directory: $(print_path $APP_VARDIR)
+	Program Directory: $(print_path $APP_DIR)
+	Working directory: $(print_path $APP_VARDIR)
 	         Log file: $(print_path $APP_LOGFILE)
 	         PID file: $(print_path $APP_PIDFILE)
-	    uWSGI version: $(print_parameter "$(get_uwsgi_version)")
-	uWSGI binary file: $(print_path "$(get_uwsgi_binary_path)")
-	uWSGI plugin file: $(print_path "$(get_uwsgi_plugin_path)")
-	   uWSGI log file: $(print_path "${UWSGI_LOGFILE-}")
+	   Python version: $(print_parameter $UWSGI_PYTHON_VERSION)
+	   Server version: $(print_parameter "$(get_uwsgi_version)")
+	      Binary file: $(print_path "$(get_uwsgi_binary_path)")
+	      Plugin file: $(print_path "$(get_uwsgi_plugin_path)")
 	EOF
 }
 
