@@ -453,7 +453,9 @@ find_plugins() (
 )
 
 find_uwsgi_plugin() {
-    find_plugins | head -n 1
+    if [ $UWSGI_HAS_PLUGIN = true ]; then
+	find_plugins | head -n 1
+    fi
 }
 
 generate_launch_agent() (
