@@ -84,10 +84,14 @@ control_agent_service() {
     else
 	case $1 in
 	    (start)
-		control_agent load generate_launch_agent $target
+		if [ ! -e $target ]; then
+		    control_agent load generate_launch_agent $target
+		fi
 		;;
 	    (stop)
-		control_agent unload remove_files $target || true
+		if [ -e $target ]; then
+		    control_agent unload remove_files $target
+		fi
 		;;
 	esac
     fi
