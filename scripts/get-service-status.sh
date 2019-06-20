@@ -43,7 +43,7 @@ get_service_parameters() {
 	             Port: $APP_PORT
 	    User/Group ID: $APP_UID/$APP_GID
 	    Configuration: $(print_path $APP_CONFIG)
-	Program Directory: $(print_path $APP_DIR)
+	Program directory: $(print_path $APP_DIR)
 	Working directory: $(print_path $APP_VARDIR)
 	         Log file: $(print_path $APP_LOGFILE)
 	         PID file: $(print_path $APP_PIDFILE)
