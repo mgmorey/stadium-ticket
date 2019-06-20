@@ -354,10 +354,10 @@ signal_process() {
     assert [ -n "$1" ]
     assert [ -n "$2" ]
     assert [ -n "$3" ]
-    assert [ $2 -gt 0 ]
-    printf "Sending SIG%s to process (PID: %s)\n" $3 $1
+    assert [ $3 -ge 0 -a $3 -le 60 ]
+    printf "Sending SIG%s to process (PID: %s)\n" $1 $2
 
-    case $3 in
+    case $1 in
 	(HUP)
 	    if signal_process_and_wait $1 $2 $3; then
 		return 0
@@ -378,10 +378,10 @@ signal_process_and_poll() {
     assert [ -n "$1" ]
     assert [ -n "$2" ]
     assert [ -n "$3" ]
-    assert [ $2 -ge 0 ]
+    assert [ $3 -ge 0 -a $3 -le 60 ]
     i=0
 
-    while kill -s $3 $1 && [ $i -lt $2 ]; do
+    while kill -s $1 $2 && [ $i -lt $3 ]; do
 	if [ $i -eq 0 ]; then
 	    printf "%s\n" "Waiting for process to exit"
 	fi
@@ -391,7 +391,7 @@ signal_process_and_poll() {
     done
 
     elapsed=$((elapsed + i))
-    test $i -lt $2
+    test $i -lt $3
     return $?
 }
 
@@ -400,12 +400,12 @@ signal_process_and_wait() {
     assert [ -n "$1" ]
     assert [ -n "$2" ]
     assert [ -n "$3" ]
-    assert [ $2 -ge 0 ]
+    assert [ $3 -ge 0 -a $3 -le 60 ]
 
-    if kill -s $3 $1; then
-	printf "Waiting for process to handle SIG%s\n" "$3"
-	sleep $2
-	elapsed=$((elapsed + $2))
+    if kill -s $1 $2; then
+	printf "Waiting for process to handle SIG%s\n" "$1"
+	sleep $3
+	elapsed=$((elapsed + $3))
 	result=0
     else
 	result=1

@@ -609,7 +609,7 @@ signal_service() {
     fi
 
     for signal in "$@"; do
-	if signal_process "$pid" "$wait" "$signal"; then
+	if signal_process "$signal" "$pid" "$wait"; then
 	    return 0
 	fi
     done
