@@ -428,7 +428,7 @@ configure_system() {
 control_darwin_service() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ $1 = start -o $1 = stop ]
+    assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
 
     if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
 	control_agent_service $1

@@ -75,7 +75,7 @@ control_agent() (
 control_agent_service() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ $1 = start -o $1 = stop ]
+    assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
 
     target=$(get_launch_agent_target)
 
@@ -96,7 +96,7 @@ control_agent_service() {
 control_brew_service() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ $1 = start -o $1 = stop ]
+    assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
 
     if [ $dryrun = true ]; then
 	return 0
@@ -115,7 +115,7 @@ control_brew_service() {
 control_freebsd_service() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ $1 = start -o $1 = stop ]
+    assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
 
     if [ $dryrun = true ]; then
 	return 0
@@ -131,7 +131,7 @@ control_freebsd_service() {
 control_linux_service() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ $1 = start -o $1 = stop ]
+    assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
 
     if [ $dryrun = true ]; then
 	return 0
@@ -151,7 +151,7 @@ control_linux_service() {
 control_service() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ $1 = start -o $1 = stop ]
+    assert [ $1 = disable -o $1 = enable -o $1 = start -o $1 = stop ]
 
     case "$kernel_name" in
 	(Linux)
