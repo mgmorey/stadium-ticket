@@ -45,7 +45,7 @@ build_uwsgi_binary() {
 build_uwsgi_from_source() (
     fetch_uwsgi_source
 
-    if ! cd "$HOME/git/uwsgi"; then
+    if ! cd "$HOME/git/$UWSGI_BRANCH"; then
 	return 1
     fi
 
@@ -57,14 +57,14 @@ build_uwsgi_from_source() (
 )
 
 fetch_uwsgi_source() {
-    if [ -d "$HOME/git/uwsgi" ]; then
+    if [ -d "$HOME/git/$UWSGI_BRANCH" ]; then
 	return 0
     fi
 
     cd
     mkdir -p git
     cd git
-    git clone -b $UWSGI_BRANCH $UWSGI_URL
+    git clone -b $UWSGI_BRANCH $UWSGI_URL $UWSGI_BRANCH
 }
 
 get_realpath() (

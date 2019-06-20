@@ -80,7 +80,7 @@ remove_service() {
 	fi
     fi
 
-    if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
+    if [ $UWSGI_IS_PACKAGED = false ]; then
 	binary=$(get_uwsgi_binary_path)
 	plugin=$(get_uwsgi_plugin_path)
 	files="$files $UWSGI_ETCDIR $binary ${plugin-}"
@@ -95,7 +95,7 @@ uninstall_service() {
     for dryrun in true false; do
 	if [ $dryrun = false ]; then
 	    if is_service_running; then
-		request_service_stop
+		control_service stop $UWSGI_IS_PACKAGED
 	    fi
 	fi
 

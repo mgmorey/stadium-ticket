@@ -40,7 +40,7 @@ configure_bsd() {
 configure_darwin() {
     configure_darwin_common
 
-    if [ "${UWSGI_IS_SOURCE_ONLY-false}" = true ]; then
+    if [ "${UWSGI_IS_PACKAGED-false}" = false ]; then
 	configure_darwin_source
     else
 	configure_darwin_native
@@ -252,8 +252,8 @@ configure_system_defaults() {
 	UWSGI_HAS_PLUGIN=true
     fi
 
-    if [ -z "${UWSGI_IS_SOURCE_ONLY-}" ]; then
-	UWSGI_IS_SOURCE_ONLY=false
+    if [ -z "${UWSGI_IS_PACKAGED-}" ]; then
+	UWSGI_IS_PACKAGED=true
     fi
 
     if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
@@ -326,7 +326,7 @@ configure_system() {
 		    case "$VERSION_ID" in
 			(9)
 			    # Build uWSGI from source
-			    UWSGI_IS_SOURCE_ONLY=true
+			    UWSGI_IS_PACKAGED=false
 			    configure_linux_debian_source
 			    ;;
 			(10)
@@ -387,7 +387,7 @@ configure_system() {
 	    ;;
 	(Darwin)
 	    # Build uWSGI from source
-	    UWSGI_IS_SOURCE_ONLY=true
+	    UWSGI_IS_PACKAGED=false
 	    configure_bsd
 	    configure_darwin
 	    ;;
@@ -409,7 +409,7 @@ configure_system() {
 	    case $ID in
 		# (openindiana)
 		#     # Build uWSGI from source
-		#     UWSGI_IS_SOURCE_ONLY=true
+		#     UWSGI_IS_PACKAGED=false
 		#     configure_openindiana
 		#     ;;
 		(*)

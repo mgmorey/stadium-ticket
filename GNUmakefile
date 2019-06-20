@@ -64,13 +64,13 @@ realclean:	clean clean-venvs
 	@/bin/rm -f .update app/app/*.sqlite
 
 start:
-	$(script_dir)/start-service.sh
+	$(script_dir)/start-service.sh || true
 
 status:
 	$(script_dir)/get-service-status.sh
 
 stop:
-	$(script_dir)/stop-service.sh
+	$(script_dir)/stop-service.sh || true
 
 stress:
 	$(script_dir)/load-test.sh

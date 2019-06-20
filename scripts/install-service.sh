@@ -148,7 +148,7 @@ install_service() {
     cd "$source_dir"
 
     for dryrun in true false; do
-	if [ $UWSGI_IS_SOURCE_ONLY = true ]; then
+	if [ $UWSGI_IS_PACKAGED = false ]; then
 	    install_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	else
 	    install_uwsgi_from_package
@@ -200,7 +200,7 @@ install_uwsgi_from_source() (
 	build_uwsgi_from_source
 	dir=$(get_home_directory ${SUDO_USER-$USER})
 
-	if ! cd $dir/git/uwsgi; then
+	if ! cd $dir/git/$UWSGI_BRANCH; then
 	    return 1
 	fi
     fi
