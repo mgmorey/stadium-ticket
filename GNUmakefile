@@ -67,13 +67,13 @@ restart:
 	$(script_dir)/restart-service.sh
 
 start:
-	$(script_dir)/start-service.sh || true
+	$(script_dir)/start-service.sh
 
 status:
 	$(script_dir)/get-service-status.sh
 
 stop:
-	$(script_dir)/stop-service.sh || true
+	$(script_dir)/stop-service.sh
 
 stress:
 	$(script_dir)/load-test.sh
