@@ -151,17 +151,8 @@ control_linux_service() {
     fi
 
     case $1 in
-	(disable)
-	    systemctl disable uwsgi
-	    ;;
-	(enable)
-	    systemctl enable uwsgi
-	    ;;
-	(restart)
-	    systemctl restart uwsgi
-	    ;;
-	(start)
-	    systemctl start uwsgi
+	(disable|enable|restart|start)
+	    systemctl $1 uwsgi
 	    ;;
 	(stop)
 	    signal_service $WAIT_SIGNAL INT TERM KILL || true
@@ -270,10 +261,7 @@ get_su_command() (
 		options=-l
 	    fi
 	    ;;
-	(Darwin)
-	    options=-l
-	    ;;
-	(FreeBSD)
+	(Darwin|FreeBSD)
 	    options=-l
 	    ;;
 	(*)
