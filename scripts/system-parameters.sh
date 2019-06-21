@@ -430,7 +430,7 @@ find_available_plugins() {
 }
 
 find_installed_plugins() {
-    cd $UWSGI_PLUGIN_DIR && ls "$@" 2>/dev/null || true
+    cd $UWSGI_PLUGIN_DIR 2>/dev/null && ls "$@" 2>/dev/null || true
 }
 
 find_plugins() (
