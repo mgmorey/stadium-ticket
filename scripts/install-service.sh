@@ -248,14 +248,6 @@ print_status() {
     esac
 }
 
-restart_service() {
-    elapsed=0
-
-    if is_service_running && signal_service $WAIT_SIGNAL HUP; then
-	elapsed=$((elapsed + $(wait_for_timeout $((WAIT_RESTART - elapsed)))))
-    fi
-}
-
 run_unpriv() (
     assert [ $# -ge 1 ]
 
@@ -282,7 +274,7 @@ source_dir=$script_dir/..
 configure_system
 install_service
 initialize_database
-restart_service
+signal_service_restart
 
 status=$(get_service_status)
 print_status $status

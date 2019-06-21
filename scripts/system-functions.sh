@@ -81,7 +81,7 @@ control_agent_service() {
 	check_permissions $target
     else
 	case $1 in
-	    (restart|start)
+	    (restart)
 		if [ ! -e $target ]; then
 		    control_agent load generate_launch_agent $target
 		fi
@@ -104,7 +104,7 @@ control_brew_service() {
     fi
 
     case $1 in
-	(restart|start)
+	(restart)
 	    brew services start uwsgi
 	    ;;
 	(stop)
@@ -151,8 +151,11 @@ control_linux_service() {
     fi
 
     case $1 in
-	(disable|enable|restart|start)
+	(disable|enable)
 	    systemctl $1 uwsgi
+	    ;;
+	(restart)
+	    systemctl restart uwsgi
 	    ;;
 	(stop)
 	    signal_service $WAIT_SIGNAL INT TERM KILL || true

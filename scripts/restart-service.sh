@@ -22,39 +22,6 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-create_symlink() {
-    assert [ $# -eq 2 ]
-    assert [ -n "$2" ]
-
-    if [ $dryrun = true ]; then
-	check_permissions "$2"
-    else
-	assert [ -n "$1" ]
-	assert [ -r $1 ]
-
-	if [ $1 != $2 -a ! -e $2 ]; then
-	    printf "Creating link %s\n" "$2"
-	    mkdir -p $(dirname $2)
-	    /bin/ln -s $1 $2
-	fi
-    fi
-}
-
-create_symlinks() (
-    assert [ $# -ge 1 ]
-    assert [ -n "$1" ]
-    file=$1
-    shift
-
-    if [ -z "${UWSGI_ETCDIR-}" ]; then
-	return 0
-    fi
-
-    for dir in "$@"; do
-	create_symlink $file $UWSGI_ETCDIR/$dir/$APP_NAME.ini
-    done
-)
-
 get_realpath() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -92,66 +59,6 @@ print_status() (
     printf "Service %s is %s\n" "$APP_NAME" "$status"
 )
 
-run_service() {
-    validate_parameters_preinstallation
-    validate_parameters_postinstallation
-
-    if [ $dryrun = false ]; then
-	command=$(get_uwsgi_binary_path)
-
-	if [ -d "${UWSGI_PLUGIN_DIR-}" ]; then
-	    command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
-	fi
-
-	$command --ini $APP_CONFIG
-    fi
-}
-
-request_restart() {
-    if [ $dryrun = false ]; then
-	printf "Restarting service %s\n" "$APP_NAME"
-    fi
-
-    control_service restart $UWSGI_IS_PACKAGED
-
-    if [ $dryrun = false ]; then
-	printf "Waiting for service %s to restart\n" "$APP_NAME"
-	elapsed=$((elapsed + $(wait_for_service $((WAIT_RESTART - elapsed)))))
-
-	if [ $elapsed -lt $WAIT_DEFAULT ]; then
-	    elapsed=$((elapsed + $(wait_for_timeout $((WAIT_DEFAULT - elapsed)))))
-	fi
-    fi
-}
-
-restart_service() {
-    restart_requested=false
-    elapsed=0
-
-    if ! is_service_installed; then
-	return 0
-    elif is_service_running; then
-	return 0
-    fi
-
-    for dryrun in true false; do
-	if [ $UWSGI_RUN_AS_SERVICE = true ]; then
-	    restart_uwsgi_service
-	else
-	    run_service
-	fi
-    done
-}
-
-restart_uwsgi_service() {
-    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
-    request_restart
-
-    if [ $dryrun = false ]; then
-	restart_requested=true
-    fi
-}
-
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
@@ -160,7 +67,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_system
-restart_service
+signal_service_restart
 
 status=$(get_service_status)
 print_status $status

@@ -22,6 +22,23 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+control_service_start() {
+    if [ $dryrun = false ]; then
+	printf "Starting service %s\n" "$APP_NAME"
+    fi
+
+    control_service restart $UWSGI_IS_PACKAGED
+
+    if [ $dryrun = false ]; then
+	printf "Waiting for service %s to start\n" "$APP_NAME"
+	elapsed=$((elapsed + $(wait_for_service $((WAIT_RESTART - elapsed)))))
+
+	if [ $elapsed -lt $WAIT_DEFAULT ]; then
+	    elapsed=$((elapsed + $(wait_for_timeout $((WAIT_DEFAULT - elapsed)))))
+	fi
+    fi
+}
+
 create_symlink() {
     assert [ $# -eq 2 ]
     assert [ -n "$2" ]
@@ -111,23 +128,6 @@ run_service() {
     fi
 }
 
-request_start() {
-    if [ $dryrun = false ]; then
-	printf "Starting service %s\n" "$APP_NAME"
-    fi
-
-    control_service start $UWSGI_IS_PACKAGED
-
-    if [ $dryrun = false ]; then
-	printf "Waiting for service %s to start\n" "$APP_NAME"
-	elapsed=$((elapsed + $(wait_for_service $((WAIT_RESTART - elapsed)))))
-
-	if [ $elapsed -lt $WAIT_DEFAULT ]; then
-	    elapsed=$((elapsed + $(wait_for_timeout $((WAIT_DEFAULT - elapsed)))))
-	fi
-    fi
-}
-
 start_service() {
     start_requested=false
     elapsed=0
@@ -149,7 +149,7 @@ start_service() {
 
 start_uwsgi_service() {
     create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
-    request_start
+    control_service_start
 
     if [ $dryrun = false ]; then
 	start_requested=true

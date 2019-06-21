@@ -605,6 +605,17 @@ signal_service() {
     return 1
 }
 
+signal_service_restart() {
+    elapsed=0
+
+    if is_service_running && signal_service $WAIT_SIGNAL HUP; then
+	elapsed=$((elapsed + $(wait_for_timeout $((WAIT_RESTART - elapsed)))))
+	restart_requested=true
+    else
+	restart_requested=false
+    fi
+}
+
 validate_parameters_postinstallation() {
     if [ ! -d $APP_ETCDIR ]; then
 	abort "%s: %s: No such configuration directory\n" "$0" "$APP_ETCDIR"
