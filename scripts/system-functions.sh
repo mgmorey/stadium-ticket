@@ -81,7 +81,7 @@ control_agent_service() {
 	check_permissions $target
     else
 	case $1 in
-	    (start)
+	    (restart|start)
 		if [ ! -e $target ]; then
 		    control_agent load generate_launch_agent $target
 		fi
@@ -104,7 +104,7 @@ control_brew_service() {
     fi
 
     case $1 in
-	(start)
+	(restart|start)
 	    brew services start uwsgi
 	    ;;
 	(stop)
