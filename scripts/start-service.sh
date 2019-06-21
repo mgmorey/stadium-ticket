@@ -128,6 +128,15 @@ run_service() {
     fi
 }
 
+start_parent_service() {
+    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
+    control_service_start
+
+    if [ $dryrun = false ]; then
+	start_requested=true
+    fi
+}
+
 start_service() {
     start_requested=false
     elapsed=0
@@ -140,20 +149,11 @@ start_service() {
 
     for dryrun in true false; do
 	if [ $UWSGI_RUN_AS_SERVICE = true ]; then
-	    start_uwsgi_service
+	    start_parent_service
 	else
 	    run_service
 	fi
     done
-}
-
-start_uwsgi_service() {
-    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
-    control_service_start
-
-    if [ $dryrun = false ]; then
-	start_requested=true
-    fi
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
