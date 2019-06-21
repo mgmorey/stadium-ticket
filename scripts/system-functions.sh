@@ -45,7 +45,6 @@ check_permissions() (
 control_agent() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" ]
-    assert expr $1 : '\(load\|unload\)' >/dev/null
 
     case $1 in
 	(load)
@@ -75,7 +74,6 @@ control_agent() (
 control_agent_service() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert expr $1 : '\(enable\|disable\|restart\|start\|stop\)' >/dev/null
 
     target=$(get_launch_agent_target)
 
@@ -100,7 +98,6 @@ control_agent_service() {
 control_brew_service() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert expr $1 : '\(enable\|disable\|restart\|start\|stop\)' >/dev/null
 
     if [ $dryrun = true ]; then
 	return 0
@@ -120,8 +117,6 @@ control_darwin_service() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
-    assert expr $1 : '\(enable\|disable\|restart\|start\|stop\)' >/dev/null
-    assert expr $2 : '\(false\|true\)' >/dev/null
 
     if [ $2 = false ]; then
 	control_agent_service $1
@@ -134,8 +129,6 @@ control_freebsd_service() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
-    assert expr $1 : '\(enable\|disable\|restart\|start\|stop\)' >/dev/null
-    assert expr $2 : '\(false\|true\)' >/dev/null
 
     if [ $dryrun = true ]; then
 	return 0
@@ -152,8 +145,6 @@ control_linux_service() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
-    assert expr $1 : '\(enable\|disable\|restart\|start\|stop\)' >/dev/null
-    assert expr $2 : '\(false\|true\)' >/dev/null
 
     if [ $dryrun = true ]; then
 	return 0
@@ -182,8 +173,6 @@ control_service() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
-    assert expr $1 : '\(enable\|disable\|restart\|start\|stop\)' >/dev/null
-    assert expr $2 : '\(false\|true\)' >/dev/null
 
     case "$kernel_name" in
 	(Linux)
