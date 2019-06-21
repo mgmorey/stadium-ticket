@@ -137,6 +137,8 @@ restart_service() {
     for dryrun in true false; do
 	if [ $UWSGI_RUN_AS_SERVICE = true ]; then
 	    restart_uwsgi_service
+	else
+	    run_service
 	fi
     done
 }
