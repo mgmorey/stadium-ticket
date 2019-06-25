@@ -94,6 +94,22 @@ find_bootstrap_python() (
     abort "%s\n" "No Python interpreter found in PATH"
 )
 
+find_pyenv_python() (
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    pythons="$(ls $1/versions/$2.*/bin/python 2>/dev/null | sort -Vr)"
+
+    for python in $pythons; do
+	if $python --version >/dev/null 2>&1; then
+	    printf "%s\n" "$python"
+	    return 0
+	fi
+    done
+
+    return 1
+)
+
 find_user_python() (
     bootstrap_python=$(find_bootstrap_python)
     python_versions=$($bootstrap_python "$script_dir/check-python.py")
@@ -126,22 +142,6 @@ find_user_python() (
 	python=$($which python$version 2>/dev/null || true)
 
 	if [ -n "$python" ]; then
-	    printf "%s\n" "$python"
-	    return 0
-	fi
-    done
-
-    return 1
-)
-
-find_pyenv_python() (
-    assert [ $# -eq 2 ]
-    assert [ -n "$1" ]
-    assert [ -n "$2" ]
-    pythons="$(ls $1/versions/$2.*/bin/python 2>/dev/null | sort -Vr)"
-
-    for python in $pythons; do
-	if $python --version >/dev/null 2>&1; then
 	    printf "%s\n" "$python"
 	    return 0
 	fi
