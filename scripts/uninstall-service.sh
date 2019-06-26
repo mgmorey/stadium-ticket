@@ -93,10 +93,8 @@ uninstall_service() {
     parse_arguments "$@"
 
     for dryrun in true false; do
-	if [ $dryrun = false ]; then
-	    if is_service_running; then
-		control_service stop $UWSGI_IS_PACKAGED
-	    fi
+	if [ $dryrun = false ] && is_service_running; then
+	    control_service stop $UWSGI_IS_PACKAGED
 	fi
 
 	remove_service
