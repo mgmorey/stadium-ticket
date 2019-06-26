@@ -62,6 +62,18 @@ def get_minimum_version():
         raise ParseError("{}: Unable to parse: {}".format(path, e))
 
 
+def get_scalar_version(s):
+    """Return the integer equivalent of a dotted decimal version string."""
+    result = 0
+    v = s.split('.')
+
+    for i in range(PYTHON_VERSION_LEN):
+        result *= 1000
+        result += int(v[i]) if i < len(v) else 0
+
+    return result
+
+
 def get_versions(version, delimiter):
     """Return list of version numbers of increasing generality."""
     parts = version.split('.')
@@ -106,18 +118,6 @@ def unquote(s):
         raise ParseError("Invalid quoted string '{}': {}".format(s, e))
 
 
-def version_str_to_int(s):
-    """Return the integer equivalent of a dotted decimal version string."""
-    result = 0
-    v = s.split('.')
-
-    for i in range(PYTHON_VERSION_LEN):
-        result *= 1000
-        result += int(v[i]) if i < len(v) else 0
-
-    return result
-
-
 def main():
     """Main program of script."""
     args = parse_args()
@@ -130,8 +130,8 @@ def main():
         exit(2)
     else:
         if actual:
-            difference = (version_str_to_int(actual) -
-                          version_str_to_int(minimum))
+            difference = (get_scalar_version(actual) -
+                          get_scalar_version(minimum))
 
             if difference >= 0:
                 message = "Python {} interpreter meets {} requirement"
