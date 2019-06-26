@@ -360,18 +360,12 @@ signal_process() {
 
     case $1 in
 	(HUP)
-	    if signal_process_and_wait $1 $2 $3; then
-		return 0
-	    fi
+	    signal_process_and_wait "$@"
 	    ;;
 	(*)
-	    if signal_process_and_poll $1 $2 $3; then
-		return 0
-	    fi
+	    signal_process_and_poll "$@"
 	    ;;
     esac
-
-    return 1
 }
 
 signal_process_and_poll() {
@@ -393,7 +387,6 @@ signal_process_and_poll() {
 
     elapsed=$((elapsed + i))
     test $i -lt $3
-    return $?
 }
 
 signal_process_and_wait() {
