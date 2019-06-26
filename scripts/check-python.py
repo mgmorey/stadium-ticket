@@ -42,6 +42,11 @@ class ParseError(Exception):
     """Represent error parsing text."""
 
 
+def get_difference(v1, v2):
+    """Compute difference between Python semantic version strings."""
+    return get_scalar_version(v1) - get_scalar_version(v2)
+
+
 def get_filepath():
     """Return the fully-qualified path name of the input file."""
     script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -63,7 +68,7 @@ def get_minimum_version():
 
 
 def get_scalar_version(s):
-    """Return the integer equivalent of a dotted decimal version string."""
+    """Return the integer equivalent of a semantic version string."""
     result = 0
     v = s.split('.')
 
@@ -75,7 +80,7 @@ def get_scalar_version(s):
 
 
 def get_versions(version, delimiter):
-    """Return list of version numbers of increasing generality."""
+    """Return version numbers in order of increasing generality."""
     parts = version.split('.')
     return [delimiter.join(parts[:n]) for n in range(len(parts), 0, -1)]
 
@@ -98,20 +103,28 @@ def parse_args():
 
 
 def parse_version(s):
-    """Parse quoted Python version string."""
+    """Parse quoted Python semantic version string."""
     try:
         return re.search(PYTHON_VERSION_REGEX, s).group(1)
     except AttributeError as e:
         raise ParseError("Invalid quoted string '{}': {}".format(s, e))
 
 
+def print_difference(difference, actual):
+    """Print difference between Python semantic version strings."""
+    message = "Python {} interpreter {} {} requirement"
+    output = sys.stdout if difference >= 0 else sys.stderr
+    verb = "meets" if difference >= 0 else "does not meet"
+    print(message.format(actual, verb, INPUT), file=output)
+
+
 def print_versions(s, delimiter):
-    """Print Python version strings using a given delimiter."""
+    """Print Python semantic version strings using a given delimiter."""
     print(' '.join(get_versions(s, delimiter)))
 
 
 def unquote(s):
-    """Parse a quoted string, stripping quotes."""
+    """Parse a quoted string, stripping quotation marks."""
     try:
         return re.search(QUOTED_REGEX, s).group(1)
     except AttributeError as e:
@@ -130,20 +143,9 @@ def main():
         exit(2)
     else:
         if actual:
-            difference = (get_scalar_version(actual) -
-                          get_scalar_version(minimum))
-
-            if difference >= 0:
-                message = "Python {} interpreter meets {} requirement"
-                output = sys.stdout
-                status = 0
-            else:
-                message = "Python {} interpreter does not meet {} requirement"
-                output = sys.stderr
-                status = 1
-
-            print(message.format(actual, INPUT), file=output)
-            exit(status)
+            difference = get_difference(actual, minimum)
+            print_difference(difference, actual)
+            exit(0 if difference >= 0 else 1)
         else:
             print_versions(minimum, args.delimiter)
             exit(0)
