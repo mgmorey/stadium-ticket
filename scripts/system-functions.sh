@@ -31,7 +31,7 @@ check_permissions() (
 	if [ ! -w "$file" ]; then
 	    dir="$(dirname "$file")"
 
-	    if expr "$dir" : '^[./]$' >/dev/null; then
+	    if [ "$dir" = / ]; then
 		abort_insufficient_permissions "$file"
 	    else
 		check_permissions "$dir"
