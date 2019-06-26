@@ -400,12 +400,10 @@ signal_process_and_wait() {
 	printf "Waiting for process to handle SIG%s\n" "$1"
 	sleep $3
 	elapsed=$((elapsed + $3))
-	result=0
-    else
-	result=1
+	return 0
     fi
 
-    return $result
+    return 1
 }
 
 wait_for_timeout() {
