@@ -28,15 +28,13 @@ abort_insufficient_permissions() {
 
 check_permissions() (
     for file; do
-	if [ -e $file -a -w $file ]; then
-	    :
-	else
-	    dir=$(dirname $file)
+	if [ ! -w "$file" ]; then
+	    dir="$(dirname "$file")"
 
-	    if [ $dir != . -a $dir != / ]; then
-		check_permissions $dir
+	    if expr "$dir" : '^[./]$' >/dev/null; then
+		abort_insufficient_permissions "$file"
 	    else
-		abort_insufficient_permissions $file
+		check_permissions "$dir"
 	    fi
 	fi
     done
