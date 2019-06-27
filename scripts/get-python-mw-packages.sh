@@ -64,17 +64,19 @@ get_python_mw_packages() {
 }
 
 get_realpath() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    assert [ -d $1 ]
+    assert [ $# -ge 1 ]
     realpath=$(which realpath)
 
     if [ -n "$realpath" ]; then
-	$realpath "$1"
-    elif expr "$1" : '/.*' >/dev/null; then
-	printf "%s\n" "$1"
+    	$realpath "$@"
     else
-	printf "%s\n" "$PWD/${1#./}"
+	for file; do
+	    if expr "$file" : '/.*' >/dev/null; then
+		printf "%s\n" "$file"
+	    else
+		printf "%s\n" "$PWD/${file#./}"
+	    fi
+	done
     fi
 )
 
