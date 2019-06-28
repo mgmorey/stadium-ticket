@@ -148,17 +148,26 @@ install_app_files() (
 
 install_service() {
     configure_system_baseline
+
+    if [ $UWSGI_IS_PACKAGED = false ]; then
+	configure_system_defaults
+    fi
+
     cd "$source_dir"
 
     for dryrun in true false; do
 	if [ $UWSGI_IS_PACKAGED = false ]; then
+	    configure_system_defaults
 	    install_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	else
 	    install_uwsgi_from_package
 	fi
 
 	if [ $dryrun = false ]; then
-	    configure_system_defaults
+	    if [ $UWSGI_IS_PACKAGED = true ]; then
+		configure_system_defaults
+	    fi
+
 	    validate_parameters_preinstallation
 	    create_service_virtualenv $VENV_FILENAME-$APP_NAME
 	fi
