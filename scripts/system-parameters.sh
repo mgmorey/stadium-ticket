@@ -401,9 +401,7 @@ configure_system_defaults() {
     # Set app plugin from uWSGI plugin filename
     if [ -z "${APP_PLUGIN-}" ]; then
 	if [ -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	    if [ -e "$(get_uwsgi_plugin_path)" ]; then
-		APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
-	    fi
+	    APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
 	fi
     fi
 
@@ -616,10 +614,10 @@ signal_service_restart() {
 validate_parameters_postinstallation() {
     if [ ! -d $APP_ETCDIR ]; then
 	abort "%s: %s: No such configuration directory\n" "$0" "$APP_ETCDIR"
-    elif [ ! -r $APP_CONFIG ]; then
-	abort "%s: %s: No read permission\n" "$0" "$APP_CONFIG"
     elif [ ! -e $APP_CONFIG ]; then
 	abort "%s: %s: No such configuration file\n" "$0" "$APP_CONFIG"
+    elif [ ! -r $APP_CONFIG ]; then
+	abort "%s: %s: No read permission\n" "$0" "$APP_CONFIG"
     elif [ ! -d $APP_DIR ]; then
 	abort "%s: %s: No such program directory\n" "$0" "$APP_DIR"
     elif [ ! -d $APP_VARDIR ]; then
