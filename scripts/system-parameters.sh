@@ -208,113 +208,12 @@ configure_sunos() {
     PS_FORMAT=pid,ppid,user,tty,stime,args
 }
 
-configure_system_defaults() {
-    # Set application group and user accounts
-
-    if [ -z "${APP_GID-}" ]; then
-	APP_GID=uwsgi
-    fi
-
-    if [ -z "${APP_UID-}" ]; then
-	APP_UID=uwsgi
-    fi
-
-    # Set application directory prefix
-    if [ -z "${APP_PREFIX-}" ]; then
-	APP_PREFIX=
-    fi
-
-    # Set application directories from APP_NAME and APP_PREFIX
-    APP_DIR=$APP_PREFIX/opt/$APP_NAME
-    APP_ETCDIR=$APP_PREFIX/etc/opt/$APP_NAME
-
-    if [ -z "${APP_VARDIR-}" ]; then
-	APP_VARDIR=$APP_PREFIX/var/opt/$APP_NAME
-    fi
-
-    # Set additional file/directory parameters
-    APP_CONFIG=$APP_ETCDIR/app.ini
-
-    # Set uWSGI top-level directories
-
-    # Set uWSGI directory prefix
-    if [ -z "${UWSGI_PREFIX-}" ]; then
-	UWSGI_PREFIX=
-    fi
-
-    if [ -z "${UWSGI_ETCDIR-}" ]; then
-	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
-    fi
-
-    # Set uWSGI-related parameters
-
-    if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
-	UWSGI_HAS_PLUGIN=true
-    fi
-
-    if [ -z "${UWSGI_IS_PACKAGED-}" ]; then
-	UWSGI_IS_PACKAGED=true
-    fi
-
-    if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
-	UWSGI_RUN_AS_SERVICE=true
-    fi
-
-    if [ -z "${UWSGI_BINARY_DIR-}" ]; then
-	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
-    fi
-
-    if [ -z "${UWSGI_BINARY_NAME-}" ]; then
-	UWSGI_BINARY_NAME=uwsgi
-    fi
-
-    if [ -z "${UWSGI_PLUGIN_DIR-}" ]; then
-	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
-    fi
-
-    if [ -z "${UWSGI_PLUGIN_NAME-}" ]; then
-	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin)
-    fi
-
-    if [ -z "${UWSGI_PYTHON_VERSION-}" ]; then
-	UWSGI_PYTHON_VERSION=$(get_system_python_version)
-    fi
-
-    # Set app plugin from uWSGI plugin filename
-    if [ -z "${APP_PLUGIN-}" ]; then
-	if [ -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	    if [ -e "$(get_uwsgi_plugin_path)" ]; then
-		APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
-	    fi
-	fi
-    fi
-
-    # Set additional app directory parameters
-
-    if [ -z "${APP_LOGDIR-}" ]; then
-	APP_LOGDIR=$APP_VARDIR
-    fi
-
-    if [ -z "${APP_RUNDIR-}" ]; then
-	APP_RUNDIR=$APP_VARDIR
-    fi
-
-    # Set additional file parameters from app directories
-
-    if [ -z "${APP_LOGFILE-}" ]; then
-	APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    fi
-
-    if [ -z "${APP_PIDFILE-}" ]; then
-	APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    fi
-
-    if [ -z "${APP_SOCKET-}" ]; then
-	APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
-    fi
+configure_system() {
+    configure_system_baseline
+    configure_system_defaults
 }
 
-configure_system() {
+configure_system_baseline() {
     eval $("$script_dir/get-os-release.sh" -X)
 
     case "$kernel_name" in
@@ -422,7 +321,105 @@ configure_system() {
 	    ;;
     esac
 
-    configure_system_defaults
+    # Set application directories from APP_NAME and APP_PREFIX
+    APP_DIR=${APP_PREFIX-}/opt/$APP_NAME
+    APP_ETCDIR=${APP_PREFIX-}/etc/opt/$APP_NAME
+
+    if [ -z "${APP_VARDIR-}" ]; then
+	APP_VARDIR=${APP_PREFIX-}/var/opt/$APP_NAME
+    fi
+
+    # Set additional app file and directory parameters
+
+    APP_CONFIG=$APP_ETCDIR/app.ini
+
+    if [ -z "${APP_LOGDIR-}" ]; then
+	APP_LOGDIR=$APP_VARDIR
+    fi
+
+    if [ -z "${APP_RUNDIR-}" ]; then
+	APP_RUNDIR=$APP_VARDIR
+    fi
+
+    # Set application group and user accounts
+
+    if [ -z "${APP_GID-}" ]; then
+	APP_GID=uwsgi
+    fi
+
+    if [ -z "${APP_UID-}" ]; then
+	APP_UID=uwsgi
+    fi
+
+    # Set uWSGI-related parameters
+
+    if [ -z "${UWSGI_IS_PACKAGED-}" ]; then
+	UWSGI_IS_PACKAGED=true
+    fi
+}
+
+configure_system_defaults() {
+    # Set uWSGI directory prefix
+    if [ -z "${UWSGI_PREFIX-}" ]; then
+	UWSGI_PREFIX=
+    fi
+
+    if [ -z "${UWSGI_ETCDIR-}" ]; then
+	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
+    fi
+
+    # Set uWSGI-related parameters
+
+    if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
+	UWSGI_HAS_PLUGIN=true
+    fi
+
+    if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
+	UWSGI_RUN_AS_SERVICE=true
+    fi
+
+    if [ -z "${UWSGI_BINARY_DIR-}" ]; then
+	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
+    fi
+
+    if [ -z "${UWSGI_BINARY_NAME-}" ]; then
+	UWSGI_BINARY_NAME=uwsgi
+    fi
+
+    if [ -z "${UWSGI_PLUGIN_DIR-}" ]; then
+	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
+    fi
+
+    if [ -z "${UWSGI_PLUGIN_NAME-}" ]; then
+	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin)
+    fi
+
+    if [ -z "${UWSGI_PYTHON_VERSION-}" ]; then
+	UWSGI_PYTHON_VERSION=$(get_system_python_version)
+    fi
+
+    # Set app plugin from uWSGI plugin filename
+    if [ -z "${APP_PLUGIN-}" ]; then
+	if [ -n "${UWSGI_PLUGIN_NAME-}" ]; then
+	    if [ -e "$(get_uwsgi_plugin_path)" ]; then
+		APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
+	    fi
+	fi
+    fi
+
+    # Set additional file parameters from app directories
+
+    if [ -z "${APP_LOGFILE-}" ]; then
+	APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+    fi
+
+    if [ -z "${APP_PIDFILE-}" ]; then
+	APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    fi
+
+    if [ -z "${APP_SOCKET-}" ]; then
+	APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
+    fi
 }
 
 find_available_plugins() {
@@ -644,19 +641,19 @@ validate_parameters_preinstallation() {
 
     if [ ! -d $UWSGI_BINARY_DIR ]; then
 	abort "%s: %s: No such binary directory\n" "$0" "$UWSGI_BINARY_DIR"
-    elif [ ! -x $binary ]; then
-	abort "%s: %s: No execute permission\n" "$0" "$binary"
     elif [ ! -e $binary ]; then
 	abort "%s: %s: No such binary file\n" "$0" "$binary"
+    elif [ ! -x $binary ]; then
+	abort "%s: %s: No execute permission\n" "$0" "$binary"
     elif ! $binary --version >/dev/null 2>&1; then
 	abort "%s: %s: Unable to query version\n" "$0" "$binary"
     elif [ $UWSGI_HAS_PLUGIN = true ]; then
 	if [ ! -d $UWSGI_PLUGIN_DIR ]; then
 	    abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
-	elif [ ! -r $plugin ]; then
-	    abort "%s: %s: No read permission\n" "$0" "$plugin"
 	elif [ ! -e $plugin ]; then
 	    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
+	elif [ ! -r $plugin ]; then
+	    abort "%s: %s: No read permission\n" "$0" "$plugin"
 	fi
     fi
 }

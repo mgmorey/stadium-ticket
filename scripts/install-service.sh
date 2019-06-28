@@ -147,6 +147,7 @@ install_app_files() (
 )
 
 install_service() {
+    configure_system_baseline
     cd "$source_dir"
 
     for dryrun in true false; do
@@ -273,7 +274,6 @@ source_dir=$script_dir/..
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
-configure_system
 install_service
 initialize_database
 signal_service_restart
