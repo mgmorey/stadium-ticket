@@ -129,11 +129,6 @@ get_realpath() (
     fi
 )
 
-initialize_database() (
-    cd $source_dir
-    run_unpriv "'$script_dir/run.sh'" python3 -m app init-db
-)
-
 install_app_files() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" ]
@@ -284,7 +279,6 @@ source_dir=$script_dir/..
 . "$script_dir/system-functions.sh"
 
 install_service
-initialize_database
 signal_service_restart
 
 status=$(get_service_status)
