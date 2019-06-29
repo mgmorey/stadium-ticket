@@ -51,13 +51,13 @@ init-db:
 install:	.env .update
 	$(script_dir)/install-service.sh
 
-pycode:	.update
+pycode:		.update
 	$(script_dir)/run.sh pycodestyle app tests
 
-pylint:	.update
+pylint:		.update
 	$(script_dir)/run.sh pylint app tests
 
-pytest:	.update init-db
+pytest:		.update init-db
 	$(script_dir)/run.sh pytest tests
 
 realclean:	clean clean-venvs
@@ -66,7 +66,7 @@ realclean:	clean clean-venvs
 restart:
 	$(script_dir)/restart-service.sh
 
-start:
+start:		init-db
 	$(script_dir)/start-service.sh
 
 status:
@@ -85,11 +85,11 @@ uninstall:	stop
 .PHONY: enable init-db install pycode pylint pytest init-db realclean restart
 .PHONY: start status stop stress uninstall
 
-.env:			.env-template
+.env:		.env-template
 	$(script_dir)/configure-env.sh $@ $<
 
-.env-mysql:		.env-template-mysql
+.env-mysql:	.env-template-mysql
 	$(script_dir)/configure-env.sh $@ $<
 
-.update:		Pipfile Pipfile.lock
+.update:	Pipfile Pipfile.lock
 	$(script_dir)/update-virtualenv.sh && touch $@
