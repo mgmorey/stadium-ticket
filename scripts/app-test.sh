@@ -37,6 +37,10 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+encode_url() {
+    printf "%s\n" "$1" | sed -e 's/ /%20/g'
+}
+
 get_realpath() (
     assert [ $# -ge 1 ]
     realpath=$(which realpath)
@@ -55,8 +59,7 @@ get_realpath() (
 )
 
 list_event() {
-    name=$(printf "%s\n" "$1" | sed -e 's/ /%20/g')
-    curl -H "$HEADER" -X GET -i "${url_event}?name=$name"
+    curl -H "$HEADER" -X GET -i "$(encode_url "${url_event}?name=$1")"
 }
 
 list_events() {
@@ -64,8 +67,7 @@ list_events() {
 }
 
 remove_event() {
-    name=$(printf "%s\n" "$1" | tr -ds ' ' '%20')
-    curl -H "$HEADER" -X DELETE -i "${url_event}?name=$name"
+    curl -H "$HEADER" -X DELETE -i "$(encode_url "${url_event}?name=$1")"
 }
 
 request_tickets() {
