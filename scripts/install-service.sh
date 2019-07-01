@@ -244,7 +244,7 @@ print_status() {
 	(running)
 	    print_service_processes 1
 	    printf "Service %s installed and started successfully\n" "$APP_NAME"
-	    printf "Service %s started in %d seconds\n" "$APP_NAME" "$elapsed"
+	    print_elapsed_time started
 	    ;;
 	(stopped)
 	    printf "Service %s installed successfully\n" "$APP_NAME"

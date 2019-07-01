@@ -331,6 +331,14 @@ is_tmpfile() {
     printf "%s\n" ${tmpfiles-} | grep $1 >/dev/null
 }
 
+print_elapsed_time() {
+    if [ $elapsed -eq 0 ]; then
+	return 0
+    fi
+
+    printf "Service %s %s in %d seconds\n" "$APP_NAME" "$1" "$elapsed"
+}
+
 print_table() {
     "$script_dir/print-table.awk" -v border="${1-1}" \
 				  -v header="${2-}" \

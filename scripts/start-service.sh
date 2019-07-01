@@ -101,9 +101,7 @@ print_status() (
 		print_service_processes 0
 	    fi
 
-	    if [ $elapsed -gt 0 ]; then
-		printf "Service %s started in %d seconds\n" "$APP_NAME" $elapsed
-	    fi
+	    print_elapsed_time started
 
 	    if [ $start_requested = false ]; then
 		status="already $status"
