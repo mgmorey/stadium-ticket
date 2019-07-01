@@ -29,13 +29,15 @@ control_service_start() {
 
     control_service restart $UWSGI_IS_PACKAGED
 
-    if [ $dryrun = false ]; then
-	printf "Waiting for service %s to start\n" "$APP_NAME"
-	elapsed=$((elapsed + $(wait_for_service $((WAIT_RESTART - elapsed)))))
+    if [ $dryrun = true ]; then
+	return 0
+    fi
 
-	if [ $elapsed -lt $WAIT_DEFAULT ]; then
-	    elapsed=$((elapsed + $(wait_for_timeout $((WAIT_DEFAULT - elapsed)))))
-	fi
+    printf "Waiting for service %s to start\n" "$APP_NAME"
+    elapsed=$((elapsed + $(wait_for_service $((WAIT_RESTART - elapsed)))))
+
+    if [ $elapsed -lt $WAIT_DEFAULT ]; then
+	elapsed=$((elapsed + $(wait_for_timeout $((WAIT_DEFAULT - elapsed)))))
     fi
 }
 
@@ -77,7 +79,7 @@ get_realpath() (
     realpath=$(which realpath)
 
     if [ -n "$realpath" ]; then
-    	$realpath "$@"
+	$realpath "$@"
     else
 	for file; do
 	    if expr "$file" : '/.*' >/dev/null; then
@@ -100,7 +102,7 @@ print_status() (
 	    fi
 
 	    if [ $elapsed -gt 0 ]; then
-		printf "Service %s started in %d seconds\n" "$APP_NAME" "$elapsed"
+		printf "Service %s started in %d seconds\n" "$APP_NAME" $elapsed
 	    fi
 
 	    if [ $start_requested = false ]; then
