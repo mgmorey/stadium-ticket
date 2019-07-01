@@ -27,7 +27,7 @@ get_realpath() (
     realpath=$(which realpath)
 
     if [ -n "$realpath" ]; then
-    	$realpath "$@"
+	$realpath "$@"
     else
 	for file; do
 	    if expr "$file" : '/.*' >/dev/null; then
@@ -50,7 +50,7 @@ print_status() (
 	    fi
 
 	    if [ $elapsed -gt 0 ]; then
-		printf "Service %s restarted in %d seconds\n" "$APP_NAME" "$elapsed"
+		printf "Service %s restarted in %d seconds\n" "$APP_NAME" $elapsed
 	    fi
 	    ;;
 	(*)
