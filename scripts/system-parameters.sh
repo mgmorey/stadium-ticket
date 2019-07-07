@@ -231,16 +231,6 @@ configure_system_baseline() {
 			(10)
 			    configure_linux_debian_native
 			    ;;
-			('')
-			    case "$(cat /etc/debian_version)" in
-				(buster/sid)
-				    configure_linux_debian_native
-				    ;;
-				(*)
-				    abort_not_supported Release
-				    ;;
-			    esac
-			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
