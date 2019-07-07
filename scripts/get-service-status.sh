@@ -41,14 +41,14 @@ get_realpath() (
 
 get_service_parameters() {
     cat <<-EOF
-		     Name: $APP_NAME
-		     Port: $APP_PORT
+	             Name: $APP_NAME
+	             Port: $APP_PORT
 	    User/Group ID: $APP_UID/$APP_GID
 	    Configuration: $(print_path $APP_CONFIG)
 	Program directory: $(print_path $APP_DIR)
 	Working directory: $(print_path $APP_VARDIR)
-		 Log file: $(print_path $APP_LOGFILE)
-		 PID file: $(print_path $APP_PIDFILE)
+	         Log file: $(print_path $APP_LOGFILE)
+	         PID file: $(print_path $APP_PIDFILE)
 	   Python version: $(print_parameter $UWSGI_PYTHON_VERSION)
 	   Server version: $(print_parameter "$(get_uwsgi_version)")
 	      Binary file: $(print_path "$(get_uwsgi_binary_path)")
