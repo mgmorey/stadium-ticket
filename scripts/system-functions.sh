@@ -316,7 +316,7 @@ is_installed() (
 	    esac
 	    ;;
 	(Darwin)
-	    brew list 2>/dev/null | grep -E '^'"$1"'$' >/dev/null
+	    brew list 2>/dev/null | grep -qE '^'"$1"'$'
 	    ;;
 	(FreeBSD)
 	    pkg query %n "$1" >/dev/null 2>&1
@@ -328,7 +328,7 @@ is_installed() (
 )
 
 is_tmpfile() {
-    printf "%s\n" ${tmpfiles-} | grep $1 >/dev/null
+    printf "%s\n" ${tmpfiles-} | grep -q $1
 }
 
 print_elapsed_time() {
