@@ -87,5 +87,4 @@ eval $("$script_dir/get-os-release.sh" -X)
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-functions.sh"
 
-set_unpriv_environment
 create_virtualenv_via_pip "$@"
