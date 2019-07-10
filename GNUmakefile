@@ -66,7 +66,7 @@ realclean:	clean clean-venvs
 restart:
 	$(script_dir)/restart-service.sh
 
-start:		init-db
+start:
 	$(script_dir)/start-service.sh
 
 status:
