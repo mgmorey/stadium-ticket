@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 # create-virtualenv.sh: create virtual environment via pip
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -87,4 +87,5 @@ eval $("$script_dir/get-os-release.sh" -X)
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-functions.sh"
 
+set_unpriv_environment
 create_virtualenv_via_pip "$@"
