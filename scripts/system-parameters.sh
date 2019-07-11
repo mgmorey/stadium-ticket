@@ -133,18 +133,7 @@ configure_linux_debian_native() {
 
 configure_linux_debian_source() {
     configure_linux_debian_common
-
-    # Set application directory prefix
-    APP_PREFIX=/usr/local
-
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS="apps-available apps-enabled"
-
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/usr/local
-
-    # Set other uWSGI parameters
-    UWSGI_RUN_AS_SERVICE=false
+    configure_source_defaults
 }
 
 configure_linux_opensuse() {
@@ -215,6 +204,17 @@ configure_openindiana() {
 
     # Set other uWSGI parameters
     UWSGI_LOGFILE=$UWSGI_PREFIX/var/opt/uwsgi.log
+}
+
+configure_source_defaults() {
+    # Set application directory prefix
+    APP_PREFIX=/usr/local
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
+    # Set other uWSGI parameters
+    UWSGI_RUN_AS_SERVICE=false
 }
 
 configure_sunos() {
