@@ -384,7 +384,7 @@ configure_system_defaults() {
     fi
 
     if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
-	if [ "${UWSGI_IS_PACKAGED-false}" = true ]; then
+	if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	    UWSGI_RUN_AS_SERVICE=true
 	else
 	    UWSGI_RUN_AS_SERVICE=false
