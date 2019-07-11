@@ -118,8 +118,6 @@ configure_linux_debian_common() {
     # Set application group and user accounts
     APP_GID=www-data
     APP_UID=www-data
-
-    configure_source_defaults
 }
 
 configure_linux_debian_native() {
