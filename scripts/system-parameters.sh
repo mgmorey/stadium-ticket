@@ -160,15 +160,7 @@ configure_linux_opensuse() {
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
-configure_linux_redhat_common() {
-    # Set application group and user accounts
-    APP_GID=nobody
-    APP_UID=nobody
-}
-
 configure_linux_redhat_native() {
-    configure_linux_redhat_common
-
     # Set uWSGI configuration directories
     UWSGI_APPDIRS=uwsgi.d
 
@@ -181,7 +173,9 @@ configure_linux_redhat_native() {
 }
 
 configure_linux_redhat_source() {
-    configure_linux_redhat_common
+    # Set application group and user accounts
+    APP_GID=nobody
+    APP_UID=nobody
 
     # Set application directory prefix
     APP_PREFIX=/usr/local
