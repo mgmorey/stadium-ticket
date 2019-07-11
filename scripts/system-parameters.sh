@@ -43,7 +43,7 @@ configure_darwin() {
     if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	configure_darwin_native
     else
-	configure_source_defaults
+	configure_darwin_source
     fi
 }
 
@@ -73,6 +73,11 @@ configure_darwin_native() {
 
     # Set other uWSGI parameters
     UWSGI_LOGFILE=$UWSGI_PREFIX/var/log/uwsgi.log
+}
+
+configure_darwin_source() {
+    UWSGI_RUN_AS_SERVICE=true
+    configure_source_defaults
 }
 
 configure_freebsd_11() {
@@ -214,7 +219,9 @@ configure_source_defaults() {
     UWSGI_PREFIX=/usr/local
 
     # Set other uWSGI parameters
-    UWSGI_RUN_AS_SERVICE=false
+    if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
+	UWSGI_RUN_AS_SERVICE=false
+    fi
 }
 
 configure_sunos() {
