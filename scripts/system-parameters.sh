@@ -40,7 +40,7 @@ configure_bsd() {
 configure_darwin() {
     configure_darwin_common
 
-    if [ "${UWSGI_IS_PACKAGED-false}" = true ]; then
+    if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	configure_darwin_native
     else
 	configure_source_defaults
@@ -51,17 +51,17 @@ configure_darwin_common() {
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
+}
+
+configure_darwin_native() {
+    # Set uWSGI configuration directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
 
     # Set application directory prefix
     APP_PREFIX=/usr/local
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
-}
-
-configure_darwin_native() {
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS="apps-available apps-enabled"
 
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
@@ -107,8 +107,10 @@ configure_linux() {
 configure_linux_debian() {
     configure_linux_debian_common
 
-    if [ "${UWSGI_IS_PACKAGED-false}" = true ]; then
+    if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	configure_linux_debian_native
+    else
+	configure_source_defaults
     fi
 }
 
@@ -149,7 +151,7 @@ configure_linux_opensuse() {
 }
 
 configure_linux_redhat() {
-    if [ "${UWSGI_IS_PACKAGED-false}" = true ]; then
+    if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	configure_linux_redhat_native
     else
 	configure_linux_redhat_source
@@ -285,17 +287,17 @@ configure_system_baseline() {
 		    configure_linux_redhat_native
 		    ;;
 		(redhat|centos)
-                    case "$VERSION_ID" in
-                        (7)
-		            UWSGI_IS_PACKAGED=false
-                            ;;
-                        (8)
-		            UWSGI_IS_PACKAGED=true
-                            ;;
+		    case "$VERSION_ID" in
+			(7)
+			    UWSGI_IS_PACKAGED=false
+			    ;;
+			(8)
+			    UWSGI_IS_PACKAGED=true
+			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
-                    esac
+		    esac
 
 		    configure_linux_redhat
 		    ;;
