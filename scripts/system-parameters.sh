@@ -40,9 +40,7 @@ configure_bsd() {
 configure_darwin() {
     configure_darwin_common
 
-    if [ "${UWSGI_IS_PACKAGED-false}" = false ]; then
-	configure_darwin_source
-    else
+    if [ "${UWSGI_IS_PACKAGED-false}" = true ]; then
 	configure_darwin_native
     fi
 }
@@ -73,12 +71,6 @@ configure_darwin_native() {
 
     # Set other uWSGI parameters
     UWSGI_LOGFILE=$UWSGI_PREFIX/var/log/uwsgi.log
-}
-
-configure_darwin_source() {
-    # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/lib/uwsgi/plugins
 }
 
 configure_freebsd_11() {
