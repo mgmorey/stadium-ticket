@@ -216,6 +216,12 @@ set_unpriv_environment() {
 
     if [ "$HOME" != "$home_dir" ]; then
 	export HOME="$home_dir"
+
+        if [ -r $HOME/.profile ]; then
+            set +u
+            . $HOME/.profile
+            set -u
+        fi
     fi
 }
 

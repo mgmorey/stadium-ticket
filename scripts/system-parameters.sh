@@ -160,7 +160,15 @@ configure_linux_opensuse() {
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
-configure_linux_redhat() {
+configure_linux_redhat_common() {
+    # Set application group and user accounts
+    APP_GID=nobody
+    APP_UID=nobody
+}
+
+configure_linux_redhat_native() {
+    configure_linux_redhat_common
+
     # Set uWSGI configuration directories
     UWSGI_APPDIRS=uwsgi.d
 
@@ -170,6 +178,19 @@ configure_linux_redhat() {
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=/usr/sbin
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
+}
+
+configure_linux_redhat_source() {
+    configure_linux_redhat_common
+
+    # Set application directory prefix
+    APP_PREFIX=/usr/local
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
+    # Set other uWSGI parameters
+    UWSGI_RUN_AS_SERVICE=false
 }
 
 configure_openindiana() {
@@ -266,8 +287,23 @@ configure_system_baseline() {
 			    ;;
 		    esac
 		    ;;
-		(fedora|redhat|centos)
-		    configure_linux_redhat
+		(fedora)
+		    configure_linux_redhat_native
+		    ;;
+		(redhat|centos)
+                    case "$VERSION_ID" in
+                        (7)
+		            # Build uWSGI from source
+		            UWSGI_IS_PACKAGED=false
+		            configure_linux_redhat_source
+                            ;;
+                        (8)
+		            configure_linux_redhat_native
+                            ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+                    esac
 		    ;;
 		(*)
 		    abort_not_supported Distro

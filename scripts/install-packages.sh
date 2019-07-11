@@ -1,4 +1,4 @@
-#!/bin/sh -u
+#!/bin/sh -eu
 
 # install-packages: install packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
