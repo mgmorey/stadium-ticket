@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # create-virtualenv.sh: create virtual environment via pip
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
