@@ -42,6 +42,8 @@ configure_darwin() {
 
     if [ "${UWSGI_IS_PACKAGED-false}" = true ]; then
 	configure_darwin_native
+    else
+	configure_source_defaults
     fi
 }
 
