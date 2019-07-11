@@ -102,6 +102,14 @@ configure_linux() {
     PS_FORMAT=pid,ppid,user,tt,lstart,command
 }
 
+configure_linux_debian() {
+    configure_linux_debian_common
+
+    if [ "${UWSGI_IS_PACKAGED-false}" = true ]; then
+	configure_linux_debian_native
+    fi
+}
+
 configure_linux_debian_common() {
     # Set application group and user accounts
     APP_GID=www-data
@@ -121,11 +129,6 @@ configure_linux_debian_native() {
     # Set additional parameters from app directories
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/socket
-}
-
-configure_linux_debian_source() {
-    configure_linux_debian_common
-    configure_source_defaults
 }
 
 configure_linux_opensuse() {
@@ -199,12 +202,6 @@ configure_openindiana() {
 }
 
 configure_source_defaults() {
-    # Set application directory prefix
-    APP_PREFIX=/usr/local
-
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/usr/local
-
     # Set other uWSGI parameters
     UWSGI_RUN_AS_SERVICE=false
 }
@@ -231,17 +228,17 @@ configure_system_baseline() {
 		(debian)
 		    case "$VERSION_ID" in
 			(9)
-			    # Build uWSGI from source
 			    UWSGI_IS_PACKAGED=false
-			    configure_linux_debian_source
 			    ;;
 			(10)
-			    configure_linux_debian_native
+			    UWSGI_IS_PACKAGED=true
 			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
 		    esac
+
+		    configure_linux_debian
 		    ;;
 		(ubuntu)
 		    case "$VERSION_ID" in
@@ -387,7 +384,11 @@ configure_system_defaults() {
     fi
 
     if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
-	UWSGI_RUN_AS_SERVICE=true
+	if [ "${UWSGI_IS_PACKAGED-false}" = true ]; then
+	    UWSGI_RUN_AS_SERVICE=true
+	else
+	    UWSGI_RUN_AS_SERVICE=false
+	fi
     fi
 
     if [ -z "${UWSGI_BINARY_DIR-}" ]; then
