@@ -114,6 +114,8 @@ configure_linux_debian_common() {
     # Set application group and user accounts
     APP_GID=www-data
     APP_UID=www-data
+
+    configure_source_defaults
 }
 
 configure_linux_debian_native() {
@@ -144,6 +146,14 @@ configure_linux_opensuse() {
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
+configure_linux_redhat() {
+    if [ "${UWSGI_IS_PACKAGED-false}" = true ]; then
+	configure_linux_redhat_native
+    else
+	configure_linux_redhat_source
+    fi
+}
+
 configure_linux_redhat_native() {
     # Set uWSGI configuration directories
     UWSGI_APPDIRS=uwsgi.d
@@ -161,14 +171,7 @@ configure_linux_redhat_source() {
     APP_GID=nobody
     APP_UID=nobody
 
-    # Set application directory prefix
-    APP_PREFIX=/usr/local
-
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/usr/local
-
-    # Set other uWSGI parameters
-    UWSGI_RUN_AS_SERVICE=false
+    configure_source_defaults
 }
 
 configure_openindiana() {
@@ -202,6 +205,12 @@ configure_openindiana() {
 }
 
 configure_source_defaults() {
+    # Set application directory prefix
+    APP_PREFIX=/usr/local
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
     # Set other uWSGI parameters
     UWSGI_RUN_AS_SERVICE=false
 }
@@ -276,17 +285,17 @@ configure_system_baseline() {
 		(redhat|centos)
                     case "$VERSION_ID" in
                         (7)
-		            # Build uWSGI from source
 		            UWSGI_IS_PACKAGED=false
-		            configure_linux_redhat_source
                             ;;
                         (8)
-		            configure_linux_redhat_native
+		            UWSGI_IS_PACKAGED=true
                             ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
                     esac
+
+		    configure_linux_redhat
 		    ;;
 		(*)
 		    abort_not_supported Distro
