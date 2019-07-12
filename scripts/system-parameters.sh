@@ -425,6 +425,10 @@ configure_system_defaults() {
 	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin)
     fi
 
+    if [ -z "${UWSGI_PYTHON_PATHNAME-}" ]; then
+	UWSGI_PYTHON_PATHNAME=$(find_system_python)
+    fi
+
     if [ -z "${UWSGI_PYTHON_VERSION-}" ]; then
 	UWSGI_PYTHON_VERSION=$(get_system_python_version)
     fi

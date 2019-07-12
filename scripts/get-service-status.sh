@@ -50,8 +50,9 @@ get_service_parameters() {
 	         Log file: $(print_path $APP_LOGFILE)
 	         PID file: $(print_path $APP_PIDFILE)
 	   Python version: $(print_parameter $UWSGI_PYTHON_VERSION)
+	      Python file: $(print_parameter $UWSGI_PYTHON_PATHNAME)
 	   Server version: $(print_parameter "$(get_uwsgi_version)")
-	      Binary file: $(print_path "$(get_uwsgi_binary_path)")
+	      Server file: $(print_path "$(get_uwsgi_binary_path)")
 	      Plugin file: $(print_path "$(get_uwsgi_plugin_path)")
 	EOF
 }
