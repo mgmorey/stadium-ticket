@@ -19,7 +19,6 @@
 DARWIN_PKG="docker"
 DARWIN_PKGS="docker-compose"
 
-DEBIAN_9_PKG="docker"
 DEBIAN_10_PKG="docker.io"
 DEBIAN_PKGS="docker-compose"
 
@@ -58,9 +57,6 @@ get_docker_packages() {
 	    case "$ID" in
 		(debian)
 		    case "$VERSION_ID" in
-			(9)
-			    packages="${package:-$DEBIAN_9_PKG} $DEBIAN_PKGS"
-			    ;;
 			(10)
 			    packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
 			    ;;
