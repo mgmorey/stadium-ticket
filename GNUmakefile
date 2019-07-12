@@ -18,8 +18,8 @@ script_dir = scripts
 
 all:	.env .update pycode pylint pytest
 
-build:	.env .env-mysql .update
-	docker-compose up --build
+build:	.env .update
+	docker build -t stadium-ticket .
 
 clean:
 	$(script_dir)/clean-caches.sh
@@ -32,6 +32,9 @@ client:		.env
 
 client-debug:	.env
 	$(script_dir)/app-test.sh -h localhost -p 5001
+
+compose:	.env .env-mysql .update
+	docker-compose up --build
 
 debug:		.update init-db
 	$(script_dir)/run.sh flask run --port 5001
@@ -81,9 +84,9 @@ stress:
 uninstall:	stop
 	$(script_dir)/uninstall-service.sh
 
-.PHONY: all build clean clean-venvs client client-debug debug disable drop-db
-.PHONY: enable init-db install pycode pylint pytest init-db realclean restart
-.PHONY: start status stop stress uninstall
+.PHONY: all build clean clean-venvs client client-debug compose debug disable
+.PHONY: drop-db enable init-db install pycode pylint pytest init-db realclean
+.PHONY: restart start status stop stress uninstall
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh $@ $<
