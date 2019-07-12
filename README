@@ -33,10 +33,10 @@ Tumbleweed 20190626 and Fedora 30.
 
     scripts/load-test.sh (or "make stress")
 
-7.  To build and run a Docker container (may require sudo):
+7.  Build and run multi-container application with Docker (may require sudo):
 
     scripts/install-docker.sh
-    docker-compose up --build (or "make build")
+    docker-compose up --build (or "make compose")
 
 8.  To install the app as a service (may require sudo):
 
