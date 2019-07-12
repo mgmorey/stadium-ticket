@@ -52,9 +52,6 @@ install_docker() {
 	    case "$ID" in
 		(debian)
 		    case "$VERSION_ID" in
-			(9)
-			    :
-			    ;;
 			(10)
 			    :
 			    ;;
