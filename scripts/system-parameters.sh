@@ -430,7 +430,7 @@ configure_system_defaults() {
     fi
 
     if [ -z "${UWSGI_PYTHON_VERSION-}" ]; then
-	UWSGI_PYTHON_VERSION=$(get_system_python_version)
+	UWSGI_PYTHON_VERSION=$(get_system_python_version $UWSGI_PYTHON_PATHNAME)
     fi
 
     # Set app plugin from uWSGI plugin filename

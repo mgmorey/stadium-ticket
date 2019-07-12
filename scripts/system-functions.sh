@@ -204,7 +204,7 @@ find_system_pythons() (
 )
 
 get_system_python_version() {
-    $(find_system_python) --version | awk '{print $2}'
+    ${1-$(find_system_python)} --version | awk '{print $2}'
 }
 
 get_service_status() {
