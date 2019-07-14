@@ -110,12 +110,12 @@ def parse_version(s):
         raise ParseError("Invalid quoted string '{}': {}".format(s, e))
 
 
-def print_difference(difference, actual):
+def print_difference(difference, actual, minimum):
     """Print difference between Python semantic version strings."""
-    message = "Python {} interpreter {} {} requirement"
+    message = "Python {} interpreter {} {} requirement ({})"
     output = sys.stdout if difference >= 0 else sys.stderr
     verb = "meets" if difference >= 0 else "does not meet"
-    print(message.format(actual, verb, INPUT), file=output)
+    print(message.format(actual, verb, INPUT, minimum), file=output)
 
 
 def print_versions(s, delimiter):
@@ -144,7 +144,7 @@ def main():
     else:
         if actual:
             difference = get_difference(actual, minimum)
-            print_difference(difference, actual)
+            print_difference(difference, actual, minimum)
             exit(0 if difference >= 0 else 1)
         else:
             print_versions(minimum, args.delimiter)
