@@ -37,7 +37,7 @@ readline-devel sqlite3-devel uuid-devel zlib-devel"
 REDHAT_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel lzma-sdk-devel \
 make ncurses-devel openssl-devel readline-devel sqlite-devel zlib-devel"
 
-SUNOS_PKGS="bash gcc libffi make ncurses readline sqlite-3"
+SUNOS_PKGS="bash libffi make ncurses readline database/sqlite-3"
 
 abort() {
     printf "$@" >&2
