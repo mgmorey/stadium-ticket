@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+DARWIN_PKG_DIR=/Library/Developer/CommandLineTools/Packages/
+DARWIN_PKG_NAME=macOS_SDK_headers_for_macOS_10.14.pkg
+
+DEBIAN_PKG=python3-defaults
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -52,23 +57,18 @@ install_dependencies() {
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in
-			(9)
-			    :
-			    ;;
-			(10)
-			    :
+			(9|10)
+			    package=$DEBIAN_PKG
 			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
 		    esac
+
 		    ;;
 		(ubuntu)
 		    case "$VERSION_ID" in
-			(18.04)
-			    :
-			    ;;
-			(19.04)
+			(18.04|19.04)
 			    :
 			    ;;
 			(*)
@@ -94,7 +94,7 @@ install_dependencies() {
 	    esac
 	    ;;
 	(Darwin)
-	    :
+	    sudo installer -pkg $DARWIN_PKG_DIR/$DARWIN_PKG_NAME -target /
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"
@@ -103,7 +103,14 @@ install_dependencies() {
 
     packages=$("$script_dir/get-dependencies.sh")
     pattern=$("$script_dir/get-devel-pattern.sh")
-    "$script_dir/install-packages.sh" ${pattern:+-p $pattern }$packages
+
+    if [ -n "$packages" ]; then
+	"$script_dir/install-packages.sh" ${pattern:+-p $pattern }$packages
+    fi
+
+    if [ -n "${package:-}" ]; then
+	"$script_dir/install-build-deps.sh" "$@" $package
+    fi
 }
 
 if [ $# -gt 0 ]; then

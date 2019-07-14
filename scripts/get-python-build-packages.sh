@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-python3-deps: get list of Python 3 build dependencies
+# get-python-build-packages: get list of Python build dependencies
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
