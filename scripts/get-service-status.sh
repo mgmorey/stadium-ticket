@@ -67,8 +67,12 @@ print_parameter() {
 }
 
 print_path() {
-    if [ -n "${1-}" ] && [ -e $1 ]; then
-	printf "%s\n" "$1"
+    if [ -n "${1-}" ]; then
+	if [ -e $1 ]; then
+	    printf "%s\n" "$1"
+	else
+	    printf "%s\n" "$1 (not found)"
+	fi
     else
 	printf "%s\n" "<none>"
     fi
