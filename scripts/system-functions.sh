@@ -179,6 +179,10 @@ control_service() {
     esac
 }
 
+get_python_version() {
+    $1 --version | awk '{print $2}'
+}
+
 find_system_python() (
     find_system_pythons | awk 'NR == 1 {print $1}'
 )
@@ -202,10 +206,6 @@ find_system_pythons() (
 
     return 1
 )
-
-get_system_python_version() {
-    ${1-$(find_system_python)} --version | awk '{print $2}'
-}
 
 get_service_status() {
     if is_service_installed; then
