@@ -25,7 +25,7 @@ libncursesw5-dev libreadline-dev libsqlite3-dev libssl1.0-dev libxml2-dev \
 liblzma-dev llvm make uuid-dev xz-utils zlib1g-dev"
 
 DEBIAN_10_PKGS="bash curl libbz2-dev libffi-dev libgdbm-dev libncurses5-dev \
-libncursesw5-dev libpython3.7-dev libreadline-dev libsqlite3-dev libssl-dev \
+libncursesw5-dev libpython3-dev libreadline-dev libsqlite3-dev libssl-dev \
 libxml2-dev libxmlsec1-dev liblzma-dev llvm make uuid-dev xz-utils zlib1g-dev"
 
 FREEBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline sqlite3"
