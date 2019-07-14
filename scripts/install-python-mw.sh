@@ -58,16 +58,6 @@ install_python_mw() {
 			(10)
 			    :
 			    ;;
-			('')
-			    case "$(cat /etc/debian_version)" in
-				(buster/sid)
-				    :
-				    ;;
-				(*)
-				    abort_not_supported Release
-				    ;;
-			    esac
-			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;

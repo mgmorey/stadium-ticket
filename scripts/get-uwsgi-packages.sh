@@ -69,16 +69,6 @@ get_uwsgi_packages() {
 			(10)
 			    packages=$DEBIAN_10_PKGS
 			    ;;
-			('')
-			    case "$(cat /etc/debian_version)" in
-				(buster/sid)
-				    packages=$DEBIAN_10_PKGS
-				    ;;
-				(*)
-				    abort_not_supported Release
-				    ;;
-			    esac
-			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;

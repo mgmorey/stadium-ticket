@@ -67,16 +67,6 @@ get_dbms_server_packages() {
 			(10)
 			    packages="${package:-$DEBIAN_10_PKG}"
 			    ;;
-			('')
-			    case "$(cat /etc/debian_version)" in
-				(buster/sid)
-				    packages="${package:-$DEBIAN_10_PKG}"
-				    ;;
-				(*)
-				    abort_not_supported Release
-				    ;;
-			    esac
-			    ;;
 		    esac
 		    ;;
 		(ubuntu)
