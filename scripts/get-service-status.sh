@@ -51,10 +51,10 @@ get_service_parameters() {
 	Working directory: $(print_path $APP_VARDIR)
 	         Log file: $(print_path $APP_LOGFILE)
 	         PID file: $(print_path $APP_PIDFILE)
+	           Socket: $(print_path $APP_SOCKET)
 	      Python file: $(print_parameter $UWSGI_PYTHON_PATHNAME)
 	      Server file: $(print_path "$(get_uwsgi_binary_path)")
 	      Plugin file: $(print_path "$(get_uwsgi_plugin_path)")
-	           Socket: $(print_path $APP_SOCKET)
 	EOF
 }
 
