@@ -96,6 +96,9 @@ install_dependencies() {
 	(Darwin)
 	    sudo installer -pkg $DARWIN_PKG_DIR/$DARWIN_PKG_NAME -target /
 	    ;;
+	(FreeBSD)
+	    :
+	    ;;
 	(SunOS)
 	    :
 	    ;;
