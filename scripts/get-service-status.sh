@@ -43,18 +43,18 @@ get_service_parameters() {
     cat <<-EOF
 	             Name: $APP_NAME
 	             Port: $APP_PORT
+	   Python version: $(print_parameter $UWSGI_PYTHON_VERSION)
+	   Server version: $(print_parameter "$(get_uwsgi_version)")
 	    User/Group ID: $APP_UID/$APP_GID
 	    Configuration: $(print_path $APP_CONFIG)
 	Program directory: $(print_path $APP_DIR)
 	Working directory: $(print_path $APP_VARDIR)
 	         Log file: $(print_path $APP_LOGFILE)
 	         PID file: $(print_path $APP_PIDFILE)
-	           Socket: $(print_path $APP_SOCKET)
-	   Python version: $(print_parameter $UWSGI_PYTHON_VERSION)
 	      Python file: $(print_parameter $UWSGI_PYTHON_PATHNAME)
-	   Server version: $(print_parameter "$(get_uwsgi_version)")
 	      Server file: $(print_path "$(get_uwsgi_binary_path)")
 	      Plugin file: $(print_path "$(get_uwsgi_plugin_path)")
+	           Socket: $(print_path $APP_SOCKET)
 	EOF
 }
 
