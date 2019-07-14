@@ -69,7 +69,7 @@ install_dependencies() {
 		(ubuntu)
 		    case "$VERSION_ID" in
 			(18.04|19.04)
-			    :
+			    package=$DEBIAN_PKG
 			    ;;
 			(*)
 			    abort_not_supported Release
