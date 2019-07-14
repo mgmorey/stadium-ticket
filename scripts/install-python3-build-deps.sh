@@ -39,7 +39,7 @@ get_realpath() (
     realpath=$(which realpath)
 
     if [ -n "$realpath" ]; then
-    	$realpath "$@"
+	$realpath "$@"
     else
 	for file; do
 	    if expr "$file" : '/.*' >/dev/null; then
@@ -60,10 +60,10 @@ case "$kernel_name" in
 	case "$ID" in
 	    (debian|raspbian|ubuntu)
 		package=$DEBIAN_PKG
-	    	;;
+		;;
 	    (opensuse-*)
 		:
-	    	;;
+		;;
 	    (fedora|redhat|centos)
 		:
 		;;
@@ -74,10 +74,10 @@ case "$kernel_name" in
 	;;
     (Darwin)
 	sudo installer -pkg $DARWIN_PKG_DIR/$DARWIN_PKG_NAME -target /
-    	;;
+	;;
     (FreeBSD|SunOS|NT)
 	:
-    	;;
+	;;
     (*)
 	abort_not_supported "Operating system"
 	;;

@@ -53,7 +53,7 @@ get_realpath() (
     realpath=$(which realpath)
 
     if [ -n "$realpath" ]; then
-    	$realpath "$@"
+	$realpath "$@"
     else
 	for file; do
 	    if expr "$file" : '/.*' >/dev/null; then
@@ -75,29 +75,29 @@ case "$kernel_name" in
 	    (debian|raspbian)
 		case "$VERSION_ID" in
 		    (9)
-	    		packages=$DEBIAN_9_PKGS
+			packages=$DEBIAN_9_PKGS
 			;;
 		    (10)
-	    		packages=$DEBIAN_10_PKGS
+			packages=$DEBIAN_10_PKGS
 			;;
 		    ('')
 			case "$(cat /etc/debian_version)" in
 			    (buster/sid)
-	    			packages=$DEBIAN_10_PKGS
+				packages=$DEBIAN_10_PKGS
 				;;
 			esac
 			;;
 		esac
 		;;
 	    (ubuntu)
-	    	packages=$DEBIAN_10_PKGS
+		packages=$DEBIAN_10_PKGS
 		;;
 	    (opensuse-*)
-	    	packages=$OPENSUSE_PKGS
-	    	;;
+		packages=$OPENSUSE_PKGS
+		;;
 	    (fedora|redhat|centos)
-	    	packages=$REDHAT_PKGS
-	    	;;
+		packages=$REDHAT_PKGS
+		;;
 	esac
 	;;
     (Darwin)

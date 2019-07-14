@@ -30,7 +30,7 @@ get_realpath() (
     realpath=$(which realpath)
 
     if [ -n "$realpath" ]; then
-    	$realpath "$@"
+	$realpath "$@"
     else
 	for file; do
 	    if expr "$file" : '/.*' >/dev/null; then
@@ -54,7 +54,7 @@ case "$kernel_name" in
 		;;
 	    (fedora|redhat|centos)
 		printf "%s\n" "groupinstall"
-	    	;;
+		;;
 	    (*)
 		printf "%s\n" "install"
 		;;
