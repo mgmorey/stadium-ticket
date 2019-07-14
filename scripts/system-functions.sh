@@ -303,7 +303,7 @@ is_installed() (
     case "$kernel_name" in
 	(Linux)
 	    case "$ID" in
-		(debian|ubuntu)
+		(debian|raspbian|ubuntu)
 		    status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
 		    test "$status" = "install ok installed"
 		    ;;

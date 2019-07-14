@@ -55,7 +55,7 @@ get_docker_packages() {
     case "$kernel_name" in
 	(Linux)
 	    case "$ID" in
-		(debian)
+		(debian|raspbian)
 		    case "$VERSION_ID" in
 			(10)
 			    packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"

@@ -243,7 +243,7 @@ configure_system_baseline() {
 	    configure_linux
 
 	    case "$ID" in
-		(debian)
+		(debian|raspbian)
 		    case "$VERSION_ID" in
 			(9)
 			    UWSGI_IS_PACKAGED=false

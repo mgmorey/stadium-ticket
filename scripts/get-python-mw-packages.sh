@@ -41,7 +41,7 @@ get_python_mw_packages() {
     case "$kernel_name" in
 	(Linux)
 	    case "$ID" in
-		(debian|ubuntu)
+		(debian|raspbian|ubuntu)
 		    packages=$DEBIAN_PKGS
 		    ;;
 		(opensuse-*)

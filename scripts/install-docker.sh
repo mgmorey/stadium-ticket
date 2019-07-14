@@ -50,7 +50,7 @@ install_docker() {
     case "$kernel_name" in
 	(Linux)
 	    case "$ID" in
-		(debian)
+		(debian|raspbian)
 		    case "$VERSION_ID" in
 			(10)
 			    :
