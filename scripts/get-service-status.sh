@@ -49,6 +49,7 @@ get_service_parameters() {
 	Working directory: $(print_path $APP_VARDIR)
 	         Log file: $(print_path $APP_LOGFILE)
 	         PID file: $(print_path $APP_PIDFILE)
+	           Socket: $(print_path $APP_SOCKET)
 	   Python version: $(print_parameter $UWSGI_PYTHON_VERSION)
 	      Python file: $(print_parameter $UWSGI_PYTHON_PATHNAME)
 	   Server version: $(print_parameter "$(get_uwsgi_version)")
