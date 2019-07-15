@@ -48,7 +48,7 @@ get_realpath() (
 
 install_extras() {
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in

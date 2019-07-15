@@ -47,7 +47,7 @@ assert() {
 
 get_python_package() {
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian)
 		    printf "%s %s\n" $DEBIAN_INFO

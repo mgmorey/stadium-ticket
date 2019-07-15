@@ -39,7 +39,7 @@ assert() {
 
 get_python_mw_packages() {
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian|ubuntu)
 		    packages=$DEBIAN_PKGS

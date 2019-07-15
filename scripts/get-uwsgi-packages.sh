@@ -59,7 +59,7 @@ get_realpath() (
 
 get_uwsgi_packages() {
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in

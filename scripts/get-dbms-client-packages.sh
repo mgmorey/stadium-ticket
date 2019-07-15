@@ -63,7 +63,7 @@ get_dbms_client_packages() {
     esac
 
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in

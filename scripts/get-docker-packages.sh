@@ -53,7 +53,7 @@ get_docker_packages() {
     package=$("$script_dir/get-installed-docker-package.sh")
 
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in

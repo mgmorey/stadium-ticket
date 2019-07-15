@@ -53,7 +53,7 @@ install_packages() {
     parse_arguments "$@"
 
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian|ubuntu|opensuse-*|fedora|redhat|centos)
 		    install_pattern_from_args

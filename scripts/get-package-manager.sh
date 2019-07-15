@@ -31,7 +31,7 @@ assert() {
 
 get_package_manager() {
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian|ubuntu)
 		    printf "%s\n" apt-get

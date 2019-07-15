@@ -167,7 +167,7 @@ control_service() {
     assert [ -n "$2" ]
 
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    control_linux_service $1 $2
 	    ;;
 	(Darwin)
@@ -255,7 +255,7 @@ get_su_command() (
     assert [ -n "$1" ]
 
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    if get_setpriv_command $1; then
 		return 0
 	    else
@@ -301,7 +301,7 @@ is_installed() (
     assert [ -n "$1" ]
 
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian|ubuntu)
 		    status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)

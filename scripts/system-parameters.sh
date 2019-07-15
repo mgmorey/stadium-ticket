@@ -103,10 +103,15 @@ configure_freebsd_common() {
     UWSGI_RUN_AS_SERVICE=false
 }
 
-configure_linux() {
+configure_gnu_hurd_linux() {
     # Set ps command format and command column
     PS_COLUMN=10
     PS_FORMAT=pid,ppid,user,tt,lstart,command
+
+    if [ "${kernel_name}" = GNU ]; then
+	UWSGI_RUN_AS_SERVICE=false
+    fi
+
 }
 
 configure_linux_debian() {
@@ -239,8 +244,8 @@ configure_system_baseline() {
     eval $("$script_dir/get-os-release.sh" -X)
 
     case "$kernel_name" in
-	(Linux)
-	    configure_linux
+	(Linux|GNU)
+	    configure_gnu_hurd_linux
 
 	    case "$ID" in
 		(debian|raspbian)

@@ -41,7 +41,7 @@ assert() {
 
 get_devel_pattern() {
     case "$kernel_name" in
-	(Linux)
+	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian|ubuntu)
 		    pattern=$DEBIAN_PATT
