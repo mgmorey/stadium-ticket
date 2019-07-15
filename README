@@ -3,9 +3,9 @@ Stadium Ticket RESTful API for GNU, Linux, macOS and Unix.
 This project has been built and tested with Python versions 3.6 and
 3.7 on the platforms shown below:
 
-+---------+---------------+--------------------------------+
++=========+===============+================================+
 | OS Type | Distribution  | OS Version (Architectures)     |
-*=========*===============*================================*
++=========+===============+================================+
 | GNU     | Debian        | 10 (i686)                      |
 +---------+---------------+--------------------------------+
 | Linux   | CentOS        | 7 (amd64)                      |
@@ -30,9 +30,9 @@ This project has been built and tested with Python versions 3.6 and
 Installation as a service has been successfully tested on the
 platforms shown below:
 
-+---------+---------------+--------------------------------+
++=========+===============+================================+
 | OS Type | Distribution  | OS Version (Architectures)     |
-*=========*===============*================================*
++=========+===============+================================+
 | Linux   | CentOS        | 7 (amd64)                      |
 +---------+---------------+--------------------------------+
 | Linux   | Debian        | 9 (amd64, s390), 10 (amd64)    |
