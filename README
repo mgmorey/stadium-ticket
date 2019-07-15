@@ -1,14 +1,48 @@
-Stadium Ticket RESTful API for Linux, macOS and Unix.
+Stadium Ticket RESTful API for GNU, Linux, macOS and Unix.
 
-This project has been tested with Python 3.6 and 3.7 on the following
-platforms: Debian 9 and 10, Raspbian 10, Ubuntu 18.04 LTS and 19.04,
-openSUSE Leap 15.0 and 15.1, openSUSE Tumbleweed 201900708, Fedora 30,
-macOS 10.14, FreeBSD 11.3 and 12.0, OpenIndiana 2019.04, CentOS 7 1810
-and GNU/Hurd 0.9.
+This project has been built and tested with Python versions 3.6 and
+3.7 on the platforms shown below:
 
-Installation as a service has been tested on the following: Debian 10,
-Raspbian 10, Ubuntu 18.04 LTS and 19.04, openSUSE Leap 15.0 and 15.1,
-openSUSE Tumbleweed 20190626 and Fedora 30.
++---------+---------------+--------------------------------+
+| OS Type | Distribution  | OS Version (Architectures)     |
+*=========*===============*================================*
+| GNU     | Debian        | 10 (i686)                      |
++---------+---------------+--------------------------------+
+| Linux   | CentOS        | 7 (amd64)                      |
++---------+---------------+--------------------------------+
+| Linux   | Debian        | 9 (amd64, s390), 10 (amd64)    |
++---------+---------------+--------------------------------+
+| Linux   | Fedora        | 30 (amd64)                     |
++---------+---------------+--------------------------------+
+| Linux   | openSUSE Leap | 15.0 (amd64), 15.1 (amd64)     |
++---------+---------------+--------------------------------+
+| Linux   | Raspbian      | 10 (armv7l)                    |
++---------+---------------+--------------------------------+
+| Linux   | Ubuntu        | 18.04 (amd64), 19.04 (amd64)   |
++---------+---------------+--------------------------------+
+| Unix    | macOS         | 10.14 (amd64)                  |
++---------+---------------+--------------------------------+
+| Unix    | FreeBSD       | 11.3 (amd64), 12.0 (amd64)     |
++---------+---------------+--------------------------------+
+| Unix    | OpenIndiana   | 2019.04 (amd64)                |
++---------+---------------+--------------------------------+
+
+Installation as a service has been successfully tested on the
+platforms shown below:
+
++---------+---------------+--------------------------------+
+| OS Type | Distribution  | OS Version (Architectures)     |
+*=========*===============*================================*
+| Linux   | CentOS        | 7 (amd64)                      |
++---------+---------------+--------------------------------+
+| Linux   | Debian        | 9 (amd64, s390), 10 (amd64)    |
++---------+---------------+--------------------------------+
+| Linux   | Fedora        | 30 (amd64)                     |
++---------+---------------+--------------------------------+
+| Linux   | openSUSE Leap | 15.0 (amd64), 15.1 (amd64)     |
++---------+---------------+--------------------------------+
+| Linux   | Ubuntu        | 18.04 (amd64), 19.04 (amd64)   |
++---------+---------------+--------------------------------+
 
 1.  To install dependencies (may require sudo):
 
