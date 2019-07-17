@@ -29,7 +29,8 @@ FREEBSD_PKG="docker"
 FREEBSD_PKGS="docker-compose-%s"
 
 OPENSUSE_PKG="docker"
-OPENSUSE_PKGS="%s-docker-compose"
+OPENSUSE_LP_PKGS="docker-compose"
+OPENSUSE_TW_PKGS="%s-docker-compose"
 
 REDHAT_PKG="docker"
 REDHAT_PKGS="docker-compose"
@@ -65,8 +66,11 @@ get_docker_packages() {
 		(ubuntu)
 		    packages="${package:-$UBUNTU_PKG} $UBUNTU_PKGS"
 		    ;;
-		(opensuse-*)
-		    packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
+		(opensuse-leap)
+		    packages="${package:-$OPENSUSE_PKG} $OPENSUSE_LP_PKGS"
+		    ;;
+		(opensuse-tumbleweed)
+		    packages="${package:-$OPENSUSE_PKG} $OPENSUSE_TW_PKGS"
 		    ;;
 		(fedora)
 		    packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
