@@ -29,7 +29,7 @@ FREEBSD_PKG="docker"
 FREEBSD_PKGS="docker-compose-%s"
 
 OPENSUSE_PKG="docker"
-OPENSUSE_PKGS="docker-compose"
+OPENSUSE_PKGS="%s-docker-compose"
 
 REDHAT_PKG="docker"
 REDHAT_PKGS="docker-compose"
