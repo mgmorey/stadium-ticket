@@ -307,7 +307,7 @@ is_installed() (
 		    status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
 		    test "$status" = "install ok installed"
 		    ;;
-		(opensuse-*|fedora|redhat|centos)
+		(opensuse-*|fedora|redhat|centos|ol)
 		    rpm --query $1 >/dev/null 2>&1
 		    ;;
 		(*)

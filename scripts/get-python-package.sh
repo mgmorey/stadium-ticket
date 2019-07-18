@@ -26,7 +26,7 @@ FREEBSD_INFO="python3 py36"
 
 OPENSUSE_INFO="python3 python3"
 
-REDHAT_INFO="python36 python36"
+REDHAT_INFO="python3 python3"
 
 SUNOS_INFO="python-34 34"
 
@@ -61,7 +61,7 @@ get_python_package() {
 		(fedora)
 		    printf "%s %s\n" $FEDORA_INFO
 		    ;;
-		(redhat|centos)
+		(redhat|centos|ol)
 		    printf "%s %s\n" $REDHAT_INFO
 		    ;;
 		(*)

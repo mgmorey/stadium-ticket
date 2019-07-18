@@ -294,7 +294,8 @@ configure_system_baseline() {
 		    esac
 		    ;;
 		(fedora)
-		    configure_linux_redhat_native
+		    UWSGI_IS_PACKAGED=true
+		    configure_linux_redhat
 		    ;;
 		(redhat|centos)
 		    case "$VERSION_ID" in
@@ -303,6 +304,18 @@ configure_system_baseline() {
 			    ;;
 			(8)
 			    UWSGI_IS_PACKAGED=true
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+
+		    configure_linux_redhat
+		    ;;
+		(ol)
+		    case "$VERSION_ID" in
+			(8.0)
+			    UWSGI_IS_PACKAGED=false
 			    ;;
 			(*)
 			    abort_not_supported Release

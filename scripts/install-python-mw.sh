@@ -82,7 +82,7 @@ install_python_mw() {
 		(fedora)
 		    :
 		    ;;
-		(redhat)
+		(redhat|ol)
 		    :
 		    ;;
 		(centos)

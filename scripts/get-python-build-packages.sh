@@ -34,8 +34,9 @@ OPENSUSE_PKGS="bash curl gcc gdbm-devel libbz2-devel libffi-devel \
 libopenssl-devel lzma-sdk-devel make ncurses-devel openssl-devel \
 readline-devel sqlite3-devel uuid-devel zlib-devel"
 
-REDHAT_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel lzma-sdk-devel \
-make ncurses-devel openssl-devel readline-devel sqlite-devel zlib-devel"
+REDHAT_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel make \
+libuuid-devel ncurses-devel openssl-devel readline-devel sqlite-devel \
+xz-devel zlib-devel"
 
 SUNOS_PKGS="bash libffi make ncurses readline database/sqlite-3"
 
@@ -88,7 +89,7 @@ case "$kernel_name" in
 	    (opensuse-*)
 		packages=$OPENSUSE_PKGS
 		;;
-	    (fedora|redhat|centos)
+	    (fedora|redhat|centos|ol)
 		packages=$REDHAT_PKGS
 		;;
 	esac

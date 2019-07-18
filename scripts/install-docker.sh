@@ -79,7 +79,7 @@ install_docker() {
 		(fedora)
 		    :
 		    ;;
-		(redhat)
+		(redhat|ol)
 		    :
 		    ;;
 		(centos)

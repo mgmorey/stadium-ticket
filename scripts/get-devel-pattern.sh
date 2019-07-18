@@ -52,7 +52,7 @@ get_devel_pattern() {
 		(fedora)
 		    pattern=$FEDORA_PATT
 		    ;;
-		(redhat|centos)
+		(redhat|centos|ol)
 		    pattern=$REDHAT_PATT
 		    ;;
 	    esac

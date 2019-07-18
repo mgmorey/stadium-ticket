@@ -91,7 +91,7 @@ get_dbms_client_packages() {
 		(fedora)
 		    packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
 		    ;;
-		(redhat|centos)
+		(redhat|centos|ol)
 		    packages="${package:-$REDHAT_PKG}"
 		    ;;
 	    esac

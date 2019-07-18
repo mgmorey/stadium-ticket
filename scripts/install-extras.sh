@@ -82,7 +82,7 @@ install_extras() {
 		(fedora)
 		    :
 		    ;;
-		(redhat)
+		(redhat|ol)
 		    :
 		    ;;
 		(centos)

@@ -90,7 +90,7 @@ get_uwsgi_packages() {
 		(fedora)
 		    packages=$FEDORA_PKGS
 		    ;;
-		(redhat|centos)
+		(redhat|centos|ol)
 		    packages=$REDHAT_PKGS
 		    ;;
 	    esac

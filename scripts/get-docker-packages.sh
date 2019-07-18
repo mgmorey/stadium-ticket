@@ -75,7 +75,7 @@ get_docker_packages() {
 		(fedora)
 		    packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
 		    ;;
-		(redhat|centos)
+		(redhat|centos|ol)
 		    packages="${package:-$REDHAT_PKG} $REDHAT_PKGS"
 		    ;;
 	    esac

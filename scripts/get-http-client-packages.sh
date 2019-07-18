@@ -45,7 +45,7 @@ get_http_client_packages() {
 		(opensuse-*)
 		    packages="$OPENSUSE_PKGS"
 		    ;;
-		(fedora|redhat|centos)
+		(fedora|redhat|centos|ol)
 		    packages="$REDHAT_PKGS"
 		    ;;
 	    esac

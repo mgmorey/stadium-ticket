@@ -88,6 +88,9 @@ install_dependencies() {
 		(centos)
 		    "$script_dir/install-packages.sh" epel-release
 		    ;;
+		(ol)
+		    :
+		    ;;
 		(*)
 		    abort_not_supported Distro
 		    ;;
