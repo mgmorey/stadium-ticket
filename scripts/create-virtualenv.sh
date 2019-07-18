@@ -44,6 +44,10 @@ create_virtualenv_via_pip() (
 	    ;;
 	($VENV_FILENAME-$APP_NAME)
 	    python=$(find_system_python)
+
+	    if ! check_python $python; then
+		abort_no_python
+	    fi
 	    ;;
     esac
 

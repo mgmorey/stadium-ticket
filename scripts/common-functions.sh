@@ -38,15 +38,17 @@ check_python() (
     python_output="$($1 --version || true)"
 
     if [ -z "$python_output" ]; then
-	abort_no_python
+	return 1
     fi
 
     version="${python_output#Python }"
     printf "Python %s interpreter found: %s\n" "$version" "$1"
 
     if ! $1 "$script_dir/check-python.py" "$version"; then
-	abort_no_python
+	return 1
     fi
+
+    return 0
 )
 
 create_tmpfile() {
@@ -71,7 +73,10 @@ create_virtualenv() (
 	fi
     fi
 
-    check_python $python
+    if ! check_python $python; then
+	abort_no_python
+    fi
+
     printf "%s\n" "Creating virtual environment"
 
     if [ "$virtualenv" != false ]; then
@@ -111,8 +116,8 @@ find_pyenv_python() (
 )
 
 find_user_python() (
-    bootstrap_python=$(find_bootstrap_python)
-    python_versions=$($bootstrap_python "$script_dir/check-python.py")
+    boot_python=$(find_bootstrap_python)
+    python_versions=$($boot_python "$script_dir/check-python.py")
 
     if pyenv --version >/dev/null 2>&1; then
 	pyenv_root="$(pyenv root)"
@@ -177,8 +182,8 @@ get_pyenv_versions() {
 }
 
 get_required_python_versions() (
-    python=$(find_bootstrap_python)
-    python_versions=$($python "$script_dir/check-python.py" --delim '\.')
+    boot_python=$(find_bootstrap_python)
+    python_versions=$($boot_python "$script_dir/check-python.py" --delim '\.')
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
 	if get_pyenv_versions $python_version; then

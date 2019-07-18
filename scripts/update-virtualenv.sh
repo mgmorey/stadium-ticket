@@ -33,7 +33,11 @@ create_virtualenv_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	if pyenv --version >/dev/null 2>&1; then
 	    python=$(find_user_python)
-	    check_python $python
+
+	    if ! check_python $python; then
+		abort_no_python
+	    fi
+
 	    $pipenv --python $python
 	else
 	    $pipenv $PIPENV_OPTS

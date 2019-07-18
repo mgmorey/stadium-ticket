@@ -44,13 +44,17 @@ build_uwsgi_binary() {
 }
 
 build_uwsgi_from_source() (
+    python=$(find_system_python)
+
+    if ! check_python $python; then
+	abort_no_python
+    fi
+
     fetch_uwsgi_source
 
     if ! cd "$HOME/git/$UWSGI_BRANCH"; then
 	return 1
     fi
-
-    python=$(find_system_python)
 
     for binary; do
 	build_uwsgi_binary $binary
