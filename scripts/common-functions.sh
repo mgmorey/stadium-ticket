@@ -17,10 +17,6 @@ GREP_REGEX='^%s(\.[0-9]+){0,2}$\n'
 PIP_9_UPGRADE_OPTS="--no-cache-dir"
 PIP_10_UPGRADE_OPTS="--no-cache-dir --no-warn-script-location"
 
-abort_no_python() {
-    abort "%s\n" "No suitable Python interpreter found"
-}
-
 activate_virtualenv() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -30,26 +26,6 @@ activate_virtualenv() {
     . "$1/bin/activate"
     set -u
 }
-
-check_python() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    assert [ -x $1 ]
-    python_output="$($1 --version || true)"
-
-    if [ -z "$python_output" ]; then
-	return 1
-    fi
-
-    version="${python_output#Python }"
-    printf "Python %s interpreter found: %s\n" "$version" "$1"
-
-    if ! $1 "$script_dir/check-python.py" "$version"; then
-	return 1
-    fi
-
-    return 0
-)
 
 create_tmpfile() {
     tmpfile=$(mktemp)

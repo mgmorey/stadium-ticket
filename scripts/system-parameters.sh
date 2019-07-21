@@ -23,6 +23,10 @@ PLUGIN_FORMAT="python%s_plugin.so\n"
 UWSGI_BRANCH=uwsgi-2.0
 UWSGI_URL=https://github.com/unbit/uwsgi.git
 
+abort_no_python() {
+    abort "%s\n" "No suitable Python interpreter found"
+}
+
 abort_not_supported() {
     abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
@@ -30,6 +34,26 @@ abort_not_supported() {
 awk_uwsgi() {
     awk "$(printf "$AWK_FORMAT" $PS_COLUMN)" binary="$1"
 }
+
+check_python() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ -x $1 ]
+    python_output="$($1 --version || true)"
+
+    if [ -z "$python_output" ]; then
+	return 1
+    fi
+
+    version="${python_output#Python }"
+    printf "Python %s interpreter found: %s\n" "$version" "$1"
+
+    if ! $1 "$script_dir/check-python.py" "$version"; then
+	return 1
+    fi
+
+    return 0
+)
 
 configure_bsd() {
     # Set ps command format and command column
