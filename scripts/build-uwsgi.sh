@@ -26,30 +26,29 @@ assert() {
 }
 
 build_uwsgi_binary() {
-    assert [ $# -eq 1 ]
+    assert [ $# -eq 2 ]
     assert [ -n "$1" ]
+    assert [ -n "$2" ]
 
-    if [ -x $1 ]; then
+    if [ -x $2 ]; then
 	return 0
     fi
 
-    case $1 in
+    case $2 in
 	(uwsgi)
-	    $python uwsgiconfig.py --build core
+	    $1 uwsgiconfig.py --build core
 	    ;;
 	(*)
-	    $python uwsgiconfig.py --plugin plugins/python core ${1%_*}
+	    $1 uwsgiconfig.py --plugin plugins/python core ${2%_*}
 	    ;;
     esac
 }
 
 build_uwsgi_from_source() (
-    python=$(find_system_python)
-
-    if ! check_python $python; then
-	abort_no_python
-    fi
-
+    assert [ $# -ge 2 ]
+    assert [ -n "$1" ]
+    python=$1
+    shift
     fetch_uwsgi_source
 
     if ! cd "$HOME/git/$UWSGI_BRANCH"; then
@@ -57,7 +56,7 @@ build_uwsgi_from_source() (
     fi
 
     for binary; do
-	build_uwsgi_binary $binary
+	build_uwsgi_binary $python $binary
     done
 )
 
@@ -89,8 +88,18 @@ get_realpath() (
     fi
 )
 
-if [ $# -gt 0 ]; then
+if [ $# -eq 0 ]; then
+    abort "%s: Not enough arguments\n" "$0"
+fi
+
+if [ $# -gt 1 ]; then
     abort "%s: Too many arguments\n" "$0"
+fi
+
+if [ $# -eq 1 ]; then
+    assert [ -n "$1" ]
+    export SYSTEM_PYTHON=$1
+    shift
 fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
@@ -104,4 +113,4 @@ source_dir=$script_dir/..
 
 configure_system
 set_unpriv_environment
-build_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
+build_uwsgi_from_source $python $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME

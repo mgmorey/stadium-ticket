@@ -52,7 +52,7 @@ Working directory: $(print_path $APP_VARDIR)
          Log file: $(print_path $APP_LOGFILE)
          PID file: $(print_path $APP_PIDFILE)
            Socket: $(print_path $APP_SOCKET)
-      Python file: $(print_parameter $SYSTEM_PYTHON_PATHNAME)
+      Python file: $(print_parameter $SYSTEM_PYTHON)
       Server file: $(print_path "$(get_uwsgi_binary_path)")
       Plugin file: $(print_path "$(get_uwsgi_plugin_path)")
 EOF

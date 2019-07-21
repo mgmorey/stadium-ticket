@@ -26,28 +26,23 @@ assert() {
 }
 
 create_virtualenv_via_pip() (
-    assert [ $# -eq 1 ]
+    assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-    source_dir=$script_dir/..
-
-    cd "$source_dir"
 
     pip=$("$script_dir/get-python-command.sh" pip)
     pipenv=$("$script_dir/get-python-command.sh" pipenv)
     python=
+    source_dir=$script_dir/..
     venv_filename=$1
     venv_requirements=requirements.txt
 
+    cd "$source_dir"
     case $venv_filename in
 	($VENV_FILENAME)
 	    :
 	    ;;
 	($VENV_FILENAME-$APP_NAME)
-	    python=$(find_system_python)
-
-	    if ! check_python $python; then
-		abort_no_python
-	    fi
+	    python=${2-}
 	    ;;
     esac
 
@@ -75,7 +70,7 @@ if [ $# -eq 0 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
 
-if [ $# -gt 1 ]; then
+if [ $# -gt 2 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
 

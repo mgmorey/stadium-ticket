@@ -443,12 +443,18 @@ configure_system_defaults() {
 	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin)
     fi
 
-    if [ -z "${SYSTEM_PYTHON_PATHNAME-}" ]; then
-	SYSTEM_PYTHON_PATHNAME=$(find_system_python)
+    if [ -z "${SYSTEM_PYTHON-}" ]; then
+	python=$(find_system_python)
+
+	if check_python $python; then
+	    export SYSTEM_PYTHON=$python
+	else
+	    abort_no_python
+	fi
     fi
 
     if [ -z "${SYSTEM_PYTHON_VERSION-}" ]; then
-	SYSTEM_PYTHON_VERSION=$(get_python_version $SYSTEM_PYTHON_PATHNAME)
+	SYSTEM_PYTHON_VERSION=$(get_python_version $SYSTEM_PYTHON)
     fi
 
     # Set app plugin from uWSGI plugin filename

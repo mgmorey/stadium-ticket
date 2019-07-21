@@ -164,7 +164,7 @@ install_service() {
 	    fi
 
 	    validate_parameters_preinstallation
-	    create_service_virtualenv $VENV_FILENAME-$APP_NAME
+	    create_service_virtualenv $VENV_FILENAME-$APP_NAME $SYSTEM_PYTHON
 	fi
 
 	create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR $APP_LOGDIR $APP_RUNDIR
@@ -204,7 +204,7 @@ install_uwsgi_from_package() (
 
 install_uwsgi_from_source() (
     if [ $dryrun = false ]; then
-	build_uwsgi_from_source
+	build_uwsgi_from_source $SYSTEM_PYTHON
 	dir=$(get_home_directory ${SUDO_USER-$USER})
 
 	if ! cd $dir/git/$UWSGI_BRANCH; then

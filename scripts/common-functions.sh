@@ -70,11 +70,11 @@ create_virtualenv() (
     if [ "$virtualenv" != false ]; then
 	if [ -z "${python-${2-}}" ]; then
 	    python=$(find_user_python)
-	fi
-    fi
 
-    if ! check_python $python; then
-	abort_no_python
+	    if ! check_python $python; then
+		abort_no_python
+	    fi
+	fi
     fi
 
     printf "%s\n" "Creating virtual environment"
