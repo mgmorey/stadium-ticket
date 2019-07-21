@@ -98,7 +98,7 @@ fi
 
 if [ $# -eq 1 ]; then
     assert [ -n "$1" ]
-    export SYSTEM_PYTHON=$1
+    SYSTEM_PYTHON=$1
     shift
 fi
 
@@ -113,4 +113,4 @@ source_dir=$script_dir/..
 
 configure_system
 set_unpriv_environment
-build_uwsgi_from_source $python $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
+build_uwsgi_from_source $SYSTEM_PYTHON $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME

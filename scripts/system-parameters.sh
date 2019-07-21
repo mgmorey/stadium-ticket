@@ -413,6 +413,22 @@ configure_system_defaults() {
 	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
     fi
 
+    # Set Python-related parameters
+
+    if [ -z "${SYSTEM_PYTHON-}" ]; then
+	python=$(find_system_python)
+
+	if check_python $python; then
+	    SYSTEM_PYTHON=$python
+	else
+	    abort_no_python
+	fi
+    fi
+
+    if [ -z "${SYSTEM_PYTHON_VERSION-}" ]; then
+	SYSTEM_PYTHON_VERSION=$(get_python_version $SYSTEM_PYTHON)
+    fi
+
     # Set uWSGI-related parameters
 
     if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
@@ -441,20 +457,6 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_PLUGIN_NAME-}" ]; then
 	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin)
-    fi
-
-    if [ -z "${SYSTEM_PYTHON-}" ]; then
-	python=$(find_system_python)
-
-	if check_python $python; then
-	    export SYSTEM_PYTHON=$python
-	else
-	    abort_no_python
-	fi
-    fi
-
-    if [ -z "${SYSTEM_PYTHON_VERSION-}" ]; then
-	SYSTEM_PYTHON_VERSION=$(get_python_version $SYSTEM_PYTHON)
     fi
 
     # Set app plugin from uWSGI plugin filename
