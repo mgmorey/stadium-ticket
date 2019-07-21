@@ -34,8 +34,8 @@ create_virtualenv_via_pipenv() {
 	if pyenv --version >/dev/null 2>&1; then
 	    python=$(find_user_python)
 
-	    if ! check_python $python; then
-		abort_no_python
+	    if ! "$script_dir/check-python.sh" $python; then
+		abort "%s\n" "No suitable Python interpreter found"
 	    fi
 
 	    $pipenv --python $python

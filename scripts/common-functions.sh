@@ -47,8 +47,8 @@ create_virtualenv() (
 	if [ -z "${python-${2-}}" ]; then
 	    python=$(find_user_python)
 
-	    if ! check_python $python; then
-		abort_no_python
+	    if ! "$script_dir/check-python.sh" $python; then
+		abort "%s\n" "No suitable Python interpreter found"
 	    fi
 	fi
     fi
