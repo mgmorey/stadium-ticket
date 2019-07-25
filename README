@@ -41,17 +41,17 @@ Installation as a service has been tested on the following platforms:
 | GNU/Linux | Ubuntu           | 18.04 (amd64), 19.04 (amd64)  |
 +-----------+------------------+-------------------------------+
 
-The various OS ports have been tested on the following CPU Models:
+The various OS ports have been tested on the following processors:
 
 +================+==============================+==============+
-| CPU ISA        | CPU Vendor and Model         | OS Ports (b) |
+| CPU ISA        | CPU Vendor and Model (Clock) | OS Port (b)  |
 +----------------+------------------------------+--------------+
-| ARMv8-A        | ARM Cortex-A53 (1.2GHz)      | arm7l (32b)  |
+| ARMv8-A        | ARM Cortex-A53      (1.2GHz) | arm7l (32b)  |
 +----------------+------------------------------+--------------+
-| x86-64         | Intel Core i7-4790K (4GHz)   | amd64 (64b), |
+| x86-64         | Intel Core i7-4790K (4.0GHz) | amd64 (64b), |
 |                |                              | i686  (32b)  |
 +----------------+------------------------------+--------------+
-| z/Architecture | IBM zSeries 900 (emulated)   | s390x (64b)  |
+| z/Architecture | IBM zSeries 900   (emulated) | s390x (64b)  |
 +----------------+------------------------------+--------------+
 
 1.  To install dependencies (may require root):
