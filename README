@@ -41,19 +41,18 @@ Installation as a service has been tested on the following platforms:
 | GNU/Linux | Ubuntu           | 18.04 (amd64), 19.04 (amd64)  |
 +-----------+------------------+-------------------------------+
 
-The various architectures have been tested on the following CPUs:
+The various OS ports have been tested on the following CPU Models:
 
-+=======+=============+==========================+=============+
-| Arch. | OS Port (b) | Cores, Vendor and Model  | Clock Rate  |
-+-------+-------------+--------------------------+-------------+
-| AMD64 | amd64 (64b) | 4x Intel Core i7-4790K   | 4.0 GHz     |
-+-------+-------------+--------------------------+-------------+
-| AMD64 | i686  (32b) | 4x Intel Core i7-4790K   | 4.0 GHz     |
-+-------+-------------+--------------------------+-------------+
-| ARMv8 | arm7l (32b) | 4x ARM Cortex-A53        | 1.2 GHz     |
-+-------+-------------+--------------------------+-------------+
-| IBM Z | s390x (64b) | 4x IBM zSeries 900       | (emulated)  |
-+-------+-------------+--------------------------+-------------+
++================+==============================+==============+
+| CPU ISA        | CPU Vendor and Model         | OS Ports (b) |
++----------------+------------------------------+--------------+
+| ARMv8-A        | ARM Cortex-A53 (1.2GHz)      | arm7l (32b)  |
++----------------+------------------------------+--------------+
+| x86-64         | Intel Core i7-4790K (4GHz)   | amd64 (64b), |
+|                |                              | i686  (32b)  |
++----------------+------------------------------+--------------+
+| z/Architecture | IBM zSeries 900 (emulated)   | s390x (64b)  |
++----------------+------------------------------+--------------+
 
 1.  To install dependencies (may require root):
 
