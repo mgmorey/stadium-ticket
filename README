@@ -32,8 +32,6 @@ Installation as a service has been tested on the following platforms:
 +===========+==================+===============================+
 | OS Family | Operating System | OS Versions (Architectures)   |
 +===========+==================+===============================+
-| GNU/Linux | CentOS           | 7 (amd64)                     |
-+-----------+------------------+-------------------------------+
 | GNU/Linux | Debian/Raspbian  | 10 (amd64, armv7l, s390x)     |
 +-----------+------------------+-------------------------------+
 | GNU/Linux | Fedora           | 30 (amd64)                    |
