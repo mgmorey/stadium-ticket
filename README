@@ -40,6 +40,8 @@ Installation as a service has been tested on the following platforms:
 +-----------+------------------+-------------------------------+
 | GNU/Linux | Ubuntu           | 18.04 (amd64), 19.04 (amd64)  |
 +-----------+------------------+-------------------------------+
+| Unix      | Darwin (macOS)   | 10.14 (amd64)                 |
++-----------+------------------+-------------------------------+
 
 The various OS ports have been tested on the following processors:
 
