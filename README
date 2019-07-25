@@ -43,16 +43,16 @@ Installation as a service has been tested on the following platforms:
 
 The various OS ports have been tested on the following processors:
 
-+================+==============================+==============+
-| CPU ISA        | CPU Vendor and Model (Clock) | OS Port (b)  |
-+----------------+------------------------------+--------------+
-| ARMv8-A        | ARM Cortex-A53      (1.2GHz) | arm7l (32b)  |
-+----------------+------------------------------+--------------+
-| x86-64         | Intel Core i7-4790K (4.0GHz) | amd64 (64b), |
-|                |                              | i686  (32b)  |
-+----------------+------------------------------+--------------+
-| z/Architecture | IBM zSeries 900   (emulated) | s390x (64b)  |
-+----------------+------------------------------+--------------+
++================+=========================+===============+
+| CPU ISA | CPU Vendor and Model (Clock)   | OS Port (b)   |
++---------+--------------------------------+---------------+
+| ARMv8-A | ARM Cortex-A53 (1.2GHz)        | arm7l (32b)   |
++---------+--------------------------------+---------------+
+| x86-64  | Intel Core i7-4790K (4.0GHz)   | amd64 (64b),  |
+|         |                                | i686  (32b)   |
++---------+--------------------------------+---------------+
+| z/Arch  | IBM z900 Model 2064 (Hercules) | s390x (64b)   |
++---------+--------------------------------+---------------+
 
 1.  To install dependencies (may require root):
 
