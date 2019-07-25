@@ -4,7 +4,7 @@ This project has been tested with Python 3.6 and 3.7 on the following
 platforms:
 
 +===========+==================+===============================+
-| OS Family | Operating System | OS Versions (Architectures)   |
+| OS Family | OS Distribution  | OS Versions (OS Ports)        |
 +===========+==================+===============================+
 | GNU/Hurd  | Debian           | 10 (i686)                     |
 +-----------+------------------+-------------------------------+
@@ -30,7 +30,7 @@ platforms:
 Installation as a service has been tested on the following platforms:
 
 +===========+==================+===============================+
-| OS Family | Operating System | OS Versions (Architectures)   |
+| OS Family | OS Distribution  | OS Versions (OS Ports)        |
 +===========+==================+===============================+
 | GNU/Linux | Debian/Raspbian  | 10 (amd64, armv7l, s390x)     |
 +-----------+------------------+-------------------------------+
@@ -40,6 +40,20 @@ Installation as a service has been tested on the following platforms:
 +-----------+------------------+-------------------------------+
 | GNU/Linux | Ubuntu           | 18.04 (amd64), 19.04 (amd64)  |
 +-----------+------------------+-------------------------------+
+
+The various architectures have been tested on the following CPUs:
+
++=======+=============+==========================+=============+
+| Arch. | OS Port (b) | Cores, Vendor and Model  | Clock Rate  |
++-------+-------------+--------------------------+-------------+
+| AMD64 | amd64 (64b) | 4x Intel Core i7-4790K   | 4.0 GHz     |
++-------+-------------+--------------------------+-------------+
+| AMD64 | i686  (32b) | 4x Intel Core i7-4790K   | 4.0 GHz     |
++-------+-------------+--------------------------+-------------+
+| ARMv8 | arm7l (32b) | 4x ARM Cortex-A53        | 1.2 GHz     |
++-------+-------------+--------------------------+-------------+
+| IBM Z | s390x (64b) | 4x IBM zSeries 900       | (emulated)  |
++-------+-------------+--------------------------+-------------+
 
 1.  To install dependencies (may require root):
 
