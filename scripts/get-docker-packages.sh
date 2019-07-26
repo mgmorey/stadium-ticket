@@ -25,8 +25,8 @@ DEBIAN_PKGS="docker-compose"
 FEDORA_PKG="docker"
 FEDORA_PKGS="docker-compose"
 
-FREEBSD_PKG="docker"
-FREEBSD_PKGS="docker-compose"
+FREEBSD_PKG="docker-machine"
+FREEBSD_PKGS="docker docker-compose"
 
 OPENSUSE_PKG="docker"
 OPENSUSE_LP_PKGS="docker-compose"
