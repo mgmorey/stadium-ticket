@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKG_DIR=/Library/Developer/CommandLineTools/Packages/
-DARWIN_PKG_NAME=macOS_SDK_headers_for_macOS_10.14.pkg
-
 DEBIAN_PKG=python3-defaults
 
 abort() {
@@ -97,7 +94,7 @@ install_dependencies() {
 	    esac
 	    ;;
 	(Darwin)
-	    sudo installer -pkg $DARWIN_PKG_DIR/$DARWIN_PKG_NAME -target /
+	    :
 	    ;;
 	(FreeBSD)
 	    :
