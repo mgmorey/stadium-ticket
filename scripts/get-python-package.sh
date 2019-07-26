@@ -30,7 +30,7 @@ REDHAT_7_INFO="python36 python36"
 
 REDHAT_8_INFO="python3 python3"
 
-SUNOS_INFO="python-34 34"
+SUNOS_INFO=":python37 py37"
 
 UBUNTU_INFO="python3 python3"
 

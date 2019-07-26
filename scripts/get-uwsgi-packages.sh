@@ -29,7 +29,7 @@ OPENSUSE_PKGS="rsync system-user-wwwrun util-linux uwsgi uwsgi-%s"
 
 REDHAT_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
-SUNOS_PKGS=""
+SUNOS_PKGS="rsync :%s-sqlite3 :%s-uwsgi"
 
 abort() {
     printf "$@" >&2
