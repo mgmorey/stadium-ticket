@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 # install-packages: install packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -50,8 +50,8 @@ install_packages() {
     install_opts=$("$script_dir/get-package-install-options.sh")
     installers=$("$script_dir/get-package-manager.sh")
 
-    installer1=$(printf "%s\n" $installers | awk '{print $1}')
-    installer2=$(printf "%s\n" $installers | awk '{print $2}')
+    installer1=$(printf "%s " $installers | awk '{print $1}')
+    installer2=$(printf "%s " $installers | awk '{print $2}')
 
     parse_arguments "$@"
 
@@ -82,11 +82,7 @@ install_packages() {
 
 install_packages_from_args() {
     if [ -n "$packages" ]; then
-	if ! $installer1 install $install_opts $packages; then
-	    if [ -n "$installer2" -a -n "$(which $installer2)" ]; then
-		$installer2 install $install_opts $packages
-	    fi
-	fi
+	$installer1 install $install_opts $packages
     fi
 }
 
