@@ -12,7 +12,7 @@ platforms:
 +-----------+------------------+-------------------------------+
 | GNU/Linux | CentOS           | 7 (amd64)                     |
 +-----------+------------------+-------------------------------+
-| GNU/Linux | Debian/Raspbian  | 10 (amd64, armv7l, s390x)     |
+| GNU/Linux | Debian/Raspbian  | 10 (amd64, armhf, s390x)      |
 +-----------+------------------+-------------------------------+
 | GNU/Linux | Fedora           | 30 (amd64)                    |
 +-----------+------------------+-------------------------------+
@@ -34,7 +34,7 @@ Installation as a service has been tested on the following platforms:
 +===========+==================+===============================+
 | OS Family | OS Distribution  | OS Versions (OS Ports)        |
 +===========+==================+===============================+
-| GNU/Linux | Debian/Raspbian  | 10 (amd64, armv7l, s390x)     |
+| GNU/Linux | Debian/Raspbian  | 10 (amd64, armhf, s390x)      |
 +-----------+------------------+-------------------------------+
 | GNU/Linux | Fedora           | 30 (amd64)                    |
 +-----------+------------------+-------------------------------+
@@ -50,7 +50,7 @@ The various OS ports have been tested on the following processors:
 +==========+===================================+===============+
 | CPU ISA  | CPU Vendor/Model         (Clock)  | OS Port (b)   |
 +----------+-----------------------------------+---------------+
-| ARMv8-A  | ARM Cortex-A53          (1.2GHz)  | arm7l (32b)   |
+| ARMv8-A  | ARM Cortex-A53          (1.2GHz)  | armhf (32b)   |
 +----------+-----------------------------------+---------------+
 | x86-64   | Intel Core i7           (3.0GHz,  | amd64 (64b),  |
 |          |                          4.0GHz)  | i686  (32b)   |
