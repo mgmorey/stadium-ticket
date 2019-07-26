@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS="rsync :%s-sqlite3 :%s-uwsgi"
+DARWIN_PKGS="rsync :%s-uwsgi"
 
 DEBIAN_9_PKGS="rsync setpriv uwsgi uwsgi-plugin-%s"
 DEBIAN_10_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
@@ -29,7 +29,7 @@ OPENSUSE_PKGS="rsync system-user-wwwrun util-linux uwsgi uwsgi-%s"
 
 REDHAT_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
-SUNOS_PKGS="rsync :%s-sqlite3 :%s-uwsgi"
+SUNOS_PKGS="rsync :%s-uwsgi"
 
 abort() {
     printf "$@" >&2
