@@ -96,6 +96,9 @@ install_extras() {
 	(Darwin)
 	    :
 	    ;;
+	(SunOS)
+	    :
+	    ;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;
