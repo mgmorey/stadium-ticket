@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 # install-packages: install packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -48,7 +48,10 @@ get_realpath() (
 
 install_packages() {
     install_opts=$("$script_dir/get-package-install-options.sh")
-    installer=$("$script_dir/get-package-manager.sh")
+    installers=$("$script_dir/get-package-manager.sh")
+
+    installer1=$(printf "%s\n" $installers | awk '{print $1}')
+    installer2=$(printf "%s\n" $installers | awk '{print $2}')
 
     parse_arguments "$@"
 
@@ -79,14 +82,18 @@ install_packages() {
 
 install_packages_from_args() {
     if [ -n "$packages" ]; then
-	$installer install $install_opts $packages
+	if ! $installer1 install $install_opts $packages; then
+	    if [ -n "$installer2" -a -n "$(which $installer2)" ]; then
+		$installer2 install $install_opts $packages
+	    fi
+	fi
     fi
 }
 
 install_pattern_from_args() {
     if [ -n "$pattern" ]; then
 	pattern_opts=$("$script_dir/get-pattern-install-options.sh")
-	$installer install $install_opts $pattern_opts $pattern
+	$installer1 install $install_opts $pattern_opts $pattern
     fi
 }
 

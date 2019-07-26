@@ -51,10 +51,13 @@ get_package_manager() {
 	    esac
 	    ;;
 	(Darwin)
-	    printf "%s\n" brew
+	    printf "%s\n" brew pkgin
 	    ;;
-	(FreeBSD|SunOS)
+	(FreeBSD)
 	    printf "%s\n" pkg
+	    ;;
+	(SunOS)
+	    printf "%s\n" pkg pkgin
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"
