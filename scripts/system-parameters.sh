@@ -188,32 +188,34 @@ configure_linux_redhat_source() {
 
 configure_openindiana() {
     # Set application group and user accounts
-    APP_GID=webserverd
-    APP_UID=webserverd
+    APP_GID=webservd
+    APP_UID=webservd
 
     # Set application directory prefix
     APP_PREFIX=
 
     # Set uWSGI prefix directory
-    UWSGI_PREFIX=
+    UWSGI_PREFIX=/opt/local
 
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
 
     # Set uWSGI top-level directories
     UWSGI_ETCDIR=$UWSGI_PREFIX/opt/etc/uwsgi
-    UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
 
     # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/libexec/uwsgi
+    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
+    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/libexec/uwsgi
 
     # Set uWSGI binary/plugin filenames
     UWSGI_BINARY_NAME=uwsgi
-    UWSGI_PLUGIN_NAME=python3_plugin.so
 
     # Set other uWSGI parameters
     UWSGI_LOGFILE=$UWSGI_PREFIX/var/opt/uwsgi.log
+
+    # Set other uWSGI parameters
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_RUN_AS_SERVICE=false
 }
 
 configure_source_defaults() {
@@ -351,11 +353,9 @@ configure_system_baseline() {
 	    configure_sunos
 
 	    case $ID in
-		# (openindiana)
-		#     # Build uWSGI from source
-		#     UWSGI_IS_PACKAGED=false
-		#     configure_openindiana
-		#     ;;
+		(openindiana)
+		    configure_openindiana
+		    ;;
 		(*)
 		    abort_not_supported Distro
 		    ;;

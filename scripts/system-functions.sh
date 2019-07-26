@@ -189,7 +189,7 @@ find_system_python() (
 
 find_system_pythons() (
     for python_version in $PYTHON_VERSIONS; do
-	for prefix in /usr/local /usr; do
+	for prefix in /usr/local /opt/local /usr; do
 	    python_dir=$prefix/bin
 
 	    if [ -d $python_dir ]; then
