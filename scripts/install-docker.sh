@@ -47,6 +47,8 @@ get_realpath() (
 )
 
 install_docker() {
+    invoke_usermod=true
+
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
@@ -93,6 +95,9 @@ install_docker() {
 	(Darwin)
 	    :
 	    ;;
+	(FreeBSD)
+	    invoke_usermod=false
+	    ;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;
@@ -103,7 +108,10 @@ install_docker() {
 
     if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
 	groupadd docker 2>/dev/null || true
-	usermod -a -G docker $SUDO_USER || true
+
+	if [ "$invoke_usermod" = true ]; then
+	    usermod -a -G docker $SUDO_USER || true
+	fi
     fi
 }
 

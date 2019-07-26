@@ -47,6 +47,8 @@ get_realpath() (
 )
 
 install_extras() {
+    invoke_usermod=true
+
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
@@ -96,6 +98,9 @@ install_extras() {
 	(Darwin)
 	    :
 	    ;;
+	(FreeBSD)
+	    invoke_usermod=false
+	    ;;
 	(SunOS)
 	    :
 	    ;;
@@ -109,7 +114,10 @@ install_extras() {
 
     if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
 	groupadd docker 2>/dev/null || true
-	usermod -a -G docker $SUDO_USER || true
+
+	if [ "$invoke_usermod" = true ]; then
+	    usermod -a -G docker $SUDO_USER || true
+	fi
     fi
 }
 
