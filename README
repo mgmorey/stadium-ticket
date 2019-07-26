@@ -55,7 +55,7 @@ The various OS ports have been tested on the following processors:
 | x86-64  | Intel Core i7           (3.0GHz, | i686   | amd64  |
 |         |                          4.0GHz) |        | x86_64 |
 +---------+----------------------------------+--------+--------+
-| z/Arch  | IBM z900 (via Hercules emulator) |        | s390x  |
+| IBM Z   | IBM z900 (via Hercules emulator) |        | s390x  |
 +---------+----------------------------------+--------+--------+
 
 1.  To install dependencies (may require root):
