@@ -50,10 +50,12 @@ install_packages() {
     install_opts=$("$script_dir/get-package-install-options.sh")
     installers=$("$script_dir/get-package-manager.sh")
 
-    installer1=$(printf "%s " $installers | awk '{print $1}')
-    installer2=$(printf "%s " $installers | awk '{print $2}')
-
     parse_arguments "$@"
+
+    installer1=$(printf "%s\n" $installers | awk 'NR == 1 {print $0}')
+    installer2=$(printf "%s\n" $installers | awk 'NR == 2 {print $0}')
+    packages1=$(printf "%s\n" $packages | awk -F: 'NF == 1 {print $0} NF == 2 {print $1}')
+    packages2=$(printf "%s\n" $packages | awk -F: 'NF == 2 {print $2}')
 
     case "$kernel_name" in
 	(Linux|GNU)
@@ -81,8 +83,14 @@ install_packages() {
 }
 
 install_packages_from_args() {
-    if [ -n "$packages" ]; then
-	$installer1 install $install_opts $packages
+    if [ -n "$installer1" -a -n "$packages1" ]; then
+	$installer1 install $install_opts $packages1
+    fi
+
+    if [ -n "$installer2" -a -n "$packages2" ]; then
+	if [ -n "$(which $installer2 2>/dev/null)" ]; then
+	    $installer2 install $packages2
+	fi
     fi
 }
 
