@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS="sqlite"
+DARWIN_PKGS=":%s-sqlite3 sqlite"
 
 DEBIAN_PKGS="sqlite3"
 
@@ -28,7 +28,7 @@ OPENSUSE_PKGS="sqlite3"
 
 REDHAT_PKGS="sqlite"
 
-SUNOS_PKGS="database/sqlite-3"
+SUNOS_PKGS=":%s-sqlite3 database/sqlite-3"
 
 abort() {
     printf "$@" >&2

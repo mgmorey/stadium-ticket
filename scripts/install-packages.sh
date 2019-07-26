@@ -70,7 +70,6 @@ install_packages() {
 	    esac
 	    ;;
 	(Darwin)
-	    "$script_dir/install-homebrew.sh"
 	    install_packages_from_args
 	    ;;
 	(FreeBSD|SunOS)
