@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+CATEGORIES="sqlite uwsgi"
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -112,6 +114,12 @@ generate_service_ini() {
     install_file 644 "$inifile" $1
 }
 
+get_packages() {
+    for category in $CATEGORIES; do
+	"$script_dir/get-$category-packages.sh"
+    done
+}
+
 get_realpath() (
     assert [ $# -ge 1 ]
     realpath=$(which realpath)
@@ -188,7 +196,7 @@ install_uwsgi_from_package() (
     fi
 
     is_installed_package=true
-    packages=$("$script_dir/get-uwsgi-packages.sh")
+    packages=$(get_packages | sort -u)
 
     for package in $packages; do
 	if ! is_installed $package; then
