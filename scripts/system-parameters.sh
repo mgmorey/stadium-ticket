@@ -37,23 +37,23 @@ configure_bsd() {
     PS_FORMAT=pid,ppid,user,tt,lstart,command
 }
 
-configure_darwin() {
-    configure_darwin_common
+configure_bsd_darwin() {
+    configure_bsd_darwin_common
 
     if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	configure_darwin_native
+	configure_bsd_darwin_native
     else
-	configure_darwin_source
+	configure_bsd_darwin_source
     fi
 }
 
-configure_darwin_common() {
+configure_bsd_darwin_common() {
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
 }
 
-configure_darwin_native() {
+configure_bsd_darwin_native() {
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
 
@@ -75,20 +75,20 @@ configure_darwin_native() {
     UWSGI_LOGFILE=$UWSGI_PREFIX/var/log/uwsgi.log
 }
 
-configure_darwin_source() {
+configure_bsd_darwin_source() {
     UWSGI_RUN_AS_SERVICE=true
     configure_source_defaults
 }
 
-configure_freebsd_11() {
-    configure_freebsd_common
+configure_bsd_freebsd_11() {
+    configure_bsd_freebsd_common
 }
 
-configure_freebsd_12() {
-    configure_freebsd_common
+configure_bsd_freebsd_12() {
+    configure_bsd_freebsd_common
 }
 
-configure_freebsd_common() {
+configure_bsd_freebsd_common() {
     # Set application directory prefix
     APP_PREFIX=/usr/local
 
@@ -97,6 +97,21 @@ configure_freebsd_common() {
 
     # Set uWSGI binary file
     UWSGI_BINARY_NAME=uwsgi-3.6
+
+    # Set other uWSGI parameters
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_RUN_AS_SERVICE=false
+}
+
+configure_bsd_netbsd() {
+    # Set application directory prefix
+    APP_PREFIX=/usr/local
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
+    # Set uWSGI binary file
+    UWSGI_BINARY_NAME=uwsgi-3.7
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
@@ -335,20 +350,37 @@ configure_system_baseline() {
 	    # Build uWSGI from source
 	    UWSGI_IS_PACKAGED=false
 	    configure_bsd
-	    configure_darwin
+	    configure_bsd_darwin
 	    ;;
 	(FreeBSD)
 	    configure_bsd
 
 	    case "$VERSION_ID" in
 		(11.*)
-		    configure_freebsd_11
+		    configure_bsd_freebsd_11
 		    ;;
 		(12.*)
-		    configure_freebsd_12
+		    configure_bsd_freebsd_12
+		    ;;
+		(*)
+		    abort_not_supported Release
 		    ;;
 	    esac
 	    ;;
+	# (NetBSD)
+	#     # Build uWSGI from source
+	#     UWSGI_IS_PACKAGED=false
+	#     configure_bsd
+
+	#     case "$VERSION_ID" in
+	# 	(8.1)
+	# 	    configure_bsd_netbsd
+	# 	    ;;
+	# 	(*)
+	# 	    abort_not_supported Release
+	# 	    ;;
+	#     esac
+	#     ;;
 	(SunOS)
 	    configure_sunos
 
@@ -696,18 +728,14 @@ validate_parameters_preinstallation() {
     binary=$(get_uwsgi_binary_path)
     plugin=$(get_uwsgi_plugin_path)
 
-    if [ ! -d $UWSGI_BINARY_DIR ]; then
-	abort "%s: %s: No such binary directory\n" "$0" "$UWSGI_BINARY_DIR"
-    elif [ ! -e $binary ]; then
+    if [ ! -e $binary ]; then
 	abort "%s: %s: No such binary file\n" "$0" "$binary"
     elif [ ! -x $binary ]; then
 	abort "%s: %s: No execute permission\n" "$0" "$binary"
     elif ! $binary --version >/dev/null 2>&1; then
 	abort "%s: %s: Unable to query version\n" "$0" "$binary"
     elif [ $UWSGI_HAS_PLUGIN = true ]; then
-	if [ ! -d $UWSGI_PLUGIN_DIR ]; then
-	    abort "%s: %s: No such plugin directory\n" "$0" "$UWSGI_PLUGIN_DIR"
-	elif [ ! -e $plugin ]; then
+	if [ ! -e $plugin ]; then
 	    abort "%s: %s: No such plugin file\n" "$0" "$plugin"
 	elif [ ! -r $plugin ]; then
 	    abort "%s: %s: No read permission\n" "$0" "$plugin"
