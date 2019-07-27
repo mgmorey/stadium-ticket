@@ -174,7 +174,7 @@ grep_pyenv_version() {
     assert [ $# -le 1 ]
 
     if [ $# -eq 1 ]; then
-	grep -E $(printf "$GREP_REGEX" "$1")
+	grep -E $(printf "$GREP_REGEX" "$1" 2>/dev/null)
     else
 	cat
     fi
