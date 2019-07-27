@@ -80,7 +80,7 @@ find_pyenv_python() (
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
-    pythons="$(ls $1/versions/$2.*/bin/python 2>/dev/null | sort -Vr)"
+    pythons="$(ls $1/versions/$2.*/bin/python 2>/dev/null | sort -r)"
 
     for python in $pythons; do
 	if $python --version >/dev/null 2>&1; then
@@ -181,7 +181,7 @@ grep_pyenv_version() {
 }
 
 install_python_version() (
-    version=${1-$(get_required_python_versions | sort -Vr | head -n 1)}
+    version=${1-$(get_required_python_versions | sort -r | head -n 1)}
 
     if [ -n "$version" ]; then
 	pyenv install -s $version

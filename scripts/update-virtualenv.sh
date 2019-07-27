@@ -32,7 +32,8 @@ assert() {
 create_virtualenv_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	if pyenv --version >/dev/null 2>&1; then
-	    python=$(find_user_python)
+	    boot_python=$(find_bootstrap_python)
+	    python=$(find_user_python $boot_python)
 
 	    if ! "$script_dir/check-python.sh" $python; then
 		abort "%s\n" "No suitable Python interpreter found"
