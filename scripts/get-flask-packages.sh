@@ -26,9 +26,7 @@ NETBSD_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
 OPENSUSE_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
-REDHAT_PKGS=""
-
-SUNOS_PKGS=""
+SUNOS_PKGS=":%s-flask :%s-flask-restful :%s-flask-sqlalchemy"
 
 abort() {
     printf "$@" >&2

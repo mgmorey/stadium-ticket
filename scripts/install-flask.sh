@@ -102,6 +102,9 @@ install_python_mw() {
 	(NetBSD)
 	    :
 	    ;;
+	(SunOS)
+	    :
+	    ;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;
