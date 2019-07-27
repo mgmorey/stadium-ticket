@@ -25,6 +25,8 @@ FEDORA_PKG="mariadb-server"
 
 FREEBSD_PKG="mariadb103-server"
 
+NETBSD_PKG="mariadb-server"
+
 OPENSUSE_PKG="mariadb"
 
 REDHAT_PKG="mariadb-server"
@@ -95,6 +97,9 @@ get_dbms_server_packages() {
 	    ;;
 	(FreeBSD)
 	    packages="${package:-$FREEBSD_PKG}"
+	    ;;
+	(NetBSD)
+	    packages="${package:-$NETBSD_PKG}"
 	    ;;
 	(SunOS)
 	    packages="${package:-$SUNOS_PKG}"

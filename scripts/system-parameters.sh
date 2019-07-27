@@ -104,6 +104,10 @@ configure_bsd_freebsd_common() {
 }
 
 configure_bsd_netbsd() {
+    # Set application group and user accounts
+    APP_GID=_www
+    APP_UID=_www
+
     # Set application directory prefix
     APP_PREFIX=/usr/local
 

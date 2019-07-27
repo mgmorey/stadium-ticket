@@ -101,6 +101,9 @@ install_extras() {
 	(FreeBSD)
 	    invoke_usermod=false
 	    ;;
+	(NetBSD)
+	    invoke_usermod=false
+	    ;;
 	(SunOS)
 	    :
 	    ;;

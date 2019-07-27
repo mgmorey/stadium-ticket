@@ -28,6 +28,9 @@ FEDORA_PKGS="%s-PyMySQL %s-sqlalchemy"
 FREEBSD_PKG="mariadb103-client"
 FREEBSD_PKGS="%s-pymysql %s-sqlalchemy12"
 
+NETBSD_PKG="mariadb-client"
+NETBSD_PKGS="%s-pymysql %s-sqlalchemy"
+
 OPENSUSE_PKG="mariadb-client"
 OPENSUSE_PKGS="%s-PyMySQL %s-SQLAlchemy"
 
@@ -101,6 +104,9 @@ get_dbms_client_packages() {
 	    ;;
 	(FreeBSD)
 	    packages="${package:-$FREEBSD_PKG} $FREEBSD_PKGS"
+	    ;;
+	(NetBSD)
+	    packages="${package:-$NETBSD_PKG} $NETBSD_PKGS"
 	    ;;
 	(SunOS)
 	    packages="${package:-$SUNOS_PKG} $SUNOS_PKGS"

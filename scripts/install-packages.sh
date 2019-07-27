@@ -54,7 +54,8 @@ install_packages() {
 
     installer1=$(printf "%s\n" $installers | awk 'NR == 1 {print $0}')
     installer2=$(printf "%s\n" $installers | awk 'NR == 2 {print $0}')
-    packages1=$(printf "%s\n" $packages | awk -F: 'NF == 1 {print $0} NF == 2 {print $1}')
+    packages1=$(printf "%s\n" $packages | awk -F: 'NF == 1 {print $0}
+						   NF == 2 {print $1}')
     packages2=$(printf "%s\n" $packages | awk -F: 'NF == 2 {print $2}')
 
     case "$kernel_name" in

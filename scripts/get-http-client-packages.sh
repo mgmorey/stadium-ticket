@@ -20,7 +20,7 @@ DEBIAN_PKGS="apache2-utils curl"
 
 FREEBSD_PKGS="apache24 curl"
 
-NETBSD_PKGS="apache24 curl"
+NETBSD_PKGS="apache curl"
 
 OPENSUSE_PKGS="apache2-utils curl"
 
@@ -56,7 +56,7 @@ get_http_client_packages() {
 	    packages="$FREEBSD_PKGS"
 	    ;;
 	(NetBSD)
-	    packages="$FREEBSD_PKGS"
+	    packages="$NETBSD_PKGS"
 	    ;;
 	(SunOS)
 	    packages="$SUNOS_PKGS"
