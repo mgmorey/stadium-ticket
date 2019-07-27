@@ -22,6 +22,8 @@ FEDORA_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
 FREEBSD_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
+NETBSD_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
+
 OPENSUSE_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
 REDHAT_PKGS=""
@@ -54,6 +56,9 @@ get_python_mw_packages() {
 	    ;;
 	(FreeBSD)
 	    packages=$FREEBSD_PKGS
+	    ;;
+	(NetBSD)
+	    packages=$NETBSD_PKGS
 	    ;;
 	(SunOS)
 	    packages=$SUNOS_PKGS

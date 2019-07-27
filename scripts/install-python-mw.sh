@@ -96,6 +96,12 @@ install_python_mw() {
 	(Darwin)
 	    :
 	    ;;
+	(FreeBSD)
+	    :
+	    ;;
+	(NetBSD)
+	    :
+	    ;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;
