@@ -45,8 +45,7 @@ create_virtualenv() (
 
     if [ "$virtualenv" != false ]; then
 	if [ -z "${python-${2-}}" ]; then
-	    boot_python=$(find_bootstrap_python)
-	    python=$(find_user_python $boot_python)
+	    python=$(find_user_python $(find_system_python))
 
 	    if ! "$script_dir/check-python.sh" $python; then
 		abort "%s\n" "No suitable Python interpreter found"
@@ -65,17 +64,6 @@ create_virtualenv() (
     fi
 )
 
-find_bootstrap_python() (
-    for version in $PYTHON_VERSIONS ""; do
-	if python$version --version >/dev/null 2>&1; then
-	    printf "%s\n" "python$version"
-	    return 0
-	fi
-    done
-
-    abort "%s\n" "No Python interpreter found in PATH"
-)
-
 find_pyenv_python() (
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
@@ -87,6 +75,30 @@ find_pyenv_python() (
 	    printf "%s\n" "$python"
 	    return 0
 	fi
+    done
+
+    return 1
+)
+
+find_system_python() (
+    find_system_pythons | awk 'NR == 1 {print $1}'
+)
+
+find_system_pythons() (
+    for python_version in $PYTHON_VERSIONS; do
+	for prefix in /usr/local /opt/local /usr/pkg /usr; do
+	    python_dir=$prefix/bin
+
+	    if [ -d $python_dir ]; then
+		python=$python_dir/python$python_version
+
+		if [ -x $python ]; then
+		    if $python --version >/dev/null 2>&1; then
+			printf "%s %s\n" "$python" "$python_version"
+		    fi
+		fi
+	    fi
+	done
     done
 
     return 1
@@ -157,9 +169,16 @@ get_pyenv_versions() {
     pyenv install --list | awk 'NR > 1 {print $1}' | grep_pyenv_version ${1-}
 }
 
+get_python_version() {
+    $1 --version | awk '{print $2}'
+}
+
 get_required_python_versions() (
-    boot_python=$(find_bootstrap_python)
-    python_versions=$($boot_python "$script_dir/check-python.py" --delim '\.')
+    if [ -z "${SYSTEM_PYTHON-}" ]; then
+	SYSTEM_PYTHON=$(find_system_python)
+    fi
+
+    python_versions=$($SYSTEM_PYTHON "$script_dir/check-python.py" --delim '\.')
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
 	if get_pyenv_versions $python_version; then

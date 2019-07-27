@@ -179,34 +179,6 @@ control_service() {
     esac
 }
 
-get_python_version() {
-    $1 --version | awk '{print $2}'
-}
-
-find_system_python() (
-    find_system_pythons | awk 'NR == 1 {print $1}'
-)
-
-find_system_pythons() (
-    for python_version in $PYTHON_VERSIONS; do
-	for prefix in /usr/local /opt/local /usr/pkg /usr; do
-	    python_dir=$prefix/bin
-
-	    if [ -d $python_dir ]; then
-		python=$python_dir/python$python_version
-
-		if [ -x $python ]; then
-		    if $python --version >/dev/null 2>&1; then
-			printf "%s %s\n" "$python" "$python_version"
-		    fi
-		fi
-	    fi
-	done
-    done
-
-    return 1
-)
-
 get_service_status() {
     if is_service_installed; then
 	if is_service_running; then

@@ -34,9 +34,8 @@ check_python() (
 
     version="${python_output#Python }"
     printf "Python %s interpreter found: %s\n" "$version" "$1"
-    boot_python=$(find_bootstrap_python)
 
-    if ! $boot_python "$script_dir/check-python.py" $version; then
+    if ! $(find_system_python) "$script_dir/check-python.py" $version; then
 	return 1
     fi
 

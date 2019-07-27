@@ -452,11 +452,9 @@ configure_system_defaults() {
     # Set Python-related parameters
 
     if [ -z "${SYSTEM_PYTHON-}" ]; then
-	python=$(find_system_python)
+	SYSTEM_PYTHON=$(find_system_python)
 
-	if "$script_dir/check-python.sh" $python; then
-	    SYSTEM_PYTHON=$python
-	else
+	if ! "$script_dir/check-python.sh" $SYSTEM_PYTHON; then
 	    abort "%s\n" "No suitable Python interpreter found"
 	fi
     fi
