@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# install-python-mw: install Python middleware packages
+# install-flask: install Python middleware packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -107,7 +107,7 @@ install_python_mw() {
 	    ;;
     esac
 
-    packages=$("$script_dir/get-python-mw-packages.sh")
+    packages=$("$script_dir/get-flask-packages.sh")
     "$script_dir/install-packages.sh" $packages
 }
 
