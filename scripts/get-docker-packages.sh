@@ -33,7 +33,7 @@ OPENSUSE_LP_PKGS="docker-compose"
 OPENSUSE_TW_PKGS="%s-docker-compose"
 
 REDHAT_PKG="docker"
-REDHAT_PKGS="docker-compose"
+REDHAT_PKGS=""
 
 SUNOS_PKG=""
 SUNOS_PKGS=""
