@@ -24,6 +24,8 @@ FEDORA_INFO="python36 python3"
 
 FREEBSD_INFO="python3 py36"
 
+NETBSD_INFO="python37 py37"
+
 OPENSUSE_INFO="python3 python3"
 
 REDHAT_7_INFO="python36 python36"
@@ -86,6 +88,9 @@ get_python_package() {
 	    ;;
 	(FreeBSD)
 	    printf "%s %s\n" $FREEBSD_INFO
+	    ;;
+	(NetBSD)
+	    printf "%s %s\n" $NETBSD_INFO
 	    ;;
 	(SunOS)
 	    printf "%s %s\n" $SUNOS_INFO

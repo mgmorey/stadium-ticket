@@ -30,6 +30,8 @@ libxml2-dev libxmlsec1-dev liblzma-dev llvm make uuid-dev xz-utils zlib1g-dev"
 
 FREEBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline sqlite3"
 
+NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline sqlite3"
+
 OPENSUSE_PKGS="bash curl gcc gdbm-devel libbz2-devel libffi-devel \
 libopenssl-devel lzma-sdk-devel make ncurses-devel openssl-devel \
 readline-devel sqlite3-devel uuid-devel zlib-devel"
@@ -99,6 +101,9 @@ case "$kernel_name" in
 	;;
     (FreeBSD)
 	packages=$FREEBSD_PKGS
+	;;
+    (NetBSD)
+	packages=$NETBSD_PKGS
 	;;
     (SunOS)
 	packages=$SUNOS_PKGS

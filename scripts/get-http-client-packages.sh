@@ -20,6 +20,8 @@ DEBIAN_PKGS="apache2-utils curl"
 
 FREEBSD_PKGS="apache24 curl"
 
+NETBSD_PKGS="apache24 curl"
+
 OPENSUSE_PKGS="apache2-utils curl"
 
 REDHAT_PKGS="curl httpd-tools"
@@ -51,6 +53,9 @@ get_http_client_packages() {
 	    esac
 	    ;;
 	(FreeBSD)
+	    packages="$FREEBSD_PKGS"
+	    ;;
+	(NetBSD)
 	    packages="$FREEBSD_PKGS"
 	    ;;
 	(SunOS)

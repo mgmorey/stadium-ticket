@@ -45,7 +45,8 @@ create_virtualenv() (
 
     if [ "$virtualenv" != false ]; then
 	if [ -z "${python-${2-}}" ]; then
-	    python=$(find_user_python)
+	    boot_python=$(find_bootstrap_python)
+	    python=$(find_user_python $boot_python)
 
 	    if ! "$script_dir/check-python.sh" $python; then
 		abort "%s\n" "No suitable Python interpreter found"
@@ -65,9 +66,9 @@ create_virtualenv() (
 )
 
 find_bootstrap_python() (
-    for python in python3 python2 python; do
-	if $python --version >/dev/null 2>&1; then
-	    printf "%s\n" "$python"
+    for version in $PYTHON_VERSIONS ""; do
+	if python$version --version >/dev/null 2>&1; then
+	    printf "%s\n" "python$version"
 	    return 0
 	fi
     done
@@ -92,8 +93,7 @@ find_pyenv_python() (
 )
 
 find_user_python() (
-    boot_python=$(find_bootstrap_python)
-    python_versions=$($boot_python "$script_dir/check-python.py")
+    python_versions=$($1 "$script_dir/check-python.py")
 
     if pyenv --version >/dev/null 2>&1; then
 	pyenv_root="$(pyenv root)"
@@ -104,7 +104,7 @@ find_user_python() (
     fi
 
     if [ -n "$pyenv_root" ]; then
-	for version in ${python_versions-$PYTHON_VERSIONS}; do
+	for version in $python_versions $PYTHON_VERSIONS; do
 	    python=$(find_pyenv_python $pyenv_root $version || true)
 
 	    if [ -z "$python" ]; then
@@ -119,7 +119,7 @@ find_user_python() (
 	done
     fi
 
-    for version in ${python_versions-$PYTHON_VERSIONS}; do
+    for version in $python_versions $PYTHON_VERSIONS; do
 	python=$($which python$version 2>/dev/null || true)
 
 	if [ -n "$python" ]; then

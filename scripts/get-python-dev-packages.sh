@@ -24,6 +24,8 @@ FEDORA_PKGS="make %s-pip %s-virtualenv"
 
 FREEBSD_PKGS="gmake %s-pip %s-virtualenv"
 
+NETBSD_PKGS="gmake %s-pip %s-virtualenv"
+
 OPENSUSE_PKGS="make %s-pip %s-virtualenv"
 
 REDHAT_PKGS="make %s-pip %s-virtualenv"
@@ -62,6 +64,9 @@ get_python_dev_packages() {
 	    ;;
 	(FreeBSD)
 	    packages=$FREEBSD_PKGS
+	    ;;
+	(NetBSD)
+	    packages=$NETBSD_PKGS
 	    ;;
 	(SunOS)
 	    packages=$SUNOS_PKGS

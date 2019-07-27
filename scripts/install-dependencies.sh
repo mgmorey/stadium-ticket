@@ -99,6 +99,9 @@ install_dependencies() {
 	(FreeBSD)
 	    :
 	    ;;
+	(NetBSD)
+	    :
+	    ;;
 	(SunOS)
 	    :
 	    ;;

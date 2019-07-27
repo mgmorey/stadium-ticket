@@ -1,4 +1,4 @@
-# -*- Mode: Shell-script -*-
+#!/bin/sh
 
 # check-python.sh: check that Python version meets requirement
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -34,8 +34,9 @@ check_python() (
 
     version="${python_output#Python }"
     printf "Python %s interpreter found: %s\n" "$version" "$1"
+    boot_python=$(find_bootstrap_python)
 
-    if ! "$script_dir/check-python.py" "$version"; then
+    if ! $boot_python "$script_dir/check-python.py" $version; then
 	return 1
     fi
 
@@ -68,5 +69,8 @@ if [ $# -gt 1 ]; then
 fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
+
+. "$script_dir/common-parameters.sh"
+. "$script_dir/common-functions.sh"
 
 check_python "$@"

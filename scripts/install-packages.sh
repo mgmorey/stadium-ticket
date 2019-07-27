@@ -72,7 +72,13 @@ install_packages() {
 	(Darwin)
 	    install_packages_from_args
 	    ;;
-	(FreeBSD|SunOS)
+	(FreeBSD)
+	    install_packages_from_args
+	    ;;
+	(NetBSD)
+	    install_packages_from_args
+	    ;;
+	(SunOS)
 	    install_packages_from_args
 	    ;;
 	(*)

@@ -56,6 +56,9 @@ get_package_manager() {
 	(FreeBSD)
 	    printf "%s\n" pkg
 	    ;;
+	(NetBSD)
+	    printf "%s\n" pkgin
+	    ;;
 	(SunOS)
 	    printf "%s\n" pkg pkgin
 	    ;;

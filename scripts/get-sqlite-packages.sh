@@ -24,6 +24,8 @@ FEDORA_PKGS="sqlite"
 
 FREEBSD_PKGS="%s-sqlite3 sqlite3"
 
+NETBSD_PKGS="%s-sqlite3 sqlite3"
+
 OPENSUSE_PKGS="sqlite3"
 
 REDHAT_PKGS="sqlite"
@@ -79,6 +81,9 @@ get_sqlite_packages() {
 	    ;;
 	(FreeBSD)
 	    packages=$FREEBSD_PKGS
+	    ;;
+	(NetBSD)
+	    packages=$NETBSD_PKGS
 	    ;;
 	(SunOS)
 	    packages=$SUNOS_PKGS

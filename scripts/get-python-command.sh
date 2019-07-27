@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-VERSION=3
+VERSIONS="3.7 3"
 
 abort() {
     printf "$@" >&2
@@ -29,21 +29,27 @@ assert() {
 
 get_python_command() (
     name="$1"
-    version="${2:-$VERSION}"
+    shift
 
     case "$name" in
 	(pip|pipenv|virtualenv)
-	    for command in $name$version $name "python$version -m $name" false; do
-		if $command --help >/dev/null 2>&1; then
-		    break
-		fi
+	    for version in $VERSIONS; do
+		for command in $name$version $name "python$version -m $name" false; do
+		    if $command --help >/dev/null 2>&1; then
+			printf "%s\n" "$command"
+			return 0
+		    fi
+		done
 	    done
 	    ;;
 	(pyvenv)
-	    for command in "python$version -m venv" false; do
-		if $command --help >/dev/null 2>&1; then
-		    break
-		fi
+	    for version in $VERSIONS; do
+		for command in "python$version -m venv" false; do
+		    if $command --help >/dev/null 2>&1; then
+			printf "%s\n" "$command"
+			return 0
+		    fi
+		done
 	    done
 	    ;;
 	(*)
