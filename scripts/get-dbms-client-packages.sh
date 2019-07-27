@@ -37,7 +37,7 @@ OPENSUSE_PKGS="%s-PyMySQL %s-SQLAlchemy"
 REDHAT_PKG="mariadb"
 
 SUNOS_PKG="mariadb-103/client"
-SUNOS_PKGS="sqlalchemy-%s"
+SUNOS_PKGS=":%s-pymysql :%s-sqlalchemy"
 
 UBUNTU_18_04_PKG="mariadb-client-10.1"
 UBUNTU_19_04_PKG="mariadb-client-10.3"

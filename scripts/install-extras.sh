@@ -105,7 +105,7 @@ install_extras() {
 	    invoke_usermod=false
 	    ;;
 	(SunOS)
-	    :
+	    invoke_usermod=false
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"
