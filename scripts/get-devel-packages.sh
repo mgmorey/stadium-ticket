@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-python-build-packages: get list of Python build dependencies
+# get-devel-packages: get list of Python development packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify

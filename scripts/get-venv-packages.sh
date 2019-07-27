@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-python-dev-packages: get Python development package names
+# get-venv-packages: get Python virtualenv package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
