@@ -52,10 +52,7 @@ install_python_mw() {
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in
-			(9)
-			    :
-			    ;;
-			(10)
+			(9|10)
 			    :
 			    ;;
 			(*)
