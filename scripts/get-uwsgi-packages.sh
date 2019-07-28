@@ -25,7 +25,7 @@ FREEBSD_PKGS="uwsgi-%s"
 
 NETBSD_PKGS="rsync"
 
-OPENSUSE_PKGS="rsync system-user-wwwrun util-linux uwsgi uwsgi-%s"
+OPENSUSE_PKGS="system-user-wwwrun util-linux uwsgi uwsgi-%s"
 
 REDHAT_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
