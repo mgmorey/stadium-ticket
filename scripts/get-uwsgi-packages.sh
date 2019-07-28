@@ -21,8 +21,6 @@ DARWIN_PKGS="rsync :%s-uwsgi"
 DEBIAN_9_PKGS="setpriv uwsgi uwsgi-plugin-%s"
 DEBIAN_10_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
-FEDORA_PKGS="util-linux uwsgi uwsgi-plugin-%s"
-
 FREEBSD_PKGS="uwsgi-%s"
 
 NETBSD_PKGS="rsync"
@@ -89,10 +87,7 @@ get_uwsgi_packages() {
 		(opensuse-*)
 		    packages=$OPENSUSE_PKGS
 		    ;;
-		(fedora)
-		    packages=$FEDORA_PKGS
-		    ;;
-		(redhat|centos|ol)
+		(fedora|redhat|centos|ol)
 		    packages=$REDHAT_PKGS
 		    ;;
 	    esac
