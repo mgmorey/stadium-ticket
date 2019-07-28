@@ -29,7 +29,7 @@ NETBSD_PKGS="rsync"
 
 OPENSUSE_PKGS="rsync system-user-wwwrun util-linux uwsgi uwsgi-%s"
 
-REDHAT_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
+REDHAT_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
 SUNOS_PKGS="rsync :%s-uwsgi"
 
