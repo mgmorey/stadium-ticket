@@ -36,7 +36,7 @@ NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline sqlite3"
 
 OPENSUSE_PKGS="bash curl gcc gdbm-devel libbz2-devel libffi-devel \
 libopenssl-devel lzma-sdk-devel make ncurses-devel openssl-devel \
-readline-devel sqlite3-devel uuid-devel zlib-devel"
+python3-devel readline-devel rsync sqlite3-devel uuid-devel zlib-devel"
 
 REDHAT_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel make \
 libuuid-devel ncurses-devel python3-devel openssl-devel readline-devel \
