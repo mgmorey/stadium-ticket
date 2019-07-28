@@ -235,7 +235,7 @@ grep_version() {
     assert [ $# -le 1 ]
 
     if [ $# -eq 1 ]; then
-	grep -E $(printf "$FORMAT_RE" "$1") 2>/dev/null
+	grep -E $(printf "$FORMAT_RE" "$1" 2>/dev/null) 2>/dev/null
     else
 	cat
     fi
