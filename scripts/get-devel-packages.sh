@@ -39,8 +39,8 @@ libopenssl-devel lzma-sdk-devel make ncurses-devel openssl-devel \
 readline-devel sqlite3-devel uuid-devel zlib-devel"
 
 REDHAT_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel make \
-libuuid-devel ncurses-devel openssl-devel readline-devel sqlite-devel \
-xz-devel zlib-devel"
+libuuid-devel ncurses-devel python3-devel openssl-devel readline-devel \
+rsync sqlite-devel xz-devel zlib-devel"
 
 SUNOS_PKGS="bash libffi make ncurses readline database/sqlite-3"
 
