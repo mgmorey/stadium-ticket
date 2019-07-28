@@ -30,8 +30,8 @@ libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
 libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev liblzma-dev \
 make rsync uuid-dev xz-utils zlib1g-dev"
 
-FREEBSD_PKGS="bash bzip2 curl gcc gdbm gmake libffi lzma ncurses readline \
-rsync sqlite3"
+FREEBSD_PKGS="bash bzip2 curl gdbm gmake libffi llvm-80 lzma ncurses \
+readline rsync sqlite3"
 
 NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline sqlite3"
 
