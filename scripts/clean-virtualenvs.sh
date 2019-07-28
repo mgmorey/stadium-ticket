@@ -53,8 +53,9 @@ fi
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
+. "$script_dir/common-functions.sh"
 
-pipenv=$("$script_dir/get-python-command.sh" pipenv)
+pipenv=$(get_python_command pipenv)
 
 if [ "$pipenv" != false ]; then
     if $pipenv --venv >/dev/null 2>&1; then

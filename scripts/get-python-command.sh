@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-VERSIONS="3 3.7"
-
 abort() {
     printf "$@" >&2
     exit 1
@@ -27,40 +25,29 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_python_command() (
-    name="$1"
-    shift
+get_realpath() (
+    assert [ $# -ge 1 ]
+    realpath=$(which realpath)
 
-    case "$name" in
-	(pip|pipenv|virtualenv)
-	    for version in "" $VERSIONS; do
-		for command in $name$version $name "python$version -m $name" false; do
-		    if $command --help >/dev/null 2>&1; then
-			printf "%s\n" "$command"
-			return 0
-		    fi
-		done
-	    done
-	    ;;
-	(pyvenv)
-	    for version in "" $VERSIONS; do
-		for command in "python$version -m venv" false; do
-		    if $command --help >/dev/null 2>&1; then
-			printf "%s\n" "$command"
-			return 0
-		    fi
-		done
-	    done
-	    ;;
-	(*)
-	    abort "%s: Invalid command/module '%s'\n" "$0" "$name"
-    esac
-
-    printf "%s\n" "$command"
+    if [ -n "$realpath" ]; then
+	$realpath "$@"
+    else
+	for file; do
+	    if expr "$file" : '/.*' >/dev/null; then
+		printf "%s\n" "$file"
+	    else
+		printf "%s\n" "$PWD/${file#./}"
+	    fi
+	done
+    fi
 )
 
 if [ $# -eq 0 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
+
+script_dir=$(get_realpath "$(dirname "$0")")
+
+. "$script_dir/common-parameters.sh"
 
 get_python_command "$@"

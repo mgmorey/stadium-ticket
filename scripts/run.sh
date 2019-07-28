@@ -47,10 +47,10 @@ get_realpath() (
 )
 
 run_in_virtualenv() {
-    pipenv=$("$script_dir/get-python-command.sh" pipenv)
+    pipenv=$(get_python_command pipenv)
 
     if [ "$pipenv" = false ]; then
-	pip=$("$script_dir/get-python-command.sh" pip)
+	pip=$(get_python_command pip)
     fi
 
     cd "$source_dir"
