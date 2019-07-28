@@ -18,8 +18,8 @@
 
 DARWIN_PKGS="rsync :%s-uwsgi"
 
-DEBIAN_9_PKGS="rsync setpriv uwsgi uwsgi-plugin-%s"
-DEBIAN_10_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
+DEBIAN_9_PKGS="setpriv uwsgi uwsgi-plugin-%s"
+DEBIAN_10_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
 FEDORA_PKGS="rsync util-linux uwsgi uwsgi-plugin-%s"
 
