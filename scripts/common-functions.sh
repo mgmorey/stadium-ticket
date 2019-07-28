@@ -19,7 +19,7 @@ PIP_9_UPGRADE_OPTS="--no-cache-dir"
 PIP_10_UPGRADE_OPTS="--no-cache-dir --no-warn-script-location"
 
 PKGSRC_PREFIXES=$(ls -d /opt/local /usr/pkg 2>/dev/null || true)
-SYSTEM_PREFIXES="/usr/local${PKGSRC_PREFIXES+ $PKGSRC_PREFIXES} /usr"
+SYSTEM_PREFIXES="/usr/local${PKGSRC_PREFIXES:+ $PKGSRC_PREFIXES} /usr"
 
 activate_virtualenv() {
     assert [ $# -eq 1 ]
