@@ -33,7 +33,8 @@ make rsync uuid-dev xz-utils zlib1g-dev"
 FREEBSD_PKGS="bash bzip2 curl gdbm gmake libffi llvm50 lzma ncurses \
 readline rsync sqlite3"
 
-NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline sqlite3"
+NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline \
+rsync sqlite3"
 
 OPENSUSE_PKGS="bash curl gcc gdbm-devel libbz2-devel libffi-devel \
 libopenssl-devel lzma-sdk-devel make ncurses-devel openssl-devel \
