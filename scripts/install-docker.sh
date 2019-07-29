@@ -107,7 +107,9 @@ install_docker() {
     "$script_dir/install-packages.sh" $packages
 
     if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	groupadd docker 2>/dev/null || true
+	if ! getent group docker >/dev/null; then
+	    groupadd docker
+	fi
 
 	if [ "$invoke_usermod" = true ]; then
 	    usermod -a -G docker $SUDO_USER || true
