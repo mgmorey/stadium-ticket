@@ -103,6 +103,23 @@ install_docker() {
 	    ;;
     esac
 
+    installed_package=$("$script_dir/get-installed-docker-package.sh")
+
+    case $installed_package in
+	(docker|docker.io)
+	    printf "Package $installed_package is installed\n"
+	    ;;
+	(docker-ce)
+	    printf "Removing $installed_package\n"
+
+	    if ! apt-get remove $installed_package; then
+		exit $?
+	    fi
+	    ;;
+	(*)
+	    printf "No Docker package installed\n"
+    esac
+
     packages=$("$script_dir/get-docker-packages.sh")
     "$script_dir/install-packages.sh" $packages
 
