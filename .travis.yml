@@ -22,6 +22,12 @@ python:
   - 3.6
   - 3.7
 
+services:
+  - docker
+
+before_install:
+  - docker build -t stadium-ticket .
+
 install:
   - pip install -r requirements-dev.txt -r requirements.txt
 
