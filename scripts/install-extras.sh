@@ -46,6 +46,21 @@ get_realpath() (
     fi
 )
 
+install_docker_group() {
+    if ! getent group docker >/dev/null; then
+	groupadd docker
+    fi
+
+    if [ "$invoke_usermod" = true ]; then
+	docker_users="$(getent group docker | awk -F: '{print $4}')"
+
+	if ! printf "%s\n" "$docker_users" | grep -q "$SUDO_USER"; then
+	    usermod -a -G docker $SUDO_USER
+	    printf "Please log out and back in again to enable the new group\n"
+	fi
+    fi
+}
+
 install_extras() {
     invoke_usermod=true
 
@@ -113,13 +128,7 @@ install_extras() {
     "$script_dir/install-packages.sh" $packages
 
     if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	if ! getent group docker >/dev/null; then
-	    groupadd docker
-	fi
-
-	if [ "$invoke_usermod" = true ]; then
-	    usermod -a -G docker $SUDO_USER || true
-	fi
+	install_docker_group
     fi
 }
 
