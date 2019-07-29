@@ -52,11 +52,11 @@ install_docker_group() {
     fi
 
     if [ "$invoke_usermod" = true ]; then
-	docker_users="$(getent group docker | awk -F: '{print $4}')"
+	members="$(getent group docker | awk -F: '{print $4}')"
 
-	if ! printf "%s\n" "$docker_users" | grep -q "$SUDO_USER"; then
+	if ! printf "%s\n" "$members" | grep -q "\<$SUDO_USER\>"; then
 	    usermod -a -G docker $SUDO_USER
-	    printf "Please log out and back in again to enable the new group\n"
+	    printf "Please restart the machine before using docker\n"
 	fi
     fi
 }
