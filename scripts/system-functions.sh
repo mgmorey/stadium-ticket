@@ -191,6 +191,17 @@ get_service_status() {
     fi
 }
 
+get_awk_command() (
+    for awk in /usr/gnu/bin/awk /usr/bin/gawk /usr/bin/awk; do
+	if [ -x $awk ]; then
+	    printf "%s\n" "$awk"
+	    return 0
+	fi
+    done
+
+    return 1
+)
+
 get_setpriv_command() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -312,9 +323,16 @@ print_elapsed_time() {
 }
 
 print_table() {
-    "$script_dir/print-table.awk" -v border="${1-1}" \
-				  -v header="${2-}" \
-				  -v width="${COLUMNS-80}"
+    awk=$(get_awk_command)
+
+    if [ -z "$awk" ]; then
+	abort "No suitable awk command found\n"
+    fi
+
+    $awk -f "$script_dir/print-table.awk" \
+	 -v border="${1-1}" \
+	 -v header="${2-}" \
+	 -v width="${COLUMNS-80}"
 }
 
 remove_files() {
