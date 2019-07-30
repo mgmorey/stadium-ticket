@@ -32,16 +32,7 @@ assert() {
 create_virtualenv_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	if pyenv --version >/dev/null 2>&1; then
-	    if [ -z "${SYSTEM_PYTHON-}" ]; then
-		SYSTEM_PYTHON=$(find_system_python)
-	    fi
-
-	    python=$(find_user_python $SYSTEM_PYTHON)
-
-	    if ! "$script_dir/check-python.sh" $python; then
-		abort "%s\n" "No suitable Python interpreter found"
-	    fi
-
+	    python=$(find_system_and_user_python)
 	    $pipenv --python $python
 	else
 	    $pipenv $PIPENV_OPTS
@@ -53,7 +44,20 @@ create_virtualenv_via_pipenv() {
     $pipenv lock -d
 }
 
-generate_requirements_files() {
+find_system_and_user_python() (
+    python=$(find_system_python | awk '{print $1}')
+    python=$(find_user_python $python)
+    python_output="$($python --version)"
+    python_version="${python_output#Python }"
+
+    if ! check_python "$python" "$python_version" >&2; then
+	abort "%s\n" "No suitable Python interpreter found"
+    fi
+
+    printf "%s\n" "$python"
+)
+
+generate_requirements_files() (
     create_tmpfile
 
     for file; do
@@ -80,7 +84,7 @@ generate_requirements_files() {
 
     chgrp $(id -g) "$@"
     chmod a+r "$@"
-}
+)
 
 get_realpath() (
     assert [ $# -ge 1 ]

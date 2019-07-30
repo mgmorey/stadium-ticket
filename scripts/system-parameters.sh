@@ -451,16 +451,15 @@ configure_system_defaults() {
 
     # Set Python-related parameters
 
-    if [ -z "${SYSTEM_PYTHON-}" ]; then
-	SYSTEM_PYTHON=$(find_system_python)
+    if [ -z "${SYSTEM_PYTHON-}" -o -z "${SYSTEM_PYTHON_VERSION-}" ]; then
+	triplet=$(find_system_python)
+	versions="${triplet#* }"
+	SYSTEM_PYTHON="${triplet%% *}"
+	SYSTEM_PYTHON_VERSION="${versions#* }"
 
-	if ! "$script_dir/check-python.sh" $SYSTEM_PYTHON; then
+	if ! check_python $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION; then
 	    abort "%s\n" "No suitable Python interpreter found"
 	fi
-    fi
-
-    if [ -z "${SYSTEM_PYTHON_VERSION-}" ]; then
-	SYSTEM_PYTHON_VERSION=$(get_python_version $SYSTEM_PYTHON)
     fi
 
     # Set uWSGI-related parameters

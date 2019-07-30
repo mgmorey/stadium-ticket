@@ -31,6 +31,20 @@ activate_virtualenv() {
     set -u
 }
 
+check_python() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+
+    printf "Python %s interpreter found: %s\n" "$2" "$1"
+
+    if ! "$1" "$script_dir/check-python.py" $2; then
+	return 1
+    fi
+
+    return 0
+}
+
 create_tmpfile() {
     tmpfile=$(mktemp)
     assert [ -n "${tmpfile}" ]
@@ -49,9 +63,10 @@ create_virtualenv() (
 
     if [ "$virtualenv" != false ]; then
 	if [ -z "${python-${2-}}" ]; then
-	    python=$(find_user_python $(find_system_python))
+	    triplet=$(find_system_python)
+	    versions="${python_triplet#* }"
 
-	    if ! "$script_dir/check-python.sh" $python; then
+	    if ! check_python "${triplet%% *}" "${versions#* }"; then
 		abort "%s\n" "No suitable Python interpreter found"
 	    fi
 	fi
@@ -68,18 +83,19 @@ create_virtualenv() (
     fi
 )
 
-find_system_python() (
-    find_system_pythons | awk 'NR == 1 {print $1}'
-)
+find_system_python() {
+    find_system_pythons | head -n 1
+}
 
 find_system_pythons() (
     for python_version in $PYTHON_VERSIONS; do
 	for system_prefix in $SYSTEM_PREFIXES; do
 	    if [ -x $system_prefix/bin/python$python_version ]; then
 		python=$system_prefix/bin/python$python_version
+		python_output="$($python --version)"
 
-		if $python --version >/dev/null 2>&1; then
-		    printf "%s %s\n" "$python" "$python_version"
+		if [ -n "$python_output" ]; then
+		    printf "%s %s %s\n" "$python" "$python_version" "${python_output#Python }"
 		fi
 	    fi
 	done
@@ -195,10 +211,6 @@ get_python_command() (
 
     printf "%s\n" "$command"
 )
-
-get_python_version() {
-    $1 --version | awk '{print $2}'
-}
 
 get_sort_command() {
     case "$(uname -s)" in

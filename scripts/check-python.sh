@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -eux
 
 # check-python.sh: check that Python version meets requirement
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
@@ -22,26 +22,6 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-check_python() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    assert [ -x $1 ]
-    python_output="$($1 --version || true)"
-
-    if [ -z "$python_output" ]; then
-	return 1
-    fi
-
-    version="${python_output#Python }"
-    printf "Python %s interpreter found: %s\n" "$version" "$1"
-
-    if ! $(find_system_python) "$script_dir/check-python.py" $version; then
-	return 1
-    fi
-
-    return 0
-)
-
 get_realpath() (
     assert [ $# -ge 1 ]
     realpath=$(which realpath)
@@ -59,11 +39,11 @@ get_realpath() (
     fi
 )
 
-if [ $# -eq 0 ]; then
+if [ $# -lt 2 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
 
-if [ $# -gt 1 ]; then
+if [ $# -gt 2 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
 
