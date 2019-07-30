@@ -228,11 +228,8 @@ get_versions_all() {
 }
 
 get_versions_passed() (
-    if [ -z "${SYSTEM_PYTHON-}" ]; then
-	SYSTEM_PYTHON=$(find_system_python)
-    fi
-
-    python_versions=$($SYSTEM_PYTHON "$script_dir/check-python.py" --delim '\.')
+    python=$(find_system_python | awk '{print $1}')
+    python_versions=$($python "$script_dir/check-python.py" --delim '\.')
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
 	if get_versions_all $python_version; then
