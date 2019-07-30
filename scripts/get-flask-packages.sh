@@ -37,7 +37,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_python_mw_packages() {
+get_flask_packages() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
@@ -87,4 +87,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-get_python_mw_packages
+get_flask_packages
