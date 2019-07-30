@@ -64,9 +64,11 @@ create_virtualenv() (
     if [ "$virtualenv" != false ]; then
 	if [ -z "${python-${2-}}" ]; then
 	    triplet=$(find_system_python)
-	    versions="${python_triplet#* }"
+	    versions="${triplet#* }"
+	    version="${versions#* }"
+	    python="${triplet%% *}"
 
-	    if ! check_python "${triplet%% *}" "${versions#* }"; then
+	    if ! check_python $python $version; then
 		abort "%s\n" "No suitable Python interpreter found"
 	    fi
 	fi
