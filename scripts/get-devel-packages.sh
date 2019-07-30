@@ -72,59 +72,63 @@ get_realpath() (
     fi
 )
 
+get_devel_packages() {
+    case "$kernel_name" in
+	(Linux|GNU)
+	    case "$ID" in
+		(debian|raspbian)
+		    case "$VERSION_ID" in
+			(9)
+			    packages=$DEBIAN_9_PKGS
+			    ;;
+			(10)
+			    packages=$DEBIAN_10_PKGS
+			    ;;
+		    esac
+		    ;;
+		(ubuntu)
+		    packages=$DEBIAN_10_PKGS
+		    ;;
+		(opensuse-*)
+		    packages=$OPENSUSE_PKGS
+		    ;;
+		(fedora|redhat|centos|ol)
+		    packages=$REDHAT_PKGS
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    packages=$DARWIN_PKGS
+	    ;;
+	(FreeBSD)
+	    packages=$FREEBSD_PKGS
+	    ;;
+	(NetBSD)
+	    packages=$NETBSD_PKGS
+	    ;;
+	(SunOS)
+	    packages=$SUNOS_PKGS
+	    ;;
+    esac
+
+    data=$("$script_dir/get-python-package.sh")
+    package_name=$(printf "%s" "$data" | awk '{print $1}')
+    package_modifier=$(printf "%s" "$data" | awk '{print $2}')
+
+    for package in ${packages-}; do
+	case $package in
+	    (*%s*)
+		printf "$package\n" $package_modifier
+		;;
+	    (*)
+		printf "%s\n" $package
+		;;
+	esac
+    done
+}
+
 script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-case "$kernel_name" in
-    (Linux|GNU)
-	case "$ID" in
-	    (debian|raspbian)
-		case "$VERSION_ID" in
-		    (9)
-			packages=$DEBIAN_9_PKGS
-			;;
-		    (10)
-			packages=$DEBIAN_10_PKGS
-			;;
-		esac
-		;;
-	    (ubuntu)
-		packages=$DEBIAN_10_PKGS
-		;;
-	    (opensuse-*)
-		packages=$OPENSUSE_PKGS
-		;;
-	    (fedora|redhat|centos|ol)
-		packages=$REDHAT_PKGS
-		;;
-	esac
-	;;
-    (Darwin)
-	packages=$DARWIN_PKGS
-	;;
-    (FreeBSD)
-	packages=$FREEBSD_PKGS
-	;;
-    (NetBSD)
-	packages=$NETBSD_PKGS
-	;;
-    (SunOS)
-	packages=$SUNOS_PKGS
-	;;
-esac
-
-data=$("$script_dir/get-python-package.sh")
-package_name=$(printf "%s" "$data" | awk '{print $1}')
-package_modifier=$(printf "%s" "$data" | awk '{print $2}')
-
-for package in ${packages-}; do
-    case $package in
-	(*%s*)
-	    printf "$package\n" $package_modifier
-	    ;;
-	(*)
-	    printf "%s\n" $package
-	    ;;
-    esac
-done
+get_devel_packages
