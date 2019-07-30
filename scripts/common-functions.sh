@@ -55,22 +55,21 @@ create_tmpfile() {
 create_virtualenv() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
+    python=${2-}
     virtualenv=$(get_python_command virtualenv)
 
     if [ "$virtualenv" = false ]; then
 	pyvenv=$(get_python_command pyvenv)
     fi
 
-    if [ "$virtualenv" != false ]; then
-	if [ -z "${python-${2-}}" ]; then
-	    triplet=$(find_system_python)
-	    versions="${triplet#* }"
-	    version="${versions#* }"
-	    python="${triplet%% *}"
+    if [ "$virtualenv" != false -a -z "${python-}" ]; then
+	python=$(find_system_python | awk '{print $1}')
+	python=$(find_user_python $python)
+	python_output="$($python --version)"
+	python_version="${python_output#Python }"
 
-	    if ! check_python $python $version; then
-		abort "%s\n" "No suitable Python interpreter found"
-	    fi
+	if ! check_python "$python" "$python_version"; then
+	    abort "%s\n" "No suitable Python interpreter found"
 	fi
     fi
 
@@ -188,7 +187,7 @@ get_python_command() (
 
     case "$name" in
 	(pip|pipenv|virtualenv)
-	    for version in "" $PYTHON_VERSIONS; do
+	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
 		for command in $name$version $name "python$version -m $name" false; do
 		    if $command --help >/dev/null 2>&1; then
 			printf "%s\n" "$command"
@@ -198,7 +197,7 @@ get_python_command() (
 	    done
 	    ;;
 	(pyvenv)
-	    for version in "" $PYTHON_VERSIONS; do
+	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
 		for command in "python$version -m venv" false; do
 		    if $command --help >/dev/null 2>&1; then
 			printf "%s\n" "$command"
