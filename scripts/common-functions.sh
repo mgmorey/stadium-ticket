@@ -186,7 +186,17 @@ get_python_command() (
     shift
 
     case "$name" in
-	(pip|pipenv|virtualenv)
+	(pipenv)
+	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
+		for command in $name "python$version -m $name" false; do
+		    if $command --help >/dev/null 2>&1; then
+			printf "%s\n" "$command"
+			return 0
+		    fi
+		done
+	    done
+	    ;;
+	(pip|virtualenv)
 	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
 		for command in $name$version $name "python$version -m $name" false; do
 		    if $command --help >/dev/null 2>&1; then
