@@ -45,10 +45,12 @@ build_uwsgi_binary() {
 }
 
 build_uwsgi_from_source() (
-    assert [ $# -ge 2 ]
+    assert [ $# -eq 4 ]
     assert [ -n "$1" ]
+    assert [ -n "$2" ]
     python=$1
-    shift
+    python_version=$2
+    shift 2
     fetch_uwsgi_source
 
     if ! cd "$HOME/git/$UWSGI_BRANCH"; then
@@ -88,18 +90,20 @@ get_realpath() (
     fi
 )
 
-if [ $# -eq 0 ]; then
+if [ $# -lt 2 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
 
-if [ $# -gt 1 ]; then
+if [ $# -gt 2 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
 
-if [ $# -eq 1 ]; then
+if [ $# -eq 2 ]; then
     assert [ -n "$1" ]
+    assert [ -n "$2" ]
     SYSTEM_PYTHON=$1
-    shift
+    SYSTEM_PYTHON_VERSION=$2
+    shift 2
 fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
@@ -113,4 +117,5 @@ source_dir=$script_dir/..
 
 configure_system
 set_unpriv_environment
-build_uwsgi_from_source $SYSTEM_PYTHON $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
+build_uwsgi_from_source $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION \
+			$UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
