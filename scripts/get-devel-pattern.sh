@@ -28,7 +28,7 @@ OPENSUSE_PATT="devel_basis"
 
 REDHAT_PATT=""
 
-SUNOS_PATT="build-essential"
+SUNOS_PATT="metapackages/build-essential"
 
 abort() {
     printf "$@" >&2

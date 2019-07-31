@@ -280,34 +280,17 @@ install_file() {
 }
 
 is_installed() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
+    assert [ $# -ge 1 ]
+    create_tmpfile
+    $script_dir/get-installed-packages.sh >$tmpfile
 
-    case "$kernel_name" in
-	(Linux|GNU)
-	    case "$ID" in
-		(debian|raspbian|ubuntu)
-		    status=$(dpkg-query -Wf '${Status}\n' $1 2>/dev/null)
-		    test "$status" = "install ok installed"
-		    ;;
-		(opensuse-*|fedora|redhat|centos|ol)
-		    rpm --query $1 >/dev/null 2>&1
-		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
-	    esac
-	    ;;
-	(Darwin)
-	    brew list 2>/dev/null | grep -qE '^'"$1"'$'
-	    ;;
-	(FreeBSD)
-	    pkg query %n "$1" >/dev/null 2>&1
-	    ;;
-	(*)
-	    false
-	    ;;
-    esac
+    for package; do
+	if ! grep -q "^$package" $tmpfile; then
+	   return 1
+	fi
+    done
+
+    return 0
 )
 
 is_tmpfile() {

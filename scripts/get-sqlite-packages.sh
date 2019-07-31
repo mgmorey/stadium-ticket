@@ -30,7 +30,7 @@ OPENSUSE_PKGS="sqlite3"
 
 REDHAT_PKGS="sqlite"
 
-SUNOS_PKGS=":%s-sqlite3 database/sqlite-3"
+SUNOS_PKGS="database/sqlite-3 :%s-sqlite3"
 
 abort() {
     printf "$@" >&2

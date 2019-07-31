@@ -56,13 +56,13 @@ create_virtualenv() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     python=${2-}
-    virtualenv=$(get_python_command virtualenv)
+    virtualenv=$(get_python_command virtualenv || true)
 
-    if [ "$virtualenv" = false ]; then
-	pyvenv=$(get_python_command pyvenv)
+    if [ -z "$virtualenv" ]; then
+	pyvenv=$(get_python_command pyvenv || true)
     fi
 
-    if [ "$virtualenv" != false -a -z "${python-}" ]; then
+    if [ -n "$virtualenv" -a -z "${python-}" ]; then
 	python=$(find_system_python | awk '{print $1}')
 	python=$(find_user_python $python)
 	python_output="$($python --version)"
@@ -75,9 +75,9 @@ create_virtualenv() (
 
     printf "%s\n" "Creating virtual environment"
 
-    if [ "$virtualenv" != false ]; then
+    if [ -n "$virtualenv" ]; then
 	$virtualenv -p $python $1
-    elif [ "$pyvenv" != false ]; then
+    elif [ -n "$pyvenv" ]; then
 	$pyvenv $1
     else
 	abort "%s: No virtualenv nor pyenv/venv command found\n" "$0"
@@ -187,18 +187,14 @@ get_python_command() (
 
     case "$name" in
 	(pipenv)
-	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
-		for command in $name "python$version -m $name" false; do
-		    if $command --help >/dev/null 2>&1; then
-			printf "%s\n" "$command"
-			return 0
-		    fi
-		done
-	    done
+	    if $name --help >/dev/null 2>&1; then
+		printf "%s\n" "$name"
+		return 0
+	    fi
 	    ;;
 	(pip|virtualenv)
 	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
-		for command in $name$version $name "python$version -m $name" false; do
+		for command in $name$version "python$version -m $name" $name; do
 		    if $command --help >/dev/null 2>&1; then
 			printf "%s\n" "$command"
 			return 0
@@ -208,19 +204,17 @@ get_python_command() (
 	    ;;
 	(pyvenv)
 	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
-		for command in "python$version -m venv" false; do
-		    if $command --help >/dev/null 2>&1; then
-			printf "%s\n" "$command"
-			return 0
-		    fi
-		done
+		if python$version -m venv --help >/dev/null 2>&1; then
+		    printf "%s\n" "python$version -m venv"
+		    return 0
+		fi
 	    done
 	    ;;
 	(*)
 	    abort "%s: Invalid command/module '%s'\n" "$0" "$name"
     esac
 
-    printf "%s\n" "$command"
+    return 1
 )
 
 get_sort_command() {
@@ -276,11 +270,11 @@ set_unpriv_environment() {
     if [ "$HOME" != "$home_dir" ]; then
 	export HOME="$home_dir"
 
-        if [ -r $HOME/.profile ]; then
-            set +u
-            . $HOME/.profile
-            set -u
-        fi
+	if [ -r $HOME/.profile ]; then
+	    set +u
+	    . $HOME/.profile
+	    set -u
+	fi
     fi
 }
 
@@ -328,10 +322,10 @@ sync_virtualenv_via_pip() {
 }
 
 upgrade_via_pip() (
-    pip=$(get_python_command pip)
+    pip=$(get_python_command pip || true)
 
-    if [ "$pip" = false ]; then
-	return
+    if [ -z "$pip" ]; then
+	return 1
     fi
 
     printf "%s\n" "Upgrading user packages via pip"

@@ -104,21 +104,21 @@ get_realpath() (
 )
 
 update_virtualenv() (
-    pipenv=$(get_python_command pipenv)
+    pipenv=$(get_python_command pipenv || true)
 
-    if [ "$pipenv" = false ]; then
-	pip=$(get_python_command pip)
+    if [ -z "$pipenv" ]; then
+	pip=$(get_python_command pip || true)
     fi
 
     source_dir=$script_dir/..
 
     cd "$source_dir"
 
-    if [ "$pipenv" != false ]; then
+    if [ -n "$pipenv" ]; then
 	create_virtualenv_via_pipenv
 	generate_requirements_files $VENV_REQUIREMENTS
 	$pipenv sync -d
-    elif [ "$pip" != false ]; then
+    elif [ -n "$pip" ]; then
 	venv_force_sync=true
 	venv_requirements=$VENV_REQUIREMENTS
 	sync_virtualenv_via_pip $VENV_FILENAME

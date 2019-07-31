@@ -35,9 +35,6 @@ OPENSUSE_TW_PKGS="%s-docker-compose"
 REDHAT_PKG="docker"
 REDHAT_PKGS=""
 
-SUNOS_PKG=""
-SUNOS_PKGS=""
-
 UBUNTU_PKG="docker.io"
 UBUNTU_PKGS="docker-compose"
 
@@ -85,9 +82,6 @@ get_docker_packages() {
 	    ;;
 	(FreeBSD)
 	    packages="${package:-$FREEBSD_PKG} $FREEBSD_PKGS"
-	    ;;
-	(SunOS)
-	    packages="${package:-$SUNOS_PKG}"
 	    ;;
     esac
 

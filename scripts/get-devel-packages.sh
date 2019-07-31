@@ -44,7 +44,8 @@ REDHAT_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel libuuid-devel \
 make ncurses-devel python3-devel openssl-devel readline-devel rsync \
 sqlite-devel xz-devel zlib-devel"
 
-SUNOS_PKGS="bash database/sqlite-3 gcc-6 libffi make ncurses readline rsync"
+SUNOS_PKGS="database/sqlite-3 developer/gcc-6 developer/build/gnu-make \
+library/libffi library/ncurses library/readline network/rsync shell/bash"
 
 abort() {
     printf "$@" >&2

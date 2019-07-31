@@ -26,7 +26,7 @@ OPENSUSE_PKGS="apache2-utils curl"
 
 REDHAT_PKGS="curl httpd-tools"
 
-SUNOS_PKGS="apache-24 curl"
+SUNOS_PKGS="web/curl web/server/apache-24"
 
 abort() {
     printf "$@" >&2

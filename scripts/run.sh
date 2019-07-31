@@ -47,17 +47,17 @@ get_realpath() (
 )
 
 run_in_virtualenv() {
-    pipenv=$(get_python_command pipenv)
+    pipenv=$(get_python_command pipenv || true)
 
-    if [ "$pipenv" = false ]; then
-	pip=$(get_python_command pip)
+    if [ -z "$pipenv" ]; then
+	pip=$(get_python_command pip || true)
     fi
 
     cd "$source_dir"
 
-    if [ "$pipenv" != false ]; then
+    if [ -n "$pipenv" ]; then
 	run_via_pipenv "$@"
-    elif [ "$pip" != false ]; then
+    elif [ -n "$pip" ]; then
 	run_via_pip "$@"
     else
 	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"

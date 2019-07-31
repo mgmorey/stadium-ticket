@@ -31,7 +31,7 @@ OPENSUSE_PKG="mariadb"
 
 REDHAT_PKG="mariadb-server"
 
-SUNOS_PKG="mariadb-103"
+SUNOS_PKG="database/mariadb-103"
 
 UBUNTU_18_04_PKG="mariadb-server-10.1"
 UBUNTU_19_04_PKG="mariadb-server-10.3"

@@ -56,6 +56,7 @@ get_installed_packages() {
 	    ;;
 	(Darwin)
 	    brew list -1
+	    pkgin list -s | awk '{print ":" $1}'
 	    ;;
 	(FreeBSD)
 	    pkg info | awk "$FREEBSD_AWK"
@@ -65,6 +66,7 @@ get_installed_packages() {
 	    ;;
 	(SunOS)
 	    pkg list -s | awk '{print $1}'
+	    pkgin list -s | awk '{print ":" $1}'
 	    ;;
     esac
 }
