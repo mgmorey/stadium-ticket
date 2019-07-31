@@ -39,7 +39,7 @@ elif [ $TERM = dumb ]; then
     fi
 fi
 
-if [ $# -eq 0 ]; then
+if [ $# -lt 1 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
 
