@@ -263,7 +263,7 @@ have_installed() (
     $script_dir/get-installed-packages.sh >$tmpfile
 
     for package; do
-	if ! grep -Eq "^$package([0-9]+-$1|-[0-9]+/$1|-$1(-[0-9\.]+)?)\$" $tmpfile; then
+	if ! grep -Eq "^$package([0-9]*|-[0-9\.]+)?\$" $tmpfile; then
 	   return 1
 	fi
     done
