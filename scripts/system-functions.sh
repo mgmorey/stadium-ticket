@@ -257,6 +257,20 @@ get_su_command() (
     return 0
 )
 
+have_installed() (
+    assert [ $# -ge 1 ]
+    create_tmpfile
+    $script_dir/get-installed-packages.sh >$tmpfile
+
+    for package; do
+	if ! grep -Eq "^$package([0-9]+-$1|-[0-9]+/$1|-$1(-[0-9\.]+)?)\$" $tmpfile; then
+	   return 1
+	fi
+    done
+
+    return 0
+)
+
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$3" ]
@@ -278,20 +292,6 @@ install_file() {
 	install -C -m $1 $2 $3
     fi
 }
-
-is_installed() (
-    assert [ $# -ge 1 ]
-    create_tmpfile
-    $script_dir/get-installed-packages.sh >$tmpfile
-
-    for package; do
-	if ! grep -q "^$package" $tmpfile; then
-	   return 1
-	fi
-    done
-
-    return 0
-)
 
 is_tmpfile() {
     printf "%s\n" ${tmpfiles-} | grep -q $1
