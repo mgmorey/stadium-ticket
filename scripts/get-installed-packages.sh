@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+DEBIAN_AWK='$1 = "install" && $2 == "ok" && $3 == "installed" {print $4}'
+
 FREEBSD_AWK='{
 n = split($1, a, "-");
 
@@ -44,7 +46,7 @@ get_installed_packages() {
 	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian|ubuntu)
-		    dpkg-query -Wf '${Package}\n'
+		    dpkg-query -Wf '${Status} ${Package}\n' | awk "$DEBIAN_AWK"
 		    ;;
 		(opensuse-*)
 		    zypper -q search -i -t package | awk 'NR > 3 {print $3}'
