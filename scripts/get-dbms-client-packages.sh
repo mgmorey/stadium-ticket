@@ -70,9 +70,9 @@ get_dbms_client_packages() {
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in
-			(9)
-			    packages="${package:-$DEBIAN_9_PKG} $DEBIAN_PKGS"
-			    ;;
+			# (9)
+			#     packages="${package:-$DEBIAN_9_PKG} $DEBIAN_PKGS"
+			#     ;;
 			(10)
 			    packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
 			    ;;

@@ -54,7 +54,10 @@ install_dependencies() {
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in
-			(9|10)
+			# (9)
+			#     package=$DEBIAN_PKG
+			#     ;;
+			(10)
 			    package=$DEBIAN_PKG
 			    ;;
 			(*)

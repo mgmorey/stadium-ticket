@@ -79,9 +79,9 @@ get_devel_packages() {
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in
-			(9)
-			    packages=$DEBIAN_9_PKGS
-			    ;;
+			# (9)
+			#     packages=$DEBIAN_9_PKGS
+			#     ;;
 			(10)
 			    packages=$DEBIAN_10_PKGS
 			    ;;

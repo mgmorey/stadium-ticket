@@ -271,9 +271,9 @@ configure_system_baseline() {
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in
-			(9)
-			    UWSGI_IS_PACKAGED=false
-			    ;;
+			# (9)
+			#     UWSGI_IS_PACKAGED=false
+			#     ;;
 			(10)
 			    UWSGI_IS_PACKAGED=true
 			    ;;
