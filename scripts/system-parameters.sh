@@ -452,10 +452,10 @@ configure_system_defaults() {
     # Set Python-related parameters
 
     if [ -z "${SYSTEM_PYTHON-}" -o -z "${SYSTEM_PYTHON_VERSION-}" ]; then
-	triple=$(find_system_python)
-	versions="${triple#* }"
-	SYSTEM_PYTHON="${triple%% *}"
-	SYSTEM_PYTHON_VERSION="${versions#* }"
+	python_triple=$(find_system_python)
+	version_pair="${python_triple#* }"
+	SYSTEM_PYTHON="${python_triple%% *}"
+	SYSTEM_PYTHON_VERSION="${version_pair#* }"
 
 	if ! check_python $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION; then
 	    abort "%s\n" "No suitable Python interpreter found"
