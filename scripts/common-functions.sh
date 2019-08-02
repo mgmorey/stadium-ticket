@@ -89,7 +89,7 @@ find_system_python() {
 }
 
 find_system_pythons() (
-    for suffix in $PYTHON_VERSIONS; do
+    for suffix in $PYTHON_VERSIONS $PYTHON_VERSION; do
 	for system_prefix in $SYSTEM_PREFIXES; do
 	    if [ -x $system_prefix/bin/python$suffix ]; then
 		python=$system_prefix/bin/python$suffix
@@ -116,7 +116,7 @@ find_user_python() (
     fi
 
     if [ -n "$pyenv_root" ]; then
-	for version in $python_versions $PYTHON_VERSIONS; do
+	for version in $python_versions; do
 	    python=$(find_user_python_installed $pyenv_root $version || true)
 
 	    if [ -z "$python" ]; then
@@ -131,7 +131,7 @@ find_user_python() (
 	done
     fi
 
-    for version in $python_versions $PYTHON_VERSIONS; do
+    for version in $python_versions; do
 	python=$($which python$version 2>/dev/null || true)
 
 	if [ -n "$python" ]; then
