@@ -320,9 +320,9 @@ configure_system_baseline() {
 		    ;;
 		(redhat|centos)
 		    case "$VERSION_ID" in
-			(7)
-			    UWSGI_IS_PACKAGED=false
-			    ;;
+			# (7)
+			#     UWSGI_IS_PACKAGED=false
+			#     ;;
 			(8)
 			    UWSGI_IS_PACKAGED=true
 			    ;;
