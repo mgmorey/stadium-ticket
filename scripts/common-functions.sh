@@ -89,14 +89,15 @@ find_system_python() {
 }
 
 find_system_pythons() (
-    for python_version in $PYTHON_VERSIONS; do
+    for suffix in $PYTHON_VERSIONS; do
 	for system_prefix in $SYSTEM_PREFIXES; do
-	    if [ -x $system_prefix/bin/python$python_version ]; then
-		python=$system_prefix/bin/python$python_version
-		python_output="$($python --version)"
+	    if [ -x $system_prefix/bin/python$suffix ]; then
+		python=$system_prefix/bin/python$suffix
+		output="$($python --version)"
 
-		if [ -n "$python_output" ]; then
-		    printf "%s %s %s\n" "$python" "$python_version" "${python_output#Python }"
+		if [ -n "$output" ]; then
+		    version="${output#Python }"
+		    printf "%s %s %s\n" "$python" "$suffix" "$version"
 		fi
 	    fi
 	done
