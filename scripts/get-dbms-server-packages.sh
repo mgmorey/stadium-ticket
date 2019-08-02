@@ -18,7 +18,7 @@
 
 DARWIN_PKG="mariadb"
 
-DEBIAN_9_PKG="mariadb-server-10.1"
+# DEBIAN_9_PKG="mariadb-server-10.1"
 DEBIAN_10_PKG="mariadb-server-10.3"
 
 FEDORA_PKG="mariadb-server"

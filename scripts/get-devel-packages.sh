@@ -20,10 +20,10 @@
 
 DARWIN_PKGS="bash curl gdbm libffi openssl readline rsync sqlite xz zlib"
 
-DEBIAN_9_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
-libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
-libsqlite3-dev libssl1.0-dev libxml2-dev liblzma-dev make rsync \
-uuid-dev xz-utils zlib1g-dev"
+# DEBIAN_9_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
+# libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
+# libsqlite3-dev libssl1.0-dev libxml2-dev liblzma-dev make rsync \
+# uuid-dev xz-utils zlib1g-dev"
 
 DEBIAN_10_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
 libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
