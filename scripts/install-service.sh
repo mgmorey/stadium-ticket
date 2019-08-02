@@ -33,8 +33,9 @@ build_uwsgi_from_source() {
     fi
 }
 
-change_owner() {
+change_owner() (
     assert [ $# -ge 1 ]
+    dirs=$(printf "%s\n" "$@" | sort -u)
 
     if [ "$(id -u)" -gt 0 ]; then
 	return 0
@@ -43,23 +44,24 @@ change_owner() {
     fi
 
     if [ $dryrun = true ]; then
-	check_permissions "$@"
+	check_permissions $dirs
     else
-	printf "Changing ownership of directory %s\n" "$@"
-	chown -R $APP_UID:$APP_GID "$@"
+	printf "Changing ownership of directory %s\n" $dirs
+	chown -R $APP_UID:$APP_GID $dirs
     fi
-}
+)
 
-create_dirs() {
+create_dirs() (
     assert [ $# -ge 1 ]
+    dirs=$(printf "%s\n" "$@" | sort -u)
 
     if [ $dryrun = true ]; then
-	check_permissions "$@"
+	check_permissions $dirs
     else
-	printf "Creating directory %s\n" $(printf "%s\n" "$@" | sort -u)
-	mkdir -p "$@"
+	printf "Creating directory %s\n" $dirs
+	mkdir -p $dirs
     fi
-}
+)
 
 create_service_virtualenv() {
     if ! run_unpriv '"$script_dir/create-virtualenv.sh"' "$@"; then
