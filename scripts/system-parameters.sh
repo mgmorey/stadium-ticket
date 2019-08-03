@@ -313,30 +313,24 @@ configure_system_baseline() {
 		    ;;
 		(redhat|centos)
 		    case "$VERSION_ID" in
-			# (7)
-			#     UWSGI_IS_PACKAGED=false
-			#     ;;
 			(8)
-			    UWSGI_IS_PACKAGED=true
+			    configure_linux_redhat
 			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
 		    esac
-
-		    configure_linux_redhat
 		    ;;
 		(ol)
 		    case "$VERSION_ID" in
 			(8.0)
 			    UWSGI_IS_PACKAGED=false
+			    configure_linux_redhat
 			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
 		    esac
-
-		    configure_linux_redhat
 		    ;;
 		(*)
 		    abort_not_supported Distro
@@ -344,7 +338,6 @@ configure_system_baseline() {
 	    esac
 	    ;;
 	(Darwin)
-	    # Build uWSGI from source
 	    UWSGI_IS_PACKAGED=false
 	    configure_bsd
 	    configure_bsd_darwin
@@ -365,7 +358,6 @@ configure_system_baseline() {
 	    esac
 	    ;;
 	# (NetBSD)
-	#     # Build uWSGI from source
 	#     UWSGI_IS_PACKAGED=false
 	#     configure_bsd
 
