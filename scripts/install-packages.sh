@@ -54,9 +54,12 @@ install_packages() {
 
     installer1=$(printf "%s\n" $installers | awk 'NR == 1 {print $0}')
     installer2=$(printf "%s\n" $installers | awk 'NR == 2 {print $0}')
-    packages1=$(printf "%s\n" $packages | awk -F: 'NF == 1 {print $0}
+
+    if [ -n "$packages" ]; then
+	packages1=$(printf "%s\n" $packages | awk -F: 'NF == 1 {print $0}
 						   NF == 2 {print $1}')
-    packages2=$(printf "%s\n" $packages | awk -F: 'NF == 2 {print $2}')
+	packages2=$(printf "%s\n" $packages | awk -F: 'NF == 2 {print $2}')
+    fi
 
     case "$kernel_name" in
 	(Linux|GNU)
@@ -89,6 +92,10 @@ install_packages() {
 }
 
 install_packages_from_args() {
+    if [ -z "$packages" ]; then
+	return 0
+    fi
+
     if [ -n "$installer1" -a -n "$packages1" ]; then
 	$installer1 install $install_opts $packages1 || true
     fi
@@ -101,10 +108,12 @@ install_packages_from_args() {
 }
 
 install_pattern_from_args() {
-    if [ -n "$pattern" ]; then
-	pattern_opts=$("$script_dir/get-pattern-install-options.sh")
-	$installer1 install $install_opts $pattern_opts $pattern || true
+    if [ -z "$pattern" ]; then
+	return 0
     fi
+
+    pattern_opts=$("$script_dir/get-pattern-install-options.sh")
+    $installer1 install $install_opts $pattern_opts $pattern || true
 }
 
 parse_arguments() {
@@ -114,7 +123,7 @@ parse_arguments() {
     while getopts hp: opt; do
 	case $opt in
 	    (p)
-		pattern=$OPTARG
+		pattern=$("$script_dir/get-uninstalled-packages.sh" $OPTARG)
 		;;
 	    (h)
 		usage
@@ -129,7 +138,7 @@ parse_arguments() {
     done
 
     shift $(($OPTIND - 1))
-    packages="$@"
+    packages=$("$script_dir/get-uninstalled-packages.sh" "$@")
 }
 
 usage() {
