@@ -114,6 +114,18 @@ install_docker() {
 	    ;;
 	(FreeBSD)
 	    invoke_usermod=false
+
+	    case "$VERSION_ID" in
+		(11.*)
+		    :
+		    ;;
+		(12.*)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"
@@ -146,11 +158,11 @@ install_docker() {
 }
 
 install_docker_group() {
-    if ! getent group docker >/dev/null; then
-	groupadd docker
-    fi
-
     if [ "$invoke_usermod" = true ]; then
+	if ! getent group docker >/dev/null; then
+	    groupadd docker
+	fi
+
 	members="$(getent group docker | awk -F: '{print $4}')"
 
 	if ! printf "%s\n" "$members" | grep -q "\<$SUDO_USER\>"; then

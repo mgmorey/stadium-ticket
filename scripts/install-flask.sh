@@ -114,7 +114,17 @@ install_python_mw() {
 	    :
 	    ;;
 	(FreeBSD)
-	    :
+	    case "$VERSION_ID" in
+		(11.*)
+		    :
+		    ;;
+		(12.*)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
 	    ;;
 	(NetBSD)
 	    :
