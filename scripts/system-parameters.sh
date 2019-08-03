@@ -287,7 +287,8 @@ configure_system_baseline() {
 		(ubuntu)
 		    case "$VERSION_ID" in
 			(18.04|19.04)
-			    configure_linux_debian_native
+			    UWSGI_IS_PACKAGED=true
+			    configure_linux_debian
 			    ;;
 			(*)
 			    abort_not_supported Release
