@@ -97,12 +97,12 @@ install_packages_from_args() {
     fi
 
     if [ -n "$installer1" -a -n "$packages1" ]; then
-	$installer1 install $install_opts $packages1 || true
+	$installer1 install $install_opts $packages1
     fi
 
     if [ -n "$installer2" -a -n "$packages2" ]; then
 	if [ -n "$(which $installer2 2>/dev/null)" ]; then
-	    $installer2 install $packages2 || true
+	    $installer2 install $packages2
 	fi
     fi
 }
@@ -113,7 +113,7 @@ install_pattern_from_args() {
     fi
 
     pattern_opts=$("$script_dir/get-pattern-install-options.sh")
-    $installer1 install $install_opts $pattern_opts $pattern || true
+    $installer1 install $install_opts $pattern_opts $pattern
 }
 
 parse_arguments() {
