@@ -150,8 +150,6 @@ configure_linux_debian_common() {
 }
 
 configure_linux_debian_native() {
-    configure_linux_debian_common
-
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
 
