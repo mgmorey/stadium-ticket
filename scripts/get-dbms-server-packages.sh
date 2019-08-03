@@ -18,7 +18,6 @@
 
 DARWIN_PKG="mariadb"
 
-# DEBIAN_9_PKG="mariadb-server-10.1"
 DEBIAN_10_PKG="mariadb-server-10.3"
 
 FEDORA_PKG="mariadb-server"
@@ -63,9 +62,6 @@ get_dbms_server_packages() {
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in
-			# (9)
-			#     packages="${package:-$DEBIAN_9_PKG}"
-			#     ;;
 			(10)
 			    packages="${package:-$DEBIAN_10_PKG}"
 			    ;;

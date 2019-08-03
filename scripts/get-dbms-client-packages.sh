@@ -18,7 +18,6 @@
 
 DARWIN_PKG="mariadb"
 
-# DEBIAN_9_PKG="mariadb-client-10.1"
 DEBIAN_10_PKG="mariadb-client-10.3"
 DEBIAN_PKGS="%s-pymysql %s-sqlalchemy"
 
@@ -70,9 +69,6 @@ get_dbms_client_packages() {
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in
-			# (9)
-			#     packages="${package:-$DEBIAN_9_PKG} $DEBIAN_PKGS"
-			#     ;;
 			(10)
 			    packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
 			    ;;
