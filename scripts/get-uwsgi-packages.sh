@@ -63,9 +63,6 @@ get_uwsgi_packages() {
 			(10)
 			    packages=$DEBIAN_10_PKGS
 			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
 		    esac
 		    ;;
 		(ubuntu)
