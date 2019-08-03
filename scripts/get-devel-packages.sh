@@ -87,7 +87,7 @@ get_devel_packages() {
 		(ubuntu)
 		    case "$VERSION_ID" in
 			(18.04)
-			    packages=$DEBIAN_9_PKGS
+			    packages=$DEBIAN_10_PKGS
 			    ;;
 			(19.04)
 			    packages=$DEBIAN_10_PKGS
@@ -97,7 +97,7 @@ get_devel_packages() {
 		(linuxmint)
 		    case "$VERSION_ID" in
 			(19.2)
-			    packages=$DEBIAN_9_PKGS
+			    packages=$DEBIAN_10_PKGS
 			    ;;
 		    esac
 		    ;;
