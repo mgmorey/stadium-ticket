@@ -260,7 +260,7 @@ get_su_command() (
 have_installed() (
     assert [ $# -ge 1 ]
     create_tmpfile
-    $script_dir/get-installed-packages.sh >$tmpfile
+    "$script_dir/get-installed-packages.sh" >$tmpfile
 
     for package; do
 	if ! grep -Eq "^$package([0-9]*|-[0-9\.]+)?(nb[0-9]+)?\$" $tmpfile; then
