@@ -55,4 +55,5 @@ get_realpath() (
 )
 
 script_dir=$(get_realpath "$(dirname "$0")")
+
 get_extra_packages
