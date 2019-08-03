@@ -90,16 +90,20 @@ install_dependencies() {
 		    :
 		    ;;
 		(fedora)
-		    :
+		    case "$VERSION_ID" in
+			(30)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
 		    ;;
-		(redhat)
+		(redhat|ol)
 		    :
 		    ;;
 		(centos)
 		    "$script_dir/install-packages.sh" epel-release
-		    ;;
-		(ol)
-		    :
 		    ;;
 		(*)
 		    abort_not_supported Distro

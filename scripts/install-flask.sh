@@ -90,7 +90,14 @@ install_python_mw() {
 		    :
 		    ;;
 		(fedora)
-		    :
+		    case "$VERSION_ID" in
+			(30)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
 		    ;;
 		(redhat|ol)
 		    :
