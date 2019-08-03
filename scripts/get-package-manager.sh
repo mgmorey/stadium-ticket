@@ -33,7 +33,7 @@ get_package_manager() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
-		(debian|raspbian|ubuntu)
+		(debian|raspbian|ubuntu|linuxmint)
 		    printf "%s\n" apt-get
 		    ;;
 		(opensuse-*)

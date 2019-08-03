@@ -61,7 +61,7 @@ install_packages() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
-		(debian|raspbian|ubuntu|opensuse-*|fedora|redhat|centos|ol)
+		(debian|raspbian|ubuntu|linuxmint|opensuse-*|fedora|redhat|centos|ol)
 		    install_pattern_from_args
 		    install_packages_from_args
 		    ;;

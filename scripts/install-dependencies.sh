@@ -76,6 +76,16 @@ install_dependencies() {
 			    ;;
 		    esac
 		    ;;
+		(linuxmint)
+		    case "$VERSION_ID" in
+			(19.2)
+			    package=$DEBIAN_PKG
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
 		(opensuse-*)
 		    :
 		    ;;

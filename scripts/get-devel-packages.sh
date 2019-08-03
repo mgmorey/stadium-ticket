@@ -20,6 +20,11 @@
 
 DARWIN_PKGS="bash curl gdbm libffi openssl readline rsync sqlite xz zlib"
 
+DEBIAN_9_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
+libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
+libsqlite3-dev libssl1.0-dev libxml2-dev liblzma-dev make rsync \
+uuid-dev xz-utils zlib1g-dev"
+
 DEBIAN_10_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
 libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
 libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev liblzma-dev \
@@ -80,7 +85,21 @@ get_devel_packages() {
 		    esac
 		    ;;
 		(ubuntu)
-		    packages=$DEBIAN_10_PKGS
+		    case "$VERSION_ID" in
+			(18.04)
+			    packages=$DEBIAN_9_PKGS
+			    ;;
+			(19.04)
+			    packages=$DEBIAN_10_PKGS
+			    ;;
+		    esac
+		    ;;
+		(linuxmint)
+		    case "$VERSION_ID" in
+			(19.2)
+			    packages=$DEBIAN_9_PKGS
+			    ;;
+		    esac
 		    ;;
 		(opensuse-*)
 		    packages=$OPENSUSE_PKGS

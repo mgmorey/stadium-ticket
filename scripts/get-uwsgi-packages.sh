@@ -79,6 +79,13 @@ get_uwsgi_packages() {
 			    ;;
 		    esac
 		    ;;
+		(linuxmint)
+		    case "$VERSION_ID" in
+			(19.2)
+			    packages=$DEBIAN_9_PKGS
+			    ;;
+		    esac
+		    ;;
 		(opensuse-*)
 		    packages=$OPENSUSE_PKGS
 		    ;;

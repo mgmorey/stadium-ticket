@@ -287,6 +287,16 @@ configure_system_baseline() {
 			    ;;
 		    esac
 		    ;;
+		(linuxmint)
+		    case "$VERSION_ID" in
+			(19.2)
+			    configure_linux_debian
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
 		(opensuse-leap)
 		    case "$VERSION_ID" in
 			(15.0|15.1)

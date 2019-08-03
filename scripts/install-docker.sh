@@ -75,6 +75,16 @@ install_docker() {
 			    ;;
 		    esac
 		    ;;
+		(linuxmint)
+		    case "$VERSION_ID" in
+			(19.2)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
 		(opensuse-*)
 		    :
 		    ;;

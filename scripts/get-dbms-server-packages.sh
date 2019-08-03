@@ -77,6 +77,13 @@ get_dbms_server_packages() {
 			    ;;
 		    esac
 		    ;;
+		(linuxmint)
+		    case "$VERSION_ID" in
+			(19.2)
+			    packages="${package:-$UBUNTU_18_04_PKG}"
+			    ;;
+		    esac
+		    ;;
 		(opensuse-*)
 		    packages="${package:-$OPENSUSE_PKG}"
 		    ;;

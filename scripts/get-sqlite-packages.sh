@@ -62,7 +62,7 @@ get_sqlite_packages() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
-		(debian|raspbian|ubuntu)
+		(debian|raspbian|ubuntu|linuxmint)
 		    packages=$DEBIAN_PKGS
 		    ;;
 		(opensuse-*)

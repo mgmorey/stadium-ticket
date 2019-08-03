@@ -84,6 +84,13 @@ get_dbms_client_packages() {
 			    ;;
 		    esac
 		    ;;
+		(linuxmint)
+		    case "$VERSION_ID" in
+			(19.2)
+			    packages="${package:-$UBUNTU_18_04_PKG} $UBUNTU_PKGS"
+			    ;;
+		    esac
+		    ;;
 		(opensuse-*)
 		    packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
 		    ;;

@@ -53,7 +53,7 @@ eval $("$script_dir/get-os-release.sh" -X)
 case "$kernel_name" in
     (Linux|GNU)
 	case "$ID" in
-	    (debian|raspbian|ubuntu)
+	    (debian|raspbian|ubuntu|linuxmint)
 		;;
 	    (*)
 		exit 1
