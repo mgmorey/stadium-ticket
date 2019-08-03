@@ -199,7 +199,7 @@ install_uwsgi_from_package() (
 
     packages=$(get_packages | sort -u)
 
-    if ! have_installed $packages; then
+    if [ -n "$packages" ]; then
 	"$script_dir/install-packages.sh" $packages
     fi
 )
