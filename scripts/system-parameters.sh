@@ -269,23 +269,17 @@ configure_system_baseline() {
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in
-			# (9)
-			#     UWSGI_IS_PACKAGED=false
-			#     ;;
 			(10)
-			    UWSGI_IS_PACKAGED=true
+			    configure_linux_debian
 			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
 		    esac
-
-		    configure_linux_debian
 		    ;;
 		(ubuntu)
 		    case "$VERSION_ID" in
 			(18.04|19.04)
-			    UWSGI_IS_PACKAGED=true
 			    configure_linux_debian
 			    ;;
 			(*)
