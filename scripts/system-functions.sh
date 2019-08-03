@@ -257,20 +257,6 @@ get_su_command() (
     return 0
 )
 
-have_installed() (
-    assert [ $# -ge 1 ]
-    create_tmpfile
-    "$script_dir/get-installed-packages.sh" >$tmpfile
-
-    for package; do
-	if ! grep -Eq "^$package([0-9]*|-[0-9\.]+)?(nb[0-9]+)?\$" $tmpfile; then
-	   return 1
-	fi
-    done
-
-    return 0
-)
-
 install_file() {
     assert [ $# -eq 3 ]
     assert [ -n "$3" ]
