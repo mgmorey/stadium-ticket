@@ -51,7 +51,15 @@ get_realpath() (
 install_homebrew() {
     case "$kernel_name" in
 	(Darwin)
-	;;
+	    case "$VERSION_ID" in
+		(10.14.*)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;

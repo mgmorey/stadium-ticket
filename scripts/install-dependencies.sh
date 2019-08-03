@@ -111,7 +111,14 @@ install_dependencies() {
 	    esac
 	    ;;
 	(Darwin)
-	    :
+	    case "$VERSION_ID" in
+		(10.14.*)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
 	    ;;
 	(FreeBSD)
 	    case "$VERSION_ID" in

@@ -356,7 +356,15 @@ configure_system_baseline() {
 	(Darwin)
 	    UWSGI_IS_PACKAGED=false
 	    configure_bsd
-	    configure_bsd_darwin
+
+	    case "$VERSION_ID" in
+		(10.14.*)
+		    configure_bsd_darwin
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
 	    ;;
 	(FreeBSD)
 	    configure_bsd
