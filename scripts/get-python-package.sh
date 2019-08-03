@@ -28,8 +28,6 @@ NETBSD_INFO="python37 py37"
 
 OPENSUSE_INFO="python3 python3"
 
-REDHAT_7_INFO="python36 python36"
-
 REDHAT_8_INFO="python3 python3"
 
 SUNOS_INFO=":python37 py37"
@@ -67,9 +65,6 @@ get_python_package() {
 		    ;;
 		(redhat|centos|ol)
 		    case "$VERSION_ID" in
-			# (7|7.0)
-			#     printf "%s %s\n" $REDHAT_7_INFO
-			#     ;;
 			(8|8.0)
 			    printf "%s %s\n" $REDHAT_8_INFO
 			    ;;
