@@ -55,7 +55,7 @@ get_installed_packages() {
 		    dnf list installed | awk '{print $1}' | awk -F. '{print $1}'
 		    ;;
 		(ol)
-		    yum list installed | awk '{print $1}' | awk -F. '{print $1}'
+		    dnf list installed | awk '{print $1}' | awk -F. '{print $1}'
 		    ;;
 	    esac
 	    ;;

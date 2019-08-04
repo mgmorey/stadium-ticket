@@ -43,7 +43,7 @@ get_package_manager() {
 		    printf "%s\n" dnf
 		    ;;
 		(ol)
-		    printf "%s\n" yum
+		    printf "%s\n" dnf
 		    ;;
 		(*)
 		    abort_not_supported Distro

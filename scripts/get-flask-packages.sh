@@ -26,6 +26,8 @@ NETBSD_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
 OPENSUSE_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
+REDHAT_PKGS="%s-flask"
+
 SUNOS_PKGS=":%s-flask :%s-flask-restful :%s-flask-sqlalchemy"
 
 abort() {
@@ -49,6 +51,9 @@ get_flask_packages() {
 		    ;;
 		(fedora)
 		    packages=$FEDORA_PKGS
+		    ;;
+		(ol)
+		    packages=$REDHAT_PKGS
 		    ;;
 	    esac
 	    ;;
