@@ -52,7 +52,7 @@ get_installed_packages() {
 		    zypper -q search -i -t package | awk 'NR > 3 {print $3}'
 		    ;;
 		(fedora)
-		    yum list installed | awk '{print $1}' | awk -F. '{print $1}'
+		    dnf list installed | awk '{print $1}' | awk -F. '{print $1}'
 		    ;;
 		(ol)
 		    yum list installed | awk '{print $1}' | awk -F. '{print $1}'
