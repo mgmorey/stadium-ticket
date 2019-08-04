@@ -16,17 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PATT=""
-
 DEBIAN_PATT="build-essential"
 
-FEDORA_PATT=""
-
-FREEBSD_PATT=""
-
 OPENSUSE_PATT="devel_basis"
-
-REDHAT_PATT=""
 
 SUNOS_PATT="metapackages/build-essential"
 
@@ -49,19 +41,7 @@ get_devel_pattern() {
 		(opensuse-*)
 		    pattern=$OPENSUSE_PATT
 		    ;;
-		(fedora)
-		    pattern=$FEDORA_PATT
-		    ;;
-		(redhat|centos|ol)
-		    pattern=$REDHAT_PATT
-		    ;;
 	    esac
-	    ;;
-	(Darwin)
-	    pattern=$DARWIN_PATT
-	    ;;
-	(FreeBSD)
-	    pattern=$FREEBSD_PATT
 	    ;;
 	(SunOS)
 	    pattern=$SUNOS_PATT

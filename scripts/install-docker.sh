@@ -85,8 +85,25 @@ install_docker() {
 			    ;;
 		    esac
 		    ;;
-		(opensuse-*)
-		    :
+		(opensuse-leap)
+		    case "$VERSION_ID" in
+			(15.0|15.1)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(opensuse-tumbleweed)
+		    case "$VERSION_ID" in
+			(2019*)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
 		    ;;
 		(fedora)
 		    case "$VERSION_ID" in
@@ -97,12 +114,6 @@ install_docker() {
 			    abort_not_supported Release
 			    ;;
 		    esac
-		    ;;
-		(redhat)
-		    :
-		    ;;
-		(centos)
-		    "$script_dir/install-packages.sh" epel-release
 		    ;;
 		(*)
 		    abort_not_supported Distro

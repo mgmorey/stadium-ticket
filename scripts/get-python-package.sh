@@ -63,15 +63,8 @@ get_python_package() {
 		(fedora)
 		    printf "%s %s\n" $FEDORA_INFO
 		    ;;
-		(redhat|centos|ol)
-		    case "$VERSION_ID" in
-			(8|8.0)
-			    printf "%s %s\n" $REDHAT_8_INFO
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
+		(ol)
+		    printf "%s %s\n" $REDHAT_8_INFO
 		    ;;
 		(*)
 		    abort_not_supported Distro

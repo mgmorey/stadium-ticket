@@ -99,11 +99,15 @@ install_dependencies() {
 			    ;;
 		    esac
 		    ;;
-		(redhat|ol)
-		    :
-		    ;;
-		(centos)
-		    "$script_dir/install-packages.sh" epel-release
+		(ol)
+		    case "$VERSION_ID" in
+			(8.0)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
 		    ;;
 		(*)
 		    abort_not_supported Distro

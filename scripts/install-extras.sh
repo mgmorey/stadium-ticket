@@ -103,8 +103,25 @@ install_extras() {
 			    ;;
 		    esac
 		    ;;
-		(opensuse-*)
-		    :
+		(opensuse-leap)
+		    case "$VERSION_ID" in
+			(15.0|15.1)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(opensuse-tumbleweed)
+		    case "$VERSION_ID" in
+			(2019*)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
 		    ;;
 		(fedora)
 		    case "$VERSION_ID" in
@@ -116,11 +133,15 @@ install_extras() {
 			    ;;
 		    esac
 		    ;;
-		(redhat|ol)
-		    :
-		    ;;
-		(centos)
-		    "$script_dir/install-packages.sh" epel-release
+		(ol)
+		    case "$VERSION_ID" in
+			(8.0)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
 		    ;;
 		(*)
 		    abort_not_supported Distro

@@ -99,7 +99,10 @@ get_devel_packages() {
 		(opensuse-*)
 		    packages=$OPENSUSE_PKGS
 		    ;;
-		(fedora|redhat|centos|ol)
+		(fedora)
+		    packages=$REDHAT_PKGS
+		    ;;
+		(ol)
 		    packages=$REDHAT_PKGS
 		    ;;
 	    esac

@@ -32,9 +32,6 @@ OPENSUSE_PKG="docker"
 OPENSUSE_LP_PKGS="docker-compose"
 OPENSUSE_TW_PKGS="%s-docker-compose"
 
-REDHAT_PKG="docker"
-REDHAT_PKGS=""
-
 UBUNTU_PKG="docker.io"
 UBUNTU_PKGS="docker-compose"
 
@@ -71,9 +68,6 @@ get_docker_packages() {
 		    ;;
 		(fedora)
 		    packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
-		    ;;
-		(redhat|centos)
-		    packages="${package:-$REDHAT_PKG} $REDHAT_PKGS"
 		    ;;
 	    esac
 	    ;;

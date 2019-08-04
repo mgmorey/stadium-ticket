@@ -71,7 +71,7 @@ get_sqlite_packages() {
 		(fedora)
 		    packages=$FEDORA_PKGS
 		    ;;
-		(redhat|centos|ol)
+		(ol)
 		    packages=$REDHAT_PKGS
 		    ;;
 	    esac

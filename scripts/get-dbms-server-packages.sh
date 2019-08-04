@@ -90,7 +90,7 @@ get_dbms_server_packages() {
 		(fedora)
 		    packages="${package:-$FEDORA_PKG}"
 		    ;;
-		(redhat|centos|ol)
+		(ol)
 		    packages="${package:-$REDHAT_PKG}"
 		    ;;
 	    esac

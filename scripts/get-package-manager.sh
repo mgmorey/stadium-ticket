@@ -42,7 +42,7 @@ get_package_manager() {
 		(fedora)
 		    printf "%s\n" dnf
 		    ;;
-		(redhat|centos|ol)
+		(ol)
 		    printf "%s\n" yum
 		    ;;
 		(*)

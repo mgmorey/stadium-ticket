@@ -327,16 +327,6 @@ configure_system_baseline() {
 			    ;;
 		    esac
 		    ;;
-		(redhat|centos)
-		    case "$VERSION_ID" in
-			(8)
-			    configure_linux_redhat
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
 		(ol)
 		    case "$VERSION_ID" in
 			(8.0)

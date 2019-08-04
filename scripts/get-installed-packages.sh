@@ -51,7 +51,10 @@ get_installed_packages() {
 		(opensuse-*)
 		    zypper -q search -i -t package | awk 'NR > 3 {print $3}'
 		    ;;
-		(fedora|redhat|centos|ol)
+		(fedora)
+		    yum list installed | awk '{print $1}' | awk -F. '{print $1}'
+		    ;;
+		(ol)
 		    yum list installed | awk '{print $1}' | awk -F. '{print $1}'
 		    ;;
 	    esac
