@@ -57,7 +57,7 @@ install_packages() {
 
     if [ -n "$packages" ]; then
 	packages1=$(printf "%s\n" $packages | awk -F: 'NF == 1 {print $0}
-						   NF == 2 {print $1}')
+						       NF == 2 {print $1}')
 	packages2=$(printf "%s\n" $packages | awk -F: 'NF == 2 {print $2}')
     fi
 
