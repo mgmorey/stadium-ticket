@@ -98,7 +98,7 @@ install_docker() {
 			    ;;
 		    esac
 		    ;;
-		(redhat|ol)
+		(redhat)
 		    :
 		    ;;
 		(centos)
