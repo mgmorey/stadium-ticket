@@ -277,7 +277,7 @@ configure_system_baseline() {
 			    ;;
 		    esac
 		    ;;
-		(ubuntu)
+		(ubuntu|neon)
 		    case "$VERSION_ID" in
 			(18.04|19.04)
 			    configure_linux_debian

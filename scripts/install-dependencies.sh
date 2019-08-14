@@ -66,7 +66,7 @@ install_dependencies() {
 		    esac
 
 		    ;;
-		(ubuntu)
+		(ubuntu|neon)
 		    case "$VERSION_ID" in
 			(18.04|19.04)
 			    package=$DEBIAN_PKG

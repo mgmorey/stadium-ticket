@@ -79,7 +79,7 @@ get_devel_packages() {
 			    ;;
 		    esac
 		    ;;
-		(ubuntu)
+		(ubuntu|neon)
 		    case "$VERSION_ID" in
 			(18.04)
 			    packages=$DEBIAN_10_PKGS

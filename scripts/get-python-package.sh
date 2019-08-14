@@ -54,7 +54,7 @@ get_python_package() {
 		(debian|raspbian)
 		    printf "%s %s\n" $DEBIAN_INFO
 		    ;;
-		(ubuntu|linuxmint)
+		(ubuntu|linuxmint|neon|neon)
 		    printf "%s %s\n" $UBUNTU_INFO
 		    ;;
 		(opensuse-*)

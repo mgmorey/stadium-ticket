@@ -63,7 +63,7 @@ install_python_mw() {
 			    ;;
 		    esac
 		    ;;
-		(ubuntu)
+		(ubuntu|neon)
 		    case "$VERSION_ID" in
 			(18.04)
 			    :

@@ -62,7 +62,7 @@ install_docker() {
 			    ;;
 		    esac
 		    ;;
-		(ubuntu)
+		(ubuntu|neon)
 		    case "$VERSION_ID" in
 			(18.04)
 			    :

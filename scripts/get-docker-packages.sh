@@ -57,7 +57,7 @@ get_docker_packages() {
 			    ;;
 		    esac
 		    ;;
-		(ubuntu|linuxmint)
+		(ubuntu|linuxmint|neon)
 		    packages="${package:-$UBUNTU_PKG} $UBUNTU_PKGS"
 		    ;;
 		(opensuse-leap)

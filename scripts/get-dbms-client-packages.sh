@@ -74,7 +74,7 @@ get_dbms_client_packages() {
 			    ;;
 		    esac
 		    ;;
-		(ubuntu)
+		(ubuntu|neon)
 		    case "$VERSION_ID" in
 			(18.04)
 			    packages="${package:-$UBUNTU_18_04_PKG} $UBUNTU_PKGS"
