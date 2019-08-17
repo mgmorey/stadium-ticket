@@ -29,6 +29,7 @@ REDHAT_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 SUNOS_PKGS=":%s-uwsgi"
 
 UBUNTU_18_PKGS="setpriv uwsgi uwsgi-plugin-%s"
+UBUNTU_19_PKGS=$DEBIAN_10_PKGS
 
 abort() {
     printf "$@" >&2
@@ -73,7 +74,7 @@ get_uwsgi_packages() {
 			    packages=$UBUNTU_18_PKGS
 			    ;;
 			(19.04)
-			    packages=$UBUNTU_18_PKGS
+			    packages=$UBUNTU_19_PKGS
 			    ;;
 		    esac
 		    ;;
