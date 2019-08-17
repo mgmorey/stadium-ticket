@@ -18,7 +18,7 @@
 
 DARWIN_PKGS=":%s-uwsgi"
 
-DEBIAN_10_PKGS="setpriv util-linux uwsgi uwsgi-plugin-%s"
+DEBIAN_10_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
 FREEBSD_PKGS="uwsgi"
 
@@ -27,6 +27,8 @@ OPENSUSE_PKGS="system-user-wwwrun util-linux uwsgi uwsgi-%s"
 REDHAT_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
 SUNOS_PKGS=":%s-uwsgi"
+
+UBUNTU_18_PKGS="setpriv uwsgi uwsgi-plugin-%s"
 
 abort() {
     printf "$@" >&2
@@ -68,17 +70,17 @@ get_uwsgi_packages() {
 		(ubuntu|neon)
 		    case "$VERSION_ID" in
 			(18.04)
-			    packages=$DEBIAN_10_PKGS
+			    packages=$UBUNTU_18_PKGS
 			    ;;
 			(19.04)
-			    packages=$DEBIAN_10_PKGS
+			    packages=$UBUNTU_18_PKGS
 			    ;;
 		    esac
 		    ;;
 		(linuxmint)
 		    case "$VERSION_ID" in
 			(19.2)
-			    packages=$DEBIAN_10_PKGS
+			    packages=$UBUNTU_18_PKGS
 			    ;;
 		    esac
 		    ;;
