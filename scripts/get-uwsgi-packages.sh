@@ -18,7 +18,7 @@
 
 DARWIN_PKGS=":%s-uwsgi"
 
-DEBIAN_10_PKGS="util-linux uwsgi uwsgi-plugin-%s"
+DEBIAN_10_PKGS="setpriv util-linux uwsgi uwsgi-plugin-%s"
 
 FREEBSD_PKGS="uwsgi"
 
