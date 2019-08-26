@@ -8,4 +8,5 @@
 .venv*
 TAGS
 __pycache__/
+core
 logs/
