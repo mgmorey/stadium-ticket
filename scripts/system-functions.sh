@@ -213,16 +213,16 @@ get_setpriv_command() (
 	    return 1
 	    ;;
 	([01].*)
-	    options="--clear-groups"
+	    return 1
 	    ;;
 	(2.[0-9].*)
-	    options="--clear-groups"
+	    return 1
 	    ;;
 	(2.[12][0-9].*)
-	    options="--clear-groups"
+	    return 1
 	    ;;
 	(2.3[012].*)
-	    options="--init-groups"
+	    return 1
 	    ;;
 	(*)
 	    options="--init-groups --reset-env"
