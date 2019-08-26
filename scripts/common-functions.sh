@@ -196,18 +196,22 @@ get_python_command() (
 	(pip|virtualenv)
 	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
 		for command in $name$version "python$version -m $name" $name; do
-		    if $command --help >/dev/null 2>&1; then
-			printf "%s\n" "$command"
-			return 0
+		    if which $command >/dev/null 2>&1; then
+			if $command --help >/dev/null 2>&1; then
+			    printf "%s\n" "$command"
+			    return 0
+			fi
 		    fi
 		done
 	    done
 	    ;;
 	(pyvenv)
 	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
-		if python$version -m venv --help >/dev/null 2>&1; then
-		    printf "%s\n" "python$version -m venv"
-		    return 0
+		if which python$version >/dev/null 2>&1; then
+		    if python$version -m venv --help >/dev/null 2>&1; then
+			printf "%s\n" "python$version -m venv"
+			return 0
+		    fi
 		fi
 	    done
 	    ;;
