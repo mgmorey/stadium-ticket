@@ -165,7 +165,7 @@ install_python_mw() {
 	    ;;
     esac
 
-    packages=$("$script_dir/get-flask-packages.sh")
+    packages=$("$script_dir/get-python-flask-packages.sh")
     "$script_dir/install-packages.sh" $packages
 }
 

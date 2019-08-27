@@ -121,7 +121,7 @@ get_devel_packages() {
 	    ;;
     esac
 
-    data=$("$script_dir/get-python-package.sh")
+    data=$("$script_dir/get-python-metadata.sh")
     package_name=$(printf "%s" "$data" | awk '{print $1}')
     package_modifier=$(printf "%s" "$data" | awk '{print $2}')
 
