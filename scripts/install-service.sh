@@ -28,7 +28,7 @@ assert() {
 }
 
 build_uwsgi_from_source() {
-    if ! run_unpriv '"$script_dir/build-uwsgi.sh"' "$@"; then
+    if ! run_unpriv "$script_dir/build-uwsgi.sh" "$@"; then
 	abort "%s: Unable to build uWSGI from source\n" "$0"
     fi
 }
@@ -64,7 +64,7 @@ create_dirs() (
 )
 
 create_service_virtualenv() {
-    if ! run_unpriv '"$script_dir/create-virtualenv.sh"' "$@"; then
+    if ! run_unpriv "$script_dir/create-virtualenv.sh" "$@"; then
 	abort "%s: Unable to create virtual environment\n" "$0"
     fi
 }
