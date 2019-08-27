@@ -16,13 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Wiki page: https://github.com/pyenv/pyenv/wiki
-
 DARWIN_PKGS=
 
 DEBIAN_10_PKGS=
 
-FREEBSD_PKGS=
+FREEBSD_PKGS="pylint-%s %s-packaging %s-pycodestyle %s-pytest"
 
 NETBSD_PKGS=
 
