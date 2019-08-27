@@ -257,16 +257,6 @@ print_status() {
     esac
 }
 
-run_unpriv() (
-    assert [ $# -ge 1 ]
-
-    if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	eval $(get_su_command $SUDO_USER) "$@"
-    else
-	eval "$@"
-    fi
-)
-
 if [ $# -gt 0 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi

@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS=
+DARWIN_PKGS=":%s-codestyle :%s-packaging :%s-pylint :%s-test"
 
 DEBIAN_10_PKGS="pylint3 %s-packaging %s-pycodestyle %s-pytest"
 

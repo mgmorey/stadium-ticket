@@ -317,6 +317,16 @@ remove_files() {
     fi
 }
 
+run_unpriv() (
+    assert [ $# -ge 1 ]
+
+    if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
+	eval $(get_su_command $SUDO_USER) "$@"
+    else
+	eval "$@"
+    fi
+)
+
 signal_process() {
     assert [ $# -ge 3 ]
     assert [ -n "$1" ]

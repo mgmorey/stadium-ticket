@@ -60,7 +60,7 @@ get_installed_packages() {
 	    esac
 	    ;;
 	(Darwin)
-	    brew list -1
+	    run_unpriv -c '"$(which brew) list -1"'
 	    pkgin list -s | awk '{print ":" $1}'
 	    ;;
 	(FreeBSD)
@@ -94,6 +94,8 @@ get_realpath() (
 )
 
 script_dir=$(get_realpath "$(dirname "$0")")
+
+. "$script_dir/system-functions.sh"
 
 eval $("$script_dir/get-os-release.sh" -X)
 
