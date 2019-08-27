@@ -28,7 +28,7 @@ NETBSD_PKGS=
 
 OPENSUSE_PKGS="%s-pylint %s-packaging %s-pycodestyle %s-pytest"
 
-REDHAT_PKGS=
+REDHAT_PKGS="%s-pycodestyle %s-pytest"
 
 SUNOS_PKGS=":%s-codestyle :%s-packaging :%s-pylint :%s-test"
 

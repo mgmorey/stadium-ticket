@@ -102,7 +102,7 @@ install_dependencies() {
 		(ol)
 		    case "$VERSION_ID" in
 			(8.0)
-			    :
+			    install_epel_8
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -158,6 +158,27 @@ install_dependencies() {
     if [ -n "${package:-}" ]; then
 	"$script_dir/install-build-deps.sh" "$@" $package
     fi
+}
+
+install_epel_8() {
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(ol)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+		esac
+	    :
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+
+    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 }
 
 if [ $# -gt 0 ]; then
