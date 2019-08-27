@@ -22,6 +22,8 @@ DEBIAN_10_PKGS="pylint3 %s-packaging %s-pycodestyle %s-pytest"
 
 FREEBSD_PKGS="pylint-%s %s-packaging %s-pycodestyle %s-pytest"
 
+FEDORA_PKGS="%s-pylint %s-packaging %s-pycodestyle %s-pytest"
+
 NETBSD_PKGS=
 
 OPENSUSE_PKGS=
@@ -88,7 +90,7 @@ get_python_devel_packages() {
 		    packages=$OPENSUSE_PKGS
 		    ;;
 		(fedora)
-		    packages=$REDHAT_PKGS
+		    packages=$FEDORA_PKGS
 		    ;;
 		(ol)
 		    packages=$REDHAT_PKGS
