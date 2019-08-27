@@ -117,7 +117,7 @@ install_pattern_from_args() {
 }
 
 invoke_installer() (
-    if [ "$1" = /usr/local/bin/brew ] && [ -n "$SUDO_USER" ]; then
+    if [ "$1" = /usr/local/bin/brew ] && [ -n "${SUDO_USER-}" ]; then
 	run_unpriv -c '"$@"'
     else
 	"$@"
