@@ -318,10 +318,17 @@ remove_files() {
 }
 
 run_unpriv() (
+    if [ $# -gt 1 ] && [ "$1" = -c ]; then
+	opts=$1
+	shift
+    fi
+
     assert [ $# -ge 1 ]
 
     if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	eval $(get_su_command $SUDO_USER) "$@"
+	    eval $(get_su_command $SUDO_USER) $opts "$@"
+    elif [ "${opts-}" = -c ]; then
+	eval sh $opts $*
     else
 	eval "$@"
     fi
