@@ -51,4 +51,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 
-get_python_command "$@"
+get_python_utility "$@"

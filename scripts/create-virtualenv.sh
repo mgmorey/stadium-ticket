@@ -29,8 +29,8 @@ create_virtualenv_via_pip() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
 
-    pip=$(get_python_command pip || true)
-    pipenv=$(get_python_command pipenv || true)
+    pip=$(get_python_utility pip || true)
+    pipenv=$(get_python_utility pipenv || true)
     python=
     source_dir=$script_dir/..
     venv_filename=$1

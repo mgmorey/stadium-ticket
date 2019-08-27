@@ -104,10 +104,10 @@ get_realpath() (
 )
 
 update_virtualenv() (
-    pipenv=$(get_python_command pipenv || true)
+    pipenv=$(get_python_utility pipenv || true)
 
     if [ -z "$pipenv" ]; then
-	pip=$(get_python_command pip || true)
+	pip=$(get_python_utility pip || true)
     fi
 
     source_dir=$script_dir/..

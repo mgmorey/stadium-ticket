@@ -56,10 +56,10 @@ create_virtualenv() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     python=${2-}
-    virtualenv=$(get_python_command virtualenv || true)
+    virtualenv=$(get_python_utility virtualenv || true)
 
     if [ -z "$virtualenv" ]; then
-	pyvenv=$(get_python_command pyvenv || true)
+	pyvenv=$(get_python_utility pyvenv || true)
     fi
 
     if [ -n "$virtualenv" -a -z "${python-}" ]; then
@@ -182,7 +182,7 @@ get_pip_upgrade_options() {
     esac
 }
 
-get_python_command() (
+get_python_utility() (
     name="$1"
     shift
 
@@ -327,7 +327,7 @@ sync_virtualenv_via_pip() {
 }
 
 upgrade_via_pip() (
-    pip=$(get_python_command pip || true)
+    pip=$(get_python_utility pip || true)
 
     if [ -z "$pip" ]; then
 	return 1
