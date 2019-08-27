@@ -51,7 +51,7 @@ get_package_manager() {
 	    esac
 	    ;;
 	(Darwin)
-	    printf "%s\n" brew pkgin
+	    printf "%s\n" /usr/local/bin/brew pkgin
 	    ;;
 	(FreeBSD)
 	    printf "%s\n" pkg

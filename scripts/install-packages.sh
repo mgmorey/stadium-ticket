@@ -97,12 +97,12 @@ install_packages_from_args() {
     fi
 
     if [ -n "$installer1" -a -n "$packages1" ]; then
-	$installer1 install $install_opts $packages1
+	invoke_installer $installer1 install $install_opts $packages1
     fi
 
     if [ -n "$installer2" -a -n "$packages2" ]; then
 	if [ -n "$(which $installer2 2>/dev/null)" ]; then
-	    $installer2 install $packages2
+	    invoke_installer $installer2 install $packages2
 	fi
     fi
 }
@@ -113,8 +113,16 @@ install_pattern_from_args() {
     fi
 
     pattern_opts=$("$script_dir/get-pattern-install-options.sh")
-    $installer1 install $install_opts $pattern_opts $pattern
+    invoke_installer $installer1 install $install_opts $pattern_opts $pattern
 }
+
+invoke_installer() (
+    if [ "$1" = brew ] && [ -n "$SUDO_USER" ]; then
+	run_unpriv -c '"$@"'
+    else
+	"$@"
+    fi
+)
 
 parse_arguments() {
     packages=

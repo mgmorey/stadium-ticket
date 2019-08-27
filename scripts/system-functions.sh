@@ -328,7 +328,7 @@ run_unpriv() (
     if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
 	eval $(get_su_command $SUDO_USER) ${opts-} "$@"
     elif [ "${opts-}" = -c ]; then
-	eval sh $opts $*
+	eval sh $opts "$@"
     else
 	eval "$@"
     fi

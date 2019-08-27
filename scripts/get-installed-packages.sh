@@ -60,7 +60,7 @@ get_installed_packages() {
 	    esac
 	    ;;
 	(Darwin)
-	    run_unpriv -c '"$(which brew) list -1"'
+	    run_unpriv -c '"/usr/local/bin/brew list -1"'
 	    pkgin list -s | awk '{print ":" $1}'
 	    ;;
 	(FreeBSD)
