@@ -225,7 +225,7 @@ get_setpriv_command() (
 	    return 1
 	    ;;
 	(*)
-	    options="--init-groups --reset-env"
+	    options=
 	    ;;
     esac
 

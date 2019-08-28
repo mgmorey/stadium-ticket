@@ -59,7 +59,7 @@ create_virtualenv() (
     virtualenv=$(get_python_utility virtualenv || true)
 
     if [ -z "$virtualenv" ]; then
-	pyvenv=$(get_python_utility pyvenv || true)
+	pyvenv=$(get_python_utility -v "$PYTHON_VERSIONS" pyvenv || true)
     fi
 
     if [ -n "$virtualenv" -a -z "${python-}" ]; then
@@ -183,40 +183,51 @@ get_pip_upgrade_options() {
 }
 
 get_python_utility() (
-    name="$1"
-    shift
+    assert [ $# -ge 1 ]
 
-    case "$name" in
+    if [ $# -ge 1 ] && [ "$1" = -v ]; then
+	versions="$2"
+	shift 2
+    else
+	versions=
+    fi
+
+    utility="$1"
+
+    case "$utility" in
 	(pipenv)
-	    if $name --help >/dev/null 2>&1; then
-		printf "%s\n" "$name"
+	    if $utility --help >/dev/null 2>&1; then
+		printf "%s\n" "$utility"
 		return 0
 	    fi
 	    ;;
-	(pip|virtualenv)
-	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
-		for command in $name$version "python$version -m $name" $name; do
-		    if which $command >/dev/null 2>&1; then
-			if $command --help >/dev/null 2>&1; then
-			    printf "%s\n" "$command"
-			    return 0
-			fi
+	(virtualenv)
+	    command=$utility
+	    printf "Trying %s\n" "$command" >&2
+
+	    if $command --help >/dev/null 2>&1; then
+		printf "%s\n" "$command"
+		return 0
+	    fi
+	    ;;
+	(*)
+	    if [ "$utility" = pyvenv ]; then
+		module=venv
+	    else
+		module=$utility
+	    fi
+
+	    for version in $versions ""; do
+		for command in $utility$version "python$version -m $module"; do
+		    printf "Trying %s\n" "$command" >&2
+
+		    if $command --help >/dev/null 2>&1; then
+			printf "%s\n" "$command"
+			return 0
 		    fi
 		done
 	    done
 	    ;;
-	(pyvenv)
-	    for version in $PYTHON_VERSION $PYTHON_VERSIONS; do
-		if which python$version >/dev/null 2>&1; then
-		    if python$version -m venv --help >/dev/null 2>&1; then
-			printf "%s\n" "python$version -m venv"
-			return 0
-		    fi
-		fi
-	    done
-	    ;;
-	(*)
-	    abort "%s: Invalid command/module '%s'\n" "$0" "$name"
     esac
 
     return 1
@@ -327,7 +338,7 @@ sync_virtualenv_via_pip() {
 }
 
 upgrade_via_pip() (
-    pip=$(get_python_utility pip || true)
+    pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip || true)
 
     if [ -z "$pip" ]; then
 	return 1

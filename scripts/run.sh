@@ -50,7 +50,7 @@ run_in_virtualenv() {
     pipenv=$(get_python_utility pipenv || true)
 
     if [ -z "$pipenv" ]; then
-	pip=$(get_python_utility pip || true)
+	pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip || true)
     fi
 
     cd "$source_dir"
