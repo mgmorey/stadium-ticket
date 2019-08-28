@@ -33,7 +33,7 @@ NETBSD_PKGS="%s-codestyle %s-packaging %s-pip %s-pylint %s-test \
 OPENSUSE_PKGS="%s-packaging %s-pip %s-pycodestyle %s-pylint %s-pytest \
 %s-virtualenv"
 
-REDHAT_PKGS="%s-pycodestyle %s-pytest"
+REDHAT_PKGS="%s-pip %s-pycodestyle %s-pytest %s-virtualenv"
 
 SUNOS_PKGS=":%s-codestyle :%s-packaging :%s-pylint :%s-test"
 
