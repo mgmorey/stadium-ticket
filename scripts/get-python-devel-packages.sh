@@ -27,7 +27,8 @@ FREEBSD_PKGS="pylint-%s %s-packaging %s-pip %s-pycodestyle %s-pytest \
 FEDORA_PKGS="%s-packaging %s-pip %s-pycodestyle %s-pylint %s-pytest \
 %s-virtualenv"
 
-NETBSD_PKGS=
+NETBSD_PKGS="%s-codestyle %s-packaging %s-pip %s-pylint %s-test \
+%s-virtualenv"
 
 OPENSUSE_PKGS="%s-packaging %s-pip %s-pycodestyle %s-pylint %s-pytest \
 %s-virtualenv"
