@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CATEGORIES="devel http-client python-devel python-flask sqlite venv"
+CATEGORIES="devel http-client python-devel python-flask sqlite"
 
 abort() {
     printf "$@" >&2
