@@ -201,15 +201,6 @@ get_python_utility() (
 		return 0
 	    fi
 	    ;;
-	(virtualenv)
-	    command=$utility
-	    printf "Trying %s\n" "$command" >&2
-
-	    if $command --help >/dev/null 2>&1; then
-		printf "%s\n" "$command"
-		return 0
-	    fi
-	    ;;
 	(*)
 	    if [ "$utility" = pyvenv ]; then
 		module=venv
