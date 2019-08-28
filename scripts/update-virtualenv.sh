@@ -31,6 +31,8 @@ assert() {
 
 create_virtualenv_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
+	upgrade_via_pip pipenv
+
 	if pyenv --version >/dev/null 2>&1; then
 	    python=$(find_system_and_user_python)
 	    $pipenv --python $python
