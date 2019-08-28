@@ -89,7 +89,7 @@ find_system_python() {
 }
 
 find_system_pythons() (
-    for suffix in $PYTHON_VERSIONS $PYTHON_VERSION; do
+    for suffix in $PYTHON_VERSIONS; do
 	for system_prefix in $SYSTEM_PREFIXES; do
 	    if [ -x $system_prefix/bin/python$suffix ]; then
 		python=$system_prefix/bin/python$suffix
@@ -203,7 +203,7 @@ get_python_utility() (
 	    ;;
     esac
 
-    for version in $versions ""; do
+    for version in ${versions:-""}; do
 	for command in $utility$version "python$version -m $module"; do
 	    case "$command" in
 		(pyenv*)
