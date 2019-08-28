@@ -28,7 +28,8 @@ FEDORA_PKGS="%s-packaging %s-pip %s-pycodestyle %s-pylint %s-pytest \
 
 NETBSD_PKGS=
 
-OPENSUSE_PKGS="%s-pylint %s-packaging %s-pycodestyle %s-pytest"
+OPENSUSE_PKGS="%s-packaging %s-pip %s-pycodestyle %s-pylint %s-pytest \
+%s-virtualenv"
 
 REDHAT_PKGS="%s-pycodestyle %s-pytest"
 
