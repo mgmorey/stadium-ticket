@@ -225,8 +225,6 @@ get_python_utility() (
 			continue
 		    fi
 
-		    printf "Trying %s\n" "$command" >&2
-
 		    if $command --version >/dev/null 2>&1; then
 			printf "%s\n" "$command"
 			return 0
