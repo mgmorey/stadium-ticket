@@ -221,6 +221,10 @@ get_python_utility() (
 			    ;;
 		    esac
 
+		    if ! which "${command%% *}" >/dev/null 2>&1; then
+			continue
+		    fi
+
 		    printf "Trying %s\n" "$command" >&2
 
 		    if $command --version >/dev/null 2>&1; then
