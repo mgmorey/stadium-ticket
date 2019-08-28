@@ -25,7 +25,10 @@ libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
 libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev liblzma-dev \
 make rsync uuid-dev xz-utils zlib1g-dev"
 
-FREEBSD_PKGS="bash bzip2 curl gdbm gmake libffi llvm50 lzma ncurses \
+FREEBSD_11_PKGS="bash bzip2 curl gdbm gmake libffi llvm50 lzma ncurses \
+readline rsync sqlite3"
+
+FREEBSD_12_PKGS="bash bzip2 curl gdbm gmake libffi llvm lzma ncurses \
 readline rsync sqlite3"
 
 NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline \
@@ -111,7 +114,14 @@ get_devel_packages() {
 	    packages=$DARWIN_PKGS
 	    ;;
 	(FreeBSD)
-	    packages=$FREEBSD_PKGS
+	    case "$VERSION_ID" in
+		(11.*)
+		    packages=$FREEBSD_11_PKGS
+		    ;;
+		(12.*)
+		    packages=$FREEBSD_12_PKGS
+		    ;;
+	    esac
 	    ;;
 	(NetBSD)
 	    packages=$NETBSD_PKGS
