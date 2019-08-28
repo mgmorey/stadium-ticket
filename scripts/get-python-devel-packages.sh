@@ -35,7 +35,8 @@ OPENSUSE_PKGS="%s-packaging %s-pip %s-pycodestyle %s-pylint %s-pytest \
 
 REDHAT_PKGS="%s-pip %s-pycodestyle %s-pytest %s-virtualenv"
 
-SUNOS_PKGS=":%s-codestyle :%s-packaging :%s-pylint :%s-test"
+SUNOS_PKGS=":%s-codestyle :%s-packaging :%s-pip :%s-pylint :%s-test \
+:%s-virtualenv"
 
 abort() {
     printf "$@" >&2
