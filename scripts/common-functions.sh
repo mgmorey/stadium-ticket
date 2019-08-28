@@ -202,14 +202,25 @@ get_python_utility() (
 	    fi
 	    ;;
 	(*)
-	    if [ "$utility" = pyvenv ]; then
-		module=venv
-	    else
-		module=$utility
-	    fi
+	    case "$utility" in
+		(pyvenv)
+		    module=venv
+		    ;;
+		(*)
+		    module=$utility
+		    ;;
+	    esac
 
 	    for version in $versions ""; do
 		for command in $utility$version "python$version -m $module"; do
+		    case "$command" in
+			(pyenv*)
+			    continue
+			    ;;
+			(*)
+			    ;;
+		    esac
+
 		    printf "Trying %s\n" "$command" >&2
 
 		    if $command --version >/dev/null 2>&1; then
