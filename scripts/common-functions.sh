@@ -284,7 +284,7 @@ set_unpriv_environment() {
 	fi
     fi
 
-    if ! grep_path $PATH $HOME/.local/bin; then
+    if ! grep_path $PATH "^$HOME/.local/bin\$"; then
 	export PATH="$HOME/.local/bin:$PATH"
     fi
 }
