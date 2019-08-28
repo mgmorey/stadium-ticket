@@ -212,7 +212,7 @@ get_python_utility() (
 		for command in $utility$version "python$version -m $module"; do
 		    printf "Trying %s\n" "$command" >&2
 
-		    if $command --help >/dev/null 2>&1; then
+		    if $command --version >/dev/null 2>&1; then
 			printf "%s\n" "$command"
 			return 0
 		    fi
@@ -252,6 +252,10 @@ get_versions_passed() (
     return 1
 )
 
+grep_path() {
+    printf "%s\n" "$1" | awk -v RS=: '{print $0}' | grep "$2"
+}
+
 grep_version() {
     assert [ $# -le 1 ]
 
@@ -268,11 +272,7 @@ install_python_version() (
 )
 
 set_unpriv_environment() {
-    if [ -z "${SUDO_USER-}" ]; then
-	return 0
-    fi
-
-    home_dir="$(get_home_directory $SUDO_USER)"
+    home_dir="$(get_home_directory ${SUDO_USER-$USER})"
 
     if [ "$HOME" != "$home_dir" ]; then
 	export HOME="$home_dir"
@@ -282,6 +282,10 @@ set_unpriv_environment() {
 	    . $HOME/.profile
 	    set -u
 	fi
+    fi
+
+    if ! grep_path $PATH $HOME/.local/bin; then
+	export PATH="$HOME/.local/bin:$PATH"
     fi
 }
 
