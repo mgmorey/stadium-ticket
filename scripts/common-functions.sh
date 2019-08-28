@@ -195,44 +195,34 @@ get_python_utility() (
     utility="$1"
 
     case "$utility" in
-	(pipenv)
-	    if $utility --help >/dev/null 2>&1; then
-		printf "%s\n" "$utility"
-		return 0
-	    fi
+	(pyvenv)
+	    module=venv
 	    ;;
 	(*)
-	    case "$utility" in
-		(pyvenv)
-		    module=venv
+	    module=$utility
+	    ;;
+    esac
+
+    for version in $versions ""; do
+	for command in $utility$version "python$version -m $module"; do
+	    case "$command" in
+		(pyenv*)
+		    continue
 		    ;;
 		(*)
-		    module=$utility
 		    ;;
 	    esac
 
-	    for version in $versions ""; do
-		for command in $utility$version "python$version -m $module"; do
-		    case "$command" in
-			(pyenv*)
-			    continue
-			    ;;
-			(*)
-			    ;;
-		    esac
+	    if ! which "${command%% *}" >/dev/null 2>&1; then
+		continue
+	    fi
 
-		    if ! which "${command%% *}" >/dev/null 2>&1; then
-			continue
-		    fi
-
-		    if $command --version >/dev/null 2>&1; then
-			printf "%s\n" "$command"
-			return 0
-		    fi
-		done
-	    done
-	    ;;
-    esac
+	    if $command --version >/dev/null 2>&1; then
+		printf "%s\n" "$command"
+		return 0
+	    fi
+	done
+    done
 
     return 1
 )
