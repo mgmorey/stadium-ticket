@@ -23,7 +23,7 @@ DEBIAN_10_PKGS="pylint3 %s-packaging %s-pip %s-pycodestyle %s-pytest \
 
 FREEBSD_PKGS="pylint-%s %s-packaging %s-pycodestyle %s-pytest"
 
-FEDORA_PKGS="%s-pylint %s-packaging %s-pip %s-pycodestyle %s-pytest \
+FEDORA_PKGS="%s-packaging %s-pip %s-pycodestyle %s-pylint %s-pytest \
 %s-virtualenv"
 
 NETBSD_PKGS=
