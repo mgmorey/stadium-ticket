@@ -18,7 +18,8 @@
 
 DARWIN_PKGS=":%s-codestyle :%s-packaging :%s-pylint :%s-test"
 
-DEBIAN_10_PKGS="pylint3 %s-packaging %s-pycodestyle %s-pytest %s-venv"
+DEBIAN_10_PKGS="pylint3 %s-packaging %s-pip %s-pycodestyle %s-pytest %s-venv \
+%s-virtualenv"
 
 FREEBSD_PKGS="pylint-%s %s-packaging %s-pycodestyle %s-pytest"
 
