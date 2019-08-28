@@ -28,7 +28,7 @@ make rsync uuid-dev xz-utils zlib1g-dev"
 FREEBSD_11_PKGS="bash bzip2 curl gdbm gmake libffi llvm50 lzma ncurses \
 readline rsync sqlite3"
 
-FREEBSD_12_PKGS="bash bzip2 curl gdbm gmake libffi llvm lzma ncurses \
+FREEBSD_12_PKGS="bash bzip2 curl gdbm gmake libffi llvm60 lzma ncurses \
 readline rsync sqlite3"
 
 NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline \
