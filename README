@@ -23,11 +23,13 @@ platforms:
 +-----------+------------------+-------------------------------+
 | GNU/Linux | Ubuntu           | 18.04 LTS and 19.04 (amd64)   |
 +-----------+------------------+-------------------------------+
-| BSD Unix  | macOS/Darwin     | 10.14 (x86_64)                |
+| Unix      | FreeBSD          | 11.3 and 12.0 (amd64)         |
 +-----------+------------------+-------------------------------+
-| BSD Unix  | FreeBSD          | 11.3 and 12.0 (amd64)         |
+| Unix      | NetBSD           | 8.1 (amd64)                   |
 +-----------+------------------+-------------------------------+
-| BSD Unix  | NetBSD           | 8.1 (amd64)                   |
+| Unix      | OpenIndiana      | Hipster 2019.04 (x86_64)      |
++-----------+------------------+-------------------------------+
+| Unix      | macOS/Darwin     | 10.14 (x86_64)                |
 +-----------+------------------+-------------------------------+
 
 Installation as a service has been tested on the following platforms:
@@ -48,7 +50,7 @@ Installation as a service has been tested on the following platforms:
 +-----------+------------------+-------------------------------+
 | GNU/Linux | Ubuntu           | 18.04 LTS/19.04 (amd64)       |
 +-----------+------------------+-------------------------------+
-| BSD Unix  | macOS/Darwin     | 10.14 (x86_64)                |
+| Unix      | macOS/Darwin     | 10.14 (x86_64)                |
 +-----------+------------------+-------------------------------+
 
 The various OS ports have been tested on the following processors:
