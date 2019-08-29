@@ -93,6 +93,29 @@ create_virtualenv() (
     abort "%s: No virtualenv utility found\n" "$0"
 )
 
+create_virtualenv_via_pip() (
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+
+    pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip || true)
+    python=
+    source_dir=$script_dir/..
+    venv_filename=$1
+    venv_requirements=requirements.txt
+
+    cd "$source_dir"
+    case $venv_filename in
+	($VENV_FILENAME)
+	    :
+	    ;;
+	($VENV_FILENAME-$APP_NAME)
+	    python=${2-}
+	    ;;
+    esac
+
+    sync_virtualenv_via_pip $venv_filename $python
+)
+
 find_python() (
     python=$(find_system_python | awk '{print $1}')
     python=$(find_user_python $python)
@@ -324,8 +347,13 @@ have_same_device_and_inode() (
 )
 
 install_python_version() (
-    sort_versions=$(get_sort_command)
-    pyenv install -s ${1-$(get_versions_passed | $sort_versions | head -n 1)}
+    python=${1-$(get_versions_passed | $(get_sort_command) | head -n 1)}
+
+    if [ -z "$python" ]; then
+	return 1
+    fi
+
+    pyenv install -s $python
 )
 
 set_unpriv_environment() {
