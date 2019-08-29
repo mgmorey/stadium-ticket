@@ -207,9 +207,9 @@ install_uwsgi_from_package() (
 install_uwsgi_from_source() (
     if [ $dryrun = false ]; then
 	build_uwsgi_from_source $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION
-	dir=$(get_home_directory ${SUDO_USER-$USER})
+	home_dir="$(get_home_directory $(get_user_name))"
 
-	if ! cd $dir/git/$UWSGI_BRANCH; then
+	if ! cd "$home_dir/git/$UWSGI_BRANCH"; then
 	    return 1
 	fi
     fi
