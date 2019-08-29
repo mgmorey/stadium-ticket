@@ -365,7 +365,7 @@ sync_virtualenv_via_pip() {
 
     if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
 	if have_same_device_and_inode "$VIRTUAL_ENV" "$1"; then
-	    abort "%s: Virtual environment already activated\n" "$0"
+	    abort "%s: %s: Virtual environment activated\n" "$0" "$VIRTUAL_ENV"
 	fi
     fi
 
