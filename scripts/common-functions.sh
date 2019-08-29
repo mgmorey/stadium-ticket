@@ -310,7 +310,7 @@ set_unpriv_environment() {
 
 sync_requirements_via_pip() {
     printf "%s\n" "Upgrading virtual environment packages via pip"
-    $pip install --upgrade pip
+    $pip install $(get_pip_upgrade_options) --upgrade pip
     printf "%s\n" "Installing virtual environment packages via pip"
     $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
 }
