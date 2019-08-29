@@ -412,7 +412,7 @@ sync_virtualenv_via_pip() {
     fi
 
     if [ $sync = true ]; then
-	upgrade_via_pip pip virtualenv
+	upgrade_via_pip pip
 	create_virtualenv "$@"
     fi
 
