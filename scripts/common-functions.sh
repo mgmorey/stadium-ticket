@@ -35,7 +35,6 @@ check_python() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
-
     printf "Python %s interpreter found: %s\n" "$2" "$1"
 
     if ! "$1" "$script_dir/check-python.py" $2; then
@@ -92,6 +91,19 @@ create_virtualenv() (
     done
 
     abort "%s: No virtualenv utility found\n" "$0"
+)
+
+find_python() (
+    python=$(find_system_python | awk '{print $1}')
+    python=$(find_user_python $python)
+    python_output="$($python --version)"
+    python_version="${python_output#Python }"
+
+    if ! check_python "$python" "$python_version" >&2; then
+	abort "%s\n" "No suitable Python interpreter found"
+    fi
+
+    printf "%s\n" "$python"
 )
 
 find_system_python() {

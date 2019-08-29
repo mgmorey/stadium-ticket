@@ -34,7 +34,7 @@ create_virtualenv_via_pipenv() {
 	upgrade_via_pip pip pipenv virtualenv
 
 	if pyenv --version >/dev/null 2>&1; then
-	    python=$(find_system_and_user_python)
+	    python=$(find_python)
 	    $pipenv --python $python
 	else
 	    $pipenv $PIPENV_OPTS
@@ -45,19 +45,6 @@ create_virtualenv_via_pipenv() {
     # generate Pipfile.lock
     $pipenv lock -d
 }
-
-find_system_and_user_python() (
-    python=$(find_system_python | awk '{print $1}')
-    python=$(find_user_python $python)
-    python_output="$($python --version)"
-    python_version="${python_output#Python }"
-
-    if ! check_python "$python" "$python_version" >&2; then
-	abort "%s\n" "No suitable Python interpreter found"
-    fi
-
-    printf "%s\n" "$python"
-)
 
 generate_requirements_files() (
     create_tmpfile
