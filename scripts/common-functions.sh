@@ -182,7 +182,22 @@ find_user_python_installed() (
     return 1
 )
 
+get_file_metadata() {
+    assert [ $# -eq 2 ]
+
+    case "$(uname -s)" in
+	(GNU|Linux|SunOS)
+	    /usr/bin/stat -Lc "$@"
+	    ;;
+	(Darwin|FreeBSD)
+	    /usr/bin/stat -Lf "$@"
+	    ;;
+    esac
+}
+
 get_home_directory() {
+    assert [ $# -eq 1 ]
+
     case "$(uname -s)" in
 	(Darwin)
 	    printf "/Users/%s\n" "${1-USER}"
@@ -298,8 +313,8 @@ grep_version() {
 }
 
 have_same_device_and_inode() (
-    stats_1="$(/usr/bin/stat -Lfc %d:%i "$1")"
-    stats_2="$(/usr/bin/stat -Lfc %d:%i "$2")"
+    stats_1="$(get_file_metadata %d:%i "$1")"
+    stats_2="$(get_file_metadata %d:%i "$2")"
 
     if [ "$stats_1" = "$stats_2" ]; then
 	return 0
