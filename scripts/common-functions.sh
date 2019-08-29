@@ -378,8 +378,6 @@ set_unpriv_environment() {
     if ! grep_path $PATH "^$HOME/.local/bin\$"; then
 	export PATH="$HOME/.local/bin:$PATH"
     fi
-
-    printenv | sort
 }
 
 sync_requirements_via_pip() (
