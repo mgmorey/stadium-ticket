@@ -320,12 +320,18 @@ set_unpriv_environment() {
     fi
 }
 
-sync_requirements_via_pip() {
+sync_requirements_via_pip() (
+    pip=$(get_python_utility pip || true)
+
+    if [ -z "$pip" ]; then
+	return 1
+    fi
+
     printf "%s\n" "Upgrading virtual environment packages via pip"
     $pip install $(get_pip_upgrade_options) --upgrade pip
     printf "%s\n" "Installing virtual environment packages via pip"
     $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
-}
+)
 
 sync_virtualenv_via_pip() {
     assert [ $# -ge 1 ]
