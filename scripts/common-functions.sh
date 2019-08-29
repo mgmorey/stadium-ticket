@@ -297,6 +297,17 @@ grep_version() {
     fi
 }
 
+have_same_device_and_inode() (
+    stats_1="$(/usr/bin/stat -Lfc %d:%i "$1")"
+    stats_2="$(/usr/bin/stat -Lfc %d:%i "$2")"
+
+    if [ "$stats_1" = "$stats_2" ]; then
+	return 0
+    else
+	return 1
+    fi
+)
+
 install_python_version() (
     sort_versions=$(get_sort_command)
     pyenv install -s ${1-$(get_versions_passed | $sort_versions | head -n 1)}
@@ -338,11 +349,8 @@ sync_virtualenv_via_pip() {
     assert [ -n "$1" ]
 
     if [ -n "${VIRTUAL_ENV:-}" -a -d "$1" ]; then
-	stats_1="$(stat -Lf "%d %i" "$VIRTUAL_ENV")"
-	stats_2="$(stat -Lf "%d %i" "$1")"
-
-	if [ "$stats_1" = "$stats_2" ]; then
-	    abort "%s: Must not be run within the virtual environment\n" "$0"
+	if have_same_device_and_inode "$VIRTUAL_ENV" "$1"; then
+	    abort "%s: Virtual environment already activated\n" "$0"
 	fi
     fi
 
