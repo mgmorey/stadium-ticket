@@ -20,7 +20,7 @@ DARWIN_INFO=":python37 py37"
 
 DEBIAN_INFO="python3 python3"
 
-FEDORA_INFO="python36 python3"
+FEDORA_INFO="python3 python3"
 
 FREEBSD_INFO="python3 py36"
 
