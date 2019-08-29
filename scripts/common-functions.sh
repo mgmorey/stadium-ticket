@@ -56,13 +56,8 @@ create_virtualenv() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     python=${2-}
-    virtualenv=$(get_python_utility virtualenv || true)
 
-    if [ -z "$virtualenv" ]; then
-	pyvenv=$(get_python_utility -v "$PYTHON_VERSIONS" pyvenv || true)
-    fi
-
-    if [ -n "$virtualenv" -a -z "${python-}" ]; then
+    if [ -z "${python-}" ]; then
 	python=$(find_system_python | awk '{print $1}')
 	python=$(find_user_python $python)
 	python_output="$($python --version)"
@@ -75,13 +70,28 @@ create_virtualenv() (
 
     printf "%s\n" "Creating virtual environment"
 
-    if [ -n "$virtualenv" ]; then
-	$virtualenv -p $python $1
-    elif [ -n "$pyvenv" ]; then
-	$pyvenv $1
-    else
-	abort "%s: No virtualenv nor pyenv/venv command found\n" "$0"
-    fi
+    for utility in $VENV_UTILITIES; do
+	case $utility in
+	    (pyvenv)
+		pyvenv=$(get_python_utility -p $python $utility || true)
+
+		if [ -n "$pyvenv" ]; then
+		    $pyvenv $1
+		    return 0
+		fi
+		;;
+	    (virtualenv)
+		virtualenv=$(get_python_utility $utility || true)
+
+		if [ -n "$virtualenv" ]; then
+		    $virtualenv -p $python $1
+		    return 0
+		fi
+		;;
+	esac
+    done
+
+    abort "%s: No virtualenv utility found\n" "$0"
 )
 
 find_system_python() {
@@ -185,6 +195,13 @@ get_pip_upgrade_options() {
 get_python_utility() (
     assert [ $# -ge 1 ]
 
+    if [ $# -ge 1 ] && [ "$1" = -p ]; then
+	python="$2"
+	shift 2
+    else
+	python=python
+    fi
+
     if [ $# -ge 1 ] && [ "$1" = -v ]; then
 	versions="$2"
 	shift 2
@@ -192,32 +209,31 @@ get_python_utility() (
 	versions=
     fi
 
+    assert [ $# -eq 1 ]
     utility="$1"
 
     case "$utility" in
 	(pyvenv)
 	    module=venv
+	    option=--help
 	    ;;
 	(*)
 	    module=$utility
+	    option=--version
 	    ;;
     esac
 
     for version in ${versions:-""}; do
-	for command in $utility$version "python$version -m $module"; do
-	    case "$command" in
-		(pyenv*)
-		    continue
-		    ;;
-		(*)
-		    ;;
-	    esac
+	for command in $utility$version "$python$version -m $module"; do
+	    if expr "$command" : pyvenv >/dev/null; then
+		continue
+	    fi
 
 	    if ! which "${command%% *}" >/dev/null 2>&1; then
 		continue
 	    fi
 
-	    if $command --version >/dev/null 2>&1; then
+	    if $command $option >/dev/null 2>&1; then
 		printf "%s\n" "$command"
 		return 0
 	    fi
@@ -294,6 +310,7 @@ set_unpriv_environment() {
 
 sync_requirements_via_pip() {
     printf "%s\n" "Installing required packages via pip"
+    $pip install $(get_pip_upgrade_options) --upgrade pip virtualenv
     $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
 }
 

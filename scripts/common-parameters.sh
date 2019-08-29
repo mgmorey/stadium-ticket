@@ -27,3 +27,4 @@ PYTHON_VERSIONS="3.7 3.6 3"
 
 VENV_FILENAME=.venv
 VENV_REQUIREMENTS=requirements*.txt
+VENV_UTILITIES="pyvenv virtualenv"
