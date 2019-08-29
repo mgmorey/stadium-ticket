@@ -362,8 +362,7 @@ install_python_version() (
 )
 
 set_unpriv_environment() {
-    user_name=$(get_user_name)
-    home_dir="$(get_home_directory $user_name)"
+    home_dir="$(get_home_directory $(get_user_name))"
 
     if [ "$HOME" != "$home_dir" ]; then
 	export HOME="$home_dir"
