@@ -205,7 +205,6 @@ get_awk_command() (
 get_setpriv_command() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    setpriv="setpriv --reuid $(id -u $1) --regid $(id -g $1)"
     version="$(setpriv --version 2>/dev/null)"
 
     case "${version##* }" in
@@ -229,6 +228,7 @@ get_setpriv_command() (
 	    ;;
     esac
 
+    setpriv="setpriv --reuid $(id -u $1) --regid $(id -g $1)"
     printf "$setpriv %s %s\n" "$options"
     return 0
 )
