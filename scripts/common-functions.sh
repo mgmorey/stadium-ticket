@@ -271,23 +271,25 @@ get_python_utility() (
     if [ -n "${versions-}" ]; then
 	for version in $versions; do
 	    for command in $utility$version "$python$version -m $module"; do
-		if get_python_utility_command $utility $version; then
+		if get_python_utility_helper $utility $version; then
 		    return 0
 		fi
 	    done
 	done
-    elif get_python_utility_command $utility; then
+    elif get_python_utility_helper $utility; then
 	return 0
     fi
 
     return 1
 )
 
-get_python_utility_command() {
+get_python_utility_helper() {
     for command in $1${2-} "$python${2-} -m $module"; do
-	if $command $option >/dev/null 2>&1; then
-	    printf "%s\n" "$command"
-	    return 0
+	if ! expr "$command" : pyvenv >/dev/null; then
+	    if $command $option >/dev/null 2>&1; then
+		printf "%s\n" "$command"
+		return 0
+	    fi
 	fi
     done
 
