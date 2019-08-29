@@ -14,10 +14,6 @@
 # GNU General Public License for more details.
 
 FORMAT_RE='^%s(\.[0-9]+){0,2}$\n'
-
-PIP_9_UPGRADE_OPTS="--no-cache-dir"
-PIP_10_UPGRADE_OPTS="--no-cache-dir --no-warn-script-location"
-
 PKGSRC_PREFIXES=$(ls -d /opt/local /usr/pkg 2>/dev/null || true)
 SYSTEM_PREFIXES="/usr/local${PKGSRC_PREFIXES:+ $PKGSRC_PREFIXES} /usr"
 
@@ -57,7 +53,7 @@ create_virtualenv() (
     python=${2-}
 
     if [ -z "${python-}" ]; then
-	python=$(find_system_python | awk '{print $1}')
+	python=$(find_system_python | /usr/bin/awk '{print $1}')
 	python=$(find_user_python $python)
 	python_output="$($python --version)"
 	python_version="${python_output#Python }"
@@ -96,7 +92,6 @@ create_virtualenv() (
 create_virtualenv_via_pip() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
-
     pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip || true)
     python=
     source_dir=$script_dir/..
@@ -117,7 +112,7 @@ create_virtualenv_via_pip() (
 )
 
 find_python() (
-    python=$(find_system_python | awk '{print $1}')
+    python=$(find_system_python | /usr/bin/awk '{print $1}')
     python=$(find_user_python $python)
     python_output="$($python --version)"
     python_version="${python_output#Python }"
@@ -223,21 +218,21 @@ get_home_directory() {
 
     case "$(uname -s)" in
 	(Darwin)
-	    printf "/Users/%s\n" "${1-USER}"
+	    printf "/Users/%s\n" "$1"
 	    ;;
 	(*)
-	    getent passwd ${1-$USER} | awk -F: '{print $6}'
+	    getent passwd "$1" | /usr/bin/awk -F: '{print $6}'
 	    ;;
     esac
 }
 
-get_pip_upgrade_options() {
-    case "$($pip --version | awk '{print $2}')" in
+get_pip_options() {
+    case "$($pip --version | /usr/bin/awk '{print $2}')" in
 	([0-9].*)
-	    printf "%s\n" "$PIP_9_UPGRADE_OPTS"
+	    printf "%s\n" "$PIP_9_OPTS"
 	    ;;
 	(*)
-	    printf "%s\n" "$PIP_10_UPGRADE_OPTS"
+	    printf "%s\n" "$PIP_10_OPTS"
 	    ;;
     esac
 }
@@ -273,25 +268,31 @@ get_python_utility() (
 	    ;;
     esac
 
-    for version in ${versions:-""}; do
-	for command in $utility$version "$python$version -m $module"; do
-	    if expr "$command" : pyvenv >/dev/null; then
-		continue
-	    fi
-
-	    if ! which "${command%% *}" >/dev/null 2>&1; then
-		continue
-	    fi
-
-	    if $command $option >/dev/null 2>&1; then
-		printf "%s\n" "$command"
-		return 0
-	    fi
+    if [ -n "${versions-}" ]; then
+	for version in $versions; do
+	    for command in $utility$version "$python$version -m $module"; do
+		if get_python_utility_command $utility $version; then
+		    return 0
+		fi
+	    done
 	done
-    done
+    elif get_python_utility_command $utility; then
+	return 0
+    fi
 
     return 1
 )
+
+get_python_utility_command() {
+    for command in $1${2-} "$python${2-} -m $module"; do
+	if $command $option >/dev/null 2>&1; then
+	    printf "%s\n" "$command"
+	    return 0
+	fi
+    done
+
+    return 1
+}
 
 get_sort_command() {
     case "$(uname -s)" in
@@ -304,12 +305,16 @@ get_sort_command() {
     esac
 }
 
+get_user_name() {
+    printf "%s\n" "${SUDO_USER-${USER-${LOGNAME}}}"
+}
+
 get_versions_all() {
-    pyenv install --list | awk 'NR > 1 {print $1}' | grep_version ${1-}
+    pyenv install --list | /usr/bin/awk 'NR > 1 {print $1}' | grep_version ${1-}
 }
 
 get_versions_passed() (
-    python=$(find_system_python | awk '{print $1}')
+    python=$(find_system_python | /usr/bin/awk '{print $1}')
     python_versions=$($python "$script_dir/check-python.py" --delim '\.')
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
@@ -322,7 +327,7 @@ get_versions_passed() (
 )
 
 grep_path() {
-    printf "%s\n" "$1" | awk -v RS=: '{print $0}' | grep -q "$2"
+    printf "%s\n" "$1" | /usr/bin/awk 'BEGIN {RS=":"} {print $0}' | grep -q "$2"
 }
 
 grep_version() {
@@ -357,14 +362,16 @@ install_python_version() (
 )
 
 set_unpriv_environment() {
-    home_dir="$(get_home_directory ${SUDO_USER-$USER})"
+    user_name=$(get_user_name)
+    home_dir="$(get_home_directory $user_name)"
 
     if [ "$HOME" != "$home_dir" ]; then
 	export HOME="$home_dir"
+	cd $HOME
 
-	if [ -r $HOME/.profile ]; then
+	if [ -r .profile ]; then
 	    set +u
-	    . $HOME/.profile
+	    . .profile
 	    set -u
 	fi
     fi
@@ -372,6 +379,8 @@ set_unpriv_environment() {
     if ! grep_path $PATH "^$HOME/.local/bin\$"; then
 	export PATH="$HOME/.local/bin:$PATH"
     fi
+
+    printenv | sort
 }
 
 sync_requirements_via_pip() (
@@ -382,7 +391,7 @@ sync_requirements_via_pip() (
     fi
 
     printf "%s\n" "Upgrading virtual environment packages via pip"
-    $pip install $(get_pip_upgrade_options) --upgrade pip
+    $pip install $(get_pip_options) --upgrade pip
     printf "%s\n" "Installing virtual environment packages via pip"
     $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
 )
@@ -430,5 +439,5 @@ upgrade_via_pip() (
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
-    $pip install $(get_pip_upgrade_options) --upgrade --user "$@"
+    $pip install $(get_pip_options) --upgrade --user "$@"
 )
