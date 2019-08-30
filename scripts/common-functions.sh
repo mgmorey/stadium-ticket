@@ -100,6 +100,7 @@ create_virtualenv_via_pip() (
     fi
 
     cd "$source_dir"
+    pip_options="$(get_pip_options)"
     venv_filename=$1
     venv_requirements=requirements.txt
     sync_virtualenv_via_pip $venv_filename ${2-}
@@ -357,14 +358,7 @@ install_python_version() (
 )
 
 install_via_pip() (
-    pip=$(get_python_utility pip)
-
-    if [ -z "$pip" ]; then
-	return 1
-    fi
-
-    options="$(get_pip_options)"
-    $pip install${options+ $options} "$@"
+    $pip install${pip_options+ $pip_options} "$@"
 )
 
 set_unpriv_environment() {
@@ -386,12 +380,18 @@ set_unpriv_environment() {
     fi
 }
 
-sync_requirements_via_pip() (
+sync_requirements_via_pip() {
+    pip=$(get_python_utility pip)
+
+    if [ -z "$pip" ]; then
+	return 1
+    fi
+
     printf "%s\n" "Upgrading virtual environment packages via pip"
     install_via_pip --upgrade pip || true
     printf "%s\n" "Installing virtual environment packages via pip"
     install_via_pip $(get_pip_requirements)
-)
+}
 
 sync_virtualenv_via_pip() {
     assert [ $# -ge 1 ]
@@ -429,6 +429,12 @@ sync_virtualenv_via_pip() {
 }
 
 upgrade_via_pip() (
+    pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip)
+
+    if [ -z "$pip" ]; then
+	return 1
+    fi
+
     printf "%s\n" "Upgrading user packages via pip"
     install_via_pip --upgrade --user "$@"
 )

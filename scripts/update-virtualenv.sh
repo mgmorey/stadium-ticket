@@ -108,6 +108,7 @@ update_virtualenv() (
 	generate_requirements_files $VENV_REQUIREMENTS
 	$pipenv sync -d
     elif [ -n "$pip" ]; then
+	pip_options="$(get_pip_options)"
 	venv_force_sync=true
 	venv_requirements=$VENV_REQUIREMENTS
 	sync_virtualenv_via_pip $VENV_FILENAME
