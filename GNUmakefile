@@ -95,4 +95,4 @@ uninstall:	stop
 	$(script_dir)/configure-env.sh $@ $<
 
 .update:	Pipfile Pipfile.lock
-	$(script_dir)/update-virtualenv.sh && touch $@
+	$(script_dir)/install-virtualenv.sh && touch $@

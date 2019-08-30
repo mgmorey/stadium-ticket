@@ -89,23 +89,6 @@ create_virtualenv() (
     abort "%s: No virtualenv utility found\n" "$0"
 )
 
-create_virtualenv_via_pip() (
-    assert [ $# -ge 1 ]
-    assert [ -n "$1" ]
-    pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip)
-    source_dir=$script_dir/..
-
-    if [ -z "$pip" ]; then
-	return 1
-    fi
-
-    cd "$source_dir"
-    pip_options="$(get_pip_options)"
-    venv_filename=$1
-    venv_requirements=requirements.txt
-    sync_virtualenv_via_pip $venv_filename ${2-}
-)
-
 find_python() (
     python=$(find_system_python | /usr/bin/awk '{print $1}')
     python=$(find_user_python $python)
@@ -359,6 +342,22 @@ install_python_version() (
 
 install_via_pip() (
     $pip install${pip_options+ $pip_options} "$@"
+)
+
+install_virtualenv_via_pip() (
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+    pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip)
+
+    if [ -z "$pip" ]; then
+	return 1
+    fi
+
+    cd "$script_dir/.."
+    pip_options="$(get_pip_options)"
+    venv_filename=$1
+    venv_requirements=requirements.txt
+    sync_virtualenv_via_pip $venv_filename ${2-}
 )
 
 set_unpriv_environment() {

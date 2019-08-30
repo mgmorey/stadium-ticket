@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# update-virtualenv: update virtual environment dependencies
+# install-virtualenv: install virtual environment dependencies
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -27,23 +27,6 @@ abort() {
 
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
-}
-
-create_virtualenv_via_pipenv() {
-    if ! $pipenv --venv >/dev/null 2>&1; then
-	upgrade_via_pip pip pipenv || true
-
-	if pyenv --version >/dev/null 2>&1; then
-	    python=$(find_python)
-	    $pipenv --python $python
-	else
-	    $pipenv $PIPENV_OPTS
-	fi
-    fi
-
-    # Lock dependencies (including development dependencies) and
-    # generate Pipfile.lock
-    $pipenv lock -d
 }
 
 generate_requirements_files() (
@@ -92,7 +75,7 @@ get_realpath() (
     fi
 )
 
-update_virtualenv() (
+install_virtualenv() (
     pipenv=$(get_python_utility pipenv || true)
 
     if [ -z "$pipenv" ]; then
@@ -104,7 +87,7 @@ update_virtualenv() (
     cd "$source_dir"
 
     if [ -n "$pipenv" ]; then
-	create_virtualenv_via_pipenv
+	install_virtualenv_via_pipenv
 	generate_requirements_files $VENV_REQUIREMENTS
 	$pipenv sync -d
     elif [ -n "$pip" ]; then
@@ -116,6 +99,23 @@ update_virtualenv() (
 	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
     fi
 )
+
+install_virtualenv_via_pipenv() {
+    if ! $pipenv --venv >/dev/null 2>&1; then
+	upgrade_via_pip pip pipenv || true
+
+	if pyenv --version >/dev/null 2>&1; then
+	    python=$(find_python)
+	    $pipenv --python $python
+	else
+	    $pipenv $PIPENV_OPTS
+	fi
+    fi
+
+    # Lock dependencies (including development dependencies) and
+    # generate Pipfile.lock
+    $pipenv lock -d
+}
 
 if [ $# -gt 0 ]; then
     abort "%s: Too many arguments\n" "$0"
@@ -134,4 +134,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 
-update_virtualenv
+install_virtualenv
