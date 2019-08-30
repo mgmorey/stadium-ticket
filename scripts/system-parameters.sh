@@ -586,11 +586,11 @@ get_service_processes() {
 }
 
 get_service_users() {
-    case "${kernel_name=$(uname -s)}" in
+    case "$kernel_name" in
 	(Darwin)
 	    printf "%s\n" $USER
 	    ;;
-	(NetBSD)
+	(FreeBSD|NetBSD)
 	    printf "%s\n" $APP_UID
 	    ;;
 	(*)
