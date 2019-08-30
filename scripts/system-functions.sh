@@ -29,12 +29,10 @@ abort_insufficient_permissions() {
 check_permissions() (
     for file; do
 	if [ ! -w "$file" ]; then
-	    dir="$(dirname "$file")"
-
-	    if [ "$dir" = / ]; then
+	    if [ "$file" = / ]; then
 		abort_insufficient_permissions "$file"
 	    else
-		check_permissions "$dir"
+		check_permissions "$(dirname "$file")"
 	    fi
 	fi
     done
