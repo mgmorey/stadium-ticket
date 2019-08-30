@@ -51,14 +51,14 @@ configure_bsd_darwin_common() {
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
+
+    # Set application directory prefix
+    APP_PREFIX=/usr/local
 }
 
 configure_bsd_darwin_native() {
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
-
-    # Set application directory prefix
-    APP_PREFIX=/usr/local
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
