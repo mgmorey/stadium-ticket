@@ -89,9 +89,6 @@ configure_bsd_freebsd_12() {
 }
 
 configure_bsd_freebsd_common() {
-    # Set application directory prefix
-    APP_PREFIX=/usr/local
-
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
