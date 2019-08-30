@@ -581,7 +581,7 @@ get_launch_agent_target() {
     printf "%s\n" "$HOME/Library/LaunchAgents/$(get_launch_agent_label).plist"
 }
 
-get_service_process() {
+get_service_processes() {
     case "$kernel_name" in
 	(NetBSD)
 	    users=$APP_UID
@@ -663,7 +663,7 @@ print_service_log_file() {
 }
 
 print_service_processes() {
-    get_service_process | print_table ${1-} ""
+    get_service_processes | print_table ${1-} ""
 }
 
 ps_uwsgi() {
