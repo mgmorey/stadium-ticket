@@ -93,15 +93,15 @@ create_virtualenv_via_pip() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip)
+    source_dir=$script_dir/..
 
     if [ -z "$pip" ]; then
 	return 1
     fi
 
-    source_dir=$script_dir/..
+    cd "$source_dir"
     venv_filename=$1
     venv_requirements=requirements.txt
-    cd "$source_dir"
     sync_virtualenv_via_pip $venv_filename ${2-}
 )
 
