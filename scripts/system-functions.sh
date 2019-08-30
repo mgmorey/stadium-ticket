@@ -27,13 +27,13 @@ abort_insufficient_permissions() {
 }
 
 check_permissions() (
-    for file; do
-	if [ ! -w "$file" ]; then
-	    if [ "$file" = / ]; then
-		abort_insufficient_permissions "$file"
-	    else
-		check_permissions "$(dirname "$file")"
-	    fi
+    for node; do
+	if [ -w "$node" ]; then
+	    continue
+	elif [ -e "$node" ]; then
+	    abort_insufficient_permissions "$node"
+	else
+	    check_permissions "$(dirname "$node")"
 	fi
     done
 )
