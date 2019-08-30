@@ -226,17 +226,6 @@ get_home_directory() {
     esac
 }
 
-get_pip_options() {
-    case "$($pip --version | /usr/bin/awk '{print $2}')" in
-	([0-9].*)
-	    printf "%s\n" "$PIP_9_OPTS"
-	    ;;
-	(*)
-	    printf "%s\n" "$PIP_10_OPTS"
-	    ;;
-    esac
-}
-
 get_python_utility() (
     assert [ $# -ge 1 ]
 
@@ -390,7 +379,7 @@ sync_requirements_via_pip() (
     fi
 
     printf "%s\n" "Upgrading virtual environment packages via pip"
-    $pip install $(get_pip_options) --upgrade pip
+    $pip install --upgrade pip || true
     printf "%s\n" "Installing virtual environment packages via pip"
     $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
 )
@@ -438,5 +427,5 @@ upgrade_via_pip() (
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
-    $pip install $(get_pip_options) --upgrade --user "$@"
+    $pip install --upgrade --user "$@" || true
 )
