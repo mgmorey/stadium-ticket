@@ -344,41 +344,6 @@ install_via_pip() (
     $pip install${pip_options+ $pip_options} "$@"
 )
 
-refresh_virtualenv_via_pip() (
-    assert [ $# -ge 1 ]
-    assert [ -n "$1" ]
-    pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip)
-
-    if [ -z "$pip" ]; then
-	return 1
-    fi
-
-    cd "$script_dir/.."
-    pip_options="$(get_pip_options)"
-    venv_filename=$1
-    venv_requirements=requirements.txt
-    refresh_via_pip $venv_filename ${2-}
-)
-
-set_unpriv_environment() {
-    home_dir="$(get_home_directory $(get_user_name))"
-
-    if [ "$HOME" != "$home_dir" ]; then
-	export HOME="$home_dir"
-	cd $HOME
-
-	if [ -r .profile ]; then
-	    set +u
-	    . ./.profile
-	    set -u
-	fi
-    fi
-
-    if ! grep_path $PATH "^$HOME/.local/bin\$"; then
-	export PATH="$HOME/.local/bin:$PATH"
-    fi
-}
-
 refresh_via_pip() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
@@ -411,6 +376,25 @@ refresh_via_pip() {
 	abort "%s: Unable to activate environment\n" "$0"
     else
 	abort "%s: No virtual environment\n" "$0"
+    fi
+}
+
+set_unpriv_environment() {
+    home_dir="$(get_home_directory $(get_user_name))"
+
+    if [ "$HOME" != "$home_dir" ]; then
+	export HOME="$home_dir"
+	cd $HOME
+
+	if [ -r .profile ]; then
+	    set +u
+	    . ./.profile
+	    set -u
+	fi
+    fi
+
+    if ! grep_path $PATH "^$HOME/.local/bin\$"; then
+	export PATH="$HOME/.local/bin:$PATH"
     fi
 }
 
