@@ -177,8 +177,6 @@ install_service() {
 	    create_service_virtualenv $VENV_FILENAME-$APP_NAME $SYSTEM_PYTHON
 	fi
 
-	create_dirs $APP_DIR $APP_ETCDIR $APP_VARDIR $APP_LOGDIR $APP_RUNDIR
-
 	if [ -r .env ]; then
 	    install_file 600 .env $APP_DIR/.env
 	fi
@@ -186,6 +184,7 @@ install_service() {
 	install_app_files 644 app $APP_DIR
 	install_virtualenv $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
 	generate_service_ini $APP_CONFIG app.ini "$APP_VARS"
+	create_dirs $APP_VARDIR $APP_LOGDIR $APP_RUNDIR
 	change_owner $APP_ETCDIR $APP_DIR $APP_VARDIR
     done
 
