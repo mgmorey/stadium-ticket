@@ -589,7 +589,7 @@ get_service_users() {
     case "$kernel_name" in
 	(Linux)
 	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon)
+		(debian|raspbian|ubuntu|linuxmint|neon|fedora|ol)
 		    printf "%s\n" $APP_UID
 		    ;;
 		(opensuse-*)
