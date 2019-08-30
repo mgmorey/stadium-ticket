@@ -216,12 +216,9 @@ install_uwsgi_from_source() (
     done
 )
 
-install_virtualenv() {
+install_virtualenv() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    venv_filename=$1
-    venv_force_sync=true
-    venv_requirements=requirements.txt
 
     if [ $dryrun = true ]; then
 	check_permissions_single "$1"
@@ -234,10 +231,12 @@ install_virtualenv() {
 
 	cd "$script_dir/.."
 	pip_options="$(get_pip_options)"
+	venv_force_sync=true
+	venv_requirements=requirements.txt
 	printf "Installing virtual environment in %s\n" "$1"
-	refresh_via_pip $venv_filename "$SYSTEM_PYTHON"
+	refresh_via_pip $1 "$SYSTEM_PYTHON"
     fi
-}
+)
 
 print_status() {
     case "$1" in
