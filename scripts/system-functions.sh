@@ -19,7 +19,7 @@ WAIT_SIGNAL=10
 
 abort_insufficient_permissions() {
     cat <<-EOF >&2
-	$0: Write access required to update file or directory: $1
+	$0: Write access required to update file or directory: $1.
 	$0: Insufficient access to complete the requested operation.
 	$0: Please try the operation again as a privileged user.
 	EOF
