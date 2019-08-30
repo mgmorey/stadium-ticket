@@ -28,15 +28,19 @@ abort_insufficient_permissions() {
 
 check_permissions() (
     for node; do
-	if [ -w "$node" ]; then
-	    continue
-	elif [ -e "$node" ]; then
-	    abort_insufficient_permissions "$node"
-	else
-	    check_permissions "$(dirname "$node")"
-	fi
+	check_permissions_single "$node"
     done
 )
+
+check_permissions_single() {
+    if [ -w "$1" ]; then
+	continue
+    elif [ -e "$1" ]; then
+	abort_insufficient_permissions "$1"
+    else
+	check_permissions_single "$(dirname "$1")"
+    fi
+}
 
 control_agent() (
     assert [ $# -eq 3 ]
@@ -74,7 +78,7 @@ control_agent_service() {
     target=$(get_launch_agent_target)
 
     if [ $dryrun = true ]; then
-	check_permissions $target
+	check_permissions_single $target
     else
 	case $1 in
 	    (restart)
@@ -260,7 +264,7 @@ install_file() {
     assert [ -n "$3" ]
 
     if [ $dryrun = true ]; then
-	check_permissions $3
+	check_permissions_single $3
     else
 	assert [ -n "$1" ]
 	assert [ -n "$2" ]

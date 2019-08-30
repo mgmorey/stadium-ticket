@@ -231,7 +231,7 @@ install_virtualenv() {
     assert [ -n "$2" ]
 
     if [ $dryrun = true ]; then
-	check_permissions "$2"
+	check_permissions_single "$2"
     else
 	assert [ -r "$1" ]
 	printf "Installing virtual environment in %s\n" "$2"

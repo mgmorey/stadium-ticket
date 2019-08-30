@@ -46,7 +46,7 @@ create_symlink() {
     assert [ -n "$2" ]
 
     if [ $dryrun = true ]; then
-	check_permissions "$2"
+	check_permissions_single "$2"
     else
 	assert [ -n "$1" ]
 	assert [ -r $1 ]
