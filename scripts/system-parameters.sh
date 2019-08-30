@@ -120,7 +120,6 @@ configure_gnu() {
     if [ "${kernel_name}" = GNU ]; then
 	UWSGI_RUN_AS_SERVICE=false
     fi
-
 }
 
 configure_linux_debian() {
@@ -200,9 +199,6 @@ configure_openindiana() {
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/opt/local
-
-    # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
