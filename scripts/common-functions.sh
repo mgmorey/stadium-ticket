@@ -215,6 +215,16 @@ get_home_directory() {
     esac
 }
 
+get_pip_options() {
+    if [ "$(id -u)" -eq 0 ]; then
+	printf "%s\n" "--no-cache-dir --quiet"
+    fi
+}
+
+get_pip_requirements() {
+    printf -- "-r %s\n" ${venv_requirements:-requirements.txt}
+}
+
 get_python_utility() (
     assert [ $# -ge 1 ]
 
@@ -367,10 +377,11 @@ sync_requirements_via_pip() (
 	return 1
     fi
 
+    options="$(get_pip_options)"
     printf "%s\n" "Upgrading virtual environment packages via pip"
-    $pip install --upgrade pip || true
+    $pip install${options+ $options} --upgrade pip || true
     printf "%s\n" "Installing virtual environment packages via pip"
-    $pip install $(printf -- "-r %s\n" ${venv_requirements:-requirements.txt})
+    $pip install${options+ $options} $(get_pip_requirements)
 )
 
 sync_virtualenv_via_pip() {
@@ -415,6 +426,7 @@ upgrade_via_pip() (
 	return 1
     fi
 
+    options="$(get_pip_options)"
     printf "%s\n" "Upgrading user packages via pip"
-    $pip install --upgrade --user "$@"
+    $pip install${options+ $options} --upgrade --user "$@"
 )
