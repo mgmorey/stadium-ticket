@@ -105,14 +105,14 @@ configure_bsd_freebsd_common() {
 
 configure_bsd_netbsd() {
     # Set application group and user accounts
-    APP_GID=_www
-    APP_UID=_www
+    APP_GID=www
+    APP_UID=www
 
     # Set application directory prefix
     APP_PREFIX=/usr/local
 
     # Set uWSGI prefix directory
-    UWSGI_PREFIX=/usr/local
+    UWSGI_PREFIX=/usr/pkg
 
     # Set uWSGI binary file
     UWSGI_BINARY_NAME=uwsgi-3.7
@@ -371,19 +371,18 @@ configure_system_baseline() {
 		    ;;
 	    esac
 	    ;;
-	# (NetBSD)
-	#     UWSGI_IS_PACKAGED=false
-	#     configure_bsd
+	(NetBSD)
+	    configure_bsd
 
-	#     case "$VERSION_ID" in
-	# 	(8.1)
-	# 	    configure_bsd_netbsd
-	# 	    ;;
-	# 	(*)
-	# 	    abort_not_supported Release
-	# 	    ;;
-	#     esac
-	#     ;;
+	    case "$VERSION_ID" in
+		(8.1)
+		    configure_bsd_netbsd
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
 	(SunOS)
 	    configure_sunos
 
@@ -583,7 +582,16 @@ get_launch_agent_target() {
 }
 
 get_service_process() {
-    ps_uwsgi $APP_UID,$USER,root | awk_uwsgi $(get_uwsgi_binary_path)
+    case "$kernel_name" in
+	(NetBSD)
+	    users=$APP_UID
+	    ;;
+	(*)
+	    users=$APP_UID,$USER,root
+	    ;;
+    esac
+
+    ps_uwsgi $users | awk_uwsgi $(get_uwsgi_binary_path)
 }
 
 get_symlinks() (

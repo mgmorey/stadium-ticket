@@ -45,7 +45,7 @@ build_uwsgi_binary() {
 }
 
 build_uwsgi_from_source() (
-    assert [ $# -eq 4 ]
+    assert [ $# -ge 3 -a $# -le 4 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
     python=$1

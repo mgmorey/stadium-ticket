@@ -22,6 +22,8 @@ DEBIAN_10_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
 FREEBSD_PKGS="uwsgi"
 
+NETBSD_PKGS="%s-uwsgi"
+
 OPENSUSE_PKGS="system-user-wwwrun util-linux uwsgi uwsgi-%s"
 
 REDHAT_PKGS="util-linux uwsgi uwsgi-plugin-%s"
@@ -101,6 +103,9 @@ get_uwsgi_packages() {
 	    ;;
 	(FreeBSD)
 	    packages=$FREEBSD_PKGS
+	    ;;
+	(NetBSD)
+	    packages=$NETBSD_PKGS
 	    ;;
 	(SunOS)
 	    packages=$SUNOS_PKGS

@@ -275,7 +275,7 @@ install_file() {
 	fi
 
 	install -d -m 755 "$(dirname "$3")"
-	install -C -m $1 $2 $3
+	install -m $1 $2 $3
     fi
 }
 
