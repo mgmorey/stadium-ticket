@@ -85,7 +85,7 @@ run_via_pip() {
 
 run_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
-	upgrade_via_pip pip pipenv
+	upgrade_via_pip pip pipenv || true
 
 	if pyenv --version >/dev/null 2>&1; then
 	    python=$(find_python)
@@ -108,7 +108,7 @@ if [ $# -eq 0 ]; then
     abort "%s: Not enough arguments\n" "$0"
 fi
 
-if [ $(id -u) -eq 0 ]; then
+if [ "$(id -u)" -eq 0 ]; then
     abort "%s: Must be run as a non-privileged user\n" "$0"
 fi
 

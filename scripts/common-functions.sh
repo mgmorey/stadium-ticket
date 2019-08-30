@@ -390,7 +390,7 @@ sync_virtualenv_via_pip() {
     fi
 
     if [ $sync = true ]; then
-	upgrade_via_pip pip
+	upgrade_via_pip pip || true
 	create_virtualenv "$@"
     fi
 
@@ -416,5 +416,5 @@ upgrade_via_pip() (
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
-    $pip install --upgrade --user "$@" || true
+    $pip install --upgrade --user "$@"
 )

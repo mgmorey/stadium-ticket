@@ -54,7 +54,7 @@ if [ $# -gt 1 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
 
-if [ $(id -u) -eq 0 ]; then
+if [ "$(id -u)" -eq 0 ]; then
     abort "%s: Must be run as a non-privileged user\n" "$0"
 fi
 
