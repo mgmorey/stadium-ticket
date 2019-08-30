@@ -18,32 +18,32 @@
 
 # Wiki page: https://github.com/pyenv/pyenv/wiki
 
-DARWIN_PKGS="bash curl gdbm libffi openssl readline rsync sqlite xz zlib"
+DARWIN_PKGS="bash curl gdbm libffi openssl readline sqlite xz zlib"
 
 DEBIAN_10_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
 libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
 libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev liblzma-dev \
-make rsync uuid-dev xz-utils zlib1g-dev"
+make uuid-dev xz-utils zlib1g-dev"
 
 FREEBSD_11_PKGS="bash bzip2 curl gdbm gmake libffi llvm50 lzma ncurses \
-readline rsync sqlite3"
+readline sqlite3"
 
 FREEBSD_12_PKGS="bash bzip2 curl gdbm gmake libffi llvm60 lzma ncurses \
-readline rsync sqlite3"
+readline sqlite3"
 
 NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline \
-rsync sqlite3"
+sqlite3"
 
 OPENSUSE_PKGS="bash curl gcc gdbm-devel libbz2-devel libffi-devel \
 libopenssl-devel lzma-sdk-devel make ncurses-devel python3-devel \
-readline-devel rsync sqlite3-devel uuid-devel zlib-devel"
+readline-devel sqlite3-devel uuid-devel zlib-devel"
 
 REDHAT_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel libuuid-devel \
-make ncurses-devel python3-devel openssl-devel readline-devel rsync \
+make ncurses-devel python3-devel openssl-devel readline-devel \
 sqlite-devel xz-devel zlib-devel"
 
 SUNOS_PKGS="database/sqlite-3 developer/gcc-6 developer/build/gnu-make \
-library/libffi library/ncurses library/readline network/rsync shell/bash"
+library/libffi library/ncurses library/readline shell/bash"
 
 abort() {
     printf "$@" >&2

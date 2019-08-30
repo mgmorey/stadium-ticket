@@ -125,23 +125,7 @@ control_darwin_service() {
     fi
 }
 
-control_freebsd_service() {
-    assert [ $# -eq 2 ]
-    assert [ -n "$1" ]
-    assert [ -n "$2" ]
-
-    if [ $dryrun = true ]; then
-	return 0
-    fi
-
-    case $1 in
-	(stop)
-	    signal_service $WAIT_SIGNAL INT TERM KILL || true
-	    ;;
-    esac
-}
-
-control_linux_service() {
+control_gnu_service() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
@@ -163,20 +147,36 @@ control_linux_service() {
     esac
 }
 
+control_unix_service() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+
+    if [ $dryrun = true ]; then
+	return 0
+    fi
+
+    case $1 in
+	(stop)
+	    signal_service $WAIT_SIGNAL INT TERM KILL || true
+	    ;;
+    esac
+}
+
 control_service() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
 
-    case "$kernel_name" in
-	(Linux|GNU)
-	    control_linux_service $1 $2
-	    ;;
+    case "${kernel_name=$(uname -s)}" in
 	(Darwin)
 	    control_darwin_service $1 $2
 	    ;;
-	(FreeBSD)
-	    control_freebsd_service $1 $2
+	(Linux|GNU)
+	    control_gnu_service $1 $2
+	    ;;
+	(*)
+	    control_unix_service $1 $2
 	    ;;
     esac
 }
@@ -239,7 +239,7 @@ get_su_command() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
-    case "$kernel_name" in
+    case "${kernel_name=$(uname -s)}" in
 	(Linux|GNU)
 	    if get_setpriv_command $1; then
 		return 0

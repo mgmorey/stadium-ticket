@@ -63,12 +63,6 @@ create_dirs() (
     fi
 )
 
-create_service_virtualenv() {
-    if ! run_unpriv "$script_dir/create-virtualenv.sh" "$@"; then
-	abort "%s: Unable to create virtual environment\n" "$0"
-    fi
-}
-
 generate_sed_program() (
     assert [ $# -ge 1 ]
 
@@ -96,19 +90,17 @@ generate_sed_program() (
 )
 
 generate_service_ini() {
-    assert [ $# -eq 3 ]
+    assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
-    assert [ -n "$3" ]
-    assert [ -r $2 ]
 
     if [ $dryrun = false ]; then
 	create_tmpfile
 	sedfile=$tmpfile
-	generate_sed_program $3 >$sedfile
+	generate_sed_program $2 >$sedfile
 	create_tmpfile
 	inifile=$tmpfile
-	sed -f $sedfile $2 >$inifile
+	sed -f $sedfile app.ini >$inifile
     else
 	inifile=
     fi
@@ -174,7 +166,6 @@ install_service() {
 	    fi
 
 	    validate_parameters_preinstallation
-	    create_service_virtualenv $VENV_FILENAME-$APP_NAME $SYSTEM_PYTHON
 	fi
 
 	if [ -r .env ]; then
@@ -182,8 +173,8 @@ install_service() {
 	fi
 
 	install_app_files 644 app $APP_DIR
-	install_virtualenv $VENV_FILENAME-$APP_NAME $APP_DIR/$VENV_FILENAME
-	generate_service_ini $APP_CONFIG app.ini "$APP_VARS"
+	install_virtualenv $APP_DIR/$VENV_FILENAME
+	generate_service_ini $APP_CONFIG "$APP_VARS"
 	create_dirs $APP_VARDIR $APP_LOGDIR $APP_RUNDIR
 	change_owner $APP_ETCDIR $APP_DIR $APP_VARDIR
     done
@@ -226,17 +217,15 @@ install_uwsgi_from_source() (
 )
 
 install_virtualenv() {
-    assert [ $# -eq 2 ]
+    assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ -n "$2" ]
+    venv_force_sync=true
 
     if [ $dryrun = true ]; then
-	check_permissions_single "$2"
+	check_permissions_single "$1"
     else
-	assert [ -r "$1" ]
-	printf "Installing virtual environment in %s\n" "$2"
-	mkdir -p $2
-	rsync -a $1/* $2
+	printf "Installing virtual environment in %s\n" "$1"
+	create_virtualenv_via_pip "$1" "$SYSTEM_PYTHON"
     fi
 }
 

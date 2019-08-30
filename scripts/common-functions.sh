@@ -93,22 +93,11 @@ create_virtualenv_via_pip() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip || true)
-    python=
     source_dir=$script_dir/..
     venv_filename=$1
     venv_requirements=requirements.txt
-
     cd "$source_dir"
-    case $venv_filename in
-	($VENV_FILENAME)
-	    :
-	    ;;
-	($VENV_FILENAME-$APP_NAME)
-	    python=${2-}
-	    ;;
-    esac
-
-    sync_virtualenv_via_pip $venv_filename $python
+    sync_virtualenv_via_pip $venv_filename ${2-}
 )
 
 find_python() (
