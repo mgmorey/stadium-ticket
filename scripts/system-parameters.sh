@@ -587,6 +587,16 @@ get_service_processes() {
 
 get_service_users() {
     case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(debian|raspbian|ubuntu|linuxmint|neon)
+		    printf "%s\n" $APP_UID
+		    ;;
+		(*)
+		    printf "%s\n" $APP_UID,$USER,root
+		    ;;
+	    esac
+	    ;;
 	(Darwin)
 	    printf "%s\n" $USER
 	    ;;
