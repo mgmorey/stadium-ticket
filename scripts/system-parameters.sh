@@ -105,9 +105,6 @@ configure_bsd_netbsd() {
     APP_GID=www
     APP_UID=www
 
-    # Set application directory prefix
-    APP_PREFIX=/usr/local
-
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/pkg
 
