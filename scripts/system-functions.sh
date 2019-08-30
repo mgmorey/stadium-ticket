@@ -230,9 +230,9 @@ get_setpriv_command() (
 	    ;;
     esac
 
-    setpriv="setpriv --reuid $(id -u $1) --regid $(id -g $1)"
-    printf "$setpriv %s %s\n" "$options"
-    return 0
+    regid="$(id -u $1)"
+    reuid="$(id -g $1)"
+    printf "setpriv --reuid %s --regid %s %s\n" "$reuid" "$regid" "$options"
 )
 
 get_su_command() (
@@ -240,7 +240,7 @@ get_su_command() (
     assert [ -n "$1" ]
 
     case "${kernel_name=$(uname -s)}" in
-	(Linux|GNU)
+	(GNU|Linux)
 	    if get_setpriv_command $1; then
 		return 0
 	    else
@@ -256,7 +256,6 @@ get_su_command() (
     esac
 
     printf "su %s %s\n" "$options" "$1"
-    return 0
 )
 
 install_file() {

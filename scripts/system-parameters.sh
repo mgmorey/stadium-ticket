@@ -116,7 +116,7 @@ configure_bsd_netbsd() {
     UWSGI_RUN_AS_SERVICE=false
 }
 
-configure_gnu_hurd_linux() {
+configure_gnu() {
     # Set ps command format and command column
     PS_COLUMN=10
     PS_FORMAT=pid,ppid,user,tt,lstart,command
@@ -214,9 +214,6 @@ configure_openindiana() {
 }
 
 configure_source_defaults() {
-    # Set application directory prefix
-    APP_PREFIX=/usr/local
-
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
@@ -242,7 +239,7 @@ configure_system_baseline() {
 
     case "$kernel_name" in
 	(Linux|GNU)
-	    configure_gnu_hurd_linux
+	    configure_gnu
 
 	    case "$ID" in
 		(debian|raspbian)

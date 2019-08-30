@@ -350,7 +350,7 @@ set_unpriv_environment() {
 
 	if [ -r .profile ]; then
 	    set +u
-	    . .profile
+	    . ./.profile
 	    set -u
 	fi
     fi
