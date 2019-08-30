@@ -75,32 +75,7 @@ get_realpath() (
     fi
 )
 
-refresh_virtualenv() (
-    pipenv=$(get_python_utility pipenv || true)
-
-    if [ -z "$pipenv" ]; then
-	pip=$(get_python_utility pip || true)
-    fi
-
-    source_dir=$script_dir/..
-
-    cd "$source_dir"
-
-    if [ -n "$pipenv" ]; then
-	refresh_virtualenv_via_pipenv
-	generate_requirements_files $VENV_REQUIREMENTS
-	$pipenv sync -d
-    elif [ -n "$pip" ]; then
-	pip_options="$(get_pip_options)"
-	venv_force_sync=true
-	venv_requirements=$VENV_REQUIREMENTS
-	sync_virtualenv_via_pip $VENV_FILENAME
-    else
-	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
-    fi
-)
-
-refresh_virtualenv_via_pipenv() {
+refresh_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	upgrade_via_pip pip pipenv || true
 
@@ -116,6 +91,31 @@ refresh_virtualenv_via_pipenv() {
     # generate Pipfile.lock
     $pipenv lock -d
 }
+
+refresh_virtualenv() (
+    pipenv=$(get_python_utility pipenv || true)
+
+    if [ -z "$pipenv" ]; then
+	pip=$(get_python_utility pip || true)
+    fi
+
+    source_dir=$script_dir/..
+
+    cd "$source_dir"
+
+    if [ -n "$pipenv" ]; then
+	refresh_via_pipenv
+	generate_requirements_files $VENV_REQUIREMENTS
+	$pipenv sync -d
+    elif [ -n "$pip" ]; then
+	pip_options="$(get_pip_options)"
+	venv_force_sync=true
+	venv_requirements=$VENV_REQUIREMENTS
+	refresh_via_pip $VENV_FILENAME
+    else
+	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
+    fi
+)
 
 if [ $# -gt 0 ]; then
     abort "%s: Too many arguments\n" "$0"

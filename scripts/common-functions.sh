@@ -357,7 +357,7 @@ refresh_virtualenv_via_pip() (
     pip_options="$(get_pip_options)"
     venv_filename=$1
     venv_requirements=requirements.txt
-    sync_virtualenv_via_pip $venv_filename ${2-}
+    refresh_via_pip $venv_filename ${2-}
 )
 
 set_unpriv_environment() {
@@ -379,20 +379,7 @@ set_unpriv_environment() {
     fi
 }
 
-sync_requirements_via_pip() {
-    pip=$(get_python_utility pip)
-
-    if [ -z "$pip" ]; then
-	return 1
-    fi
-
-    printf "%s\n" "Upgrading virtual environment packages via pip"
-    install_via_pip --upgrade pip || true
-    printf "%s\n" "Installing virtual environment packages via pip"
-    install_via_pip $(get_pip_requirements)
-}
-
-sync_virtualenv_via_pip() {
+refresh_via_pip() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
 
@@ -415,10 +402,10 @@ sync_virtualenv_via_pip() {
 
     if [ -r $1/bin/activate ]; then
 	activate_virtualenv $1
-	assert [ -n "${VIRTUAL_ENV:-}" ]
+	assert [ -n "${VIRTUAL_ENV-}" ]
 
 	if [ "${venv_force_sync:-$sync}" = true ]; then
-	    sync_requirements_via_pip
+	    upgrade_requirements_via_pip
 	fi
     elif [ -d $1 ]; then
 	abort "%s: Unable to activate environment\n" "$0"
@@ -426,6 +413,19 @@ sync_virtualenv_via_pip() {
 	abort "%s: No virtual environment\n" "$0"
     fi
 }
+
+upgrade_requirements_via_pip() (
+    pip=$(get_python_utility pip)
+
+    if [ -z "$pip" ]; then
+	return 1
+    fi
+
+    printf "%s\n" "Upgrading virtual environment packages via pip"
+    install_via_pip --upgrade pip || true
+    printf "%s\n" "Installing virtual environment packages via pip"
+    install_via_pip $(get_pip_requirements)
+)
 
 upgrade_via_pip() (
     pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip)
