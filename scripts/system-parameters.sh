@@ -592,6 +592,9 @@ get_service_users() {
 		(debian|raspbian|ubuntu|linuxmint|neon)
 		    printf "%s\n" $APP_UID
 		    ;;
+		(opensuse-*)
+		    printf "%s\n" $APP_UID,root
+		    ;;
 		(*)
 		    printf "%s\n" $APP_UID,$USER,root
 		    ;;
