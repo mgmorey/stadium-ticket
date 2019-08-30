@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# install-virtualenv: install virtual environment dependencies
+# refresh-virtualenv: install virtual environment dependencies
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -75,7 +75,7 @@ get_realpath() (
     fi
 )
 
-install_virtualenv() (
+refresh_virtualenv() (
     pipenv=$(get_python_utility pipenv || true)
 
     if [ -z "$pipenv" ]; then
@@ -87,7 +87,7 @@ install_virtualenv() (
     cd "$source_dir"
 
     if [ -n "$pipenv" ]; then
-	install_virtualenv_via_pipenv
+	refresh_virtualenv_via_pipenv
 	generate_requirements_files $VENV_REQUIREMENTS
 	$pipenv sync -d
     elif [ -n "$pip" ]; then
@@ -100,7 +100,7 @@ install_virtualenv() (
     fi
 )
 
-install_virtualenv_via_pipenv() {
+refresh_virtualenv_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
 	upgrade_via_pip pip pipenv || true
 
@@ -134,4 +134,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 
-install_virtualenv
+refresh_virtualenv

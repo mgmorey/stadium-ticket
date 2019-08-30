@@ -344,7 +344,7 @@ install_via_pip() (
     $pip install${pip_options+ $pip_options} "$@"
 )
 
-install_virtualenv_via_pip() (
+refresh_virtualenv_via_pip() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip)

@@ -225,7 +225,7 @@ install_virtualenv() {
 	check_permissions_single "$1"
     else
 	printf "Installing virtual environment in %s\n" "$1"
-	install_virtualenv_via_pip "$1" "$SYSTEM_PYTHON"
+	refresh_virtualenv_via_pip "$1" "$SYSTEM_PYTHON"
     fi
 }
 

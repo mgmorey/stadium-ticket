@@ -24,8 +24,8 @@ build:	.env .update
 clean:
 	$(script_dir)/clean-caches.sh
 
-clean-venvs:
-	$(script_dir)/clean-virtualenvs.sh
+clean-virtualenv:
+	$(script_dir)/clean-virtualenv.sh
 
 client:		.env
 	$(script_dir)/app-test.sh
@@ -63,7 +63,7 @@ pylint:		.update
 pytest:		.update init-db
 	$(script_dir)/run.sh pytest tests
 
-realclean:	clean clean-venvs
+realclean:	clean clean-virtualenv
 	@/bin/rm -f .update app/app/*.sqlite
 
 restart:
@@ -84,9 +84,9 @@ stress:
 uninstall:	stop
 	$(script_dir)/uninstall-service.sh
 
-.PHONY: all build clean clean-venvs client client-debug compose debug disable
-.PHONY: drop-db enable init-db install pycode pylint pytest init-db realclean
-.PHONY: restart start status stop stress uninstall
+.PHONY: all build clean clean-virtualenv client client-debug compose debug
+.PHONY: disable drop-db enable init-db install pycode pylint pytest init-db
+.PHONY: realclean restart start status stop stress uninstall
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh $@ $<
@@ -95,4 +95,4 @@ uninstall:	stop
 	$(script_dir)/configure-env.sh $@ $<
 
 .update:	Pipfile Pipfile.lock
-	$(script_dir)/install-virtualenv.sh && touch $@
+	$(script_dir)/refresh-virtualenv.sh && touch $@
