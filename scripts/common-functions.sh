@@ -203,7 +203,7 @@ find_user_python_installed() (
 get_file_metadata() {
     assert [ $# -eq 2 ]
 
-    case "$(uname -s)" in
+    case "${kernel_name=$(uname -s)}" in
 	(GNU|Linux|SunOS)
 	    /usr/bin/stat -Lc "$@"
 	    ;;
@@ -216,7 +216,7 @@ get_file_metadata() {
 get_home_directory() {
     assert [ $# -eq 1 ]
 
-    case "$(uname -s)" in
+    case "${kernel_name=$(uname -s)}" in
 	(Darwin)
 	    printf "/Users/%s\n" "$1"
 	    ;;
@@ -297,7 +297,7 @@ get_python_utility_helper() {
 }
 
 get_sort_command() {
-    case "$(uname -s)" in
+    case "${kernel_name=$(uname -s)}" in
 	(NetBSD)
 	    printf "%s\n" "sort -r"
 	    ;;
