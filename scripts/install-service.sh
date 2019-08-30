@@ -159,6 +159,7 @@ install_service() {
     fi
 
     cd "$source_dir"
+    printf "Checking permissions\n"
 
     for dryrun in true false; do
 	if [ $UWSGI_IS_PACKAGED = false ]; then
