@@ -118,10 +118,10 @@ control_darwin_service() {
     assert [ -n "$1" ]
     assert [ -n "$2" ]
 
-    if [ $2 = false ]; then
-	control_agent_service $1
-    else
+    if [ $2 = true ]; then
 	control_brew_service $1
+    else
+	control_agent_service $1
     fi
 }
 

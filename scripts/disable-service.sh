@@ -30,7 +30,7 @@ disable_service() {
     fi
 
     for dryrun in false; do
-	control_service disable $UWSGI_IS_PACKAGED
+	control_service disable $UWSGI_IS_HOMEBREW
     done
 }
 

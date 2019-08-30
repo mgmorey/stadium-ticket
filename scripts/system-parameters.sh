@@ -57,22 +57,18 @@ configure_bsd_darwin_common() {
 }
 
 configure_bsd_darwin_native() {
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS="apps-available apps-enabled"
+    SYSTEM_PYTHON=/opt/pkg/bin/python3.7
+    SYSTEM_PYTHON_VERSION=3.7.4
 
     # Set uWSGI prefix directory
-    UWSGI_PREFIX=/usr/local
+    UWSGI_PREFIX=/opt/pkg
 
-    # Set uWSGI top-level directories
-    UWSGI_ETCDIR=$UWSGI_PREFIX/etc/uwsgi
-    UWSGI_OPTDIR=$UWSGI_PREFIX/opt/uwsgi
-
-    # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=$UWSGI_OPTDIR/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_OPTDIR/libexec/uwsgi
+    # Set uWSGI binary file
+    UWSGI_BINARY_NAME=uwsgi-3.7
 
     # Set other uWSGI parameters
-    UWSGI_LOGFILE=$UWSGI_PREFIX/var/log/uwsgi.log
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_IS_HOMEBREW=false
 }
 
 configure_bsd_darwin_source() {
@@ -319,7 +315,6 @@ configure_system_baseline() {
 	    esac
 	    ;;
 	(Darwin)
-	    UWSGI_IS_PACKAGED=false
 	    configure_bsd
 
 	    case "$VERSION_ID" in
@@ -441,6 +436,10 @@ configure_system_defaults() {
 	UWSGI_HAS_PLUGIN=true
     fi
 
+    if [ -z "${UWSGI_IS_HOMEBREW-}" ]; then
+	UWSGI_IS_HOMEBREW=false
+    fi
+
     if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
 	if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	    UWSGI_RUN_AS_SERVICE=true
@@ -531,8 +530,6 @@ generate_launch_agent() (
 	    <key>ProgramArguments</key>
 	    <array>
 	        <string>$(get_uwsgi_binary_path)</string>
-	        <string>--plugin-dir</string>
-	        <string>$UWSGI_PLUGIN_DIR</string>
 	        <string>--ini</string>
 	        <string>$APP_CONFIG</string>
 	    </array>

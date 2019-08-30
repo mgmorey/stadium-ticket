@@ -64,7 +64,7 @@ stop_service() {
     for dryrun in true false; do
 	if [ $dryrun = false ]; then
 	    if is_service_running; then
-		control_service stop $UWSGI_IS_PACKAGED
+		control_service stop $UWSGI_IS_HOMEBREW
 		stop_requested=true
 	    else
 		stop_requested=false

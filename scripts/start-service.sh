@@ -27,7 +27,7 @@ control_service_start() {
 	printf "Starting service %s\n" "$APP_NAME"
     fi
 
-    control_service restart $UWSGI_IS_PACKAGED
+    control_service restart $UWSGI_IS_HOMEBREW
 
     if [ $dryrun = true ]; then
 	return 0
