@@ -34,7 +34,7 @@ check_permissions() (
 
 check_permissions_single() {
     if [ -w "$1" ]; then
-	continue
+	return 0
     elif [ -e "$1" ]; then
 	abort_insufficient_permissions "$1"
     else
