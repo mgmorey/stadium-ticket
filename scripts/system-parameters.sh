@@ -208,27 +208,11 @@ configure_openindiana() {
     APP_GID=webservd
     APP_UID=webservd
 
-    # Set application directory prefix
-    APP_PREFIX=
-
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/opt/local
 
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS="apps-available apps-enabled"
-
-    # Set uWSGI top-level directories
-    UWSGI_ETCDIR=$UWSGI_PREFIX/opt/etc/uwsgi
-
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=$UWSGI_PREFIX/bin
-    UWSGI_PLUGIN_DIR=$UWSGI_PREFIX/libexec/uwsgi
-
-    # Set uWSGI binary/plugin filenames
-    UWSGI_BINARY_NAME=uwsgi
-
-    # Set other uWSGI parameters
-    UWSGI_LOGFILE=$UWSGI_PREFIX/var/opt/uwsgi.log
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
