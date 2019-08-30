@@ -582,16 +582,18 @@ get_launch_agent_target() {
 }
 
 get_service_processes() {
+    ps_uwsgi $(get_service_users) | awk_uwsgi $(get_uwsgi_binary_path)
+}
+
+get_service_users() {
     case "$kernel_name" in
 	(NetBSD)
-	    users=$APP_UID
+	    printf "%s\n" $APP_UID
 	    ;;
 	(*)
-	    users=$APP_UID,$USER,root
+	    printf "%s\n" $APP_UID,$USER,root
 	    ;;
     esac
-
-    ps_uwsgi $users | awk_uwsgi $(get_uwsgi_binary_path)
 }
 
 get_symlinks() (
