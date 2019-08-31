@@ -123,6 +123,6 @@ The various OS ports have been tested on the following processors:
 
     scripts/uninstall-service.sh (or "make uninstall")
 
-12. To report the current app as a service status:
+12. To report the current status of the app service:
 
     scripts/get-service-status.sh (or "make status")
