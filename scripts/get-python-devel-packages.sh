@@ -102,10 +102,10 @@ get_python_devel_packages() {
 		    ;;
 		(ol)
 		    case "$VERSION_ID" in
-			(7.7)
+			(7.*)
 			    packages=$REDHAT_7_PKGS
 			    ;;
-			(8.0)
+			(8.*)
 			    packages=$REDHAT_8_PKGS
 			    ;;
 		    esac
