@@ -215,18 +215,19 @@ get_pip_requirements() {
 }
 
 get_python_command() (
-    for command in ${1:+$1/}$2 "$python${3-} -m $module"; do
-	case $command in
-	    (pyvenv|*/pyvenv)
-		continue
-		;;
-	    (*)
-		if $command $option >/dev/null 2>&1; then
-		    printf "%s\n" "$command"
-		    return 0
-		fi
-		;;
-	esac
+    if ! expr "$2" : pyvenv >/dev/null; then
+	command_1=${1:+$1/}$2${3-}
+    else
+	command_1=
+    fi
+
+    command_2="$python -m $module"
+
+    for command in $command_1 "$command_2"; do
+	if $command $option >/dev/null 2>&1; then
+	    printf "%s\n" "$command"
+	    return 0
+	fi
     done
 
     return 1
@@ -238,17 +239,20 @@ get_python_utility() (
     if [ $# -ge 1 ] && [ "$1" = -p ]; then
 	dirname="$(dirname "$2")"
 	python="$2"
+	versions="${2#*python}"
 	shift 2
     else
 	dirname=
 	python=python
+	versions=
     fi
 
     if [ $# -ge 1 ] && [ "$1" = -v ]; then
-	versions="$2"
+	if [ -z "${versions}" ]; then
+	    versions="$2"
+	fi
+
 	shift 2
-    else
-	versions=
     fi
 
     assert [ $# -eq 1 ]
