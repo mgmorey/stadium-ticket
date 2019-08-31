@@ -214,13 +214,33 @@ get_pip_requirements() {
     printf -- "-r %s\n" ${venv_requirements:-requirements.txt}
 }
 
+get_python_command() (
+    for command in ${1:+$1/}$2 "$python${3-} -m $module"; do
+	case $command in
+	    (pyvenv|*/pyvenv)
+		continue
+		;;
+	    (*)
+		if $command $option >/dev/null 2>&1; then
+		    printf "%s\n" "$command"
+		    return 0
+		fi
+		;;
+	esac
+    done
+
+    return 1
+)
+
 get_python_utility() (
     assert [ $# -ge 1 ]
 
     if [ $# -ge 1 ] && [ "$1" = -p ]; then
+	dirname="$(dirname "$2")"
 	python="$2"
 	shift 2
     else
+	dirname=
 	python=python
     fi
 
@@ -232,46 +252,33 @@ get_python_utility() (
     fi
 
     assert [ $# -eq 1 ]
-    utility="$1"
+    basename="$1"
 
-    case "$utility" in
+    case "$basename" in
 	(pyvenv)
 	    module=venv
 	    option=--help
 	    ;;
 	(*)
-	    module=$utility
+	    module=$basename
 	    option=--version
 	    ;;
     esac
 
+    utility="${dir:+$dir/}$basename"
+
     if [ -n "${versions-}" ]; then
 	for version in $versions; do
-	    for command in $utility$version "$python$version -m $module"; do
-		if get_python_utility_helper $utility $version; then
-		    return 0
-		fi
-	    done
+	    if get_python_command "$dirname" "$basename" $version; then
+		return 0
+	    fi
 	done
-    elif get_python_utility_helper $utility; then
+    elif get_python_command "$dirname" "$basename"; then
 	return 0
     fi
 
     return 1
 )
-
-get_python_utility_helper() {
-    for command in $1${2-} "$python${2-} -m $module"; do
-	if ! expr "$command" : pyvenv >/dev/null; then
-	    if $command $option >/dev/null 2>&1; then
-		printf "%s\n" "$command"
-		return 0
-	    fi
-	fi
-    done
-
-    return 1
-}
 
 get_sort_command() {
     case "${kernel_name=$(uname -s)}" in
@@ -412,7 +419,13 @@ upgrade_requirements_via_pip() (
 )
 
 upgrade_via_pip() (
-    pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip)
+    if [ -n "${SYSTEM_PYTHON-}" ]; then
+	options="-p \"$SYSTEM_PYTHON\""
+    else
+	options="-v \"$PYTHON_VERSIONS\""
+    fi
+
+    pip=$(eval get_python_utility $options pip)
 
     if [ -z "$pip" ]; then
 	return 1

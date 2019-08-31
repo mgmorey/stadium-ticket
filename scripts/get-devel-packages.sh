@@ -38,9 +38,12 @@ OPENSUSE_PKGS="bash curl gcc gdbm-devel libbz2-devel libffi-devel \
 libopenssl-devel lzma-sdk-devel make ncurses-devel python3-devel \
 readline-devel sqlite3-devel uuid-devel zlib-devel"
 
-REDHAT_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel libuuid-devel \
-make ncurses-devel python3-devel openssl-devel readline-devel \
+REDHAT_7_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel \
+libuuid-devel make ncurses-devel openssl-devel readline-devel \
 sqlite-devel xz-devel zlib-devel"
+REDHAT_8_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel \
+libuuid-devel make ncurses-devel python3-devel openssl-devel \
+readline-devel sqlite-devel xz-devel zlib-devel"
 
 SUNOS_PKGS="database/sqlite-3 developer/gcc-6 developer/build/gnu-make \
 library/libffi library/ncurses library/readline shell/bash"
@@ -106,10 +109,21 @@ get_devel_packages() {
 		    packages=$REDHAT_PKGS
 		    ;;
 		(ol)
-		    packages=$REDHAT_PKGS
+		    case "$VERSION_ID" in
+			(7.7)
+			    packages=$REDHAT_7_PKGS
+			    ;;
+			(8.0)
+			    packages=$REDHAT_8_PKGS
+			    ;;
+		    esac
 		    ;;
 		(centos)
-		    packages=$REDHAT_PKGS
+		    case "$VERSION_ID" in
+			(7)
+			    packages=$REDHAT_7_PKGS
+			    ;;
+		    esac
 		    ;;
 	    esac
 	    ;;

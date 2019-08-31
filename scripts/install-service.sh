@@ -223,7 +223,13 @@ install_virtualenv() (
     if [ $dryrun = true ]; then
 	check_permissions_single "$1"
     else
-	pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip)
+	if [ -n "${SYSTEM_PYTHON-}" ]; then
+	    options="-p \"$SYSTEM_PYTHON\""
+	else
+	    options="-v \"$PYTHON_VERSIONS\""
+	fi
+
+	pip=$(eval get_python_utility $options pip)
 
 	if [ -z "$pip" ]; then
 	    return 1

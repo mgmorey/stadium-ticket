@@ -170,7 +170,7 @@ configure_linux_redhat_7() {
     if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	configure_linux_redhat_pkgsrc
     else
-	configure_linux_redhat_source
+	configure_source_defaults
     fi
 }
 
@@ -322,6 +322,9 @@ configure_system_baseline() {
 		    ;;
 		(ol)
 		    case "$VERSION_ID" in
+			(7.7)
+			    configure_linux_redhat_7
+			    ;;
 			(8.0)
 			    UWSGI_IS_PACKAGED=false
 			    configure_linux_redhat_8
