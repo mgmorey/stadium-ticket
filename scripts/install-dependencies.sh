@@ -101,6 +101,12 @@ install_dependencies() {
 		    ;;
 		(ol)
 		    case "$VERSION_ID" in
+			(7.7)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
 			(8.0)
 			    install_epel_8
 			    ;;
