@@ -41,7 +41,7 @@ configure_bsd_darwin() {
     configure_bsd_darwin_common
 
     if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	configure_bsd_darwin_native
+	configure_bsd_darwin_pkgsrc
     else
 	configure_bsd_darwin_source
     fi
@@ -56,7 +56,7 @@ configure_bsd_darwin_common() {
     APP_PREFIX=/usr/local
 }
 
-configure_bsd_darwin_native() {
+configure_bsd_darwin_pkgsrc() {
     SYSTEM_PYTHON=/opt/pkg/bin/python3.7
     SYSTEM_PYTHON_VERSION=3.7.4
 

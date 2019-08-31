@@ -16,7 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS=":%s-codestyle :%s-packaging :%s-pylint :%s-test"
+DARWIN_PKGS=":%s-codestyle :%s-packaging :%s-pip :%s-pylint :%s-test \
+:%s-virtualenv"
 
 DEBIAN_10_PKGS="pylint3 %s-openssl %s-packaging %s-pip %s-pycodestyle \
 %s-pytest %s-venv %s-virtualenv"
