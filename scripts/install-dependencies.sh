@@ -109,6 +109,16 @@ install_dependencies() {
 			    ;;
 		    esac
 		    ;;
+		(centos)
+		    case "$VERSION_ID" in
+			(7)
+			    install_epel_7
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
 		(*)
 		    abort_not_supported Distro
 		    ;;
@@ -158,6 +168,27 @@ install_dependencies() {
     if [ -n "${package:-}" ]; then
 	"$script_dir/install-build-deps.sh" "$@" $package
     fi
+}
+
+install_epel_7() {
+    case "$kernel_name" in
+	(Linux)
+	    case "$ID" in
+		(centos)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+		esac
+	    :
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+
+    # yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 }
 
 install_epel_8() {

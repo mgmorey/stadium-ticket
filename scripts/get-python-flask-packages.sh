@@ -26,7 +26,8 @@ NETBSD_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
 OPENSUSE_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
-REDHAT_PKGS="%s-flask"
+REDHAT_7_PKGS=":%s-flask :%s-flask-restful :%s-flask-sqlalchemy"
+REDHAT_8_PKGS="%s-flask"
 
 SUNOS_PKGS=":%s-flask :%s-flask-restful :%s-flask-sqlalchemy"
 
@@ -53,7 +54,18 @@ get_flask_packages() {
 		    packages=$FEDORA_PKGS
 		    ;;
 		(ol)
-		    packages=$REDHAT_PKGS
+		    case "$VERSION_ID" in
+			(8.0)
+			    packages=$REDHAT_8_PKGS
+			    ;;
+		    esac
+		    ;;
+		(centos)
+		    case "$VERSION_ID" in
+			(7)
+			    packages=$REDHAT_7_PKGS
+			    ;;
+		    esac
 		    ;;
 	    esac
 	    ;;

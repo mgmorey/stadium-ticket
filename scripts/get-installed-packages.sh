@@ -54,24 +54,32 @@ get_installed_packages() {
 		(fedora)
 		    dnf list installed | awk '{print $1}' | awk -F. '{print $1}'
 		    ;;
-		(ol)
-		    dnf list installed | awk '{print $1}' | awk -F. '{print $1}'
+		(ol|centos)
+		    case "$VERSION_ID" in
+			(7|7.*)
+			    yum list installed | awk '{print $1}' | awk -F. '{print $1}'
+			    /usr/pkg/bin/pkgin list | awk '{print ":" $1}'
+			    ;;
+			(8|8.*)
+			    dnf list installed | awk '{print $1}' | awk -F. '{print $1}'
+			    ;;
+		    esac
 		    ;;
 	    esac
 	    ;;
 	(Darwin)
 	    run_unpriv -c "/usr/local/bin/brew list -1"
-	    pkgin list -s | awk '{print ":" $1}'
+	    pkgin list | awk '{print ":" $1}'
 	    ;;
 	(FreeBSD)
 	    pkg info | awk "$FREEBSD_AWK"
 	    ;;
 	(NetBSD)
-	    pkgin list -s | awk '{print $1}'
+	    pkgin list | awk '{print $1}'
 	    ;;
 	(SunOS)
 	    pkg list -s | awk '{print $1}'
-	    pkgin list -s | awk '{print ":" $1}'
+	    pkgin list | awk '{print ":" $1}'
 	    ;;
     esac
 }

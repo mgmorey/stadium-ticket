@@ -26,7 +26,8 @@ NETBSD_PKGS="%s-uwsgi"
 
 OPENSUSE_PKGS="system-user-wwwrun util-linux uwsgi uwsgi-%s"
 
-REDHAT_PKGS="util-linux uwsgi uwsgi-plugin-%s"
+REDHAT_7_PKGS=":%s-uwsgi"
+REDHAT_8_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
 SUNOS_PKGS=":%s-uwsgi"
 
@@ -94,7 +95,18 @@ get_uwsgi_packages() {
 		    packages=$REDHAT_PKGS
 		    ;;
 		(ol)
-		    packages=$REDHAT_PKGS
+		    case "$VERSION_ID" in
+			(8.0)
+			    packages=$REDHAT_8_PKGS
+			    ;;
+		    esac
+		    ;;
+		(centos)
+		    case "$VERSION_ID" in
+			(7)
+			    packages=$REDHAT_7_PKGS
+			    ;;
+		    esac
 		    ;;
 	    esac
 	    ;;

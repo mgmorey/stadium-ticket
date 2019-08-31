@@ -53,6 +53,9 @@ get_http_client_packages() {
 		(ol)
 		    packages="$REDHAT_PKGS"
 		    ;;
+		(centos)
+		    packages="$REDHAT_PKGS"
+		    ;;
 	    esac
 	    ;;
 	(FreeBSD)

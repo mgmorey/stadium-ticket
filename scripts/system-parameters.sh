@@ -164,12 +164,30 @@ configure_linux_opensuse() {
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
-configure_linux_redhat() {
+configure_linux_redhat_7() {
+    configure_linux_redhat_common
+
     if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	configure_linux_redhat_native
+	configure_linux_redhat_pkgsrc
     else
 	configure_linux_redhat_source
     fi
+}
+
+configure_linux_redhat_8() {
+    configure_linux_redhat_common
+
+    if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
+	configure_linux_redhat_native
+    else
+	configure_source_defaults
+    fi
+}
+
+configure_linux_redhat_common() {
+    # Set application group and user accounts
+    APP_GID=nobody
+    APP_UID=nobody
 }
 
 configure_linux_redhat_native() {
@@ -184,12 +202,20 @@ configure_linux_redhat_native() {
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
-configure_linux_redhat_source() {
-    # Set application group and user accounts
-    APP_GID=nobody
-    APP_UID=nobody
+configure_linux_redhat_pkgsrc() {
+    # Configure system Python interpreter
+    SYSTEM_PYTHON=/usr/pkg/bin/python3.7
+    SYSTEM_PYTHON_VERSION=3.7.4
 
-    configure_source_defaults
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/pkg
+
+    # Set uWSGI binary file
+    UWSGI_BINARY_NAME=uwsgi-3.7
+
+    # Set other uWSGI parameters
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_RUN_AS_SERVICE=false
 }
 
 configure_openindiana() {
@@ -298,7 +324,17 @@ configure_system_baseline() {
 		    case "$VERSION_ID" in
 			(8.0)
 			    UWSGI_IS_PACKAGED=false
-			    configure_linux_redhat
+			    configure_linux_redhat_8
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(centos)
+		    case "$VERSION_ID" in
+			(7)
+			    configure_linux_redhat_7
 			    ;;
 			(*)
 			    abort_not_supported Release

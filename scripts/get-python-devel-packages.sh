@@ -33,7 +33,9 @@ NETBSD_PKGS="%s-codestyle %s-packaging %s-pip %s-pylint %s-test \
 OPENSUSE_PKGS="%s-packaging %s-pip %s-pycodestyle %s-pylint %s-pytest \
 %s-virtualenv"
 
-REDHAT_PKGS="%s-pip %s-pycodestyle %s-pytest %s-virtualenv"
+REDHAT_7_PKGS=":%s-codestyle :%s-packaging :%s-pip :%s-pylint :%s-test \
+:%s-virtualenv"
+REDHAT_8_PKGS="%s-pip %s-pycodestyle %s-pytest %s-virtualenv"
 
 SUNOS_PKGS=":%s-codestyle :%s-packaging :%s-pip :%s-pylint :%s-test \
 :%s-virtualenv"
@@ -99,7 +101,18 @@ get_python_devel_packages() {
 		    packages=$FEDORA_PKGS
 		    ;;
 		(ol)
-		    packages=$REDHAT_PKGS
+		    case "$VERSION_ID" in
+			(8.0)
+			    packages=$REDHAT_8_PKGS
+			    ;;
+		    esac
+		    ;;
+		(centos)
+		    case "$VERSION_ID" in
+			(7)
+			    packages=$REDHAT_7_PKGS
+			    ;;
+		    esac
 		    ;;
 	    esac
 	    ;;

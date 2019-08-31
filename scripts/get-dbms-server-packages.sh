@@ -93,6 +93,9 @@ get_dbms_server_packages() {
 		(ol)
 		    packages="${package:-$REDHAT_PKG}"
 		    ;;
+		(centos)
+		    packages="${package:-$REDHAT_PKG}"
+		    ;;
 	    esac
 	    ;;
 	(Darwin)

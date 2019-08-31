@@ -108,6 +108,9 @@ get_devel_packages() {
 		(ol)
 		    packages=$REDHAT_PKGS
 		    ;;
+		(centos)
+		    packages=$REDHAT_PKGS
+		    ;;
 	    esac
 	    ;;
 	(Darwin)

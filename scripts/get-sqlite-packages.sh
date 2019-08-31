@@ -28,7 +28,8 @@ NETBSD_PKGS="%s-sqlite3 sqlite3"
 
 OPENSUSE_PKGS="sqlite3"
 
-REDHAT_PKGS="sqlite"
+REDHAT_7_PKGS=":%s-sqlite3 sqlite"
+REDHAT_8_PKGS="sqlite"
 
 SUNOS_PKGS="database/sqlite-3 :%s-sqlite3"
 
@@ -72,7 +73,18 @@ get_sqlite_packages() {
 		    packages=$FEDORA_PKGS
 		    ;;
 		(ol)
-		    packages=$REDHAT_PKGS
+		    case "$VERSION_ID" in
+			(8.0)
+			    packages=$REDHAT_8_PKGS
+			    ;;
+		    esac
+		    ;;
+		(centos)
+		    case "$VERSION_ID" in
+			(7)
+			    packages=$REDHAT_7_PKGS
+			    ;;
+		    esac
 		    ;;
 	    esac
 	    ;;

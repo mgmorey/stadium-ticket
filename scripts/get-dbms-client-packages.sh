@@ -100,6 +100,9 @@ get_dbms_client_packages() {
 		(ol)
 		    packages="${package:-$REDHAT_PKG}"
 		    ;;
+		(centos)
+		    packages="${package:-$REDHAT_PKG}"
+		    ;;
 	    esac
 	    ;;
 	(Darwin)

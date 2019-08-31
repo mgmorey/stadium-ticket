@@ -42,8 +42,15 @@ get_package_manager() {
 		(fedora)
 		    printf "%s\n" dnf
 		    ;;
-		(ol)
-		    printf "%s\n" dnf
+		(ol|centos)
+		    case "$VERSION_ID" in
+			(7|7.*)
+			    printf "%s\n" yum /usr/pkg/bin/pkgin
+			    ;;
+			(8|8.*)
+			    printf "%s\n" dnf
+			    ;;
+		    esac
 		    ;;
 		(*)
 		    abort_not_supported Distro
