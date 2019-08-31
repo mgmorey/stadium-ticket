@@ -135,7 +135,7 @@ install_extras() {
 		    ;;
 		(ol)
 		    case "$VERSION_ID" in
-			(8.0)
+			(7.7)
 			    :
 			    ;;
 			(*)

@@ -107,12 +107,6 @@ install_dependencies() {
 			(*)
 			    abort_not_supported Release
 			    ;;
-			(8.0)
-			    install_epel_8
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
 		    esac
 		    ;;
 		(centos)

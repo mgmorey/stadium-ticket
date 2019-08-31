@@ -168,17 +168,7 @@ configure_linux_redhat_7() {
     configure_linux_redhat_common
 
     if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	configure_linux_redhat_pkgsrc
-    else
-	configure_source_defaults
-    fi
-}
-
-configure_linux_redhat_8() {
-    configure_linux_redhat_common
-
-    if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	configure_linux_redhat_native
+	configure_linux_redhat_7_pkgsrc
     else
 	configure_source_defaults
     fi
@@ -190,19 +180,7 @@ configure_linux_redhat_common() {
     APP_UID=nobody
 }
 
-configure_linux_redhat_native() {
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS=uwsgi.d
-
-    # Set uWSGI top-level directories
-    UWSGI_ETCDIR=/etc
-
-    # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=/usr/sbin
-    UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
-}
-
-configure_linux_redhat_pkgsrc() {
+configure_linux_redhat_7_pkgsrc() {
     # Configure system Python interpreter
     SYSTEM_PYTHON=/usr/pkg/bin/python3.7
     SYSTEM_PYTHON_VERSION=3.7.4
@@ -324,10 +302,6 @@ configure_system_baseline() {
 		    case "$VERSION_ID" in
 			(7.7)
 			    configure_linux_redhat_7
-			    ;;
-			(8.0)
-			    UWSGI_IS_PACKAGED=false
-			    configure_linux_redhat_8
 			    ;;
 			(*)
 			    abort_not_supported Release
