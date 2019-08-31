@@ -47,10 +47,10 @@ get_realpath() (
 )
 
 run_in_virtualenv() {
-    pipenv=$(get_python_utility pipenv || true)
+    pipenv=$(get_command pipenv || true)
 
     if [ -z "$pipenv" ]; then
-	pip=$(get_python_utility -v "$PYTHON_VERSIONS" pip || true)
+	pip=$(get_command -v "$PYTHON_VERSIONS" pip || true)
     fi
 
     cd "$source_dir"

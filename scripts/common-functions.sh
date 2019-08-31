@@ -66,22 +66,23 @@ create_virtualenv() (
     printf "%s\n" "Creating virtual environment"
 
     for utility in $VENV_UTILITIES; do
-	case $utility in
-	    (pyvenv)
-		pyvenv=$(get_python_utility -p $python $utility || true)
+	command=$(eval get_command -p $python $utility || true)
 
-		if [ -n "$pyvenv" ]; then
-		    $pyvenv $1
-		    return 0
-		fi
+	if [ -z "$command" ]; then
+	    continue
+	fi
+
+	case "$utility" in
+	    (pyvenv)
+		$command $1
+		return $?
 		;;
 	    (virtualenv)
-		virtualenv=$(get_python_utility $utility || true)
-
-		if [ -n "$virtualenv" ]; then
-		    $virtualenv -p $python $1
-		    return 0
-		fi
+		$command -p $python $1
+		return $?
+		;;
+	    (*)
+		continue
 		;;
 	esac
     done
@@ -178,62 +179,7 @@ find_user_python_installed() (
     return 1
 )
 
-get_file_metadata() {
-    assert [ $# -eq 2 ]
-
-    case "${kernel_name=$(uname -s)}" in
-	(GNU|Linux|SunOS)
-	    /usr/bin/stat -Lc "$@"
-	    ;;
-	(Darwin|FreeBSD)
-	    /usr/bin/stat -Lf "$@"
-	    ;;
-    esac
-}
-
-get_home_directory() {
-    assert [ $# -eq 1 ]
-
-    case "${kernel_name=$(uname -s)}" in
-	(Darwin)
-	    printf "/Users/%s\n" "$1"
-	    ;;
-	(*)
-	    getent passwd "$1" | /usr/bin/awk -F: '{print $6}'
-	    ;;
-    esac
-}
-
-get_pip_options() {
-    if [ "$(id -u)" -eq 0 ]; then
-	printf "%s\n" "--no-cache-dir --quiet"
-    fi
-}
-
-get_pip_requirements() {
-    printf -- "-r %s\n" ${venv_requirements:-requirements.txt}
-}
-
-get_python_command() (
-    if ! expr "$2" : pyvenv >/dev/null; then
-	command_1=${1:+$1/}$2${3-}
-    else
-	command_1=
-    fi
-
-    command_2="$python -m $module"
-
-    for command in $command_1 "$command_2"; do
-	if $command $option >/dev/null 2>&1; then
-	    printf "%s\n" "$command"
-	    return 0
-	fi
-    done
-
-    return 1
-)
-
-get_python_utility() (
+get_command() (
     assert [ $# -ge 1 ]
 
     if [ $# -ge 1 ] && [ "$1" = -p ]; then
@@ -273,16 +219,69 @@ get_python_utility() (
 
     if [ -n "${versions-}" ]; then
 	for version in $versions; do
-	    if get_python_command "$dirname" "$basename" $version; then
+	    if get_command_helper "$dirname" "$basename" $version; then
 		return 0
 	    fi
 	done
-    elif get_python_command "$dirname" "$basename"; then
+    elif get_command_helper "$dirname" "$basename"; then
 	return 0
     fi
 
     return 1
 )
+
+get_command_helper() (
+    if ! expr "$2" : pyvenv >/dev/null; then
+	script=${1:+$1/}$2${3-}
+    else
+	script=
+    fi
+
+    for command in $script "$python -m $module"; do
+	if $command $option >/dev/null 2>&1; then
+	    printf "%s\n" "$command"
+	    return 0
+	fi
+    done
+
+    return 1
+)
+
+get_file_metadata() {
+    assert [ $# -eq 2 ]
+
+    case "${kernel_name=$(uname -s)}" in
+	(GNU|Linux|SunOS)
+	    /usr/bin/stat -Lc "$@"
+	    ;;
+	(Darwin|FreeBSD)
+	    /usr/bin/stat -Lf "$@"
+	    ;;
+    esac
+}
+
+get_home_directory() {
+    assert [ $# -eq 1 ]
+
+    case "${kernel_name=$(uname -s)}" in
+	(Darwin)
+	    printf "/Users/%s\n" "$1"
+	    ;;
+	(*)
+	    getent passwd "$1" | /usr/bin/awk -F: '{print $6}'
+	    ;;
+    esac
+}
+
+get_pip_options() {
+    if [ "$(id -u)" -eq 0 ]; then
+	printf "%s\n" "--no-cache-dir --quiet"
+    fi
+}
+
+get_pip_requirements() {
+    printf -- "-r %s\n" ${venv_requirements:-requirements.txt}
+}
 
 get_sort_command() {
     case "${kernel_name=$(uname -s)}" in
@@ -410,7 +409,7 @@ set_unpriv_environment() {
 }
 
 upgrade_requirements_via_pip() (
-    pip=$(get_python_utility pip)
+    pip=$(get_command pip)
 
     if [ -z "$pip" ]; then
 	return 1
@@ -429,7 +428,7 @@ upgrade_via_pip() (
 	options="-v \"$PYTHON_VERSIONS\""
     fi
 
-    pip=$(eval get_python_utility $options pip)
+    pip=$(eval get_command $options pip)
 
     if [ -z "$pip" ]; then
 	return 1

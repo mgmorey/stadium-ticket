@@ -223,23 +223,10 @@ install_virtualenv() (
     if [ $dryrun = true ]; then
 	check_permissions_single "$1"
     else
-	if [ -n "${SYSTEM_PYTHON-}" ]; then
-	    options="-p \"$SYSTEM_PYTHON\""
-	else
-	    options="-v \"$PYTHON_VERSIONS\""
-	fi
-
-	pip=$(eval get_python_utility $options pip)
-
-	if [ -z "$pip" ]; then
-	    return 1
-	fi
-
+	printf "Installing virtual environment in %s\n" "$1"
 	cd "$script_dir/.."
-	pip_options="$(get_pip_options)"
 	venv_force_sync=true
 	venv_requirements=requirements.txt
-	printf "Installing virtual environment in %s\n" "$1"
 	refresh_via_pip $1 "$SYSTEM_PYTHON"
     fi
 )
