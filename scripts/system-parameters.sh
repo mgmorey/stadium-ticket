@@ -32,7 +32,7 @@ awk_uwsgi() {
 }
 
 configure_bsd() {
-    # Set ps command format and command column
+    # Set ps command format and column width
     PS_COLUMN=10
     PS_FORMAT=pid,ppid,user,tt,lstart,command
 }
