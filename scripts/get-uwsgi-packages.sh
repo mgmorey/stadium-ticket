@@ -20,6 +20,8 @@ DARWIN_PKGS=":%s-uwsgi"
 
 DEBIAN_10_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
+FEDORA_PKGS="util-linux uwsgi uwsgi-plugin-%s"
+
 FREEBSD_PKGS="uwsgi"
 
 NETBSD_PKGS="%s-uwsgi"
@@ -92,14 +94,14 @@ get_uwsgi_packages() {
 		    packages=$OPENSUSE_PKGS
 		    ;;
 		(fedora)
-		    packages=$REDHAT_PKGS
+		    packages=$FEDORA_PKGS
 		    ;;
 		(ol)
 		    case "$VERSION_ID" in
-			(7.7)
+			(7.*)
 			    packages=$REDHAT_7_PKGS
 			    ;;
-			(8.0)
+			(8.*)
 			    packages=$REDHAT_8_PKGS
 			    ;;
 		    esac

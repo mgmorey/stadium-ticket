@@ -151,6 +151,18 @@ configure_linux_debian_native() {
     APP_SOCKET=$APP_RUNDIR/socket
 }
 
+configure_linux_fedora() {
+    # Set uWSGI configuration directory
+    UWSGI_ETCDIR=/etc
+
+    # Set uWSGI app configuration directory
+    UWSGI_APPDIRS=uwsgi.d
+
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=/usr/sbin
+    UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
+}
+
 configure_linux_opensuse() {
     # Set application group and user accounts
     APP_GID=nogroup
@@ -291,7 +303,7 @@ configure_system_baseline() {
 		(fedora)
 		    case "$VERSION_ID" in
 			(30)
-			    configure_linux_redhat
+			    configure_linux_fedora
 			    ;;
 			(*)
 			    abort_not_supported Release
