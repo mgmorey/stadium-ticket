@@ -144,7 +144,7 @@ install_app_files() (
 )
 
 install_pkgsrc() {
-    if ! which pkgin >/dev/null 2>/dev/null; then
+    if ! which $UWSGI_PREFIX/bin/pkgin >/dev/null 2>/dev/null; then
 	if [ $dryrun = true ]; then
 	    check_permissions_single /
 	else
