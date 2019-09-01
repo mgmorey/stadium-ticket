@@ -31,7 +31,7 @@ OPENSUSE_INFO="python3 python3"
 REDHAT_7_INFO=":python36 py36"
 REDHAT_8_INFO="python3 python3"
 
-SUNOS_INFO=":python37 py37"
+SUNOS_INFO=":python36 py36"
 
 UBUNTU_INFO="python3 python3"
 
