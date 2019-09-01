@@ -93,6 +93,7 @@ refresh_via_pipenv() {
 }
 
 refresh_virtualenv() (
+    configure_system_baseline
     pipenv=$(get_command pipenv || true)
 
     if [ -z "$pipenv" ]; then
@@ -132,5 +133,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
+. "$script_dir/system-parameters.sh"
 
 refresh_virtualenv

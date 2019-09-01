@@ -103,9 +103,17 @@ find_python() (
     printf "%s\n" "$python"
 )
 
-find_system_python() {
-    find_system_pythons | head -n 1
-}
+find_system_python() (
+    if [ -n "${SYSTEM_PYTHON-}" -a -n "${SYSTEM_PYTHON_VERSION-}" ]; then
+	basename="$(basename "$SYSTEM_PYTHON")"
+	python="$SYSTEM_PYTHON"
+	suffix="${basename#python}"
+	version="$SYSTEM_PYTHON_VERSION"
+	printf "%s %s %s\n" "$python" "$suffix" "$version"
+    else
+	find_system_pythons | head -n 1
+    fi
+)
 
 find_system_pythons() (
     for suffix in $PYTHON_VERSIONS; do
@@ -124,6 +132,7 @@ find_system_pythons() (
 )
 
 find_user_python() (
+    assert [ $# -eq 1 ]
     python_versions=$($1 "$script_dir/check-python.py")
 
     if pyenv --version >/dev/null 2>&1; then
@@ -137,6 +146,17 @@ find_user_python() (
     if [ -n "$pyenv_root" ]; then
 	for version in $python_versions; do
 	    python=$(find_user_python_installed $pyenv_root $version || true)
+
+	    if [ -z "$python" ]; then
+		if [ -n "${SYSTEM_PYTHON-}" ]; then
+		    basename="$(basename "$SYSTEM_PYTHON")"
+		    suffix="${basename#python}"
+
+		    if [ "$suffix" = "$version" ]; then
+			python="$SYSTEM_PYTHON"
+		    fi
+		fi
+	    fi
 
 	    if [ -z "$python" ]; then
 		install_python_version >&2
