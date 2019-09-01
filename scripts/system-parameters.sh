@@ -43,7 +43,7 @@ configure_bsd_darwin() {
     if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	configure_bsd_darwin_pkgsrc
     else
-	configure_bsd_darwin_source
+	configure_source_defaults
     fi
 }
 
@@ -66,11 +66,7 @@ configure_bsd_darwin_pkgsrc() {
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
-}
-
-configure_bsd_darwin_source() {
-    UWSGI_RUN_AS_SERVICE=true
-    configure_source_defaults
+    UWSGI_RUN_AS_SERVICE=false
 }
 
 configure_bsd_freebsd_11() {
