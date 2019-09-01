@@ -151,7 +151,7 @@ install_dependencies() {
 	    :
 	    ;;
 	(SunOS)
-	    :
+	    install_pkgsrc
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"
@@ -210,6 +210,12 @@ install_epel_8() {
     esac
 
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+}
+
+install_pkgsrc() {
+    if ! which pkgin >/dev/null 2>/dev/null; then
+	"$script_dir/install-pkgsrc.sh"
+    fi
 }
 
 if [ $# -gt 0 ]; then
