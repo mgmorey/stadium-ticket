@@ -18,7 +18,7 @@
 
 # Wiki page: https://github.com/pyenv/pyenv/wiki
 
-DARWIN_PKGS="bash curl gdbm libffi openssl readline sqlite xz zlib"
+DARWIN_PKGS="bash curl gdbm libffi openssl readline sqlite xz zlib :git"
 
 DEBIAN_10_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
 libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
