@@ -218,6 +218,7 @@ configure_openindiana() {
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
+    UWSGI_IS_PKGSRC=true
     UWSGI_RUN_AS_SERVICE=false
 }
 
@@ -459,6 +460,10 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_IS_HOMEBREW-}" ]; then
 	UWSGI_IS_HOMEBREW=false
+    fi
+
+    if [ -z "${UWSGI_IS_PKGSRC-}" ]; then
+	UWSGI_IS_PKGSRC=false
     fi
 
     if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then

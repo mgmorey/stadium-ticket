@@ -143,6 +143,16 @@ install_app_files() (
     done
 )
 
+install_pkgsrc() {
+    if ! which pkgin >/dev/null 2>/dev/null; then
+	if [ $dryrun = true ]; then
+	    check_permissions_single /
+	else
+	    "$script_dir/install-pkgsrc.sh"
+	fi
+    fi
+}
+
 install_service() {
     configure_system_baseline
 
@@ -157,6 +167,10 @@ install_service() {
 	    configure_system_defaults
 	    install_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	else
+	    if [ $UWSGI_IS_PKGSRC = true ]; then
+		install_pkgsrc
+	    fi
+
 	    install_uwsgi_from_package
 	fi
 
