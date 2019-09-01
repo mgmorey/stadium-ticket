@@ -273,14 +273,19 @@ get_home_directory() {
     esac
 }
 
-get_pip_options() {
+get_pip_install_options() (
     if [ "$(id -u)" -eq 0 ]; then
-	printf "%s\n" "--no-cache-dir --quiet"
+	options=--no-cache-dir
+    else
+	options=
     fi
-}
+
+    options="${options+$options }--quiet"
+    printf "%s\n" "$options"
+)
 
 get_pip_requirements() {
-    printf -- "-r %s\n" ${venv_requirements:-requirements.txt}
+    printf -- "--requirement %s\n" ${venv_requirements:-requirements.txt}
 }
 
 get_sort_command() {
@@ -350,9 +355,9 @@ install_python_version() (
     pyenv install -s $python
 )
 
-install_via_pip() (
-    $pip install${pip_options+ $pip_options} "$@"
-)
+install_via_pip() {
+    $pip install $(get_pip_install_options) "$@"
+}
 
 refresh_via_pip() {
     assert [ $# -ge 1 ]
