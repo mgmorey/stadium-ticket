@@ -28,7 +28,7 @@ NETBSD_INFO="python37 py37"
 
 OPENSUSE_INFO="python3 python3"
 
-REDHAT_7_INFO=":python3 py37"
+REDHAT_7_INFO=":python36 py36"
 REDHAT_8_INFO="python3 python3"
 
 SUNOS_INFO=":python37 py37"

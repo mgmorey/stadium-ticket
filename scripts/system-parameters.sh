@@ -188,8 +188,8 @@ configure_linux_redhat_common() {
 
 configure_linux_redhat_7_pkgsrc() {
     # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/pkg/bin/python3.7
-    SYSTEM_PYTHON_VERSION=3.7.4
+    SYSTEM_PYTHON=/usr/pkg/bin/python3.6
+    SYSTEM_PYTHON_VERSION=3.6.9
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/pkg
