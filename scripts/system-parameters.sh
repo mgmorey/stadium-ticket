@@ -43,7 +43,7 @@ configure_bsd_darwin() {
     if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	configure_bsd_darwin_pkgsrc
     else
-	configure_source_defaults
+	configure_uwsgi_source
     fi
 }
 
@@ -122,7 +122,7 @@ configure_linux_debian() {
     if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	configure_linux_debian_native
     else
-	configure_source_defaults
+	configure_uwsgi_source
     fi
 }
 
@@ -176,7 +176,7 @@ configure_linux_redhat_7() {
     if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
 	configure_linux_redhat_7_pkgsrc
     else
-	configure_source_defaults
+	configure_uwsgi_source
     fi
 }
 
@@ -203,7 +203,7 @@ configure_linux_redhat_7_pkgsrc() {
     UWSGI_RUN_AS_SERVICE=false
 }
 
-configure_openindiana() {
+configure_unix_illumos() {
     # Set application group and user accounts
     APP_GID=webservd
     APP_UID=webservd
@@ -224,7 +224,7 @@ configure_openindiana() {
     UWSGI_RUN_AS_SERVICE=false
 }
 
-configure_source_defaults() {
+configure_uwsgi_source() {
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
@@ -382,7 +382,7 @@ configure_system_baseline() {
 
 	    case $ID in
 		(openindiana)
-		    configure_openindiana
+		    configure_unix_illumos
 		    ;;
 		(*)
 		    abort_not_supported Distro
