@@ -49,11 +49,10 @@ get_realpath() (
 install_packages() {
     install_opts=$("$script_dir/get-package-install-options.sh")
     installers=$("$script_dir/get-package-manager.sh")
-
-    parse_arguments "$@"
-
     installer1=$(printf "%s\n" $installers | awk 'NR == 1 {print $0}')
     installer2=$(printf "%s\n" $installers | awk 'NR == 2 {print $0}')
+
+    parse_arguments "$@"
 
     if [ -n "$packages" ]; then
 	packages1=$(printf "%s\n" $packages | awk -F: 'NF == 1 {print $0}

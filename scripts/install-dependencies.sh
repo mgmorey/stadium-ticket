@@ -52,7 +52,10 @@ install_dependencies() {
     packages=$("$script_dir/get-dependencies.sh")
     pattern=$("$script_dir/get-devel-pattern.sh")
     configure_system_baseline
-    install_pkgsrc
+
+    if [ $UWSGI_IS_PKGSRC = true ]; then
+	install_pkgsrc
+    fi
 
     if [ -n "$packages" ]; then
 	"$script_dir/install-packages.sh" ${pattern:+-p $pattern }$packages
