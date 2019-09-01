@@ -55,14 +55,14 @@ configure_bsd_darwin_common() {
 
 configure_bsd_darwin_pkgsrc() {
     # Set system Python interpreter
-    SYSTEM_PYTHON=${PKGSRC_PREFIX-}/opt/pkg/bin/python3.7
-    SYSTEM_PYTHON_VERSION=3.7.4
+    SYSTEM_PYTHON=/opt/pkg/bin/python3.6
+    SYSTEM_PYTHON_VERSION=3.6.9
 
     # Set uWSGI prefix directory
-    UWSGI_PREFIX=${PKGSRC_PREFIX-}/opt/pkg
+    UWSGI_PREFIX=/opt/pkg
 
     # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.7
+    UWSGI_BINARY_NAME=uwsgi-3.6
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false

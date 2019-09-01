@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_INFO=":python37 py37"
+DARWIN_INFO=":python36 py36"
 
 DEBIAN_INFO="python3 python3"
 
