@@ -46,13 +46,6 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-create_tmpfile() {
-    tmpfile=$(mktemp)
-    assert [ -n "${tmpfile}" ]
-    tmpfiles="${tmpfiles+$tmpfiles }$tmpfile"
-    trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
-}
-
 get_realpath() (
     assert [ $# -ge 1 ]
     realpath=$(which realpath)
@@ -121,31 +114,25 @@ install_pkgsrc() {
     boot_pgp="\${${key}_BOOT_PGP}"
     boot_sha="\${${key}_BOOT_SHA}"
     boot_tar="\${${key}_BOOT_TAR}"
-
     boot_url=$URL/packages/$boot_os/bootstrap
     pgp_url=$URL/pgp
+    target=/
 
-    cd /tmp
+    if [ ! -w $target ]; then
+	abort "%s: %s: %s\n" "$0" "$target" "No write permission"
+    fi
 
-    # Download the pkgsrc kit to the current directory.
+    cd "${TMPDIR-/tmp}"
     eval curl -O $boot_url/$boot_tar
-
-    # # Verify the SHA1 checksum.
-    verify_checksum || true
-
-    # # Verify PGP signature.  This step is optional, and requires gpg.
+    verify_checksum
     verify_signature || true
-
-    # Install bootstrap kit
-    eval tar -zxpf $boot_tar -C /
+    eval tar -C $target -zxpf $boot_tar
     eval /bin/rm -f $boot_tar
 }
 
 verify_checksum() {
     if which shasum >/dev/null 2>&1; then
-	create_tmpfile
-	eval printf "%s\n" "$boot_sha  $boot_tar" >$tmpfile
-	shasum -c $tmpfile
+	eval printf "%s\n" "$boot_sha $boot_tar" | shasum || true
     fi
 }
 
@@ -153,8 +140,8 @@ verify_signature() {
     if which gpg >/dev/null 2>&1; then
 	eval curl -O $boot_url/$boot_tar.asc
 	eval curl -sS $pgp_url/$boot_pgp.asc | gpg --import
-	eval gpg --verify $boot_tar{.asc,}
-	eval /bin/rm -f $boot_tar.asc
+	eval gpg --verify $boot_tar.asc $boot_tar
+	eval /bin/rm -f $boot_pgp.asc $boot_tar.asc
     fi
 }
 
