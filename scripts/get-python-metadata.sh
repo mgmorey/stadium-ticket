@@ -24,7 +24,7 @@ FEDORA_INFO="python3 python3"
 
 FREEBSD_INFO="python3 py36"
 
-NETBSD_INFO="python37 py37"
+NETBSD_INFO="python36 py36"
 
 OPENSUSE_INFO="python3 python3"
 
