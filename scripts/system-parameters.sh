@@ -205,6 +205,7 @@ configure_linux_redhat_7_pkgsrc() {
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
+    UWSGI_IS_PKGSRC=true
     UWSGI_RUN_AS_SERVICE=false
 }
 
