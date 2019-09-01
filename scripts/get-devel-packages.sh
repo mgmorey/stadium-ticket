@@ -25,10 +25,10 @@ libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
 libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev liblzma-dev \
 make uuid-dev xz-utils zlib1g-dev"
 
-FREEBSD_11_PKGS="bash bzip2 curl gdbm gmake libffi llvm50 lzma ncurses \
+FREEBSD_11_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses \
 readline sqlite3"
 
-FREEBSD_12_PKGS="bash bzip2 curl gdbm gmake libffi llvm60 lzma ncurses \
+FREEBSD_12_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses \
 readline sqlite3"
 
 NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline \
