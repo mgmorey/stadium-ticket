@@ -49,117 +49,10 @@ get_realpath() (
 )
 
 install_dependencies() {
-    case "$kernel_name" in
-	(Linux|GNU)
-	    case "$ID" in
-		(debian|raspbian)
-		    case "$VERSION_ID" in
-			# (9)
-			#     package=$DEBIAN_PKG
-			#     ;;
-			(10)
-			    package=$DEBIAN_PKG
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-
-		    ;;
-		(ubuntu|neon)
-		    case "$VERSION_ID" in
-			(18.04|19.04)
-			    package=$DEBIAN_PKG
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(linuxmint)
-		    case "$VERSION_ID" in
-			(19.2)
-			    package=$DEBIAN_PKG
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(opensuse-*)
-		    :
-		    ;;
-		(fedora)
-		    case "$VERSION_ID" in
-			(30)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(ol)
-		    case "$VERSION_ID" in
-			(7.7)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(centos)
-		    case "$VERSION_ID" in
-			(7)
-			    install_epel_7
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
-	    esac
-	    ;;
-	(Darwin)
-	    case "$VERSION_ID" in
-		(10.14.*)
-		    :
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(FreeBSD)
-	    case "$VERSION_ID" in
-		(11.*)
-		    :
-		    ;;
-		(12.*)
-		    :
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(NetBSD)
-	    :
-	    ;;
-	(SunOS)
-	    install_pkgsrc
-	    ;;
-	(*)
-	    abort_not_supported "Operating system"
-	    ;;
-    esac
-
     packages=$("$script_dir/get-dependencies.sh")
     pattern=$("$script_dir/get-devel-pattern.sh")
+    configure_system_baseline
+    install_pkgsrc
 
     if [ -n "$packages" ]; then
 	"$script_dir/install-packages.sh" ${pattern:+-p $pattern }$packages
@@ -213,8 +106,8 @@ install_epel_8() {
 }
 
 install_pkgsrc() {
-    if ! which pkgin >/dev/null 2>/dev/null; then
-	"$script_dir/install-pkgsrc.sh"
+    if ! which $UWSGI_PREFIX/bin/pkgin >/dev/null 2>/dev/null; then
+	"$script_dir/install-pkgsrc.sh" "${PKGSRC_PREFIX-/}"
     fi
 }
 
@@ -224,6 +117,7 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $("$script_dir/get-os-release.sh" -X)
+. "$script_dir/common-parameters.sh"
+. "$script_dir/system-parameters.sh"
 
 install_dependencies

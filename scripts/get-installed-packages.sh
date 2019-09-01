@@ -42,6 +42,10 @@ assert() {
 }
 
 get_installed_packages() {
+    installers=$("$script_dir/get-package-manager.sh")
+    installer1=$(printf "%s\n" $installers | awk 'NR == 1 {print $0}')
+    installer2=$(printf "%s\n" $installers | awk 'NR == 2 {print $0}')
+
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
@@ -49,37 +53,37 @@ get_installed_packages() {
 		    dpkg-query -Wf '${Status} ${Package}\n' | awk "$DEBIAN_AWK"
 		    ;;
 		(opensuse-*)
-		    zypper -q search -i -t package | awk 'NR > 3 {print $3}'
+		    $installer1 -q search -i -t package | awk 'NR > 3 {print $3}'
 		    ;;
 		(fedora)
-		    dnf list installed | awk '{print $1}' | awk -F. '{print $1}'
+		    $installer1 list installed | awk '{print $1}' | awk -F. '{print $1}'
 		    ;;
 		(ol|centos)
 		    case "$VERSION_ID" in
 			(7|7.*)
-			    yum list installed | awk '{print $1}' | awk -F. '{print $1}'
-			    /usr/pkg/bin/pkgin list | awk '{print ":" $1}'
+			    $installer1 list installed | awk '{print $1}' | awk -F. '{print $1}'
+			    $installer2 list | awk '{print ":" $1}'
 			    ;;
 			(8|8.*)
-			    dnf list installed | awk '{print $1}' | awk -F. '{print $1}'
+			    $installer1 list installed | awk '{print $1}' | awk -F. '{print $1}'
 			    ;;
 		    esac
 		    ;;
 	    esac
 	    ;;
 	(Darwin)
-	    run_unpriv -c "/usr/local/bin/brew list -1"
-	    pkgin list | awk '{print ":" $1}'
+	    run_unpriv -c "$installer1 list -1"
+	    $installer2 list | awk '{print ":" $1}'
 	    ;;
 	(FreeBSD)
-	    pkg info | awk "$FREEBSD_AWK"
+	    $installer1 info | awk "$FREEBSD_AWK"
 	    ;;
 	(NetBSD)
-	    pkgin list | awk '{print $1}'
+	    $installer1 list | awk '{print $1}'
 	    ;;
 	(SunOS)
-	    pkg list -s | awk '{print $1}'
-	    pkgin list | awk '{print ":" $1}'
+	    $installer1 list -s | awk '{print $1}'
+	    $installer2 list | awk '{print ":" $1}'
 	    ;;
     esac
 }

@@ -146,9 +146,9 @@ install_app_files() (
 install_pkgsrc() {
     if ! which $UWSGI_PREFIX/bin/pkgin >/dev/null 2>/dev/null; then
 	if [ $dryrun = true ]; then
-	    check_permissions_single /
+	    check_permissions_single "${PKGSRC_PREFIX-/}"
 	else
-	    "$script_dir/install-pkgsrc.sh"
+	    "$script_dir/install-pkgsrc.sh" "${PKGSRC_PREFIX-/}"
 	fi
     fi
 }

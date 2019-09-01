@@ -64,6 +64,9 @@ get_realpath() (
 )
 
 install_pkgsrc() {
+    assert [ $# -eq 1 ]
+    target="$1"
+
     case "$kernel_name" in
 	(Linux)
 	    case "$ID" in
@@ -116,12 +119,6 @@ install_pkgsrc() {
     boot_tar="\${${key}_BOOT_TAR}"
     boot_url=$URL/packages/$boot_os/bootstrap
     pgp_url=$URL/pgp
-    target=/
-
-    if [ ! -w $target ]; then
-	abort "%s: %s: %s\n" "$0" "$target" "No write permission"
-    fi
-
     cd "${TMPDIR-/tmp}"
     eval curl -O $boot_url/$boot_tar
     verify_checksum
@@ -145,7 +142,11 @@ verify_signature() {
     fi
 }
 
-if [ $# -gt 0 ]; then
+if [ $# -lt 1 ]; then
+    abort "%s: Not enough arguments\n" "$0"
+fi
+
+if [ $# -gt 1 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
 
@@ -153,4 +154,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-install_pkgsrc
+install_pkgsrc "$@"

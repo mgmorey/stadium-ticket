@@ -51,24 +51,21 @@ configure_bsd_darwin_common() {
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
-
-    # Set application directory prefix
-    APP_PREFIX=/usr/local
 }
 
 configure_bsd_darwin_pkgsrc() {
-    SYSTEM_PYTHON=/opt/pkg/bin/python3.7
+    # Set system Python interpreter
+    SYSTEM_PYTHON=${PKGSRC_PREFIX-}/opt/pkg/bin/python3.7
     SYSTEM_PYTHON_VERSION=3.7.4
 
     # Set uWSGI prefix directory
-    UWSGI_PREFIX=/opt/pkg
+    UWSGI_PREFIX=${PKGSRC_PREFIX-}/opt/pkg
 
     # Set uWSGI binary file
     UWSGI_BINARY_NAME=uwsgi-3.7
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
-    UWSGI_IS_HOMEBREW=false
 }
 
 configure_bsd_darwin_source() {
@@ -193,7 +190,7 @@ configure_linux_redhat_common() {
 }
 
 configure_linux_redhat_7_pkgsrc() {
-    # Configure system Python interpreter
+    # Set system Python interpreter
     SYSTEM_PYTHON=/usr/pkg/bin/python3.7
     SYSTEM_PYTHON_VERSION=3.7.4
 
