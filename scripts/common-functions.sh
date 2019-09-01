@@ -273,16 +273,13 @@ get_home_directory() {
     esac
 }
 
-get_pip_install_options() (
+get_pip_install_options() {
     if [ "$(id -u)" -eq 0 ]; then
-	options=--no-cache-dir
-    else
-	options=
+	printf "%s\n" --no-cache-dir
     fi
 
-    options="${options+$options }--quiet"
-    printf "%s\n" "$options"
-)
+    printf "%s\n" --quiet
+}
 
 get_pip_requirements() {
     printf -- "--requirement %s\n" ${venv_requirements:-requirements.txt}
