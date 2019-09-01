@@ -195,7 +195,7 @@ configure_linux_redhat_7_pkgsrc() {
     UWSGI_PREFIX=/usr/pkg
 
     # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.7
+    UWSGI_BINARY_NAME=uwsgi-3.6
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
