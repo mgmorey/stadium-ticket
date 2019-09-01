@@ -428,6 +428,10 @@ configure_system_baseline() {
     if [ -z "${UWSGI_IS_PACKAGED-}" ]; then
 	UWSGI_IS_PACKAGED=true
     fi
+
+    if [ -z "${UWSGI_IS_PKGSRC-}" ]; then
+	UWSGI_IS_PKGSRC=false
+    fi
 }
 
 configure_system_defaults() {
@@ -461,10 +465,6 @@ configure_system_defaults() {
 
     if [ -z "${UWSGI_IS_HOMEBREW-}" ]; then
 	UWSGI_IS_HOMEBREW=false
-    fi
-
-    if [ -z "${UWSGI_IS_PKGSRC-}" ]; then
-	UWSGI_IS_PKGSRC=false
     fi
 
     if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
