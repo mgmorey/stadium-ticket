@@ -403,7 +403,7 @@ refresh_via_pip() {
 	assert [ -n "${VIRTUAL_ENV-}" ]
 
 	if [ "${venv_force_sync:-$sync}" = true ]; then
-	    upgrade_requirements_via_pip
+	    upgrade_requirements_via_pip $1
 	fi
     elif [ -d $1 ]; then
 	abort "%s: Unable to activate environment\n" "$0"
@@ -432,7 +432,13 @@ set_unpriv_environment() {
 }
 
 upgrade_requirements_via_pip() (
-    pip=$(get_command -p $VENV_FILENAME/bin/python pip)
+    if [ $# -eq 1 ]; then
+	venv=$1
+    else
+	venv=$VENV_FILENAME
+    fi
+
+    pip=$(get_command -p $venv/bin/python pip)
 
     if [ -z "$pip" ]; then
 	return 1
