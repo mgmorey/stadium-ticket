@@ -116,6 +116,7 @@ print_status() (
 )
 
 run_service() {
+    configure_defaults
     validate_parameters_preinstallation
     validate_parameters_postinstallation
 
@@ -165,7 +166,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
-configure_system
+configure_baseline
 start_service
 
 status=$(get_service_status)

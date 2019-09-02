@@ -28,86 +28,289 @@ abort_not_supported() {
 }
 
 awk_uwsgi() {
+    assert [ $# -eq 1 ]
     awk "$(printf "$AWK_FORMAT" $PS_COLUMN)" binary="$1"
 }
 
-configure_bsd() {
-    # Set ps command format and column number
-    PS_COLUMN=10
-    PS_FORMAT=pid,ppid,user,tt,lstart,command
+configure_all() {
+    configure_baseline
+    configure_defaults
 }
 
-configure_bsd_darwin() {
-    configure_bsd_darwin_common
+configure_baseline() {
+    eval $("$script_dir/get-os-release.sh" -X)
 
-    if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	configure_bsd_darwin_pkgsrc
-    else
-	configure_uwsgi_source
+    case "$kernel_name" in
+	(Linux|GNU)
+	    configure_gnu
+
+	    case "$ID" in
+		(debian|raspbian)
+		    case "$VERSION_ID" in
+			(10)
+			    configure_linux_debian
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(ubuntu|neon)
+		    case "$VERSION_ID" in
+			(18.04|19.04)
+			    configure_linux_debian
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(linuxmint)
+		    case "$VERSION_ID" in
+			(19.2)
+			    configure_linux_debian
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(opensuse-leap)
+		    case "$VERSION_ID" in
+			(15.0|15.1)
+			    configure_linux_opensuse
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(opensuse-tumbleweed)
+		    case "$VERSION_ID" in
+			(2019*)
+			    configure_linux_opensuse
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(fedora)
+		    case "$VERSION_ID" in
+			(30)
+			    configure_linux_fedora
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(ol)
+		    case "$VERSION_ID" in
+			(7.7)
+			    configure_linux_redhat_7
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(centos)
+		    case "$VERSION_ID" in
+			(7)
+			    configure_linux_redhat_7
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    configure_unix_bsd
+
+	    case "$VERSION_ID" in
+		(10.14.*)
+		    configure_unix_darwin
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(FreeBSD)
+	    configure_unix_bsd
+
+	    case "$VERSION_ID" in
+		(11.*)
+		    configure_unix_freebsd_11
+		    ;;
+		(12.*)
+		    configure_unix_freebsd_12
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(NetBSD)
+	    configure_unix_bsd
+
+	    case "$VERSION_ID" in
+		(8.1)
+		    configure_unix_netbsd
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(SunOS)
+	    configure_unix
+
+	    case $ID in
+		(openindiana)
+		    configure_unix_sunos
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+
+    # Set application directories from APP_NAME and APP_PREFIX
+    APP_DIR=${APP_PREFIX-}/opt/$APP_NAME
+    APP_ETCDIR=${APP_PREFIX-}/etc/opt/$APP_NAME
+
+    if [ -z "${APP_VARDIR-}" ]; then
+	APP_VARDIR=${APP_PREFIX-}/var/opt/$APP_NAME
+    fi
+
+    # Set additional app file and directory parameters
+
+    APP_CONFIG=$APP_ETCDIR/app.ini
+
+    if [ -z "${APP_LOGDIR-}" ]; then
+	APP_LOGDIR=$APP_VARDIR
+    fi
+
+    if [ -z "${APP_RUNDIR-}" ]; then
+	APP_RUNDIR=$APP_VARDIR
+    fi
+
+    # Set application group and user accounts
+
+    if [ -z "${APP_GID-}" ]; then
+	APP_GID=uwsgi
+    fi
+
+    if [ -z "${APP_UID-}" ]; then
+	APP_UID=uwsgi
+    fi
+
+    # Set application log directory
+    if [ -z "${APP_LOGFILE-}" ]; then
+	APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+    fi
+
+    # Set uWSGI-related parameters
+
+    if [ -z "${UWSGI_IS_PACKAGED-}" ]; then
+	UWSGI_IS_PACKAGED=true
+    fi
+
+    if [ -z "${UWSGI_IS_HOMEBREW-}" ]; then
+	UWSGI_IS_HOMEBREW=false
+    fi
+
+    if [ -z "${UWSGI_IS_PKGSRC-}" ]; then
+	UWSGI_IS_PKGSRC=false
+    fi
+
+    if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
+	if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
+	    UWSGI_RUN_AS_SERVICE=true
+	else
+	    UWSGI_RUN_AS_SERVICE=false
+	fi
+    fi
+
+    if [ -z "${UWSGI_BINARY_DIR-}" ]; then
+	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
+    fi
+
+    if [ -z "${UWSGI_BINARY_NAME-}" ]; then
+	UWSGI_BINARY_NAME=uwsgi
     fi
 }
 
-configure_bsd_darwin_common() {
-    # Set application group and user accounts
-    APP_GID=_www
-    APP_UID=_www
-}
+configure_defaults() {
+    # Set uWSGI directory prefix
+    if [ -z "${UWSGI_PREFIX-}" ]; then
+	UWSGI_PREFIX=
+    fi
 
-configure_bsd_darwin_pkgsrc() {
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/opt/pkg/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.9
+    if [ -z "${UWSGI_ETCDIR-}" ]; then
+	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
+    fi
 
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/opt/pkg
+    # Set Python-related parameters
 
-    # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.6
+    if [ -z "${SYSTEM_PYTHON-}" -o -z "${SYSTEM_PYTHON_VERSION-}" ]; then
+	python_triple=$(find_system_python)
+	version_pair="${python_triple#* }"
+	SYSTEM_PYTHON="${python_triple%% *}"
+	SYSTEM_PYTHON_VERSION="${version_pair#* }"
 
-    # Set other uWSGI parameters
-    UWSGI_HAS_PLUGIN=false
-    UWSGI_IS_PKGSRC=true
-    UWSGI_RUN_AS_SERVICE=false
-}
+	if ! check_python $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION; then
+	    abort "%s\n" "No suitable Python interpreter found"
+	fi
+    fi
 
-configure_bsd_freebsd_11() {
-    configure_bsd_freebsd_common
-}
+    # Set uWSGI-related parameters
 
-configure_bsd_freebsd_12() {
-    configure_bsd_freebsd_common
-}
+    if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
+	UWSGI_HAS_PLUGIN=true
+    fi
 
-configure_bsd_freebsd_common() {
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/usr/local
+    if [ -z "${UWSGI_BINARY_DIR-}" ]; then
+	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
+    fi
 
-    # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.6
+    if [ -z "${UWSGI_BINARY_NAME-}" ]; then
+	UWSGI_BINARY_NAME=uwsgi
+    fi
 
-    # Set other uWSGI parameters
-    UWSGI_HAS_PLUGIN=false
-    UWSGI_RUN_AS_SERVICE=false
-}
+    if [ -z "${UWSGI_PLUGIN_DIR-}" ]; then
+	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
+    fi
 
-configure_bsd_netbsd() {
-    # Set application group and user accounts
-    APP_GID=www
-    APP_UID=www
+    if [ -z "${UWSGI_PLUGIN_NAME-}" ]; then
+	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin)
+    fi
 
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/pkg/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.9
+    # Set app plugin from uWSGI plugin filename
+    if [ -z "${APP_PLUGIN-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
+	APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
+    fi
 
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/usr/pkg
+    # Set additional file parameters from app directories
 
-    # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.6
+    if [ -z "${APP_PIDFILE-}" ]; then
+	APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
+    fi
 
-    # Set other uWSGI parameters
-    UWSGI_HAS_PLUGIN=false
-    UWSGI_RUN_AS_SERVICE=false
+    if [ -z "${APP_SOCKET-}" ]; then
+	APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
+    fi
 }
 
 configure_gnu() {
@@ -207,7 +410,92 @@ configure_linux_redhat_7_pkgsrc() {
     UWSGI_RUN_AS_SERVICE=false
 }
 
-configure_unix_illumos() {
+configure_unix() {
+    # Set ps command format and column number
+    PS_COLUMN=6
+    PS_FORMAT=pid,ppid,user,tty,stime,args
+}
+
+configure_unix_bsd() {
+    # Set ps command format and column number
+    PS_COLUMN=10
+    PS_FORMAT=pid,ppid,user,tt,lstart,command
+}
+
+configure_unix_darwin() {
+    configure_unix_darwin_common
+
+    if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
+	configure_unix_darwin_pkgsrc
+    else
+	configure_uwsgi_source
+    fi
+}
+
+configure_unix_darwin_common() {
+    # Set application group and user accounts
+    APP_GID=_www
+    APP_UID=_www
+}
+
+configure_unix_darwin_pkgsrc() {
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/opt/pkg/bin/python3.6
+    SYSTEM_PYTHON_VERSION=3.6.9
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/opt/pkg
+
+    # Set uWSGI binary file
+    UWSGI_BINARY_NAME=uwsgi-3.6
+
+    # Set other uWSGI parameters
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_IS_PKGSRC=true
+    UWSGI_RUN_AS_SERVICE=false
+}
+
+configure_unix_freebsd_11() {
+    configure_unix_freebsd_common
+}
+
+configure_unix_freebsd_12() {
+    configure_unix_freebsd_common
+}
+
+configure_unix_freebsd_common() {
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
+    # Set uWSGI binary file
+    UWSGI_BINARY_NAME=uwsgi-3.6
+
+    # Set other uWSGI parameters
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_RUN_AS_SERVICE=false
+}
+
+configure_unix_netbsd() {
+    # Set application group and user accounts
+    APP_GID=www
+    APP_UID=www
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/pkg/bin/python3.6
+    SYSTEM_PYTHON_VERSION=3.6.9
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/pkg
+
+    # Set uWSGI binary file
+    UWSGI_BINARY_NAME=uwsgi-3.6
+
+    # Set other uWSGI parameters
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_RUN_AS_SERVICE=false
+}
+
+configure_unix_sunos() {
     # Set application group and user accounts
     APP_GID=webservd
     APP_UID=webservd
@@ -235,284 +523,6 @@ configure_uwsgi_source() {
     # Set other uWSGI parameters
     if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
 	UWSGI_RUN_AS_SERVICE=false
-    fi
-}
-
-configure_sunos() {
-    # Set ps command format and command column
-    PS_COLUMN=6
-    PS_FORMAT=pid,ppid,user,tty,stime,args
-}
-
-configure_system() {
-    configure_system_baseline
-    configure_system_defaults
-}
-
-configure_system_baseline() {
-    eval $("$script_dir/get-os-release.sh" -X)
-
-    case "$kernel_name" in
-	(Linux|GNU)
-	    configure_gnu
-
-	    case "$ID" in
-		(debian|raspbian)
-		    case "$VERSION_ID" in
-			(10)
-			    configure_linux_debian
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(ubuntu|neon)
-		    case "$VERSION_ID" in
-			(18.04|19.04)
-			    configure_linux_debian
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(linuxmint)
-		    case "$VERSION_ID" in
-			(19.2)
-			    configure_linux_debian
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(opensuse-leap)
-		    case "$VERSION_ID" in
-			(15.0|15.1)
-			    configure_linux_opensuse
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(opensuse-tumbleweed)
-		    case "$VERSION_ID" in
-			(2019*)
-			    configure_linux_opensuse
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(fedora)
-		    case "$VERSION_ID" in
-			(30)
-			    configure_linux_fedora
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(ol)
-		    case "$VERSION_ID" in
-			(7.7)
-			    configure_linux_redhat_7
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(centos)
-		    case "$VERSION_ID" in
-			(7)
-			    configure_linux_redhat_7
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
-	    esac
-	    ;;
-	(Darwin)
-	    configure_bsd
-
-	    case "$VERSION_ID" in
-		(10.14.*)
-		    configure_bsd_darwin
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(FreeBSD)
-	    configure_bsd
-
-	    case "$VERSION_ID" in
-		(11.*)
-		    configure_bsd_freebsd_11
-		    ;;
-		(12.*)
-		    configure_bsd_freebsd_12
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(NetBSD)
-	    configure_bsd
-
-	    case "$VERSION_ID" in
-		(8.1)
-		    configure_bsd_netbsd
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(SunOS)
-	    configure_sunos
-
-	    case $ID in
-		(openindiana)
-		    configure_unix_illumos
-		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
-	    esac
-	    ;;
-	(*)
-	    abort_not_supported "Operating system"
-	    ;;
-    esac
-
-    # Set application directories from APP_NAME and APP_PREFIX
-    APP_DIR=${APP_PREFIX-}/opt/$APP_NAME
-    APP_ETCDIR=${APP_PREFIX-}/etc/opt/$APP_NAME
-
-    if [ -z "${APP_VARDIR-}" ]; then
-	APP_VARDIR=${APP_PREFIX-}/var/opt/$APP_NAME
-    fi
-
-    # Set additional app file and directory parameters
-
-    APP_CONFIG=$APP_ETCDIR/app.ini
-
-    if [ -z "${APP_LOGDIR-}" ]; then
-	APP_LOGDIR=$APP_VARDIR
-    fi
-
-    if [ -z "${APP_RUNDIR-}" ]; then
-	APP_RUNDIR=$APP_VARDIR
-    fi
-
-    # Set application group and user accounts
-
-    if [ -z "${APP_GID-}" ]; then
-	APP_GID=uwsgi
-    fi
-
-    if [ -z "${APP_UID-}" ]; then
-	APP_UID=uwsgi
-    fi
-
-    # Set uWSGI-related parameters
-
-    if [ -z "${UWSGI_IS_PACKAGED-}" ]; then
-	UWSGI_IS_PACKAGED=true
-    fi
-
-    if [ -z "${UWSGI_IS_PKGSRC-}" ]; then
-	UWSGI_IS_PKGSRC=false
-    fi
-}
-
-configure_system_defaults() {
-    # Set uWSGI directory prefix
-    if [ -z "${UWSGI_PREFIX-}" ]; then
-	UWSGI_PREFIX=
-    fi
-
-    if [ -z "${UWSGI_ETCDIR-}" ]; then
-	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
-    fi
-
-    # Set Python-related parameters
-
-    if [ -z "${SYSTEM_PYTHON-}" -o -z "${SYSTEM_PYTHON_VERSION-}" ]; then
-	python_triple=$(find_system_python)
-	version_pair="${python_triple#* }"
-	SYSTEM_PYTHON="${python_triple%% *}"
-	SYSTEM_PYTHON_VERSION="${version_pair#* }"
-
-	if ! check_python $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION; then
-	    abort "%s\n" "No suitable Python interpreter found"
-	fi
-    fi
-
-    # Set uWSGI-related parameters
-
-    if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
-	UWSGI_HAS_PLUGIN=true
-    fi
-
-    if [ -z "${UWSGI_IS_HOMEBREW-}" ]; then
-	UWSGI_IS_HOMEBREW=false
-    fi
-
-    if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
-	if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	    UWSGI_RUN_AS_SERVICE=true
-	else
-	    UWSGI_RUN_AS_SERVICE=false
-	fi
-    fi
-
-    if [ -z "${UWSGI_BINARY_DIR-}" ]; then
-	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
-    fi
-
-    if [ -z "${UWSGI_BINARY_NAME-}" ]; then
-	UWSGI_BINARY_NAME=uwsgi
-    fi
-
-    if [ -z "${UWSGI_PLUGIN_DIR-}" ]; then
-	UWSGI_PLUGIN_DIR=${UWSGI_PREFIX:-/usr}/lib/uwsgi/plugins
-    fi
-
-    if [ -z "${UWSGI_PLUGIN_NAME-}" ]; then
-	UWSGI_PLUGIN_NAME=$(find_uwsgi_plugin)
-    fi
-
-    # Set app plugin from uWSGI plugin filename
-    if [ -z "${APP_PLUGIN-}" -a -n "${UWSGI_PLUGIN_NAME-}" ]; then
-	APP_PLUGIN=${UWSGI_PLUGIN_NAME%_plugin.so}
-    fi
-
-    # Set additional file parameters from app directories
-
-    if [ -z "${APP_LOGFILE-}" ]; then
-	APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
-    fi
-
-    if [ -z "${APP_PIDFILE-}" ]; then
-	APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    fi
-
-    if [ -z "${APP_SOCKET-}" ]; then
-	APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
     fi
 }
 

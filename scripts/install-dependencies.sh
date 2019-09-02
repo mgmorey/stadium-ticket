@@ -51,7 +51,7 @@ get_realpath() (
 install_dependencies() {
     packages=$("$script_dir/get-dependencies.sh")
     pattern=$("$script_dir/get-devel-pattern.sh")
-    configure_system_baseline
+    configure_baseline
 
     if [ $UWSGI_IS_PKGSRC = true ]; then
 	install_pkgsrc

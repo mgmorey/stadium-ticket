@@ -93,7 +93,7 @@ refresh_via_pipenv() {
 }
 
 refresh_virtualenv() (
-    configure_system_baseline
+    configure_baseline
     pipenv=$(get_command pipenv || true)
 
     if [ -z "$pipenv" ]; then

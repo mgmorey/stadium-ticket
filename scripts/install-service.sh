@@ -154,17 +154,17 @@ install_pkgsrc() {
 }
 
 install_service() {
-    configure_system_baseline
+    configure_baseline
 
     if [ $UWSGI_IS_PACKAGED = false ]; then
-	configure_system_defaults
+	configure_defaults
     fi
 
     cd "$source_dir"
 
     for dryrun in true false; do
 	if [ $UWSGI_IS_PACKAGED = false ]; then
-	    configure_system_defaults
+	    configure_defaults
 	    install_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	else
 	    if [ $UWSGI_IS_PKGSRC = true ]; then
@@ -176,7 +176,7 @@ install_service() {
 
 	if [ $dryrun = false ]; then
 	    if [ $UWSGI_IS_PACKAGED = true ]; then
-		configure_system_defaults
+		configure_defaults
 	    fi
 
 	    validate_parameters_preinstallation

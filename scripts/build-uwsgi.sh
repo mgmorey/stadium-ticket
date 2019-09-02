@@ -115,7 +115,7 @@ source_dir=$script_dir/..
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
-configure_system
+configure_all
 set_unpriv_environment
 build_uwsgi_from_source $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION \
 			$UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
