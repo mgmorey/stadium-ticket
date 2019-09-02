@@ -445,9 +445,9 @@ upgrade_requirements_via_pip() (
     fi
 
     printf "%s\n" "Upgrading virtual environment packages via pip"
-    install_via_pip $pip --upgrade pip || true
+    install_via_pip "$pip" --upgrade pip || true
     printf "%s\n" "Installing virtual environment packages via pip"
-    install_via_pip $pip $(get_pip_requirements)
+    install_via_pip "$pip" $(get_pip_requirements)
 )
 
 upgrade_via_pip() (
@@ -464,5 +464,5 @@ upgrade_via_pip() (
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
-    install_via_pip $pip --upgrade --user "$@"
+    install_via_pip "$pip" --upgrade --user "$@"
 )
