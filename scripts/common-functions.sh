@@ -147,14 +147,12 @@ find_user_python() (
 	for version in $python_versions; do
 	    python=$(find_user_python_installed $pyenv_root $version || true)
 
-	    if [ -z "$python" ]; then
-		if [ -n "${SYSTEM_PYTHON-}" ]; then
-		    basename="$(basename "$SYSTEM_PYTHON")"
-		    suffix="${basename#python}"
+	    if [ -z "$python" -a -n "${SYSTEM_PYTHON-}" ]; then
+		basename="$(basename "$SYSTEM_PYTHON")"
+		suffix="${basename#python}"
 
-		    if [ "$suffix" = "$version" ]; then
-			python="$SYSTEM_PYTHON"
-		    fi
+		if [ "$suffix" = "$version" ]; then
+		    python="$SYSTEM_PYTHON"
 		fi
 	    fi
 
