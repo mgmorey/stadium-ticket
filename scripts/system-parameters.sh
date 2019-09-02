@@ -186,6 +186,16 @@ configure_baseline() {
 	    ;;
     esac
 
+    # Set application group and user accounts
+
+    if [ -z "${APP_GID-}" ]; then
+	APP_GID=uwsgi
+    fi
+
+    if [ -z "${APP_UID-}" ]; then
+	APP_UID=uwsgi
+    fi
+
     # Set application directories from APP_NAME and APP_PREFIX
     APP_DIR=${APP_PREFIX-}/opt/$APP_NAME
     APP_ETCDIR=${APP_PREFIX-}/etc/opt/$APP_NAME
@@ -206,14 +216,10 @@ configure_baseline() {
 	APP_RUNDIR=$APP_VARDIR
     fi
 
-    # Set application group and user accounts
+    # Set additional file parameters from app directories
 
-    if [ -z "${APP_GID-}" ]; then
-	APP_GID=uwsgi
-    fi
-
-    if [ -z "${APP_UID-}" ]; then
-	APP_UID=uwsgi
+    if [ -z "${APP_PIDFILE-}" ]; then
+	APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     fi
 
     # Set application log directory
