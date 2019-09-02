@@ -97,7 +97,7 @@ refresh_virtualenv() (
     pipenv=$(get_command pipenv || true)
 
     if [ -z "$pipenv" ]; then
-	pip=$(get_command pip || true)
+	pip=$(get_command -v "$PYTHON_VERSIONS" pip || true)
     fi
 
     source_dir=$script_dir/..
