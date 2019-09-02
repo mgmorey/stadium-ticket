@@ -249,6 +249,15 @@ configure_baseline() {
 	fi
     fi
 
+    # Set uWSGI directory prefix
+    if [ -z "${UWSGI_PREFIX-}" ]; then
+	UWSGI_PREFIX=
+    fi
+
+    if [ -z "${UWSGI_ETCDIR-}" ]; then
+	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
+    fi
+
     if [ -z "${UWSGI_BINARY_DIR-}" ]; then
 	UWSGI_BINARY_DIR=${UWSGI_PREFIX:-/usr}/bin
     fi
@@ -259,15 +268,6 @@ configure_baseline() {
 }
 
 configure_defaults() {
-    # Set uWSGI directory prefix
-    if [ -z "${UWSGI_PREFIX-}" ]; then
-	UWSGI_PREFIX=
-    fi
-
-    if [ -z "${UWSGI_ETCDIR-}" ]; then
-	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
-    fi
-
     # Set Python-related parameters
 
     if [ -z "${SYSTEM_PYTHON-}" -o -z "${SYSTEM_PYTHON_VERSION-}" ]; then
