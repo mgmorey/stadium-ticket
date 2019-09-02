@@ -609,25 +609,16 @@ get_service_users() {
     case "$kernel_name" in
 	(Linux)
 	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon|fedora|ol)
-		    printf "%s\n" $APP_UID
-		    ;;
 		(opensuse-*)
 		    printf "%s\n" $APP_UID,root
 		    ;;
 		(*)
-		    printf "%s\n" $APP_UID,$USER,root
+		    printf "%s\n" $APP_UID
 		    ;;
 	    esac
 	    ;;
-	(Darwin)
-	    printf "%s\n" $USER
-	    ;;
-	(FreeBSD|NetBSD)
-	    printf "%s\n" $APP_UID
-	    ;;
 	(*)
-	    printf "%s\n" $APP_UID,$USER,root
+	    printf "%s\n" $APP_UID
 	    ;;
     esac
 }
