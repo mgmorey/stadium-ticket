@@ -250,12 +250,16 @@ get_command() (
 
 get_command_helper() (
     if ! expr "$2" : pyvenv >/dev/null; then
-	script=${1:+$1/}$2${3-}
+	if [ -n "${3-}" ]; then
+	    scripts="${1:+$1/}$2$3 ${1:+$1/}$2-$3"
+	else
+	    scripts="${1:+$1/}$2"
+	fi
     else
-	script=
+	scripts=
     fi
 
-    for command in $script "$python -m $module"; do
+    for command in $scripts "$python -m $module"; do
 	if $command $option >/dev/null 2>&1; then
 	    printf "%s\n" "$command"
 	    return 0
