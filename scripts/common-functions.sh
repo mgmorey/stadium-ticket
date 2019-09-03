@@ -432,13 +432,7 @@ set_unpriv_environment() {
 }
 
 upgrade_requirements_via_pip() (
-    if [ $# -eq 1 ]; then
-	venv=$1
-    else
-	venv=$VENV_FILENAME
-    fi
-
-    pip=$(get_command -p $venv/bin/python pip)
+    pip=$(get_command -p ${1-$VENV_FILENAME}/bin/python pip)
 
     if [ -z "$pip" ]; then
 	return 1
