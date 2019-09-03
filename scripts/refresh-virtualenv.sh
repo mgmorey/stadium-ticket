@@ -113,7 +113,7 @@ refresh_virtualenv() (
 	venv_requirements=$VENV_REQUIREMENTS
 	refresh_via_pip $VENV_FILENAME
     else
-	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
+	abort "%s: Neither pip nor pipenv command found in PATH\n" "$0"
     fi
 )
 

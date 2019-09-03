@@ -61,7 +61,7 @@ run_in_virtualenv() {
     elif [ -n "$pip" ]; then
 	run_via_pip "$@"
     else
-	abort "%s: Neither pip nor pipenv found in PATH\n" "$0"
+	abort "%s: Neither pip nor pipenv command found in PATH\n" "$0"
     fi
 }
 

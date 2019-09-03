@@ -435,7 +435,7 @@ upgrade_requirements_via_pip() (
     pip=$(get_command -p ${1-$VENV_FILENAME}/bin/python pip)
 
     if [ -z "$pip" ]; then
-	return 1
+	abort "%s: No pip command found in PATH\n" "$0"
     fi
 
     printf "%s\n" "Upgrading virtual environment packages via pip"
@@ -454,7 +454,7 @@ upgrade_via_pip() (
     pip=$(eval get_command $options pip)
 
     if [ -z "$pip" ]; then
-	return 1
+	abort "%s: No pip command found in PATH\n" "$0"
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
