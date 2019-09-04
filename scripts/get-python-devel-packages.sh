@@ -95,6 +95,13 @@ get_python_devel_packages() {
 			    ;;
 		    esac
 		    ;;
+		(kali)
+		    case "$VERSION_ID" in
+			(2019.3)
+			    packages=$DEBIAN_10_PKGS
+			    ;;
+		    esac
+		    ;;
 		(opensuse-*)
 		    packages=$OPENSUSE_PKGS
 		    ;;

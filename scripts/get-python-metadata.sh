@@ -52,10 +52,10 @@ get_python_package() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
-		(debian|raspbian)
+		(debian|raspbian|kali)
 		    printf "%s %s\n" $DEBIAN_INFO
 		    ;;
-		(ubuntu|linuxmint|neon|neon)
+		(ubuntu|linuxmint|neon)
 		    printf "%s %s\n" $UBUNTU_INFO
 		    ;;
 		(opensuse-*)

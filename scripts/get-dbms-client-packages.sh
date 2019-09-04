@@ -91,6 +91,13 @@ get_dbms_client_packages() {
 			    ;;
 		    esac
 		    ;;
+		(kali)
+		    case "$VERSION_ID" in
+			(2019.3)
+			    packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
+			    ;;
+		    esac
+		    ;;
 		(opensuse-*)
 		    packages="${package:-$OPENSUSE_PKG} $OPENSUSE_PKGS"
 		    ;;

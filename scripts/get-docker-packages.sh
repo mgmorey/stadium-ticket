@@ -50,7 +50,7 @@ get_docker_packages() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
-		(debian|raspbian)
+		(debian|raspbian|kali)
 		    case "$VERSION_ID" in
 			(10)
 			    packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"

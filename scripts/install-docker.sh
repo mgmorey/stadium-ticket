@@ -85,6 +85,16 @@ install_docker() {
 			    ;;
 		    esac
 		    ;;
+		(kali)
+		    case "$VERSION_ID" in
+			(2019.3)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
 		(opensuse-leap)
 		    case "$VERSION_ID" in
 			(15.0|15.1)

@@ -49,7 +49,7 @@ get_installed_packages() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon)
+		(debian|raspbian|ubuntu|linuxmint|neon|kali)
 		    dpkg-query -Wf '${Status} ${Package}\n' | awk "$DEBIAN_AWK"
 		    ;;
 		(opensuse-*)

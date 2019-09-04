@@ -44,7 +44,7 @@ get_flask_packages() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon)
+		(debian|raspbian|ubuntu|linuxmint|neon|kali)
 		    packages=$DEBIAN_PKGS
 		    ;;
 		(opensuse-*)

@@ -84,6 +84,13 @@ get_dbms_server_packages() {
 			    ;;
 		    esac
 		    ;;
+		(kali)
+		    case "$VERSION_ID" in
+			(2019.3)
+			    packages="${package:-$DEBIAN_10_PKG}"
+			    ;;
+		    esac
+		    ;;
 		(opensuse-*)
 		    packages="${package:-$OPENSUSE_PKG}"
 		    ;;

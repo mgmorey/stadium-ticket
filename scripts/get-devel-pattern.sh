@@ -35,7 +35,7 @@ get_devel_pattern() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon)
+		(debian|raspbian|ubuntu|linuxmint|neon|kali)
 		    pattern=$DEBIAN_PATT
 		    ;;
 		(opensuse-*)
