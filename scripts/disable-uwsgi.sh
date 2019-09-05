@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# enable-service.sh: enable uWSGI service
+# disable-uwsgi.sh: disable uWSGI service
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-enable_service() {
+disable_service() {
     if [ $UWSGI_RUN_AS_SERVICE = false ]; then
 	return 0
     elif ! is_service_installed; then
@@ -30,7 +30,7 @@ enable_service() {
     fi
 
     for dryrun in false; do
-	control_service enable $UWSGI_IS_HOMEBREW
+	control_service disable $UWSGI_IS_HOMEBREW
     done
 }
 
@@ -59,4 +59,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_baseline
-enable_service
+disable_service

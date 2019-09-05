@@ -40,13 +40,13 @@ debug:		.update init-db
 	$(script_dir)/run.sh flask run --port 5001
 
 disable:
-	$(script_dir)/disable-service.sh
+	$(script_dir)/disable-uwsgi.sh
 
 drop-db:
 	$(script_dir)/run.sh python3 -m app drop-db
 
 enable:
-	$(script_dir)/enable-service.sh
+	$(script_dir)/enable-uwsgi.sh
 
 init-db:
 	$(script_dir)/run.sh python3 -m app init-db
