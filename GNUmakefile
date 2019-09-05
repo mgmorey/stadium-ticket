@@ -69,24 +69,31 @@ realclean:	clean clean-virtualenv
 restart:
 	$(script_dir)/restart-app.sh
 
-start:
+start-app:	start-uwsgi
 	$(script_dir)/start-app.sh
 
-status:
-	$(script_dir)/get-service-status.sh
+start-uwsgi:
+	$(script_dir)/start-uwsgi.sh
 
-stop:
+status:
+	$(script_dir)/get-app-status.sh
+
+stop-app:
 	$(script_dir)/stop-app.sh
+
+stop-uwsgi:
+	$(script_dir)/stop-uwsgi.sh
 
 stress:
 	$(script_dir)/load-test.sh
 
-uninstall:	stop
+uninstall:	stop-app
 	$(script_dir)/uninstall-app.sh
 
 .PHONY: all build clean clean-virtualenv client client-debug compose debug
 .PHONY: disable drop-db enable init-db install pycode pylint pytest init-db
-.PHONY: realclean restart start status stop stress uninstall
+.PHONY: realclean restart start-app start-uwgi status stop-app stop-uwsgi
+.PHONY: stress uninstall
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh $@ $<

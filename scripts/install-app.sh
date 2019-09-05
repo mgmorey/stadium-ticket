@@ -153,7 +153,7 @@ install_pkgsrc() {
     fi
 }
 
-install_service() {
+install_app() {
     configure_baseline
 
     if [ $UWSGI_IS_PACKAGED = false ]; then
@@ -248,7 +248,7 @@ install_virtualenv() (
 print_status() {
     case "$1" in
 	(running)
-	    print_service_processes 1
+	    print_app_processes 1
 	    printf "Service %s installed and started successfully\n" "$APP_NAME"
 	    print_elapsed_time started
 	    ;;
@@ -274,10 +274,10 @@ source_dir=$script_dir/..
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
-install_service
-signal_service_restart
+install_app
+signal_app_restart
 
-status=$(get_service_status)
+status=$(get_app_status)
 print_status $status
 
 case $status in

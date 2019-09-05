@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# restart-app.sh: restart uWSGI service for application
+# restart-app.sh: restart application
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -45,8 +45,8 @@ print_status() (
     case $1 in
 	(running)
 	    if [ $restart_requested = true ]; then
-		print_service_log_file 1
-		print_service_processes 0
+		print_app_log_file 1
+		print_app_processes 0
 	    fi
 
 	    print_elapsed_time restarted
@@ -67,9 +67,9 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_all
-signal_service_restart
+signal_app_restart
 
-status=$(get_service_status)
+status=$(get_app_status)
 print_status $status
 
 case $status in

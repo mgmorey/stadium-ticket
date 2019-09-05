@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# stop-app.sh: stop application
+# stop-uwsgi.sh: stop uWSGI service
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -39,40 +39,10 @@ get_realpath() (
     fi
 )
 
-print_status() (
-    if [ $stop_requested = true ]; then
-	print_app_log_file 1
+stop_uwsgi() {
+    if is_service_running uwsgi; then
+	systemctl stop uwsgi
     fi
-
-    status=$1
-
-    case $1 in
-	(stopped)
-	    if [ $stop_requested = false ]; then
-		status="already $status"
-	    fi
-	    ;;
-	(*)
-	    exec >&2
-	    ;;
-    esac
-
-    printf "Service %s is %s\n" "$APP_NAME" "$status"
-)
-
-stop_app() {
-    for dryrun in true false; do
-	if [ $dryrun = false ]; then
-	    if is_app_running; then
-		control_app stop $UWSGI_IS_HOMEBREW
-		stop_requested=true
-	    else
-		stop_requested=false
-	    fi
-	fi
-
-	remove_files $(get_symlinks)
-    done
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
@@ -83,12 +53,9 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_baseline
-stop_app
+stop_uwsgi
 
-status=$(get_app_status)
-print_status $status
-
-case $status in
+case "$(get_service_status uwsgi)" in
     (uninstalled|stopped)
 	exit 0
 	;;

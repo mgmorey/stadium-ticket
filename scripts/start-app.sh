@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# start-app.sh: run application as a service using uWSGI
+# start-app.sh: start or run application
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -22,12 +22,12 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-control_service_start() {
+control_app_start() {
     if [ $dryrun = false ]; then
 	printf "Starting service %s\n" "$APP_NAME"
     fi
 
-    control_service restart $UWSGI_IS_HOMEBREW
+    control_app restart $UWSGI_IS_HOMEBREW
 
     if [ $dryrun = true ]; then
 	return 0
@@ -97,8 +97,8 @@ print_status() (
     case $1 in
 	(running)
 	    if [ $start_requested = true ]; then
-		print_service_log_file 1
-		print_service_processes 0
+		print_app_log_file 1
+		print_app_processes 0
 	    fi
 
 	    print_elapsed_time started
@@ -131,28 +131,24 @@ run_service() {
     fi
 }
 
-start_parent_service() {
-    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
-    control_service_start
-
-    if [ $dryrun = false ]; then
-	start_requested=true
-    fi
-}
-
-start_service() {
+start_app() {
     start_requested=false
     elapsed=0
 
-    if ! is_service_installed; then
+    if ! is_app_installed; then
 	return 0
-    elif is_service_running; then
+    elif is_app_running; then
 	return 0
     fi
 
     for dryrun in true false; do
 	if [ $UWSGI_RUN_AS_SERVICE = true ]; then
-	    start_parent_service
+	    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
+	    control_app_start
+
+	    if [ $dryrun = false ]; then
+		start_requested=true
+	    fi
 	else
 	    run_service
 	fi
@@ -167,9 +163,9 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_baseline
-start_service
+start_app
 
-status=$(get_service_status)
+status=$(get_app_status)
 print_status $status
 
 case $status in

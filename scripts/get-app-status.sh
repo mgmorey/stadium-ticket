@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-service-status.sh: print last few lines of service log file
+# get-app-status.sh: print last few lines of service log file
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -78,7 +78,7 @@ print_path() {
     fi
 }
 
-print_service_parameters() {
+print_app_parameters() {
     get_service_parameters | print_table "${1-}" "SERVICE PARAMETER: VALUE"
 }
 
@@ -86,7 +86,7 @@ print_status() {
     border=1
 
     for item in parameters log_file processes; do
-	eval print_service_$item $border
+	eval print_app_$item $border
 	border=0
     done
 
@@ -101,4 +101,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_all
-print_status $(get_service_status)
+print_status $(get_app_status)

@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# stop-app.sh: stop application
+# restart-uwsgi.sh: restart uWSGI service
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -40,17 +40,16 @@ get_realpath() (
 )
 
 print_status() (
-    if [ $stop_requested = true ]; then
-	print_app_log_file 1
-    fi
-
     status=$1
 
     case $1 in
-	(stopped)
-	    if [ $stop_requested = false ]; then
-		status="already $status"
+	(running)
+	    if [ $restart_requested = true ]; then
+		print_app_log_file 1
+		print_app_processes 0
 	    fi
+
+	    print_elapsed_time restarted
 	    ;;
 	(*)
 	    exec >&2
@@ -60,21 +59,6 @@ print_status() (
     printf "Service %s is %s\n" "$APP_NAME" "$status"
 )
 
-stop_app() {
-    for dryrun in true false; do
-	if [ $dryrun = false ]; then
-	    if is_app_running; then
-		control_app stop $UWSGI_IS_HOMEBREW
-		stop_requested=true
-	    else
-		stop_requested=false
-	    fi
-	fi
-
-	remove_files $(get_symlinks)
-    done
-}
-
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
@@ -82,14 +66,14 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
-configure_baseline
-stop_app
+configure_all
+signal_app_restart
 
 status=$(get_app_status)
 print_status $status
 
 case $status in
-    (uninstalled|stopped)
+    (running)
 	exit 0
 	;;
     (*)

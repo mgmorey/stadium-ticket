@@ -91,12 +91,12 @@ remove_service() {
     remove_files $(get_symlinks) $files
 }
 
-uninstall_service() {
+uninstall_app() {
     parse_arguments "$@"
 
     for dryrun in true false; do
-	if [ $dryrun = false ] && is_service_running; then
-	    control_service stop $UWSGI_IS_PACKAGED
+	if [ $dryrun = false ] && is_app_running; then
+	    control_app stop $UWSGI_IS_PACKAGED
 	fi
 
 	remove_service
@@ -124,4 +124,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_baseline
-uninstall_service "$@"
+uninstall_app "$@"

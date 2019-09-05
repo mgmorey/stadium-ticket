@@ -667,11 +667,11 @@ get_uwsgi_version() {
     fi
 }
 
-is_service_installed() {
+is_app_installed() {
     test -e $APP_CONFIG
 }
 
-is_service_running() {
+is_app_running() {
     if [ -r $APP_PIDFILE ]; then
 	pid=$(cat $APP_PIDFILE)
 
@@ -689,7 +689,86 @@ is_service_running() {
     return 1
 }
 
-print_service_log_file() {
+is_service_active() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if ! is_system_running || ! is_service_loaded uwsgi; then
+	return 1
+    fi
+
+    active=$(systemctl show --property=ActiveState $1)
+
+    if [ $? -eq 0 ]; then
+	if [ "${active#ActiveState=}" = "active" ]; then
+	    return 0
+	else
+	    return 1
+	fi
+    else
+	return 1
+    fi
+}
+
+is_service_loaded() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if ! is_system_running; then
+	return 1
+    fi
+
+    loaded=$(systemctl show --property=LoadState $1)
+
+    if [ $? -eq 0 ]; then
+	if [ "${loaded#LoadState=}" = "loaded" ]; then
+	    return 0
+	else
+	    return 1
+	fi
+    else
+	return 1
+    fi
+}
+
+is_service_running() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if ! is_system_running || ! is_service_loaded uwsgi; then
+	return 1
+    fi
+
+    active=$(systemctl show --property=ActiveState $1)
+
+    if [ "${active#ActiveState=}" = "active" ]; then
+	state=$(systemctl show --property=SubState $1)
+
+	if [ "${state#SubState=}" = "running" ]; then
+	    return 0
+	else
+	    return 1
+	fi
+    else
+	return 1
+    fi
+}
+
+is_system_running() {
+    running=$(systemctl is-system-running)
+
+    if [ $? -eq 0 ]; then
+	if [ "$running" = running ]; then
+	    return 0
+	else
+	    return 1
+	fi
+    else
+	return 1
+    fi
+}
+
+print_app_log_file() {
     assert [ $# -le 1 ]
 
     if [ -r $APP_LOGFILE ]; then
@@ -701,7 +780,7 @@ print_service_log_file() {
     fi
 }
 
-print_service_processes() {
+print_app_processes() {
     get_service_processes | print_table ${1-} ""
 }
 
@@ -709,7 +788,7 @@ ps_uwsgi() {
     ps -U "$1" -o $PS_FORMAT
 }
 
-signal_service() {
+signal_app() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     assert [ $1 -gt 0 ]
@@ -738,10 +817,10 @@ signal_service() {
     return 1
 }
 
-signal_service_restart() {
+signal_app_restart() {
     elapsed=0
 
-    if is_service_running && signal_service $WAIT_SIGNAL HUP; then
+    if is_app_running && signal_app $WAIT_SIGNAL HUP; then
 	elapsed=$((elapsed + $(wait_for_timeout $((WAIT_RESTART - elapsed)))))
 	restart_requested=true
     else

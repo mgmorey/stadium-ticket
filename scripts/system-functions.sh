@@ -142,7 +142,7 @@ control_gnu_service() {
 	    systemctl restart uwsgi
 	    ;;
 	(stop)
-	    signal_service $WAIT_SIGNAL INT TERM KILL || true
+	    signal_app $WAIT_SIGNAL INT TERM KILL || true
 	    ;;
     esac
 }
@@ -158,12 +158,12 @@ control_unix_service() {
 
     case $1 in
 	(stop)
-	    signal_service $WAIT_SIGNAL INT TERM KILL || true
+	    signal_app $WAIT_SIGNAL INT TERM KILL || true
 	    ;;
     esac
 }
 
-control_service() {
+control_app() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
@@ -181,15 +181,32 @@ control_service() {
     esac
 }
 
-get_service_status() {
-    if is_service_installed; then
-	if is_service_running; then
+get_app_status() {
+    if is_app_installed; then
+	if is_app_running; then
 	    printf "%s\n" running
 	else
 	    printf "%s\n" stopped
 	fi
     else
 	printf "%s\n" uninstalled
+    fi
+}
+
+get_service_status() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if is_system_running; then
+	if is_service_loaded $1; then
+	    if is_service_running $1; then
+		printf "%s\n" running
+	    else
+		printf "%s\n" stopped
+	    fi
+	else
+	    printf "%s\n" uninstalled
+	fi
     fi
 }
 
