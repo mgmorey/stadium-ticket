@@ -112,7 +112,7 @@ def parse_version(s):
 
 def print_difference(difference, actual, minimum):
     """Print difference between Python semantic version strings."""
-    message = "Python {} interpreter {} {} requirement ({})"
+    message = "Python {} interpreter {} {} requirement (>= {})"
     output = sys.stdout if difference >= 0 else sys.stderr
     verb = "meets" if difference >= 0 else "does not meet"
     print(message.format(actual, verb, INPUT, minimum), file=output)
