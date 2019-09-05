@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# disable-service.sh: disable application uWSGI service
+# disable-service.sh: disable uWSGI service
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
