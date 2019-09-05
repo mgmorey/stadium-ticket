@@ -52,7 +52,7 @@ init-db:
 	$(script_dir)/run.sh python3 -m app init-db
 
 install:	.env .update
-	$(script_dir)/install-service.sh
+	$(script_dir)/install-app.sh
 
 pycode:		.update
 	$(script_dir)/run.sh pycodestyle app tests
@@ -67,22 +67,22 @@ realclean:	clean clean-virtualenv
 	@/bin/rm -f .update app/app/*.sqlite
 
 restart:
-	$(script_dir)/restart-service.sh
+	$(script_dir)/restart-app.sh
 
 start:
-	$(script_dir)/start-service.sh
+	$(script_dir)/start-app.sh
 
 status:
 	$(script_dir)/get-service-status.sh
 
 stop:
-	$(script_dir)/stop-service.sh
+	$(script_dir)/stop-app.sh
 
 stress:
 	$(script_dir)/load-test.sh
 
 uninstall:	stop
-	$(script_dir)/uninstall-service.sh
+	$(script_dir)/uninstall-app.sh
 
 .PHONY: all build clean clean-virtualenv client client-debug compose debug
 .PHONY: disable drop-db enable init-db install pycode pylint pytest init-db

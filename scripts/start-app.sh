@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# start-service.sh: run application as a service using uWSGI
+# start-app.sh: run application as a service using uWSGI
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
