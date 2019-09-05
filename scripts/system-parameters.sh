@@ -720,12 +720,8 @@ is_service_loaded() {
 
     loaded=$(systemctl show --property=LoadState $1)
 
-    if [ $? -eq 0 ]; then
-	if [ "${loaded#LoadState=}" = "loaded" ]; then
-	    return 0
-	else
-	    return 1
-	fi
+    if [ "${loaded#LoadState=}" = "loaded" ]; then
+	return 0
     else
 	return 1
     fi
@@ -757,12 +753,8 @@ is_service_running() {
 is_system_running() {
     running=$(systemctl is-system-running)
 
-    if [ $? -eq 0 ]; then
-	if [ "$running" = running ]; then
-	    return 0
-	else
-	    return 1
-	fi
+    if [ "$running" = running ]; then
+	return 0
     else
 	return 1
     fi
