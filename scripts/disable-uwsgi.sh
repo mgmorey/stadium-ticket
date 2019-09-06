@@ -30,7 +30,7 @@ disable_service() {
     fi
 
     for dryrun in false; do
-	control_app disable $UWSGI_IS_HOMEBREW
+	control_app disable
     done
 }
 

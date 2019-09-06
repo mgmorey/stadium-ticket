@@ -96,9 +96,8 @@ control_agent_service() {
 }
 
 control_gnu_service() {
-    assert [ $# -eq 2 ]
+    assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ -n "$2" ]
 
     if [ $dryrun = true ]; then
 	return 0
@@ -112,9 +111,8 @@ control_gnu_service() {
 }
 
 control_unix_service() {
-    assert [ $# -eq 2 ]
+    assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ -n "$2" ]
 
     if [ $dryrun = true ]; then
 	return 0
@@ -128,19 +126,18 @@ control_unix_service() {
 }
 
 control_app() {
-    assert [ $# -eq 2 ]
+    assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    assert [ -n "$2" ]
 
     case "${kernel_name=$(uname -s)}" in
 	(Darwin)
-	    control_agent_service $1 $2
+	    control_agent_service $1
 	    ;;
 	(Linux|GNU)
-	    control_gnu_service $1 $2
+	    control_gnu_service $1
 	    ;;
 	(*)
-	    control_unix_service $1 $2
+	    control_unix_service $1
 	    ;;
     esac
 }

@@ -64,7 +64,7 @@ stop_app() {
     for dryrun in true false; do
 	if [ $dryrun = false ]; then
 	    if is_app_running; then
-		control_app stop $UWSGI_IS_HOMEBREW
+		control_app stop
 		stop_requested=true
 	    else
 		stop_requested=false

@@ -30,7 +30,7 @@ enable_service() {
     fi
 
     for dryrun in false; do
-	control_app enable $UWSGI_IS_HOMEBREW
+	control_app enable
     done
 }
 

@@ -243,10 +243,6 @@ configure_baseline() {
 	UWSGI_IS_PACKAGED=true
     fi
 
-    if [ -z "${UWSGI_IS_HOMEBREW-}" ]; then
-	UWSGI_IS_HOMEBREW=false
-    fi
-
     if [ -z "${UWSGI_IS_PKGSRC-}" ]; then
 	UWSGI_IS_PKGSRC=false
     fi
