@@ -40,7 +40,9 @@ get_realpath() (
 )
 
 start_uwsgi() {
-    if ! is_service_loaded uwsgi; then
+    if [ "$UWSGI_RUN_AS_SERVICE" = false ]; then
+	return 0
+    elif ! is_service_loaded uwsgi; then
 	return 0
     elif is_service_running uwsgi; then
 	return 0
@@ -57,7 +59,10 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_baseline
-start_uwsgi
+
+if [ "$UWSGI_RUN_AS_SERVICE" = false ]; then
+    exit 0
+fi
 
 case "$(get_service_status uwsgi)" in
     (running)

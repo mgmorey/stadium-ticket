@@ -53,6 +53,11 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 configure_baseline
+
+if [ "$UWSGI_RUN_AS_SERVICE" = false ]; then
+    exit 0
+fi
+
 stop_uwsgi
 
 case "$(get_service_status uwsgi)" in

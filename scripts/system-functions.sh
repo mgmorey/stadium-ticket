@@ -197,7 +197,9 @@ get_service_status() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
-    if is_system_running; then
+    if [ "$UWSGI_RUN_AS_SERVICE" = false ]; then
+	return 0
+    elif is_system_running; then
 	if is_service_loaded $1; then
 	    if is_service_running $1; then
 		printf "%s\n" running
