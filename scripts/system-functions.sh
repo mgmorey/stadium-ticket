@@ -42,7 +42,21 @@ check_permissions_single() {
     fi
 }
 
-control_agent() (
+control_app() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case "${kernel_name=$(uname -s)}" in
+	(Darwin)
+	    control_launch_app $1
+	    ;;
+	(*)
+	    control_system_app $1
+	    ;;
+    esac
+}
+
+control_launch_agent() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" ]
 
@@ -71,7 +85,7 @@ control_agent() (
     esac
 )
 
-control_agent_service() {
+control_launch_app() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
@@ -83,19 +97,19 @@ control_agent_service() {
 	case $1 in
 	    (restart)
 		if [ ! -e $target ]; then
-		    control_agent load generate_launch_agent $target
+		    control_launch_agent load generate_launch_agent $target
 		fi
 		;;
 	    (stop)
 		if [ -e $target ]; then
-		    control_agent unload remove_files $target
+		    control_launch_agent unload remove_files $target
 		fi
 		;;
 	esac
     fi
 }
 
-control_gnu_service() {
+control_system_app() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
@@ -104,40 +118,11 @@ control_gnu_service() {
     fi
 
     case $1 in
+	(restart)
+	    systemctl restart uwsgi
+	    ;;
 	(stop)
 	    signal_app $WAIT_SIGNAL INT TERM KILL || true
-	    ;;
-    esac
-}
-
-control_unix_service() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    if [ $dryrun = true ]; then
-	return 0
-    fi
-
-    case $1 in
-	(stop)
-	    signal_app $WAIT_SIGNAL INT TERM KILL || true
-	    ;;
-    esac
-}
-
-control_app() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    case "${kernel_name=$(uname -s)}" in
-	(Darwin)
-	    control_agent_service $1
-	    ;;
-	(Linux|GNU)
-	    control_gnu_service $1
-	    ;;
-	(*)
-	    control_unix_service $1
 	    ;;
     esac
 }
