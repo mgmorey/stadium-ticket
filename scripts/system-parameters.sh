@@ -77,7 +77,7 @@ configure_baseline() {
 		    ;;
 		(kali)
 		    case "$VERSION_ID" in
-			(2019.3)
+			(2019.[34])
 			    configure_linux_debian
 			    ;;
 			(*)
