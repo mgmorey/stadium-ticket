@@ -95,36 +95,6 @@ control_agent_service() {
     fi
 }
 
-control_brew_service() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    if [ $dryrun = true ]; then
-	return 0
-    fi
-
-    case $1 in
-	(restart)
-	    brew services start uwsgi
-	    ;;
-	(stop)
-	    brew services stop uwsgi
-	    ;;
-    esac
-}
-
-control_darwin_service() {
-    assert [ $# -eq 2 ]
-    assert [ -n "$1" ]
-    assert [ -n "$2" ]
-
-    if [ $2 = true ]; then
-	control_brew_service $1
-    else
-	control_agent_service $1
-    fi
-}
-
 control_gnu_service() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
@@ -135,12 +105,6 @@ control_gnu_service() {
     fi
 
     case $1 in
-	(disable|enable)
-	    systemctl $1 uwsgi
-	    ;;
-	(restart)
-	    systemctl restart uwsgi
-	    ;;
 	(stop)
 	    signal_app $WAIT_SIGNAL INT TERM KILL || true
 	    ;;
@@ -170,7 +134,7 @@ control_app() {
 
     case "${kernel_name=$(uname -s)}" in
 	(Darwin)
-	    control_darwin_service $1 $2
+	    control_agent_service $1 $2
 	    ;;
 	(Linux|GNU)
 	    control_gnu_service $1 $2
