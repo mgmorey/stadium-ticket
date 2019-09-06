@@ -160,16 +160,16 @@ get_service_status() {
 
     if [ "$UWSGI_RUN_AS_SERVICE" = false ]; then
 	return 0
-    elif is_system_running; then
-	if is_service_loaded $1; then
-	    if is_service_running $1; then
-		printf "%s\n" running
-	    else
-		printf "%s\n" stopped
-	    fi
+    elif ! is_system_running; then
+	return 0
+    elif is_service_loaded $1; then
+	if is_service_running $1; then
+	    printf "%s\n" running
 	else
-	    printf "%s\n" uninstalled
+	    printf "%s\n" stopped
 	fi
+    else
+	printf "%s\n" uninstalled
     fi
 }
 

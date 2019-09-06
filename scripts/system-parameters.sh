@@ -751,6 +751,8 @@ is_system_running() {
 
     if [ "$running" = running ]; then
 	return 0
+    elif [ "$running" = degraded ]; then
+	return 0
     else
 	return 1
     fi
