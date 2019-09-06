@@ -64,8 +64,10 @@ if [ "$UWSGI_RUN_AS_SERVICE" = false ]; then
     exit 0
 fi
 
+start_uwsgi
+
 case "$(get_service_status uwsgi)" in
-    (running)
+    (exited|running)
 	exit 0
 	;;
     (*)

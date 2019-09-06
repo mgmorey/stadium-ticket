@@ -695,15 +695,14 @@ is_service_active() {
 
     active=$(systemctl show --property=ActiveState $1)
 
-    if [ $? -eq 0 ]; then
-	if [ "${active#ActiveState=}" = "active" ]; then
+    case "${active#ActiveState=}" in
+	(active)
 	    return 0
-	else
+	    ;;
+	(*)
 	    return 1
-	fi
-    else
-	return 1
-    fi
+	    ;;
+    esac
 }
 
 is_service_loaded() {
@@ -716,34 +715,38 @@ is_service_loaded() {
 
     loaded=$(systemctl show --property=LoadState $1)
 
-    if [ "${loaded#LoadState=}" = "loaded" ]; then
-	return 0
-    else
-	return 1
-    fi
+    case "${loaded#LoadState=}" in
+	(loaded)
+	    return 0
+	    ;;
+	(*)
+	    return 1
+	    ;;
+    esac
 }
 
 is_service_running() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
-    if ! is_system_running || ! is_service_loaded uwsgi; then
+    if ! is_system_running || ! is_service_loaded $1; then
 	return 1
     fi
 
-    active=$(systemctl show --property=ActiveState $1)
+    if ! is_service_active $1; then
+	return 1
+    fi
 
-    if [ "${active#ActiveState=}" = "active" ]; then
-	state=$(systemctl show --property=SubState $1)
+    state=$(systemctl show --property=SubState $1)
 
-	if [ "${state#SubState=}" = "running" ]; then
+    case "${state#SubState=}" in
+	(exited|running)
 	    return 0
-	else
+	    ;;
+	(*)
 	    return 1
-	fi
-    else
-	return 1
-    fi
+	    ;;
+    esac
 }
 
 is_system_running() {
