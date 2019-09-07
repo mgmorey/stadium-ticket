@@ -99,3 +99,6 @@ uninstall:	stop
 
 .update:	Pipfile Pipfile.lock
 	$(script_dir)/refresh-virtualenv.sh && touch $@
+
+Makefile:	GNUmakefile
+	ln -s $< $@

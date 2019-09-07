@@ -6,6 +6,7 @@
 .python-version
 .update
 .venv*
+Makefile
 TAGS
 __pycache__/
 core
