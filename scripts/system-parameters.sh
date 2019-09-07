@@ -752,13 +752,14 @@ is_service_running() {
 is_system_running() {
     running=$(systemctl is-system-running)
 
-    if [ "$running" = running ]; then
-	return 0
-    elif [ "$running" = degraded ]; then
-	return 0
-    else
-	return 1
-    fi
+    case "$running" in
+	(degraded|running|starting)
+	    return 0
+	    ;;
+	(*)
+	    return 1
+	    ;;
+    esac
 }
 
 print_app_log_file() {
