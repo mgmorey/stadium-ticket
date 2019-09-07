@@ -66,10 +66,7 @@ pytest:		.update init-db
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update app/app/*.sqlite
 
-restart:
-	$(script_dir)/restart-app.sh
-
-start-app:	start-uwsgi
+start:		install start-uwsgi
 	$(script_dir)/start-app.sh
 
 start-uwsgi:
@@ -78,7 +75,7 @@ start-uwsgi:
 status:
 	$(script_dir)/get-app-status.sh
 
-stop-app:
+stop:
 	$(script_dir)/stop-app.sh
 
 stop-uwsgi:
@@ -87,13 +84,12 @@ stop-uwsgi:
 stress:
 	$(script_dir)/load-test.sh
 
-uninstall:	stop-app
+uninstall:	stop
 	$(script_dir)/uninstall-app.sh
 
 .PHONY: all build clean clean-virtualenv client client-debug compose debug
 .PHONY: disable drop-db enable init-db install pycode pylint pytest init-db
-.PHONY: realclean restart start-app start-uwgi status stop-app stop-uwsgi
-.PHONY: stress uninstall
+.PHONY: realclean start start-uwgi status stop stop-uwsgi stress uninstall
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh $@ $<
