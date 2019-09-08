@@ -33,7 +33,7 @@ INPUT = 'Pipfile'
 
 PYTHON_VERSION_LEN = 3
 PYTHON_VERSION_PATH = ['requires', 'python_version']
-PYTHON_VERSION_REGEX = r'^(\d{1,3}(\.\d{1,3}){0,2})(rc\d)?$'
+PYTHON_VERSION_REGEX = r'^(\d{1,3}(\.\d{1,3}){0,2})(\+|rc\d)?$'
 
 QUOTED_REGEX = r'^"([^"]+)"$'
 
