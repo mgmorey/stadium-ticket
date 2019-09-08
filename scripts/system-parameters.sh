@@ -335,22 +335,10 @@ configure_gnu() {
 }
 
 configure_linux_debian() {
-    configure_linux_debian_common
-
-    if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	configure_linux_debian_native
-    else
-	configure_uwsgi_source
-    fi
-}
-
-configure_linux_debian_common() {
     # Set application group and user accounts
     APP_GID=www-data
     APP_UID=www-data
-}
 
-configure_linux_debian_native() {
     # Set uWSGI configuration directories
     UWSGI_APPDIRS="apps-available apps-enabled"
 
