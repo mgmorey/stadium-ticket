@@ -386,12 +386,6 @@ configure_linux_redhat_7() {
     fi
 }
 
-configure_linux_redhat_common() {
-    # Set application group and user accounts
-    APP_GID=nobody
-    APP_UID=nobody
-}
-
 configure_linux_redhat_7_pkgsrc() {
     # Set system Python interpreter
     SYSTEM_PYTHON=/usr/pkg/bin/python3.6
@@ -407,6 +401,12 @@ configure_linux_redhat_7_pkgsrc() {
     UWSGI_HAS_PLUGIN=false
     UWSGI_IS_PKGSRC=true
     UWSGI_RUN_AS_SERVICE=false
+}
+
+configure_linux_redhat_common() {
+    # Set application group and user accounts
+    APP_GID=nobody
+    APP_UID=nobody
 }
 
 configure_unix() {
