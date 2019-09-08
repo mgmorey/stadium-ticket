@@ -16,7 +16,6 @@
 APP_VARS="APP_DIR APP_GID APP_LOGFILE APP_PIDFILE APP_PLUGIN APP_PORT APP_UID \
 APP_VARDIR"
 
-APPLE_URL=http://www.apple.com/DTDs/PropertyList-1.0.dtd
 AWK_FORMAT='NR == 1 || $%d == binary {print $0}\n'
 PLUGIN_FORMAT="python%s_plugin.so\n"
 

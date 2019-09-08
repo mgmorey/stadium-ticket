@@ -13,6 +13,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+APPLE_URL=http://www.apple.com/DTDs/PropertyList-1.0.dtd
+
 WAIT_DEFAULT=5
 WAIT_RESTART=10
 WAIT_SIGNAL=10
