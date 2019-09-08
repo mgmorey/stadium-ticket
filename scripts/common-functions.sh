@@ -233,8 +233,6 @@ get_command() (
 	    ;;
     esac
 
-    utility="${dir:+$dir/}$basename"
-
     if [ -n "${versions-}" ]; then
 	for version in $versions; do
 	    if get_command_helper "$dirname" "$basename" $version; then
