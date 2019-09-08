@@ -59,12 +59,11 @@ control_app() {
 control_launch_agent() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    assert [ -n "$3" ]
 
     case $1 in
 	(load)
-	    assert [ $# -eq 3 ]
-	    assert [ -n "$2" ]
-	    assert [ -n "$3" ]
 	    $2 $3
 
 	    if [ $dryrun = false ]; then
@@ -72,10 +71,6 @@ control_launch_agent() (
 	    fi
 	    ;;
 	(unload)
-	    assert [ $# -eq 3 ]
-	    assert [ -n "$2" ]
-	    assert [ -n "$3" ]
-
 	    if [ $dryrun = false -a -e $3 ]; then
 		launchctl unload $3
 	    fi
