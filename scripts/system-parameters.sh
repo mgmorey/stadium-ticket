@@ -228,13 +228,12 @@ configure_baseline() {
 
     # Set additional file parameters from app directories
 
-    if [ -z "${APP_PIDFILE-}" ]; then
-	APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
-    fi
-
-    # Set application log directory
     if [ -z "${APP_LOGFILE-}" ]; then
 	APP_LOGFILE=$APP_LOGDIR/$APP_NAME.log
+    fi
+
+    if [ -z "${APP_PIDFILE-}" ]; then
+	APP_PIDFILE=$APP_RUNDIR/$APP_NAME.pid
     fi
 
     # Set uWSGI-related parameters
