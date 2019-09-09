@@ -172,6 +172,17 @@ get_app_status() {
     fi
 }
 
+get_awk_command() (
+    for awk in /usr/gnu/bin/awk /usr/bin/gawk /usr/bin/awk; do
+	if [ -x $awk ]; then
+	    printf "%s\n" "$awk"
+	    return 0
+	fi
+    done
+
+    return 1
+)
+
 get_launch_agent_label() {
     printf "%s\n" "local.$APP_NAME"
 }
@@ -198,17 +209,6 @@ get_service_status() {
 	printf "%s\n" uninstalled
     fi
 }
-
-get_awk_command() (
-    for awk in /usr/gnu/bin/awk /usr/bin/gawk /usr/bin/awk; do
-	if [ -x $awk ]; then
-	    printf "%s\n" "$awk"
-	    return 0
-	fi
-    done
-
-    return 1
-)
 
 get_setpriv_command() (
     assert [ $# -eq 1 ]
@@ -262,6 +262,20 @@ get_su_command() (
     esac
 
     printf "su %s %s\n" "$options" "$1"
+)
+
+get_symlinks() (
+    if [ -z "${UWSGI_APPDIRS-}" ]; then
+	return 0
+    elif [ -z "${UWSGI_ETCDIR-}" ]; then
+	return 0
+    elif [ ! -d $UWSGI_ETCDIR ]; then
+	return 0
+    else
+	for dir in $UWSGI_APPDIRS; do
+	    printf "%s\n" $UWSGI_ETCDIR/$dir/$APP_NAME.ini
+	done
+    fi
 )
 
 install_file() {

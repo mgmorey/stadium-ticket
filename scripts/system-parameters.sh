@@ -571,20 +571,6 @@ get_service_users() {
     esac
 }
 
-get_symlinks() (
-    if [ -z "${UWSGI_APPDIRS-}" ]; then
-	return 0
-    elif [ -z "${UWSGI_ETCDIR-}" ]; then
-	return 0
-    elif [ ! -d $UWSGI_ETCDIR ]; then
-	return 0
-    else
-	for dir in $UWSGI_APPDIRS; do
-	    printf "%s\n" $UWSGI_ETCDIR/$dir/$APP_NAME.ini
-	done
-    fi
-)
-
 get_uwsgi_binary_path() {
     printf "%s/%s\n" "$UWSGI_BINARY_DIR" "$UWSGI_BINARY_NAME"
 }
