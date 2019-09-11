@@ -27,7 +27,7 @@ control_app_start() {
 	printf "Starting service %s\n" "$APP_NAME"
     fi
 
-    control_app restart
+    control_service restart uwsgi
 
     if [ $dryrun = true ]; then
 	return 0

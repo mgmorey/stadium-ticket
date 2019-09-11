@@ -105,6 +105,21 @@ control_launch_app() {
     fi
 }
 
+control_service() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+
+    case "${kernel_name=$(uname -s)}" in
+	(Darwin)
+	    :
+	    ;;
+	(*)
+	    control_system_service $1 $2
+	    ;;
+    esac
+}
+
 control_system_app() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
@@ -114,11 +129,24 @@ control_system_app() {
     fi
 
     case $1 in
-	(restart)
-	    systemctl restart uwsgi
-	    ;;
 	(stop)
 	    signal_app $WAIT_SIGNAL INT TERM KILL || true
+	    ;;
+    esac
+}
+
+control_system_service() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+
+    if [ $dryrun = true ]; then
+	return 0
+    fi
+
+    case $1 in
+	(enable|disable|restart)
+	    systemctl $1 $2
 	    ;;
     esac
 }

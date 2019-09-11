@@ -25,12 +25,10 @@ assert() {
 enable_service() {
     if [ $UWSGI_RUN_AS_SERVICE = false ]; then
 	return 0
-    elif ! is_app_installed; then
-	return 0
     fi
 
     for dryrun in false; do
-	control_app enable
+	control_service enable uwsgi
     done
 }
 
