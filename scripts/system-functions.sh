@@ -85,7 +85,6 @@ control_launch_agent() (
 control_launch_app() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-
     target=$(get_launch_agent_target)
 
     if [ $dryrun = true ]; then
