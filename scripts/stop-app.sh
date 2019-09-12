@@ -23,7 +23,7 @@ assert() {
 }
 
 control_app_disable() {
-    remove_files $(get_symlinks)
+    control_app disable
 }
 
 control_app_stop() {

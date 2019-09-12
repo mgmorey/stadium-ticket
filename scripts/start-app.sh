@@ -23,14 +23,10 @@ assert() {
 }
 
 control_app_enable() {
-    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
+    control_app enable
 }
 
 control_app_start() {
-    if [ $dryrun = false ]; then
-	printf "Starting service %s\n" "$APP_NAME"
-    fi
-
     control_service restart uwsgi
 
     if [ $dryrun = true ]; then

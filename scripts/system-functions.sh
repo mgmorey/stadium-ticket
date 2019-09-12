@@ -50,15 +50,38 @@ control_app() {
 
     case "${kernel_name=$(uname -s)}" in
 	(Darwin)
-	    control_launch_app $1
+	    control_app_via_launchd $1
 	    ;;
 	(*)
-	    control_system_app $1
+	    control_app_via_systemd $1
 	    ;;
     esac
 }
 
-control_launch_agent() (
+control_app_via_launchd() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    target=$(get_launch_agent_target)
+
+    if [ $dryrun = true ]; then
+	check_permissions_single $target
+    else
+	case $1 in
+	    (disable)
+		if [ -e $target ]; then
+		    control_app_via_launchctl unload remove_files $target
+		fi
+		;;
+	    (enable)
+		if [ ! -e $target ]; then
+		    control_app_via_launchctl load generate_launch_agent $target
+		fi
+		;;
+	esac
+    fi
+}
+
+control_app_via_launchctl() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
@@ -82,27 +105,25 @@ control_launch_agent() (
     esac
 )
 
-control_launch_app() {
+control_app_via_systemd() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    target=$(get_launch_agent_target)
 
     if [ $dryrun = true ]; then
-	check_permissions_single $target
-    else
-	case $1 in
-	    (restart)
-		if [ ! -e $target ]; then
-		    control_launch_agent load generate_launch_agent $target
-		fi
-		;;
-	    (stop)
-		if [ -e $target ]; then
-		    control_launch_agent unload remove_files $target
-		fi
-		;;
-	esac
+	return 0
     fi
+
+    case $1 in
+	(disable)
+	    remove_files $(get_symlinks)
+	    ;;
+	(enable)
+	    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
+	    ;;
+	(stop)
+	    signal_app $WAIT_SIGNAL INT TERM KILL || true
+	    ;;
+    esac
 }
 
 control_service() {
@@ -115,27 +136,12 @@ control_service() {
 	    :
 	    ;;
 	(*)
-	    control_system_service $1 $2
+	    control_service_via_systemd $1 $2
 	    ;;
     esac
 }
 
-control_system_app() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    if [ $dryrun = true ]; then
-	return 0
-    fi
-
-    case $1 in
-	(stop)
-	    signal_app $WAIT_SIGNAL INT TERM KILL || true
-	    ;;
-    esac
-}
-
-control_system_service() {
+control_service_via_systemd() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
