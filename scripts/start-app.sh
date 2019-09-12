@@ -22,6 +22,10 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+control_app_enable() {
+    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
+}
+
 control_app_start() {
     if [ $dryrun = false ]; then
 	printf "Starting service %s\n" "$APP_NAME"
@@ -142,8 +146,9 @@ start_app() {
     fi
 
     for dryrun in true false; do
+	control_app_enable
+
 	if [ $UWSGI_RUN_AS_SERVICE = true ]; then
-	    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
 	    control_app_start
 
 	    if [ $dryrun = false ]; then

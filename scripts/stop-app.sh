@@ -22,6 +22,14 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+control_app_disable() {
+    remove_files $(get_symlinks)
+}
+
+control_app_stop() {
+    control_app stop
+}
+
 get_realpath() (
     assert [ $# -ge 1 ]
     realpath=$(which realpath)
@@ -40,17 +48,13 @@ get_realpath() (
 )
 
 print_status() (
-    if [ $stop_requested = true ]; then
-	print_app_log_file 1
-    fi
+    print_app_log_file 1
 
     status=$1
 
     case $1 in
 	(stopped)
-	    if [ $stop_requested = false ]; then
-		status="already $status"
-	    fi
+	    :
 	    ;;
 	(*)
 	    exec >&2
@@ -62,16 +66,11 @@ print_status() (
 
 stop_app() {
     for dryrun in true false; do
-	if [ $dryrun = false ]; then
-	    if is_app_running; then
-		control_app stop
-		stop_requested=true
-	    else
-		stop_requested=false
-	    fi
-	fi
+	control_app_disable
 
-	remove_files $(get_symlinks)
+	if [ $dryrun = false ]; then
+	    control_app_stop
+	fi
     done
 }
 
