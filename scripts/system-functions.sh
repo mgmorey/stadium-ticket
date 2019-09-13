@@ -58,29 +58,6 @@ control_app() {
     esac
 }
 
-control_app_via_launchd() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    target=$(get_launch_agent_target)
-
-    if [ $dryrun = true ]; then
-	check_permissions_single $target
-    else
-	case $1 in
-	    (disable)
-		if [ -e $target ]; then
-		    control_app_via_launchctl unload remove_files $target
-		fi
-		;;
-	    (enable)
-		if [ ! -e $target ]; then
-		    control_app_via_launchctl load generate_launch_agent $target
-		fi
-		;;
-	esac
-    fi
-}
-
 control_app_via_launchctl() (
     assert [ $# -eq 3 ]
     assert [ -n "$1" ]
@@ -104,6 +81,29 @@ control_app_via_launchctl() (
 	    ;;
     esac
 )
+
+control_app_via_launchd() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    target=$(get_launch_agent_target)
+
+    if [ $dryrun = true ]; then
+	check_permissions_single $target
+    else
+	case $1 in
+	    (disable)
+		if [ -e $target ]; then
+		    control_app_via_launchctl unload remove_files $target
+		fi
+		;;
+	    (enable)
+		if [ ! -e $target ]; then
+		    control_app_via_launchctl load generate_launch_agent $target
+		fi
+		;;
+	esac
+    fi
+}
 
 control_app_via_systemd() {
     assert [ $# -eq 1 ]
