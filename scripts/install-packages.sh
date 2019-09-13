@@ -116,7 +116,7 @@ install_pattern_from_args() {
     fi
 
     pattern_opts=$("$script_dir/get-pattern-install-options.sh")
-    invoke_installer $installer1 install $install_opts $pattern_opts $pattern
+    invoke_installer $installer1 install $install_opts $pattern_opts "$pattern"
 }
 
 invoke_installer() (
@@ -134,7 +134,7 @@ parse_arguments() {
     while getopts hp: opt; do
 	case $opt in
 	    (p)
-		pattern=$("$script_dir/get-uninstalled-packages.sh" $OPTARG)
+		pattern=$("$script_dir/get-uninstalled-packages.sh" "$OPTARG")
 		;;
 	    (h)
 		usage
