@@ -42,7 +42,7 @@ assert() {
 }
 
 get_installed_packages() {
-    installers=$("$script_dir/get-package-manager.sh")
+    installers=$("$script_dir/get-package-managers.sh")
     installer1=$(printf "%s\n" $installers | awk 'NR == 1 {print $0}')
     installer2=$(printf "%s\n" $installers | awk 'NR == 2 {print $0}')
 

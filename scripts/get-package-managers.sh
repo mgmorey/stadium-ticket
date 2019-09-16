@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-package-manager: get name of package manager utility
+# get-package-managers: get names of package manager utilities
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -19,10 +19,6 @@
 abort() {
     printf "$@" >&2
     exit 1
-}
-
-abort_not_supported() {
-    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
 
 assert() {
@@ -52,9 +48,6 @@ get_package_manager() {
 			    ;;
 		    esac
 		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
 	    esac
 	    ;;
 	(Darwin)
@@ -68,9 +61,6 @@ get_package_manager() {
 	    ;;
 	(SunOS)
 	    printf "%s\n" pkg pkgin
-	    ;;
-	(*)
-	    abort_not_supported "Operating system"
 	    ;;
     esac
 }
