@@ -522,6 +522,11 @@ configure_uwsgi_source() {
     UWSGI_PREFIX=/usr/local
 
     # Set other uWSGI parameters
+
+    if [ -z "${UWSGI_IS_PACKAGED-}" ]; then
+	UWSGI_IS_PACKAGED=false
+    fi
+
     if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
 	UWSGI_RUN_AS_SERVICE=false
     fi
@@ -533,7 +538,7 @@ configure_windows() {
     SYSTEM_PYTHON_VERSION=3.6.9
 
     # Set uWSGI parameters
-    UWSGI_RUN_AS_SERVICE=false
+    configure_uwsgi_source
 }
 
 find_available_plugins() {
