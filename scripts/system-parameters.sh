@@ -190,6 +190,9 @@ configure_baseline() {
 		    ;;
 	    esac
 	    ;;
+	(CYGWIN_NT-10.*)
+	    configure_windows
+	    ;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;
@@ -522,6 +525,15 @@ configure_uwsgi_source() {
     if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
 	UWSGI_RUN_AS_SERVICE=false
     fi
+}
+
+configure_windows() {
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.6
+    SYSTEM_PYTHON_VERSION=3.6.9
+
+    # Set uWSGI parameters
+    UWSGI_RUN_AS_SERVICE=false
 }
 
 find_available_plugins() {
