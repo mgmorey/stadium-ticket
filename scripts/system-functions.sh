@@ -101,6 +101,9 @@ control_app_via_launchd() {
 		    control_app_via_launchctl load generate_launch_agent $target
 		fi
 		;;
+	    (stop)
+		signal_app $WAIT_SIGNAL INT TERM KILL || true
+		;;
 	esac
     fi
 }
