@@ -21,3 +21,8 @@ trim_trailing_whitespace = true
 
 indent_style = tab
 trim_trailing_whitespace = true
+
+[*.yml]
+
+indent_style = tab
+trim_trailing_whitespace = true
