@@ -15,11 +15,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 version: '3'
+
 services:
 
     mysql:
-        env_file: .env-mysql
         image: mariadb
+        env_file: .env-mysql
         ports:
             - 3306:3306
         volumes:
