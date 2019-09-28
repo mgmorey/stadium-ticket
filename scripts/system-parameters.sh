@@ -533,6 +533,9 @@ configure_uwsgi_source() {
 }
 
 configure_windows() {
+    # Set ps command format and command column
+    PS_COLUMN=6
+
     # Set system Python interpreter
     SYSTEM_PYTHON=/usr/bin/python3.6
     SYSTEM_PYTHON_VERSION=3.6.9
@@ -625,7 +628,14 @@ print_app_processes() {
 }
 
 ps_uwsgi() {
-    ps -U "$1" -o $PS_FORMAT
+    case "$kernel_name" in
+	(CYGWIN_NT-10.*)
+	    ps -ef
+	    ;;
+	(*)
+	    ps -U "$1" -o $PS_FORMAT
+	    ;;
+    esac
 }
 
 signal_app() {
