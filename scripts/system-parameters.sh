@@ -383,16 +383,10 @@ configure_linux_opensuse() {
 }
 
 configure_linux_redhat_7() {
-    configure_linux_redhat_common
+    # Set application group and user accounts
+    APP_GID=nobody
+    APP_UID=nobody
 
-    if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	configure_linux_redhat_7_pkgsrc
-    else
-	configure_uwsgi_source
-    fi
-}
-
-configure_linux_redhat_7_pkgsrc() {
     # Set system Python interpreter
     SYSTEM_PYTHON=/usr/pkg/bin/python3.6
     SYSTEM_PYTHON_VERSION=3.6.9
@@ -407,12 +401,6 @@ configure_linux_redhat_7_pkgsrc() {
     UWSGI_HAS_PLUGIN=false
     UWSGI_IS_PKGSRC=true
     UWSGI_RUN_AS_SERVICE=false
-}
-
-configure_linux_redhat_common() {
-    # Set application group and user accounts
-    APP_GID=nobody
-    APP_UID=nobody
 }
 
 configure_unix() {
