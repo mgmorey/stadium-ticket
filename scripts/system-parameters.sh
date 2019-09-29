@@ -428,22 +428,10 @@ configure_unix_bsd() {
 }
 
 configure_unix_darwin() {
-    configure_unix_darwin_common
-
-    if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	configure_unix_darwin_pkgsrc
-    else
-	configure_uwsgi_source
-    fi
-}
-
-configure_unix_darwin_common() {
     # Set application group and user accounts
     APP_GID=_www
     APP_UID=_www
-}
 
-configure_unix_darwin_pkgsrc() {
     # Set system Python interpreter
     SYSTEM_PYTHON=/opt/pkg/bin/python3.6
     SYSTEM_PYTHON_VERSION=3.6.9
