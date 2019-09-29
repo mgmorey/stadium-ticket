@@ -240,6 +240,10 @@ configure_baseline() {
 
     # Set uWSGI-related parameters
 
+    if [ -z "${UWSGI_BUILDCONF-}" ]; then
+	UWSGI_BUILDCONF=core
+    fi
+
     if [ -z "${UWSGI_IS_PACKAGED-}" ]; then
 	UWSGI_IS_PACKAGED=true
     fi
@@ -541,6 +545,8 @@ configure_windows() {
     SYSTEM_PYTHON_VERSION=3.6.9
 
     # Set uWSGI parameters
+    UWSGI_BUILDCONF=pyonly
+    UWSGI_HAS_PLUGIN=false
     configure_uwsgi_source
 }
 
