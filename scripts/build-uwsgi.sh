@@ -25,7 +25,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-build_uwsgi_binary() {
+build_uwsgi_binary() (
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
@@ -36,13 +36,18 @@ build_uwsgi_binary() {
 
     case $2 in
 	(uwsgi)
-	    $1 uwsgiconfig.py --build core
+	    $1 uwsgiconfig.py --build $UWSGI_BUILDCONF
 	    ;;
 	(*)
-	    $1 uwsgiconfig.py --plugin plugins/python core ${2%_*}
+	    case "$UWSGI_BUILDCONF" in
+		(core)
+		    options="--plugin plugins/python $UWSGI_BUILDCONF"
+		    $1 uwsgiconfig.py $options ${2%_*}
+		    ;;
+	    esac
 	    ;;
     esac
-}
+)
 
 build_uwsgi_from_source() (
     assert [ $# -ge 3 -a $# -le 4 ]
