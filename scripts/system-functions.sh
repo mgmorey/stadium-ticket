@@ -68,12 +68,16 @@ control_app_via_launchctl() (
 	(load)
 	    $2 $3
 
-	    if [ $dryrun = false ]; then
+	    if [ $dryrun = true ]; then
+		check_permissions $3
+	    else
 		launchctl load $3
 	    fi
 	    ;;
 	(unload)
-	    if [ $dryrun = false -a -e $3 ]; then
+	    if [ $dryrun = true ]; then
+		check_permissions $3
+	    elif [ -e $3 ]; then
 		launchctl unload $3
 	    fi
 
@@ -87,34 +91,28 @@ control_app_via_launchd() {
     assert [ -n "$1" ]
     target=$(get_launch_agent_target)
 
-    if [ $dryrun = true ]; then
-	check_permissions_single $target
-    else
-	case $1 in
-	    (disable)
-		if [ -e $target ]; then
-		    control_app_via_launchctl unload remove_files $target
-		fi
-		;;
-	    (enable)
-		if [ ! -e $target ]; then
-		    control_app_via_launchctl load generate_launch_agent $target
-		fi
-		;;
-	    (stop)
+    case $1 in
+	(disable)
+	    if [ $UWSGI_RUN_AS_SERVICE = true -a -e $target ]; then
+		control_app_via_launchctl unload remove_files $target
+	    fi
+	    ;;
+	(enable)
+	    if [ $UWSGI_RUN_AS_SERVICE = true -a ! -e $target ]; then
+		control_app_via_launchctl load generate_launch_agent $target
+	    fi
+	    ;;
+	(stop)
+	    if [ $dryrun = false ]; then
 		signal_app $WAIT_SIGNAL INT TERM KILL || true
-		;;
-	esac
-    fi
+	    fi
+	    ;;
+    esac
 }
 
 control_app_via_systemd() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-
-    if [ $dryrun = true ]; then
-	return 0
-    fi
 
     case $1 in
 	(disable)
@@ -124,7 +122,9 @@ control_app_via_systemd() {
 	    create_symlinks $APP_CONFIG ${UWSGI_APPDIRS-}
 	    ;;
 	(stop)
-	    signal_app $WAIT_SIGNAL INT TERM KILL || true
+	    if [ $dryrun = false ]; then
+		signal_app $WAIT_SIGNAL INT TERM KILL || true
+	    fi
 	    ;;
     esac
 }

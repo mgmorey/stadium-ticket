@@ -141,19 +141,18 @@ start_app() {
 	return 0
     fi
 
-    for dryrun in true false; do
-	control_app_enable
-
-	if [ $UWSGI_RUN_AS_SERVICE = true ]; then
+    if [ $UWSGI_RUN_AS_SERVICE = true ]; then
+	for dryrun in true false; do
+	    control_app_enable
 	    control_app_start
 
 	    if [ $dryrun = false ]; then
 		start_requested=true
 	    fi
-	else
-	    run_service
-	fi
-    done
+	done
+    else
+	run_service
+    fi
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")

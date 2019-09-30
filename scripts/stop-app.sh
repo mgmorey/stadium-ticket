@@ -67,10 +67,7 @@ print_status() (
 stop_app() {
     for dryrun in true false; do
 	control_app_disable
-
-	if [ $dryrun = false ]; then
-	    control_app_stop
-	fi
+	control_app_stop
     done
 }
 
