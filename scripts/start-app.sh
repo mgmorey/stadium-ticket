@@ -119,16 +119,13 @@ run_service() {
     configure_defaults
     validate_parameters_preinstallation
     validate_parameters_postinstallation
+    command=$(get_uwsgi_binary_path)
 
-    if [ $dryrun = false ]; then
-	command=$(get_uwsgi_binary_path)
-
-	if [ -d "${UWSGI_PLUGIN_DIR-}" ]; then
-	    command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
-	fi
-
-	$command --ini $APP_CONFIG
+    if [ -d "${UWSGI_PLUGIN_DIR-}" ]; then
+	command="$command --plugin-dir $UWSGI_PLUGIN_DIR"
     fi
+
+    $command --ini $APP_CONFIG
 }
 
 start_app() {
