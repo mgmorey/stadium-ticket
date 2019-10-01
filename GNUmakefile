@@ -66,7 +66,7 @@ pytest:		.update init-db
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update app/app/*.sqlite
 
-start:		install start-uwsgi
+start:
 	$(script_dir)/start-app.sh
 
 start-uwsgi:
