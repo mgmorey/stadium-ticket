@@ -25,6 +25,10 @@ libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
 libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev liblzma-dev \
 make uuid-dev xz-utils zlib1g-dev"
 
+FEDORA_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel \
+libuuid-devel make ncurses-devel python3-devel openssl-devel \
+readline-devel sqlite-devel xz-devel zlib-devel"
+
 FREEBSD_11_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses \
 readline sqlite3"
 
@@ -113,7 +117,7 @@ get_devel_packages() {
 		    packages=$OPENSUSE_PKGS
 		    ;;
 		(fedora)
-		    packages=$REDHAT_PKGS
+		    packages=$FEDORA_PKGS
 		    ;;
 		(ol)
 		    case "$VERSION_ID" in
