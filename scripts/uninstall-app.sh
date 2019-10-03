@@ -85,7 +85,12 @@ remove_service() {
     if [ $UWSGI_IS_PACKAGED = false ]; then
 	binary=$(get_uwsgi_binary_path)
 	plugin=$(get_uwsgi_plugin_path)
-	files="$files $UWSGI_ETCDIR $binary ${plugin-}"
+
+	if [ -n "${UWSGI_ETCDIR-}" ]; then
+	    files="$files $UWSGI_ETCDIR"
+	fi
+
+	files="$files $binary ${plugin-}"
     fi
 
     remove_files $(get_symlinks) $files

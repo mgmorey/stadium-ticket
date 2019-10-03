@@ -265,7 +265,7 @@ configure_baseline() {
 	UWSGI_PREFIX=
     fi
 
-    if [ -z "${UWSGI_ETCDIR-}" ]; then
+    if [ -z "${UWSGI_ETCDIR-}" -a "$UWSGI_RUN_AS_SERVICE" = true ]; then
 	UWSGI_ETCDIR=${UWSGI_PREFIX-}/etc/uwsgi
     fi
 
