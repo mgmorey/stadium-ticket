@@ -119,6 +119,9 @@ configure_baseline() {
 			(7.7)
 			    configure_linux_redhat_7
 			    ;;
+			(8.0)
+			    configure_linux_redhat_8
+			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
@@ -401,6 +404,21 @@ configure_linux_redhat_7() {
     UWSGI_HAS_PLUGIN=false
     UWSGI_IS_PKGSRC=true
     UWSGI_RUN_AS_SERVICE=false
+}
+
+configure_linux_redhat_8() {
+    # Set application group and user accounts
+    APP_GID=nobody
+    APP_UID=nobody
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.6
+    SYSTEM_PYTHON_VERSION=3.6.8
+
+    # Set uWSGI parameters
+    UWSGI_BUILDCONF=pyonly
+    UWSGI_HAS_PLUGIN=false
+    configure_uwsgi_source
 }
 
 configure_unix() {
