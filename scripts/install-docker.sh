@@ -192,6 +192,19 @@ validate_platform() {
 			    ;;
 		    esac
 		    ;;
+		(ol)
+		    case "$VERSION_ID" in
+			(7.7)
+			    :
+			    ;;
+			(8.0)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
 		(*)
 		    abort_not_supported Distro
 		    ;;
