@@ -28,6 +28,10 @@ assert() {
 }
 
 build_uwsgi_from_source() {
+    if ! "$script_dir/install-dependencies.sh"; then
+	exit $?
+    fi
+
     if ! run_unpriv "$script_dir/build-uwsgi.sh" "$@"; then
 	abort "%s: Unable to build uWSGI from source\n" "$0"
     fi
