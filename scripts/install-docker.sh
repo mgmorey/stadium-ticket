@@ -208,8 +208,6 @@ validate_platform() {
 	    esac
 	    ;;
 	(FreeBSD)
-	    invoke_usermod=false
-
 	    case "$VERSION_ID" in
 		(11.*)
 		    :
