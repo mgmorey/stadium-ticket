@@ -87,6 +87,9 @@ get_sqlite_packages() {
 			(7)
 			    packages=$REDHAT_7_PKGS
 			    ;;
+			(8)
+			    packages=$REDHAT_8_PKGS
+			    ;;
 		    esac
 		    ;;
 	    esac

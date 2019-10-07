@@ -132,6 +132,9 @@ configure_baseline() {
 			(7)
 			    configure_linux_redhat_7
 			    ;;
+			(8)
+			    configure_linux_redhat_8
+			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
