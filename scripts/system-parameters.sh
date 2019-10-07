@@ -303,7 +303,11 @@ configure_defaults() {
     # Set uWSGI-related parameters
 
     if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
-	UWSGI_HAS_PLUGIN=true
+	if [ "$UWSGI_BUILDCONF" = pyonly ]; then
+	    UWSGI_HAS_PLUGIN=false
+	else
+	    UWSGI_HAS_PLUGIN=true
+	fi
     fi
 
     if [ -z "${UWSGI_BINARY_DIR-}" ]; then
@@ -541,7 +545,6 @@ configure_windows() {
 
     # Set uWSGI parameters
     UWSGI_BUILDCONF=pyonly
-    UWSGI_HAS_PLUGIN=false
     configure_uwsgi_source
 }
 
