@@ -307,7 +307,9 @@ configure_defaults() {
     # Set uWSGI-related parameters
 
     if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
-	if [ "$UWSGI_IS_PKGSRC" = true ]; then
+	if [ "$UWSGI_BUILDCONF" = pyonly ]; then
+	    UWSGI_HAS_PLUGIN=false
+	elif [ "$UWSGI_IS_PKGSRC" = true ]; then
 	    UWSGI_HAS_PLUGIN=false
 	else
 	    UWSGI_HAS_PLUGIN=true
@@ -543,7 +545,6 @@ configure_windows() {
 
     # Set uWSGI parameters
     UWSGI_BUILDCONF=pyonly
-    UWSGI_HAS_PLUGIN=false
     configure_uwsgi_source
 }
 
