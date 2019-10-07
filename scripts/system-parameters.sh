@@ -258,11 +258,11 @@ configure_baseline() {
 	UWSGI_IS_PKGSRC=false
     fi
 
-    if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
+    if [ -z "${UWSGI_IS_SERVICE-}" ]; then
 	if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	    UWSGI_RUN_AS_SERVICE=true
+	    UWSGI_IS_SERVICE=true
 	else
-	    UWSGI_RUN_AS_SERVICE=false
+	    UWSGI_IS_SERVICE=false
 	fi
     fi
 
@@ -272,7 +272,7 @@ configure_baseline() {
     fi
 
     if [ -z "${UWSGI_ETCDIR-}" ]; then
-	if [ "$UWSGI_RUN_AS_SERVICE" = true ]; then
+	if [ "$UWSGI_IS_SERVICE" = true ]; then
 	    UWSGI_ETCDIR=${UWSGI_PREFIX:-}/etc/uwsgi
 	fi
     fi
@@ -344,7 +344,7 @@ configure_gnu() {
     PS_FORMAT=pid,ppid,user,tt,lstart,command
 
     if [ "${kernel_name}" = GNU ]; then
-	UWSGI_RUN_AS_SERVICE=false
+	UWSGI_IS_SERVICE=false
     fi
 }
 
@@ -408,7 +408,7 @@ configure_linux_redhat_7() {
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
     UWSGI_IS_PKGSRC=true
-    UWSGI_RUN_AS_SERVICE=false
+    UWSGI_IS_SERVICE=false
 }
 
 configure_linux_redhat_8() {
@@ -456,7 +456,7 @@ configure_unix_darwin() {
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
     UWSGI_IS_PKGSRC=true
-    UWSGI_RUN_AS_SERVICE=false
+    UWSGI_IS_SERVICE=false
 }
 
 configure_unix_freebsd_11() {
@@ -476,7 +476,7 @@ configure_unix_freebsd_common() {
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
-    UWSGI_RUN_AS_SERVICE=false
+    UWSGI_IS_SERVICE=false
 }
 
 configure_unix_netbsd() {
@@ -496,7 +496,7 @@ configure_unix_netbsd() {
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
-    UWSGI_RUN_AS_SERVICE=false
+    UWSGI_IS_SERVICE=false
 }
 
 configure_unix_sunos() {
@@ -517,7 +517,7 @@ configure_unix_sunos() {
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
     UWSGI_IS_PKGSRC=true
-    UWSGI_RUN_AS_SERVICE=false
+    UWSGI_IS_SERVICE=false
 }
 
 configure_uwsgi_source() {
@@ -530,8 +530,8 @@ configure_uwsgi_source() {
 	UWSGI_IS_PACKAGED=false
     fi
 
-    if [ -z "${UWSGI_RUN_AS_SERVICE-}" ]; then
-	UWSGI_RUN_AS_SERVICE=false
+    if [ -z "${UWSGI_IS_SERVICE-}" ]; then
+	UWSGI_IS_SERVICE=false
     fi
 }
 
