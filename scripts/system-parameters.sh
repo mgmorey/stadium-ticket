@@ -259,8 +259,12 @@ configure_baseline() {
     fi
 
     if [ -z "${UWSGI_IS_SERVICE-}" ]; then
-	if [ "${UWSGI_IS_PACKAGED-true}" = true ]; then
-	    UWSGI_IS_SERVICE=true
+	if [ "${UWSGI_IS_PACKAGED}" = true ]; then
+	    if [ "${UWSGI_IS_PKGSRC}" = true ]; then
+		UWSGI_IS_SERVICE=false
+	    else
+		UWSGI_IS_SERVICE=true
+	    fi
 	else
 	    UWSGI_IS_SERVICE=false
 	fi
@@ -303,7 +307,11 @@ configure_defaults() {
     # Set uWSGI-related parameters
 
     if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
-	UWSGI_HAS_PLUGIN=true
+	if [ "$UWSGI_IS_PKGSRC" = true ]; then
+	    UWSGI_HAS_PLUGIN=false
+	else
+	    UWSGI_HAS_PLUGIN=true
+	fi
     fi
 
     if [ -z "${UWSGI_BINARY_DIR-}" ]; then
@@ -525,14 +533,8 @@ configure_uwsgi_source() {
     UWSGI_PREFIX=/usr/local
 
     # Set other uWSGI parameters
-
-    if [ -z "${UWSGI_IS_PACKAGED-}" ]; then
-	UWSGI_IS_PACKAGED=false
-    fi
-
-    if [ -z "${UWSGI_IS_SERVICE-}" ]; then
-	UWSGI_IS_SERVICE=false
-    fi
+    UWSGI_IS_PACKAGED=false
+    UWSGI_IS_SERVICE=false
 }
 
 configure_windows() {
