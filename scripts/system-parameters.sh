@@ -539,10 +539,6 @@ configure_windows() {
     # Set ps command format and command column
     PS_COLUMN=6
 
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.9
-
     # Set uWSGI parameters
     UWSGI_BUILDCONF=pyonly
     UWSGI_HAS_PLUGIN=false
