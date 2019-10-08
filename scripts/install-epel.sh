@@ -70,7 +70,12 @@ get_url() {
 install_epel() {
     validate_platform
     configure_platform
-    manager=$("$script_dir/get-package-managers.sh" | awk 'NR == 1 {print $0}')
+
+    if rpm -q epel-release >/dev/null 2>&1; then
+	return 0
+    fi
+
+    manager=$("$script_dir/get-package-managers" | awk 'NR == 1 {print $0}')
     $manager install $(get_url)
 }
 
