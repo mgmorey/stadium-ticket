@@ -459,9 +459,7 @@ configure_unix_darwin() {
     UWSGI_BINARY_NAME=uwsgi-3.6
 
     # Set other uWSGI parameters
-    UWSGI_HAS_PLUGIN=false
     UWSGI_IS_PKGSRC=true
-    UWSGI_IS_SERVICE=false
 }
 
 configure_unix_freebsd_11() {
