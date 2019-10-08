@@ -426,13 +426,8 @@ configure_linux_redhat_8() {
     APP_GID=nobody
     APP_UID=nobody
 
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.8
-
     # Set uWSGI parameters
     UWSGI_BUILDCONF=pyonly
-    UWSGI_HAS_PLUGIN=false
     configure_uwsgi_source
 }
 
