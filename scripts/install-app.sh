@@ -112,8 +112,8 @@ generate_service_ini() {
     install_file 644 "$inifile" $1
 }
 
-get_packages() {
-    for category in $CATEGORIES; do
+get_packages_in() {
+    for category; do
 	"$script_dir/get-$category-packages.sh"
     done
 }
@@ -205,7 +205,7 @@ install_uwsgi_from_package() (
 	return 0
     fi
 
-    packages=$(get_packages | sort -u)
+    packages=$(get_packages_in $CATEGORIES | sort -u)
 
     if [ -n "$packages" ]; then
 	"$script_dir/install-packages.sh" $packages

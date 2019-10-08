@@ -28,11 +28,11 @@ assert() {
 }
 
 get_extra_packages() {
-    get_packages | sort -u
+    get_packages_in $CATEGORIES | sort -u
 }
 
-get_packages() {
-    for category in $CATEGORIES; do
+get_packages_in() {
+    for category; do
 	"$script_dir/get-$category-packages.sh"
     done
 }
