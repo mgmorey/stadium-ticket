@@ -498,8 +498,7 @@ configure_unix_netbsd() {
     UWSGI_BINARY_NAME=uwsgi-3.6
 
     # Set other uWSGI parameters
-    UWSGI_HAS_PLUGIN=false
-    UWSGI_IS_SERVICE=false
+    UWSGI_IS_PKGSRC=true
 }
 
 configure_unix_sunos() {
