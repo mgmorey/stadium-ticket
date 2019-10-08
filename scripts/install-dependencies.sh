@@ -66,48 +66,6 @@ install_dependencies() {
     fi
 }
 
-install_epel_7() {
-    case "$kernel_name" in
-	(Linux)
-	    case "$ID" in
-		(centos)
-		    :
-		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
-		esac
-	    :
-	    ;;
-	(*)
-	    abort_not_supported "Operating system"
-	    ;;
-    esac
-
-    # yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-}
-
-install_epel_8() {
-    case "$kernel_name" in
-	(Linux)
-	    case "$ID" in
-		(ol)
-		    :
-		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
-		esac
-	    :
-	    ;;
-	(*)
-	    abort_not_supported "Operating system"
-	    ;;
-    esac
-
-    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-}
-
 install_pkgsrc() {
     if ! which $UWSGI_PREFIX/bin/pkgin >/dev/null 2>/dev/null; then
 	"$script_dir/install-pkgsrc.sh" "${PKGSRC_PREFIX-/}"
