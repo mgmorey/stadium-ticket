@@ -21,15 +21,16 @@ FILE_OS=/etc/os-release
 IS_SHELL_FORMAT=false
 LOWERCASE="tr '[:upper:]' '[:lower:]'"
 VARS_STANDARD="ID NAME PRETTY_NAME VERSION VERSION_ID"
-VARS_EXTENDED="kernel_name kernel_release"
+VARS_EXTENDED="debian_version kernel_name kernel_release os_version \
+os_version_id redhat_release"
 
 abort_conflicting_option() {
     usage "%s: conflicting option -- %s\n" "$0" "$1"
     exit 2
 }
 
-abort_extra_arguments() {
-    usage "%s: extra arguments -- %s\n" "$0" "$*"
+abort_too_many_arguments() {
+    usage "%s: too many arguments -- %s\n" "$0" "$*"
     exit 2
 }
 
@@ -41,12 +42,16 @@ collect_data() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    . $FILE_OS
-	    ;;
+	    os_version_id=$(get_os_version_id)
 
-	(Darwin)
-	    NAME=$(sw_vers -productName)
-	    VERSION=$(sw_vers -productVersion)
-	    ID=macos
+	    case "$ID" in
+		(debian|raspbian|ubuntu|linuxmint|neon|kali)
+		    debian_version=$(cat /etc/debian_version)
+		    ;;
+		(fedora|ol|centos)
+		    redhat_release=$(cat /etc/redhat-release)
+		    ;;
+	    esac
 	    ;;
 
 	(SunOS)
@@ -54,6 +59,12 @@ collect_data() {
 	    NAME=${input%:*}
 	    VERSION=${input#*:}
 	    ID=$(printf "%s\n" "${NAME% *}" | $LOWERCASE)
+	    ;;
+
+	(Darwin)
+	    NAME=$(sw_vers -productName)
+	    VERSION=$(sw_vers -productVersion)
+	    ID=macos
 	    ;;
 
 	(CYGWIN_NT-*)
@@ -83,6 +94,32 @@ collect_data() {
     if [ -z "${PRETTY_NAME-}" ]; then
 	PRETTY_NAME="$NAME $VERSION"
     fi
+
+    if [ -z "${os_version_id-}" ]; then
+	os_version_id=$VERSION_ID
+    fi
+
+    if [ -z "${os_version-}" ]; then
+	os_version=$VERSION
+    fi
+}
+
+get_os_version_id() {
+    case "$kernel_name" in
+	(Linux|GNU)
+	    case "$ID" in
+		(debian)
+		    cat /etc/debian_version
+		    ;;
+		(ubuntu)
+		    printf "%s\n" "$VERSION" | awk '{print $1}'
+		    ;;
+		(centos)
+		    awk '{print $4}' /etc/redhat-release
+		    ;;
+	    esac
+	    ;;
+    esac
 }
 
 output_data() {
@@ -92,12 +129,12 @@ output_data() {
 
     if [ "$is_shell_format" = true ]; then
 	for var in $vars; do
-	    eval val="\$$var"
+	    eval val="\${$var-}"
 	    printf "%s=\"%s\"\n" "$var" "$val"
 	done
     else
 	for var in $vars; do
-	    eval val="\$$var"
+	    eval val="\${$var-}"
 	    printf "%s\n" "$val"
 	done
     fi
@@ -148,7 +185,7 @@ parse_arguments() {
     shift $(($OPTIND - 1))
 
     if [ $# -gt 0 ]; then
-	abort_extra_arguments "$@"
+	abort_too_many_arguments "$@"
     fi
 }
 
