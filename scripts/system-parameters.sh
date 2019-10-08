@@ -518,9 +518,7 @@ configure_unix_sunos() {
     UWSGI_BINARY_NAME=uwsgi-3.6
 
     # Set other uWSGI parameters
-    UWSGI_HAS_PLUGIN=false
     UWSGI_IS_PKGSRC=true
-    UWSGI_IS_SERVICE=false
 }
 
 configure_uwsgi_source() {
