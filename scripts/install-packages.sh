@@ -48,9 +48,9 @@ get_realpath() (
 
 install_packages() {
     install_opts=$("$script_dir/get-package-install-options.sh")
-    installers=$("$script_dir/get-package-managers.sh")
-    installer1=$(printf "%s\n" $installers | awk 'NR == 1 {print $0}')
-    installer2=$(printf "%s\n" $installers | awk 'NR == 2 {print $0}')
+    managers=$("$script_dir/get-package-managers.sh")
+    manager1=$(printf "%s\n" $managers | awk 'NR == 1 {print $0}')
+    manager2=$(printf "%s\n" $managers | awk 'NR == 2 {print $0}')
 
     parse_arguments "$@"
 
@@ -99,13 +99,13 @@ install_packages_from_args() {
 	return 0
     fi
 
-    if [ -n "$installer1" -a -n "$packages1" ]; then
-	invoke_installer $installer1 install $install_opts $packages1
+    if [ -n "$manager1" -a -n "$packages1" ]; then
+	invoke_manager $manager1 install $install_opts $packages1
     fi
 
-    if [ -n "$installer2" -a -n "$packages2" ]; then
-	if [ -n "$(which $installer2 2>/dev/null)" ]; then
-	    invoke_installer $installer2 install $packages2
+    if [ -n "$manager2" -a -n "$packages2" ]; then
+	if [ -n "$(which $manager2 2>/dev/null)" ]; then
+	    invoke_manager $manager2 install $packages2
 	fi
     fi
 }
@@ -116,10 +116,10 @@ install_pattern_from_args() {
     fi
 
     pattern_cmd=$("$script_dir/get-pattern-install-command.sh")
-    invoke_installer $installer1 $pattern_cmd $install_opts "$pattern"
+    invoke_manager $manager1 $pattern_cmd $install_opts "$pattern"
 }
 
-invoke_installer() (
+invoke_manager() (
     if [ "$1" = /usr/local/bin/brew ]; then
 	run_unpriv -c "$*"
     else
