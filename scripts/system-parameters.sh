@@ -427,7 +427,6 @@ configure_linux_redhat_8() {
     APP_UID=nobody
 
     # Set uWSGI parameters
-    UWSGI_BUILDCONF=pyonly
     configure_uwsgi_source
 }
 
@@ -525,6 +524,11 @@ configure_uwsgi_source() {
     UWSGI_PREFIX=/usr/local
 
     # Set other uWSGI parameters
+
+    if [ -z "${UWSGI_BUILDCONF-}" ]; then
+	UWSGI_BUILDCONF=pyonly
+    fi
+
     UWSGI_IS_PACKAGED=false
     UWSGI_IS_SERVICE=false
 }
@@ -534,7 +538,6 @@ configure_windows() {
     PS_COLUMN=6
 
     # Set uWSGI parameters
-    UWSGI_BUILDCONF=pyonly
     configure_uwsgi_source
 }
 
