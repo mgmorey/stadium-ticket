@@ -47,10 +47,10 @@ get_realpath() (
 )
 
 install_packages() {
-    install_opts=$("$script_dir/get-package-install-options.sh")
     managers=$("$script_dir/get-package-managers.sh")
     manager1=$(printf "%s\n" $managers | awk 'NR == 1 {print $0}')
     manager2=$(printf "%s\n" $managers | awk 'NR == 2 {print $0}')
+    options=$("$script_dir/get-package-install-options.sh")
 
     parse_arguments "$@"
 
@@ -100,7 +100,7 @@ install_packages_from_args() {
     fi
 
     if [ -n "$manager1" -a -n "$packages1" ]; then
-	invoke_manager $manager1 install $install_opts $packages1
+	invoke_manager $manager1 install $options $packages1
     fi
 
     if [ -n "$manager2" -a -n "$packages2" ]; then
@@ -116,7 +116,7 @@ install_pattern_from_args() {
     fi
 
     pattern_cmd=$("$script_dir/get-pattern-install-command.sh")
-    invoke_manager $manager1 $pattern_cmd $install_opts "$pattern"
+    invoke_manager $manager1 $pattern_cmd $options "$pattern"
 }
 
 invoke_manager() (
