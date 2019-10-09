@@ -47,11 +47,19 @@ get_realpath() (
 )
 
 install_build_deps() {
+    validate_platform
+    manager=$("$script_dir/get-package-managers.sh" | awk 'NR == 1 {print $0}')
+    options=$("$script_dir/get-package-install-options.sh")
+    $manager build-dep $options "$@"
+}
+
+validate_platform() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian|ubuntu|linuxmint|neon|kali)
-		;;
+		    :
+		    ;;
 		(*)
 		    exit 1
 		    ;;
@@ -61,10 +69,6 @@ install_build_deps() {
 	    abort_not_supported "Operating system"
 	    ;;
     esac
-
-    manager=$("$script_dir/get-package-managers.sh" | awk 'NR == 1 {print $0}')
-    options=$("$script_dir/get-package-install-options.sh")
-    $manager build-dep $options "$@"
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
