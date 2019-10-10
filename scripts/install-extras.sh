@@ -46,21 +46,6 @@ get_realpath() (
     fi
 )
 
-install_docker_group() {
-    if [ "$invoke_usermod" = true ]; then
-	if ! getent group docker >/dev/null; then
-	    groupadd docker
-	fi
-
-	members="$(getent group docker | awk -F: '{print $4}')"
-
-	if ! printf "%s\n" "$members" | grep -q "\<$SUDO_USER\>"; then
-	    usermod -a -G docker $SUDO_USER
-	    printf "Please restart the machine before using docker\n"
-	fi
-    fi
-}
-
 install_extras() {
     invoke_usermod=true
 
@@ -206,10 +191,6 @@ install_extras() {
 
     packages=$("$script_dir/get-extra-packages.sh")
     "$script_dir/install-packages.sh" $packages
-
-    if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	install_docker_group
-    fi
 }
 
 if [ $# -gt 0 ]; then
