@@ -153,6 +153,16 @@ install_extras() {
 			    ;;
 		    esac
 		    ;;
+		(centos)
+		    case "$VERSION_ID" in
+			(7)
+			    :
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
 		(*)
 		    abort_not_supported Distro
 		    ;;
