@@ -29,6 +29,49 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+configure_platform() {
+    case "$kernel_name" in
+	(Linux|GNU)
+	    case "$ID" in
+		(debian|raspbian|ubuntu|linuxmint|neon|kali)
+		    IS_PATTERN_SUPPORTED=true
+		    ;;
+		(opensuse-*|fedora|ol|centos)
+		    IS_PATTERN_SUPPORTED=true
+		    ;;
+		(*)
+		    IS_PATTERN_SUPPORTED=false
+		    ;;
+	    esac
+	    ;;
+	(*)
+	    IS_PATTERN_SUPPORTED=false
+	    ;;
+    esac
+}
+
+get_manager() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ $1 -ge 1 -a -$1 -le 2 ]
+    printf "%s\n" $managers | awk 'NR == '"$1"' {print $0}'
+}
+
+get_packages() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    assert [ $1 -ge 1 -a -$1 -le 2 ]
+
+    printf "%s\n" $packages | case "$1" in
+	(1)
+	    awk -F: 'NF == 1 {print $0} NF == 2 {print $1}'
+	    ;;
+	(2)
+	    awk -F: 'NF == 2 {print $2}'
+	    ;;
+    esac
+}
+
 get_realpath() (
     assert [ $# -ge 1 ]
     realpath=$(which realpath)
@@ -47,51 +90,22 @@ get_realpath() (
 )
 
 install_packages() {
+    validate_platform
+    configure_platform
     managers=$("$script_dir/get-package-managers.sh")
-    manager1=$(printf "%s\n" $managers | awk 'NR == 1 {print $0}')
-    manager2=$(printf "%s\n" $managers | awk 'NR == 2 {print $0}')
     options=$("$script_dir/get-package-install-options.sh")
+
+    if [ $# -eq 0 ]; then
+	return 0
+    fi
 
     parse_arguments "$@"
 
-    if [ -n "$packages" ]; then
-	packages1=$(printf "%s\n" $packages | awk -F: 'NF == 1 {print $0}
-						       NF == 2 {print $1}')
-	packages2=$(printf "%s\n" $packages | awk -F: 'NF == 2 {print $2}')
+    if [ "$IS_PATTERN_SUPPORTED" = true ]; then
+	install_pattern_from_args
     fi
 
-    case "$kernel_name" in
-	(Linux|GNU)
-	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon|kali)
-		    install_pattern_from_args
-		    install_packages_from_args
-		    ;;
-		(opensuse-*|fedora|ol|centos)
-		    install_pattern_from_args
-		    install_packages_from_args
-		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
-	    esac
-	    ;;
-	(Darwin)
-	    install_packages_from_args
-	    ;;
-	(FreeBSD)
-	    install_packages_from_args
-	    ;;
-	(NetBSD)
-	    install_packages_from_args
-	    ;;
-	(SunOS)
-	    install_packages_from_args
-	    ;;
-	(*)
-	    abort_not_supported "Operating system"
-	    ;;
-    esac
+    install_packages_from_args
 }
 
 install_packages_from_args() {
@@ -99,15 +113,8 @@ install_packages_from_args() {
 	return 0
     fi
 
-    if [ -n "$manager1" -a -n "$packages1" ]; then
-	invoke_manager $manager1 install $options $packages1
-    fi
-
-    if [ -n "$manager2" -a -n "$packages2" ]; then
-	if [ -n "$(which $manager2 2>/dev/null)" ]; then
-	    invoke_manager $manager2 install $packages2
-	fi
-    fi
+    invoke_manager "$(get_manager 1)" install $options $(get_packages 1)
+    invoke_manager "$(get_manager 2)" install $(get_packages 2)
 }
 
 install_pattern_from_args() {
@@ -116,13 +123,13 @@ install_pattern_from_args() {
     fi
 
     command=$("$script_dir/get-pattern-install-command.sh")
-    invoke_manager $manager1 $command $options "$pattern"
+    invoke_manager "$(get_manager 1)" $command $options "$pattern"
 }
 
 invoke_manager() (
     if [ "$1" = /usr/local/bin/brew ]; then
 	run_unpriv -c "$*"
-    else
+    elif [ -n "$1" ]; then
 	"$@"
     fi
 )
@@ -134,7 +141,7 @@ parse_arguments() {
     while getopts hp: opt; do
 	case $opt in
 	    (p)
-		pattern=$("$script_dir/get-uninstalled-packages.sh" "$OPTARG")
+		pattern=$OPTARG
 		;;
 	    (h)
 		usage
@@ -162,6 +169,39 @@ usage() {
 	Usage: $0: [-p PATTERN]
 	       $0: -h
 	EOF
+}
+
+validate_platform() {
+    case "$kernel_name" in
+	(Linux|GNU)
+	    case "$ID" in
+		(debian|raspbian|ubuntu|linuxmint|neon|kali)
+		    :
+		    ;;
+		(opensuse-*|fedora|ol|centos)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
+	    ;;
+	(Darwin)
+	    :
+	    ;;
+	(FreeBSD)
+	    :
+	    ;;
+	(NetBSD)
+	    :
+	    ;;
+	(SunOS)
+	    :
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
