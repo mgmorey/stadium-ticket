@@ -127,6 +127,10 @@ install_pattern_from_args() {
 }
 
 invoke_manager() (
+    if [ $# -lt 3 ]; then
+	return 0
+    fi
+
     if [ "$1" = /usr/local/bin/brew ]; then
 	run_unpriv -c "$*"
     elif [ -n "$1" ]; then
