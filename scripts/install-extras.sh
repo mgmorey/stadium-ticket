@@ -47,16 +47,17 @@ get_realpath() (
 )
 
 install_extras() {
-    invoke_usermod=true
+    validate_platform
+    packages=$("$script_dir/get-extra-packages.sh")
+    "$script_dir/install-packages.sh" $packages
+}
 
+validate_platform() {
     case "$kernel_name" in
 	(Linux|GNU)
 	    case "$ID" in
 		(debian|raspbian)
 		    case "$VERSION_ID" in
-			# (9)
-			#     :
-			#     ;;
 			(10)
 			    :
 			    ;;
@@ -170,8 +171,6 @@ install_extras() {
 	    esac
 	    ;;
 	(FreeBSD)
-	    invoke_usermod=false
-
 	    case "$VERSION_ID" in
 		(11.*)
 		    :
@@ -185,18 +184,15 @@ install_extras() {
 	    esac
 	    ;;
 	(NetBSD)
-	    invoke_usermod=false
+	    :
 	    ;;
 	(SunOS)
-	    invoke_usermod=false
+	    :
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"
 	    ;;
     esac
-
-    packages=$("$script_dir/get-extra-packages.sh")
-    "$script_dir/install-packages.sh" $packages
 }
 
 if [ $# -gt 0 ]; then
