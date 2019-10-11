@@ -162,20 +162,9 @@ get_devel_packages() {
 	    ;;
     esac
 
-    data=$("$script_dir/get-python-metadata.sh")
-    package_name=$(printf "%s" "$data" | awk '{print $1}')
-    package_modifier=$(printf "%s" "$data" | awk '{print $2}')
-
-    for package in ${packages-}; do
-	case $package in
-	    (*%s*)
-		printf "$package\n" $package_modifier
-		;;
-	    (*)
-		printf "%s\n" $package
-		;;
-	esac
-    done
+    if [ -n "${packages-}" ]; then
+	printf "%s\n" $packages
+    fi
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")
