@@ -31,7 +31,6 @@ readline-devel sqlite-devel xz-devel zlib-devel"
 
 FREEBSD_11_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses \
 readline sqlite3"
-
 FREEBSD_12_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses \
 readline sqlite3"
 
@@ -43,7 +42,7 @@ libopenssl-devel lzma-sdk-devel make ncurses-devel python3-devel \
 readline-devel sqlite3-devel uuid-devel zlib-devel"
 
 REDHAT_7_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel \
-libuuid-devel make ncurses-devel openssl-devel python36-devel \
+libuuid-devel make ncurses-devel openssl-devel python3-devel \
 readline-devel sqlite-devel xz-devel zlib-devel :git"
 REDHAT_8_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel \
 libuuid-devel make ncurses-devel openssl-devel python36-devel \
@@ -60,23 +59,6 @@ abort() {
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
-
-get_realpath() (
-    assert [ $# -ge 1 ]
-    realpath=$(which realpath)
-
-    if [ -n "$realpath" ]; then
-	$realpath "$@"
-    else
-	for file; do
-	    if expr "$file" : '/.*' >/dev/null; then
-		printf "%s\n" "$file"
-	    else
-		printf "%s\n" "$PWD/${file#./}"
-	    fi
-	done
-    fi
-)
 
 get_devel_packages() {
     case "$kernel_name" in
@@ -166,6 +148,23 @@ get_devel_packages() {
 	printf "%s\n" $packages
     fi
 }
+
+get_realpath() (
+    assert [ $# -ge 1 ]
+    realpath=$(which realpath)
+
+    if [ -n "$realpath" ]; then
+	$realpath "$@"
+    else
+	for file; do
+	    if expr "$file" : '/.*' >/dev/null; then
+		printf "%s\n" "$file"
+	    else
+		printf "%s\n" "$PWD/${file#./}"
+	    fi
+	done
+    fi
+)
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
