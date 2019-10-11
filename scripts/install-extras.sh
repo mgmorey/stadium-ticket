@@ -146,6 +146,9 @@ install_extras() {
 			(7)
 			    :
 			    ;;
+			(8)
+			    :
+			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
