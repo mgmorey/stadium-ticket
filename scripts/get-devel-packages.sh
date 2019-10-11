@@ -43,8 +43,8 @@ libopenssl-devel lzma-sdk-devel make ncurses-devel python3-devel \
 readline-devel sqlite3-devel uuid-devel zlib-devel"
 
 REDHAT_7_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel \
-libuuid-devel make ncurses-devel openssl-devel readline-devel \
-sqlite-devel xz-devel zlib-devel :git"
+libuuid-devel make ncurses-devel openssl-devel python36-devel \
+readline-devel sqlite-devel xz-devel zlib-devel :git"
 REDHAT_8_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel \
 libuuid-devel make ncurses-devel openssl-devel python36-devel \
 readline-devel sqlite-devel xz-devel zlib-devel"
