@@ -133,6 +133,9 @@ install_extras() {
 			(7.7)
 			    :
 			    ;;
+			(8.0)
+			    :
+			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
