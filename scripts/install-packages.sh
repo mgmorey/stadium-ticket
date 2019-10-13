@@ -137,7 +137,7 @@ install_pattern_from_args() (
 	return 0
     fi
 
-    command=$("$script_dir/get-pattern-install-command")
+    command=$("$script_dir/get-pattern-install-command.sh")
     install_using "$(get_manager 1)" "$command" "$options" "$pattern"
 )
 
