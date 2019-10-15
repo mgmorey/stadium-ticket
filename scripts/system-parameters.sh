@@ -79,8 +79,8 @@ configure_baseline() {
 		    ;;
 		(kali)
 		    case "$VERSION_ID" in
-			(2019.[34])
-			    configure_linux_ubuntu_18
+			(2019.4)
+			    configure_linux_kali_2019_4
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -89,7 +89,7 @@ configure_baseline() {
 		    ;;
 		(opensuse-leap)
 		    case "$VERSION_ID" in
-			(15.0|15.1)
+			(15.1)
 			    configure_linux_opensuse_lp_15
 			    ;;
 			(*)
@@ -400,6 +400,14 @@ configure_linux_fedora() {
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=/usr/sbin
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
+}
+
+configure_linux_kali_2019_4() {
+    configure_linux_debian
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.7
+    SYSTEM_PYTHON_VERSION=3.7.4
 }
 
 configure_linux_opensuse() {
