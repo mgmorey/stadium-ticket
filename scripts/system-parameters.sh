@@ -415,10 +415,6 @@ configure_linux_opensuse() {
     APP_GID=nogroup
     APP_UID=nobody
 
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.5
-
     # Set uWSGI configuration directories
     UWSGI_APPDIRS=vassals
 
