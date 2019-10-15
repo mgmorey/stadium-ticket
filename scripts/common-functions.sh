@@ -118,7 +118,7 @@ find_system_pythons() (
 	for system_prefix in $SYSTEM_PREFIXES; do
 	    if [ -x $system_prefix/bin/python$suffix ]; then
 		python=$system_prefix/bin/python$suffix
-		version="$(get_python_version $python)"
+		version="$(get_python_version $python 2>/dev/null || true)"
 
 		if [ -n "$version" ]; then
 		    printf "%s %s %s\n" "$python" "$suffix" "$version"
