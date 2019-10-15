@@ -110,7 +110,7 @@ configure_baseline() {
 		(fedora)
 		    case "$VERSION_ID" in
 			(30)
-			    configure_linux_fedora
+			    configure_linux_fedora_30
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -296,11 +296,17 @@ configure_baseline() {
 configure_defaults() {
     # Set Python-related parameters
 
-    if [ -z "${SYSTEM_PYTHON-}" -o -z "${SYSTEM_PYTHON_VERSION-}" ]; then
-	python_triple=$(find_system_python)
-	version_pair="${python_triple#* }"
-	SYSTEM_PYTHON="${python_triple%% *}"
-	SYSTEM_PYTHON_VERSION="${version_pair#* }"
+    if [ -z "${SYSTEM_PYTHON-}" ]; then
+	if [ -z "${SYSTEM_PYTHON_VERSION-}" ]; then
+	    SYSTEM_PYTHON_VERSION="$(get_python_version $SYSTEM_PYTHON)"
+	fi
+
+	if [ -z "${SYSTEM_PYTHON_VERSION-}" ]; then
+	    python_triple=$(find_system_python)
+	    version_pair="${python_triple#* }"
+	    SYSTEM_PYTHON="${python_triple%% *}"
+	    SYSTEM_PYTHON_VERSION="${version_pair#* }"
+	fi
 
 	if ! check_python $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION; then
 	    abort "%s\n" "No suitable Python interpreter found"
@@ -387,10 +393,6 @@ configure_linux_debian_10() {
 }
 
 configure_linux_fedora() {
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/bin/python3.7
-    SYSTEM_PYTHON_VERSION=3.7.4
-
     # Set uWSGI configuration directory
     UWSGI_ETCDIR=/etc
 
@@ -400,6 +402,13 @@ configure_linux_fedora() {
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=/usr/sbin
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
+}
+
+configure_linux_fedora_30() {
+    configure_linux_fedora
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.7
 }
 
 configure_linux_kali_2019_4() {
@@ -414,10 +423,6 @@ configure_linux_opensuse() {
     # Set application group and user accounts
     APP_GID=nogroup
     APP_UID=nobody
-
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.5
 
     # Set uWSGI configuration directories
     UWSGI_APPDIRS=vassals
@@ -440,7 +445,6 @@ configure_linux_opensuse_tw() {
 
     # Set system Python interpreter
     SYSTEM_PYTHON=/usr/bin/python3.7
-    SYSTEM_PYTHON_VERSION=3.7.3
 }
 
 configure_linux_redhat() {
@@ -488,7 +492,6 @@ configure_linux_ubuntu_19() {
 
     # Set system Python interpreter
     SYSTEM_PYTHON=/usr/bin/python3.7
-    SYSTEM_PYTHON_VERSION=3.7.3
 }
 
 configure_unix() {
@@ -510,7 +513,6 @@ configure_unix_darwin() {
 
     # Set system Python interpreter
     SYSTEM_PYTHON=/opt/pkg/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.9
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/opt/pkg
@@ -549,7 +551,6 @@ configure_unix_netbsd() {
 
     # Set system Python interpreter
     SYSTEM_PYTHON=/usr/pkg/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.9
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/pkg
@@ -568,7 +569,6 @@ configure_unix_sunos() {
 
     # Set system Python interpreter
     SYSTEM_PYTHON=/opt/local/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.9
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/opt/local

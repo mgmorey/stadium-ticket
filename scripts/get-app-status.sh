@@ -40,6 +40,10 @@ get_realpath() (
 )
 
 get_service_parameters() {
+    if [ -z "${SYSTEM_PYTHON_VERSION-}" ]; then
+	SYSTEM_PYTHON_VERSION="$(get_python_version $SYSTEM_PYTHON)"
+    fi
+
     cat <<EOF
              Name: $APP_NAME
              Port: $APP_PORT

@@ -55,10 +55,9 @@ create_virtualenv() (
     if [ -z "${python-}" ]; then
 	python=$(find_system_python | /usr/bin/awk '{print $1}')
 	python=$(find_user_python $python)
-	python_output="$($python --version)"
-	python_version="${python_output#Python }"
+	version="$(get_python_version $python)"
 
-	if ! check_python "$python" "$python_version"; then
+	if ! check_python "$python" "$version"; then
 	    abort "%s\n" "No suitable Python interpreter found"
 	fi
     fi
@@ -93,10 +92,9 @@ create_virtualenv() (
 find_python() (
     python=$(find_system_python | /usr/bin/awk '{print $1}')
     python=$(find_user_python $python)
-    python_output="$($python --version)"
-    python_version="${python_output#Python }"
+    version="$(get_python_version $python)"
 
-    if ! check_python "$python" "$python_version" >&2; then
+    if ! check_python "$python" "$version" >&2; then
 	abort "%s\n" "No suitable Python interpreter found"
     fi
 
@@ -120,10 +118,9 @@ find_system_pythons() (
 	for system_prefix in $SYSTEM_PREFIXES; do
 	    if [ -x $system_prefix/bin/python$suffix ]; then
 		python=$system_prefix/bin/python$suffix
-		output="$($python --version)"
+		version="$(get_python_version $python 2>/dev/null || true)"
 
-		if [ -n "$output" ]; then
-		    version="${output#Python }"
+		if [ -n "$version" ]; then
 		    printf "%s %s %s\n" "$python" "$suffix" "$version"
 		fi
 	    fi
@@ -304,6 +301,14 @@ get_pip_install_options() {
 get_pip_requirements() {
     printf -- "--requirement %s\n" ${venv_requirements:-requirements.txt}
 }
+
+get_python_version() (
+    output="$($1 --version)"
+
+    if [ -n "$output" ]; then
+	printf "%s\n" "${output#Python }"
+    fi
+)
 
 get_sort_command() {
     case "${kernel_name=$(uname -s)}" in
