@@ -47,7 +47,7 @@ configure_baseline() {
 		(debian|raspbian)
 		    case "$VERSION_ID" in
 			(10)
-			    configure_linux_debian
+			    configure_linux_debian_10
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -56,8 +56,11 @@ configure_baseline() {
 		    ;;
 		(ubuntu|neon)
 		    case "$VERSION_ID" in
-			(18.04|19.04)
-			    configure_linux_debian
+			(18.04)
+			    configure_linux_ubuntu_18
+			    ;;
+			(19.04)
+			    configure_linux_ubuntu_19
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -67,7 +70,7 @@ configure_baseline() {
 		(linuxmint)
 		    case "$VERSION_ID" in
 			(19.2)
-			    configure_linux_debian
+			    configure_linux_ubuntu_18
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -77,7 +80,7 @@ configure_baseline() {
 		(kali)
 		    case "$VERSION_ID" in
 			(2019.[34])
-			    configure_linux_debian
+			    configure_linux_ubuntu_18
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -87,7 +90,7 @@ configure_baseline() {
 		(opensuse-leap)
 		    case "$VERSION_ID" in
 			(15.0|15.1)
-			    configure_linux_opensuse
+			    configure_linux_opensuse_lp_15
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -97,7 +100,7 @@ configure_baseline() {
 		(opensuse-tumbleweed)
 		    case "$VERSION_ID" in
 			(2019*)
-			    configure_linux_opensuse
+			    configure_linux_opensuse_tw
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -363,9 +366,6 @@ configure_linux_debian() {
     APP_GID=www-data
     APP_UID=www-data
 
-    # Set uWSGI configuration directories
-    UWSGI_APPDIRS="apps-available apps-enabled"
-
     # Set additional file/directory parameters
     APP_LOGDIR=/var/log/uwsgi/app
     APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
@@ -373,6 +373,17 @@ configure_linux_debian() {
     # Set additional parameters from app directories
     APP_PIDFILE=$APP_RUNDIR/pid
     APP_SOCKET=$APP_RUNDIR/socket
+
+    # Set uWSGI configuration directories
+    UWSGI_APPDIRS="apps-available apps-enabled"
+}
+
+configure_linux_debian_10() {
+    configure_linux_debian
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.7
+    SYSTEM_PYTHON_VERSION=3.7.3
 }
 
 configure_linux_fedora() {
@@ -397,8 +408,8 @@ configure_linux_opensuse() {
     APP_UID=nobody
 
     # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/bin/python3.7
-    SYSTEM_PYTHON_VERSION=3.7.3
+    SYSTEM_PYTHON=/usr/bin/python3.6
+    SYSTEM_PYTHON_VERSION=3.6.5
 
     # Set uWSGI configuration directories
     UWSGI_APPDIRS=vassals
@@ -408,10 +419,30 @@ configure_linux_opensuse() {
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
-configure_linux_redhat_7() {
+configure_linux_opensuse_lp_15() {
+    configure_linux_opensuse
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.6
+    SYSTEM_PYTHON_VERSION=3.6.5
+}
+
+configure_linux_opensuse_tw() {
+    configure_linux_opensuse
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.7
+    SYSTEM_PYTHON_VERSION=3.7.3
+}
+
+configure_linux_redhat() {
     # Set application group and user accounts
     APP_GID=nobody
     APP_UID=nobody
+}
+
+configure_linux_redhat_7() {
+    configure_linux_redhat
 
     # Set system Python interpreter
     SYSTEM_PYTHON=/usr/pkg/bin/python3.6
@@ -430,12 +461,26 @@ configure_linux_redhat_7() {
 }
 
 configure_linux_redhat_8() {
-    # Set application group and user accounts
-    APP_GID=nobody
-    APP_UID=nobody
+    configure_linux_redhat
 
     # Set uWSGI parameters
     configure_uwsgi_source
+}
+
+configure_linux_ubuntu_18() {
+    configure_linux_debian
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.6
+    SYSTEM_PYTHON_VERSION=3.6.8
+}
+
+configure_linux_ubuntu_19() {
+    configure_linux_debian
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.7
+    SYSTEM_PYTHON_VERSION=3.7.3
 }
 
 configure_unix() {
@@ -469,15 +514,7 @@ configure_unix_darwin() {
     UWSGI_IS_PKGSRC=true
 }
 
-configure_unix_freebsd_11() {
-    configure_unix_freebsd_common
-}
-
-configure_unix_freebsd_12() {
-    configure_unix_freebsd_common
-}
-
-configure_unix_freebsd_common() {
+configure_unix_freebsd() {
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
 
@@ -487,6 +524,14 @@ configure_unix_freebsd_common() {
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
     UWSGI_IS_SERVICE=false
+}
+
+configure_unix_freebsd_11() {
+    configure_unix_freebsd
+}
+
+configure_unix_freebsd_12() {
+    configure_unix_freebsd
 }
 
 configure_unix_netbsd() {
