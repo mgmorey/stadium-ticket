@@ -492,7 +492,6 @@ configure_linux_ubuntu_19() {
 
     # Set system Python interpreter
     SYSTEM_PYTHON=/usr/bin/python3.7
-    SYSTEM_PYTHON_VERSION=3.7.3
 }
 
 configure_unix() {
@@ -514,7 +513,6 @@ configure_unix_darwin() {
 
     # Set system Python interpreter
     SYSTEM_PYTHON=/opt/pkg/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.9
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/opt/pkg
@@ -553,7 +551,6 @@ configure_unix_netbsd() {
 
     # Set system Python interpreter
     SYSTEM_PYTHON=/usr/pkg/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.9
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/pkg
@@ -572,7 +569,6 @@ configure_unix_sunos() {
 
     # Set system Python interpreter
     SYSTEM_PYTHON=/opt/local/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.9
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/opt/local
