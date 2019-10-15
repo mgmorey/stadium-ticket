@@ -257,7 +257,7 @@ get_command_helper() (
 	scripts=
     fi
 
-    for command in $scripts "$python -m $module"; do
+    for command in "$python -m $module" $scripts; do
 	if $command $option >/dev/null 2>&1; then
 	    printf "%s\n" "$command"
 	    return 0
