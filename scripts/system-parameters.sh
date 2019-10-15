@@ -376,6 +376,10 @@ configure_linux_debian() {
 }
 
 configure_linux_fedora() {
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.7
+    SYSTEM_PYTHON_VERSION=3.7.4
+
     # Set uWSGI configuration directory
     UWSGI_ETCDIR=/etc
 
