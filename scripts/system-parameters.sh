@@ -115,6 +115,9 @@ configure_baseline() {
 			(30)
 			    configure_linux_fedora_30
 			    ;;
+			(31)
+			    configure_linux_fedora_31
+			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
@@ -406,6 +409,13 @@ configure_linux_fedora() {
 }
 
 configure_linux_fedora_30() {
+    configure_linux_fedora
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.7
+}
+
+configure_linux_fedora_31() {
     configure_linux_fedora
 
     # Set system Python interpreter
