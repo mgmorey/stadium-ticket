@@ -57,10 +57,13 @@ configure_baseline() {
 		(ubuntu|neon)
 		    case "$VERSION_ID" in
 			(18.04)
-			    configure_linux_ubuntu_18
+			    configure_linux_ubuntu_18_04
 			    ;;
 			(19.04)
-			    configure_linux_ubuntu_19
+			    configure_linux_ubuntu_19_04
+			    ;;
+			(19.10)
+			    configure_linux_ubuntu_19_10
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -70,7 +73,7 @@ configure_baseline() {
 		(linuxmint)
 		    case "$VERSION_ID" in
 			(19.2)
-			    configure_linux_ubuntu_18
+			    configure_linux_ubuntu_18_04
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -477,7 +480,7 @@ configure_linux_redhat_8() {
     configure_uwsgi_source
 }
 
-configure_linux_ubuntu_18() {
+configure_linux_ubuntu_18_04() {
     configure_linux_debian
 
     # Set system Python interpreter
@@ -485,7 +488,14 @@ configure_linux_ubuntu_18() {
     SYSTEM_PYTHON_VERSION=3.6.8
 }
 
-configure_linux_ubuntu_19() {
+configure_linux_ubuntu_19_04() {
+    configure_linux_debian
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.7
+}
+
+configure_linux_ubuntu_19_10() {
     configure_linux_debian
 
     # Set system Python interpreter
