@@ -455,7 +455,7 @@ configure_linux_opensuse_tw() {
     configure_linux_opensuse
 
     # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/bin/python3.7
+    SYSTEM_PYTHON=/usr/bin/python3
 }
 
 configure_linux_redhat() {
