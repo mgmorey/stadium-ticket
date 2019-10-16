@@ -296,12 +296,10 @@ configure_baseline() {
 configure_defaults() {
     # Set Python-related parameters
 
-    if [ -z "${SYSTEM_PYTHON-}" ]; then
-	if [ -z "${SYSTEM_PYTHON_VERSION-}" ]; then
+    if [ -z "${SYSTEM_PYTHON-}" -o -z "${SYSTEM_PYTHON_VERSION-}" ]; then
+	if [ -n "${SYSTEM_PYTHON-}" ]; then
 	    SYSTEM_PYTHON_VERSION="$(get_python_version $SYSTEM_PYTHON)"
-	fi
-
-	if [ -z "${SYSTEM_PYTHON_VERSION-}" ]; then
+	else
 	    python_triple=$(find_system_python)
 	    version_pair="${python_triple#* }"
 	    SYSTEM_PYTHON="${python_triple%% *}"
