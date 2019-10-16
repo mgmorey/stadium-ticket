@@ -81,6 +81,9 @@ get_uwsgi_packages() {
 			(19.04)
 			    packages=$UBUNTU_19_PKGS
 			    ;;
+			(19.10)
+			    packages=$UBUNTU_19_PKGS
+			    ;;
 		    esac
 		    ;;
 		(linuxmint)

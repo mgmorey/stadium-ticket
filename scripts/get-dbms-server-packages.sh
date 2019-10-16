@@ -34,6 +34,7 @@ SUNOS_PKG="database/mariadb-103"
 
 UBUNTU_18_04_PKG="mariadb-server-10.1"
 UBUNTU_19_04_PKG="mariadb-server-10.3"
+UBUNTU_19_10_PKG="mariadb-server-10.3"
 
 abort() {
     printf "$@" >&2
@@ -74,6 +75,9 @@ get_dbms_server_packages() {
 			    ;;
 			(19.04)
 			    packages="${package:-$UBUNTU_19_04_PKG}"
+			    ;;
+			(19.10)
+			    packages="${package:-$UBUNTU_19_10_PKG}"
 			    ;;
 		    esac
 		    ;;

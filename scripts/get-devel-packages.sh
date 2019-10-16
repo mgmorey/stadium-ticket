@@ -79,6 +79,9 @@ get_devel_packages() {
 			(19.04)
 			    packages=$DEBIAN_10_PKGS
 			    ;;
+			(19.10)
+			    packages=$DEBIAN_10_PKGS
+			    ;;
 		    esac
 		    ;;
 		(linuxmint)

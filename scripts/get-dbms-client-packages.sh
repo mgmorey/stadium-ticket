@@ -40,6 +40,7 @@ SUNOS_PKGS=":%s-pymysql :%s-sqlalchemy"
 
 UBUNTU_18_04_PKG="mariadb-client-10.1"
 UBUNTU_19_04_PKG="mariadb-client-10.3"
+UBUNTU_19_10_PKG="mariadb-client-10.3"
 UBUNTU_PKGS="%s-pymysql %s-sqlalchemy"
 
 abort() {
@@ -81,6 +82,9 @@ get_dbms_client_packages() {
 			    ;;
 			(19.04)
 			    packages="${package:-$UBUNTU_19_04_PKG} $UBUNTU_PKGS"
+			    ;;
+			(19.10)
+			    packages="${package:-$UBUNTU_19_10_PKG} $UBUNTU_PKGS"
 			    ;;
 		    esac
 		    ;;
