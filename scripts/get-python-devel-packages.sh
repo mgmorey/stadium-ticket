@@ -41,6 +41,13 @@ REDHAT_8_PKGS="%s-pip %s-pycodestyle %s-pytest %s-virtualenv"
 SUNOS_PKGS=":%s-codestyle :%s-packaging :%s-pip :%s-pylint :%s-test \
 :%s-virtualenv"
 
+UBUNTU_18_04_PKGS="pylint3 %s-openssl %s-packaging %s-pip %s-pycodestyle \
+%s-pytest %s-venv %s-virtualenv"
+UBUNTU_19_04_PKGS="pylint3 %s-openssl %s-packaging %s-pip %s-pycodestyle \
+%s-pytest %s-venv %s-virtualenv"
+UBUNTU_19_10_PKGS="pylint %s-openssl %s-packaging %s-pip %s-pycodestyle \
+%s-pytest %s-venv %s-virtualenv"
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -81,13 +88,13 @@ get_python_devel_packages() {
 		(ubuntu|neon)
 		    case "$VERSION_ID" in
 			(18.04)
-			    packages=$DEBIAN_10_PKGS
+			    packages=$UBUNTU_18_04_PKGS
 			    ;;
 			(19.04)
-			    packages=$DEBIAN_10_PKGS
+			    packages=$UBUNTU_19_04_PKGS
 			    ;;
 			(19.10)
-			    packages=$DEBIAN_10_PKGS
+			    packages=$UBUNTU_19_10_PKGS
 			    ;;
 		    esac
 		    ;;

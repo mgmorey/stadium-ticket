@@ -51,6 +51,19 @@ readline-devel sqlite-devel xz-devel zlib-devel"
 SUNOS_PKGS="database/sqlite-3 developer/gcc-6 developer/build/gnu-make \
 library/libffi library/ncurses library/readline shell/bash"
 
+UBUNTU_18_04_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
+libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
+libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev liblzma-dev \
+make uuid-dev xz-utils zlib1g-dev"
+UBUNTU_19_04_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
+libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
+libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev liblzma-dev \
+make uuid-dev xz-utils zlib1g-dev"
+UBUNTU_19_10_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
+libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
+libsqlite3-dev libssl-dev libxml2-dev libxmlsec1-dev liblzma-dev \
+make uuid-dev xz-utils zlib1g-dev"
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -74,13 +87,13 @@ get_devel_packages() {
 		(ubuntu|neon)
 		    case "$VERSION_ID" in
 			(18.04)
-			    packages=$DEBIAN_10_PKGS
+			    packages=$UBUNTU_18_04_PKGS
 			    ;;
 			(19.04)
-			    packages=$DEBIAN_10_PKGS
+			    packages=$UBUNTU_19_04_PKGS
 			    ;;
 			(19.10)
-			    packages=$DEBIAN_10_PKGS
+			    packages=$UBUNTU_19_10_PKGS
 			    ;;
 		    esac
 		    ;;

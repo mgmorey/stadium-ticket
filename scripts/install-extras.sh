@@ -74,9 +74,9 @@ validate_platform() {
 			(19.04)
 			    :
 			    ;;
-			# (19.10)
-			#     :
-			#     ;;
+			(19.10)
+			    :
+			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;
