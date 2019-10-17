@@ -357,7 +357,7 @@ configure_defaults() {
     fi
 
     if [ -z "${APP_SOCKET-}" ]; then
-	APP_SOCKET=$APP_RUNDIR/$APP_NAME.sock
+	APP_SOCKET=
     fi
 }
 
