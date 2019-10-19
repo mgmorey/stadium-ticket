@@ -28,6 +28,7 @@ Flask = "*"
 Flask-SQLAlchemy = "*"
 PyMySQL = "*"
 SQLAlchemy = "*"
+cryptography = "*"
 python-decouple = "*"
 python-dotenv = "*"
 
