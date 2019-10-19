@@ -199,7 +199,7 @@ get_command() (
 
     if [ $# -ge 1 ] && [ "$1" = -p ]; then
 	dirname="$(dirname "$2")"
-	python="$2"
+	python="$dirname/python"
 	versions="${2#*python}"
 	shift 2
     else
@@ -245,16 +245,12 @@ get_command() (
 
 get_command_helper() (
     if ! expr "$2" : pyvenv >/dev/null; then
-	if [ -n "${3-}" ]; then
-	    scripts="${1:+$1/}$2$3 ${1:+$1/}$2-$3"
-	else
-	    scripts="${1:+$1/}$2"
-	fi
+	scripts="${1:+$1/}$2${3-}${3+ ${1:+$1/}$2-$3}"
     else
 	scripts=
     fi
 
-    for command in "$python -m $module" $scripts; do
+    for command in "$python${3-} -m $module" $scripts; do
 	if $command $option >/dev/null 2>&1; then
 	    printf "%s\n" "$command"
 	    return 0
