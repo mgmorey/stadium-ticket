@@ -287,7 +287,7 @@ get_home_directory() {
 get_pip_install_options() {
     if [ "$(id -u)" -eq 0 ]; then
 	printf "%s\n" --no-cache-dir
-    else
+    elif [ -z "${VIRTUAL_ENV:-}" ]; then
 	printf "%s\n" --user
     fi
 
