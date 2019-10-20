@@ -287,6 +287,8 @@ get_home_directory() {
 get_pip_install_options() {
     if [ "$(id -u)" -eq 0 ]; then
 	printf "%s\n" --no-cache-dir
+    else
+	printf "%s\n" --user
     fi
 
     printf "%s\n" --quiet
@@ -459,5 +461,5 @@ upgrade_via_pip() (
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
-    install_via_pip "$pip" --upgrade --user "$@"
+    install_via_pip "$pip" --upgrade "$@"
 )
