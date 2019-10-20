@@ -32,9 +32,11 @@ exec_sql_cli() {
     case "$DATABASE_DIALECT" in
 	(mysql)
 	    ${1+$1 }$DATABASE_DIALECT \
-		-h${DATABASE_HOST:-localhost} \
-		-u${DATABASE_USER:-$USER} \
-		-p${DATABASE_PASSWORD:-}
+		--protocol=${DATABASE_PROTOCOL:-TCP} \
+		--host=${DATABASE_HOST:-localhost} \
+		--port=${DATABASE_PORT:-3306} \
+		--user=${DATABASE_USER:-$USER} \
+		--password=${DATABASE_PASSWORD:-}
 	    ;;
 	(sqlite)
 	    ${1+$1 }sqlite3 $DATABASE_FILENAME
