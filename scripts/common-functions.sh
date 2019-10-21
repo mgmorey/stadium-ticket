@@ -450,7 +450,7 @@ upgrade_requirements_via_pip() (
     printf "%s\n" "Upgrading virtual environment packages via pip"
     install_via_pip "$pip" --quiet --upgrade pip || true
     printf "%s\n" "Installing virtual environment packages via pip"
-    install_via_pip "$pip" $(get_pip_requirements) --quiet
+    install_via_pip "$pip" --quiet $(get_pip_requirements)
 )
 
 upgrade_via_pip() (
