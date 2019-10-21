@@ -15,7 +15,7 @@
 
 FORMAT_RE='^%s(\.[0-9]+){0,2}$\n'
 PKGSRC_PREFIXES=$(ls -d /opt/local /opt/pkg /usr/pkg 2>/dev/null || true)
-SYSTEM_PREFIXES="/usr/local${PKGSRC_PREFIXES:+ $PKGSRC_PREFIXES} /usr"
+SYSTEM_PREFIXES="$HOME/.local /usr/local $PKGSRC_PREFIXES /usr"
 
 activate_virtualenv() {
     assert [ $# -eq 1 ]
