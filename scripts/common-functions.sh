@@ -298,8 +298,6 @@ get_pip_install_options() {
 	    printf "%s\n" --user
 	fi
     fi
-
-    printf "%s\n" --quiet
 }
 
 get_pip_requirements() {
@@ -450,9 +448,9 @@ upgrade_requirements_via_pip() (
     fi
 
     printf "%s\n" "Upgrading virtual environment packages via pip"
-    install_via_pip "$pip" --upgrade pip || true
+    install_via_pip "$pip" --upgrade --quiet pip || true
     printf "%s\n" "Installing virtual environment packages via pip"
-    install_via_pip "$pip" $(get_pip_requirements)
+    install_via_pip "$pip" $(get_pip_requirements) --quiet
 )
 
 upgrade_via_pip() (
@@ -474,5 +472,5 @@ upgrade_via_pip() (
 	export PATH=$HOME/.local/bin:$PATH
     fi
 
-    install_via_pip "$pip" --upgrade "$@"
+    install_via_pip "$pip" --upgrade --quiet "$@"
 )
