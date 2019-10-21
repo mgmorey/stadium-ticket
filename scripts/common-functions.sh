@@ -448,7 +448,7 @@ upgrade_requirements_via_pip() (
     fi
 
     printf "%s\n" "Upgrading virtual environment packages via pip"
-    install_via_pip "$pip" --upgrade --quiet pip || true
+    install_via_pip "$pip" --quiet --upgrade pip || true
     printf "%s\n" "Installing virtual environment packages via pip"
     install_via_pip "$pip" $(get_pip_requirements) --quiet
 )
@@ -472,5 +472,5 @@ upgrade_via_pip() (
 	export PATH=$HOME/.local/bin:$PATH
     fi
 
-    install_via_pip "$pip" --upgrade --quiet "$@"
+    install_via_pip "$pip" --quiet --upgrade "$@"
 )
