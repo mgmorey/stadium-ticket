@@ -71,6 +71,10 @@ create_virtualenv() (
 	    continue
 	fi
 
+	if [ "$(id -u)" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
+	    export PATH=$HOME/.local/bin:$PATH
+	fi
+
 	case "$utility" in
 	    (pyvenv)
 		$command $1
@@ -287,8 +291,12 @@ get_home_directory() {
 get_pip_install_options() {
     if [ "$(id -u)" -eq 0 ]; then
 	printf "%s\n" --no-cache-dir
-    elif [ -z "${VIRTUAL_ENV:-}" ]; then
-	printf "%s\n" --user
+    fi
+
+    if [ -z "${VIRTUAL_ENV:-}" ]; then
+	if expr "$PATH" : "$HOME/\.local/bin" >/dev/null; then
+	    printf "%s\n" --user
+	fi
     fi
 
     printf "%s\n" --quiet
@@ -461,5 +469,10 @@ upgrade_via_pip() (
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
+
+    if [ "$(id -u)" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
+	export PATH=$HOME/.local/bin:$PATH
+    fi
+
     install_via_pip "$pip" --upgrade "$@"
 )
