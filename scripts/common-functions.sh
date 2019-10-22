@@ -284,6 +284,16 @@ get_home_directory() {
     esac
 }
 
+get_pip_command() {
+    if [ -n "${1-}" ]; then
+	get_command -p $1 pip
+    elif [ -x $HOME/.local/bin/pip ]; then
+	printf "%s\n" "$HOME/.local/bin/pip"
+    else
+	get_command -v "$PYTHON_VERSIONS" pip
+    fi
+}
+
 get_pip_requirements() {
     printf -- "--requirement %s\n" ${venv_requirements:-requirements.txt}
 }
@@ -372,6 +382,10 @@ install_via_pip() (
 	export PATH=$HOME/.local/bin:$PATH
     fi
 
+    if [ "$PIP_VERBOSE" = true ]; then
+	printf "Using %s\n" "$(pip --version)"
+    fi
+
     $pip install "$@"
 )
 
@@ -392,7 +406,14 @@ refresh_via_pip() {
     fi
 
     if [ $sync = true ]; then
-	upgrade_via_pip pip || true
+	if [ "$UPGRADE_USER_PIP" = true ]; then
+	    if upgrade_via_pip pip; then
+		if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
+		    hash -r
+		fi
+	    fi
+	fi
+
 	create_virtualenv "$@"
     fi
 
@@ -430,26 +451,23 @@ set_unpriv_environment() {
 }
 
 upgrade_requirements_via_pip() (
-    pip=$(get_command -p ${1-$VENV_FILENAME}/bin/python pip)
+    pip=$(get_pip_command ${1-$VENV_FILENAME}/bin/python)
 
     if [ -z "$pip" ]; then
 	abort "%s: No pip command found in PATH\n" "$0"
     fi
 
+    if [ "$UPGRADE_VENV_PIP" = true ]; then
+	printf "%s\n" "Upgrading virtual environment packages via pip"
+	install_via_pip "$pip" --quiet --upgrade pip || true
+    fi
+
     printf "%s\n" "Installing virtual environment packages via pip"
     install_via_pip "$pip" --quiet $(get_pip_requirements)
-    printf "%s\n" "Upgrading virtual environment packages via pip"
-    install_via_pip "$pip" --quiet --upgrade pip || true
 )
 
 upgrade_via_pip() (
-    if [ -n "${SYSTEM_PYTHON-}" ]; then
-	options="-p \"$SYSTEM_PYTHON\""
-    else
-	options="-v \"$PYTHON_VERSIONS\""
-    fi
-
-    pip=$(eval get_command $options pip)
+    pip=$(get_pip_command)
 
     if [ -z "$pip" ]; then
 	abort "%s: No pip command found in PATH\n" "$0"
