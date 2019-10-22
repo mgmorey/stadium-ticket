@@ -372,7 +372,7 @@ install_via_pip() (
 	export PATH=$HOME/.local/bin:$PATH
     fi
 
-    $pip install "$@"
+    $(which $pip) install "$@"
 )
 
 refresh_via_pip() {
@@ -430,8 +430,7 @@ set_unpriv_environment() {
 }
 
 upgrade_requirements_via_pip() (
-    version=$(get_python_version ${1-$VENV_FILENAME}/bin/python)
-    pip=$(get_command -v "${version%.*}" pip)
+    pip=$(get_command -p ${1-$VENV_FILENAME}/bin/python pip)
 
     if [ -z "$pip" ]; then
 	abort "%s: No pip command found in PATH\n" "$0"
@@ -445,17 +444,22 @@ upgrade_requirements_via_pip() (
 
 upgrade_via_pip() (
     if [ -n "${SYSTEM_PYTHON-}" ]; then
-	versions=$(get_python_version $SYSTEM_PYTHON)
+	options="-p \"$SYSTEM_PYTHON\""
     else
-	versions=$PYTHON_VERSIONS
+	options="-v \"$PYTHON_VERSIONS\""
     fi
 
-    pip=$(eval get_command -v "$versions" pip)
+    pip=$(eval get_command $options pip)
 
     if [ -z "$pip" ]; then
 	abort "%s: No pip command found in PATH\n" "$0"
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
+
+    if [ "$(id -u)" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
+	export PATH=$HOME/.local/bin:$PATH
+    fi
+
     install_via_pip "$pip" --quiet --upgrade --user "$@"
 )
