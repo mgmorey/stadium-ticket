@@ -32,3 +32,4 @@ UPGRADE_VENV_PIP=true
 VENV_FILENAME=.venv
 VENV_REQUIREMENTS=requirements*.txt
 VENV_UTILITIES="pyvenv virtualenv"
+VENV_VERBOSE=true
