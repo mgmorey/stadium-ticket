@@ -71,10 +71,6 @@ create_virtualenv() (
 	    continue
 	fi
 
-	if [ "$(id -u)" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
-	    export PATH=$HOME/.local/bin:$PATH
-	fi
-
 	case "$utility" in
 	    (pyvenv)
 		$command $1
@@ -252,7 +248,7 @@ get_command_helper() (
 	scripts=
     fi
 
-    for command in "${1:+$1/}python${3-} -m $module" $scripts; do
+    for command in $scripts "${1:+$1/}python${3-} -m $module"; do
 	if $command $option >/dev/null 2>&1; then
 	    printf "%s\n" "$command"
 	    return 0
@@ -286,18 +282,6 @@ get_home_directory() {
 	    getent passwd "$1" | /usr/bin/awk -F: '{print $6}'
 	    ;;
     esac
-}
-
-get_pip_install_options() {
-    if [ "$(id -u)" -eq 0 ]; then
-	printf "%s\n" --no-cache-dir
-    fi
-
-    if [ -z "${VIRTUAL_ENV:-}" ]; then
-	if expr "$PATH" : "$HOME/\.local/bin" >/dev/null; then
-	    printf "%s\n" --user
-	fi
-    fi
 }
 
 get_pip_requirements() {
@@ -383,7 +367,12 @@ install_via_pip() (
     assert [ $# -ge 1 ]
     pip=$1
     shift
-    $pip install $(get_pip_install_options) "$@"
+
+    if [ "$(id -u)" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
+	export PATH=$HOME/.local/bin:$PATH
+    fi
+
+    $pip install "$@"
 )
 
 refresh_via_pip() {
@@ -441,14 +430,15 @@ set_unpriv_environment() {
 }
 
 upgrade_requirements_via_pip() (
-    pip=$(get_command -p ${1-$VENV_FILENAME}/bin/python pip)
+    version=$(get_python_version ${1-$VENV_FILENAME}/bin/python)
+    pip=$(get_command -v "${version%.*}" pip)
 
     if [ -z "$pip" ]; then
 	abort "%s: No pip command found in PATH\n" "$0"
     fi
 
     printf "%s\n" "Upgrading virtual environment packages via pip"
-    install_via_pip "$pip" --quiet --upgrade pip || true
+    install_via_pip "$pip" --quiet --upgrade --user pip || true
     printf "%s\n" "Installing virtual environment packages via pip"
     install_via_pip "$pip" --quiet $(get_pip_requirements)
 )
@@ -467,10 +457,5 @@ upgrade_via_pip() (
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
-
-    if [ "$(id -u)" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
-	export PATH=$HOME/.local/bin:$PATH
-    fi
-
-    install_via_pip "$pip" --quiet --upgrade "$@"
+    install_via_pip "$pip" --quiet --upgrade --user "$@"
 )
