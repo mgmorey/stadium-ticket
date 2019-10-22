@@ -383,16 +383,23 @@ install_via_pip() (
     assert [ $# -ge 1 ]
     pip=$1
     shift
-
-    if [ "$(id -u)" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
-	export PATH=$HOME/.local/bin:$PATH
-    fi
+    id="$(id -u)"
 
     if [ "$PIP_VERBOSE" = true ]; then
 	printf "Using %s\n" "$($pip --version)"
     fi
 
-    $pip install "$@"
+    if [ "$id" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
+	export PATH=$HOME/.local/bin:$PATH
+    fi
+
+    if [ "$id" -eq 0 ]; then
+	options=--no-cache-dir
+    else
+	options=
+    fi
+
+    $pip install $options "$@"
 )
 
 refresh_via_pip() {
@@ -465,7 +472,7 @@ upgrade_requirements_via_pip() (
 
     if [ "$UPGRADE_VENV_PIP" = true ]; then
 	printf "%s\n" "Upgrading virtual environment packages via pip"
-	install_via_pip "$pip" --no-cache-dir --quiet --upgrade pip || true
+	install_via_pip "$pip" --quiet --upgrade pip || true
     fi
 
     printf "%s\n" "Installing virtual environment packages via pip"
@@ -481,9 +488,5 @@ upgrade_via_pip() (
 
     printf "%s\n" "Upgrading user packages via pip"
 
-    if [ "$(id -u)" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
-	export PATH=$HOME/.local/bin:$PATH
-    fi
-
-    install_via_pip "$pip" --no-cache-dir --quiet --upgrade --user "$@"
+    install_via_pip "$pip" --quiet --upgrade --user "$@"
 )
