@@ -372,7 +372,7 @@ install_via_pip() (
 	export PATH=$HOME/.local/bin:$PATH
     fi
 
-    $(which $pip) install "$@"
+    $pip install "$@"
 )
 
 refresh_via_pip() {
