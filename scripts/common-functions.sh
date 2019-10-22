@@ -389,7 +389,7 @@ install_via_pip() (
     fi
 
     if [ "$PIP_VERBOSE" = true ]; then
-	printf "Using %s\n" "$(pip --version)"
+	printf "Using %s\n" "$($pip --version)"
     fi
 
     $pip install "$@"
