@@ -65,7 +65,7 @@ create_virtualenv() (
     printf "%s\n" "Creating virtual environment"
 
     for utility in $VENV_UTILITIES; do
-	command=$(eval get_command -p $python $utility || true)
+	command=$(get_command -p $python $utility || true)
 
 	if [ -z "$command" ]; then
 	    continue
