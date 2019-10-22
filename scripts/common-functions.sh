@@ -485,5 +485,5 @@ upgrade_via_pip() (
 	export PATH=$HOME/.local/bin:$PATH
     fi
 
-    install_via_pip "$pip" --quiet --upgrade --user "$@"
+    install_via_pip "$pip" --no-cache-dir --quiet --upgrade --user "$@"
 )
