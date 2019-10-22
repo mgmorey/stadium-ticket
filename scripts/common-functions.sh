@@ -450,7 +450,7 @@ upgrade_via_pip() (
 	options="-v \"$PYTHON_VERSIONS\""
     fi
 
-    pip=$(eval get_command $options pip)
+    pip=$(get_command $options pip)
 
     if [ -z "$pip" ]; then
 	abort "%s: No pip command found in PATH\n" "$0"
