@@ -77,7 +77,11 @@ get_realpath() (
 
 refresh_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
-	upgrade_via_pip pipenv || true
+	if upgrade_via_pip pipenv; then
+	    if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
+		hash -r
+	    fi
+	fi
 
 	if pyenv --version >/dev/null 2>&1; then
 	    python=$(find_python)
