@@ -407,7 +407,7 @@ refresh_via_pip() {
 
     if [ $sync = true ]; then
 	if [ "$UPGRADE_USER_PIP" = true ]; then
-	    if upgrade_via_pip pip; then
+	    if upgrade_via_pip pip virtualenv; then
 		if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
 		    hash -r
 		fi
