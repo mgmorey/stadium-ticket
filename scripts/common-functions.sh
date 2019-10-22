@@ -73,17 +73,23 @@ create_virtualenv() (
 
 	case "$utility" in
 	    (pyvenv)
-		$command $1
-		return $?
+		command="$command $1"
 		;;
 	    (virtualenv)
-		$command -p $python $1
-		return $?
+		command="$command -p $python $1"
 		;;
 	    (*)
 		continue
 		;;
 	esac
+
+	if [ "$VENV_VERBOSE" = true ]; then
+	    printf "Using %s\n" "$command"
+	fi
+
+	if $command; then
+	    return 0
+	fi
     done
 
     abort "%s: No virtualenv utility found\n" "$0"
