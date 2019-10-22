@@ -445,12 +445,12 @@ upgrade_requirements_via_pip() (
 
 upgrade_via_pip() (
     if [ -n "${SYSTEM_PYTHON-}" ]; then
-	options="-p \"$SYSTEM_PYTHON\""
+	versions=$(get_python_version $SYSTEM_PYTHON)
     else
-	options="-v \"$PYTHON_VERSIONS\""
+	versions=$PYTHON_VERSIONS
     fi
 
-    pip=$(get_command $options pip)
+    pip=$(eval get_command -v "$versions" pip)
 
     if [ -z "$pip" ]; then
 	abort "%s: No pip command found in PATH\n" "$0"
