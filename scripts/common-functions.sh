@@ -436,8 +436,8 @@ upgrade_requirements_via_pip() (
 	abort "%s: No pip command found in PATH\n" "$0"
     fi
 
-    # printf "%s\n" "Upgrading virtual environment packages via pip"
-    # install_via_pip "$pip" --quiet --upgrade --user pip || true
+    printf "%s\n" "Upgrading virtual environment packages via pip"
+    install_via_pip "$pip" --quiet --upgrade --user pip || true
     printf "%s\n" "Installing virtual environment packages via pip"
     install_via_pip "$pip" --quiet $(get_pip_requirements)
 )
