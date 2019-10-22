@@ -465,7 +465,7 @@ upgrade_requirements_via_pip() (
 
     if [ "$UPGRADE_VENV_PIP" = true ]; then
 	printf "%s\n" "Upgrading virtual environment packages via pip"
-	install_via_pip "$pip" --quiet --upgrade pip || true
+	install_via_pip "$pip" --no-cache-dir --quiet --upgrade pip || true
     fi
 
     printf "%s\n" "Installing virtual environment packages via pip"
