@@ -77,7 +77,7 @@ get_realpath() (
 
 refresh_via_pipenv() {
     if ! $pipenv --venv >/dev/null 2>&1; then
-	if upgrade_via_pip pipenv; then
+	if upgrade_via_pip pip pipenv; then
 	    if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
 		hash -r
 	    fi
