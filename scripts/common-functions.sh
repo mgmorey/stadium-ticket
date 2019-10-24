@@ -65,29 +65,30 @@ create_virtualenv() (
     printf "%s\n" "Creating virtual environment"
 
     for utility in $VENV_UTILITIES; do
-	command=$(get_command -p $python $utility || true)
+	case "$utility" in
+	    (pyvenv)
+		command=$(get_command -p $python $utility || true)
+		options="$1"
+		;;
+	    (virtualenv)
+		command=$(get_command -v "$PYTHON_VERSIONS" $utility || true)
+		options="-p $python $1"
+		;;
+	    (*)
+		command=
+		continue
+		;;
+	esac
 
 	if [ -z "$command" ]; then
 	    continue
 	fi
 
-	case "$utility" in
-	    (pyvenv)
-		command="$command $1"
-		;;
-	    (virtualenv)
-		command="$command -p $python $1"
-		;;
-	    (*)
-		continue
-		;;
-	esac
-
 	if [ "$VENV_VERBOSE" = true ]; then
-	    printf "Using %s\n" "$command"
+	    printf "Using %s\n" "$(which $command) $options"
 	fi
 
-	if $command; then
+	if $command $options; then
 	    return 0
 	fi
     done
