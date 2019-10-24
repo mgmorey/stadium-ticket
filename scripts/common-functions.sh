@@ -493,6 +493,5 @@ upgrade_via_pip() (
     fi
 
     printf "%s\n" "Upgrading user packages via pip"
-
     install_via_pip "$pip" --quiet --upgrade --user "$@"
 )
