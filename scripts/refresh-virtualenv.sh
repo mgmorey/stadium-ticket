@@ -30,6 +30,10 @@ assert() {
 }
 
 generate_requirements_files() (
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+    pipenv=$1
+    shift
     create_tmpfile
 
     for file; do
@@ -76,7 +80,10 @@ get_realpath() (
 )
 
 refresh_via_pipenv() {
-    if ! $pipenv --venv >/dev/null 2>&1; then
+    assert [ $# -ge 1 ]
+    assert [ -n "$1" ]
+
+    if ! $1 --venv >/dev/null 2>&1; then
 	if upgrade_via_pip pip pipenv; then
 	    if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
 		hash -r
@@ -84,41 +91,49 @@ refresh_via_pipenv() {
 	fi
 
 	if pyenv --version >/dev/null 2>&1; then
-	    python=$(find_python)
-	    $pipenv --python $python
+	    $1 --python "$(find_python)"
 	else
-	    $pipenv $PIPENV_OPTS
+	    $1 $PIPENV_OPTS
 	fi
     fi
 
     # Lock dependencies (including development dependencies) and
     # generate Pipfile.lock
-    $pipenv lock -d
+    $1 lock -d
 }
 
 refresh_virtualenv() (
     configure_baseline
-    pipenv=$(get_command pipenv || true)
-
-    if [ -z "$pipenv" ]; then
-	pip=$(get_command -v "$PYTHON_VERSIONS" pip || true)
-    fi
-
     source_dir=$script_dir/..
-
     cd "$source_dir"
 
-    if [ -n "$pipenv" ]; then
-	refresh_via_pipenv
-	generate_requirements_files $VENV_REQUIREMENTS
-	$pipenv sync -d
-    elif [ -n "$pip" ]; then
-	venv_force_sync=true
-	venv_requirements=$VENV_REQUIREMENTS
-	refresh_via_pip $VENV_FILENAME
-    else
-	abort "%s: Neither pip nor pipenv command found in PATH\n" "$0"
-    fi
+    for utility in $PYPI_UTILITIES; do
+	case "$utility" in
+	    (pipenv)
+		pipenv=$(get_command pipenv || true)
+
+		if [ -z "$pipenv" ]; then
+		    continue
+		fi
+
+		if refresh_via_pipenv $pipenv; then
+		    if generate_requirements_files $pipenv $VENV_REQUIREMENTS; then
+			if $pipenv sync -d; then
+			    return 0
+			fi
+		    fi
+		fi
+		;;
+	    (pip)
+		venv_force_sync=true
+		venv_requirements=$VENV_REQUIREMENTS
+
+		if refresh_via_pip $VENV_FILENAME; then
+		    return 0
+		fi
+		;;
+	esac
+    done
 )
 
 if [ $# -gt 0 ]; then
