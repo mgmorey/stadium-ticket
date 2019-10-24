@@ -424,7 +424,7 @@ refresh_via_pip() {
     fi
 
     if [ $sync = true ]; then
-	if [ "$UPGRADE_USER_PIP" = true ]; then
+	if [ "$PIP_UPGRADE_USER" = true ]; then
 	    if upgrade_via_pip pip virtualenv; then
 		if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
 		    hash -r
@@ -475,7 +475,7 @@ upgrade_requirements_via_pip() (
 	abort "%s: No pip command found in PATH\n" "$0"
     fi
 
-    if [ "$UPGRADE_VENV_PIP" = true ]; then
+    if [ "$PIP_UPGRADE_VENV" = true ]; then
 	printf "%s\n" "Upgrading virtual environment packages via pip"
 	install_via_pip "$pip" --quiet --upgrade pip || true
     fi
