@@ -93,7 +93,7 @@ refresh_via_pipenv() {
 	if pyenv --version >/dev/null 2>&1; then
 	    $1 --python "$(find_python)"
 	else
-	    $1 $PIPENV_OPTS
+	    $1 --three
 	fi
     fi
 
