@@ -235,12 +235,6 @@ get_command() (
 	    ;;
     esac
 
-    case "$basename" in
-	(virtualenv)
-	    versions=
-	    ;;
-    esac
-
     if [ -n "${versions-}" ]; then
 	for version in $versions; do
 	    if get_command_helper "$dirname" "$basename" $version; then
