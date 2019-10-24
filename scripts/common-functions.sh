@@ -71,7 +71,7 @@ create_virtualenv() (
 		options="$1"
 		;;
 	    (virtualenv)
-		command=$(get_command -v "$PYTHON_VERSIONS" $utility || true)
+		command=$(get_command $utility || true)
 		options="-p $python $1"
 		;;
 	    (*)
