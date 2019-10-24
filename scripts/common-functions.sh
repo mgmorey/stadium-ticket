@@ -228,14 +228,15 @@ get_command() (
 	    module=venv
 	    option=--help
 	    ;;
-	(virtualenv)
-	    module=$basename
-	    option=--version
-	    versions=
-	    ;;
 	(*)
 	    module=$basename
 	    option=--version
+	    ;;
+    esac
+
+    case "$basename" in
+	(virtualenv)
+	    versions=
 	    ;;
     esac
 
