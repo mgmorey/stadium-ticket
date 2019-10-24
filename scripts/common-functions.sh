@@ -85,10 +85,11 @@ create_virtualenv() (
 	fi
 
 	if [ "$VENV_VERBOSE" = true ]; then
-	    printf "Using %s %s from %s\n" \
-		   "$command" \
-		   "$($command --version)" \
-		   "$(which $command)"
+	    pathname=$(printf "%s\n" "$command" | awk '{print $1}')
+	    version=$($pathname --version)
+	    printf "Using %s %s from %s\n" "$utility" \
+		   "${version#Python }" \
+		   "$(which $pathname)"
 	fi
 
 	if $command $options; then
