@@ -245,7 +245,7 @@ install_virtualenv() (
 	cd "$script_dir/.."
 	venv_force_sync=true
 	venv_requirements=requirements.txt
-	refresh_via_pip $1 "$SYSTEM_PYTHON"
+	refresh_via_pip $1 $SYSTEM_PYTHON
     fi
 )
 
