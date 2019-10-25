@@ -97,8 +97,6 @@ remove_service() {
 }
 
 uninstall_app() {
-    parse_arguments "$@"
-
     for dryrun in true false; do
 	if [ $dryrun = false ] && is_app_running; then
 	    control_app stop $UWSGI_IS_PACKAGED
@@ -128,5 +126,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
+parse_arguments "$@"
 configure_baseline
-uninstall_app "$@"
+uninstall_app

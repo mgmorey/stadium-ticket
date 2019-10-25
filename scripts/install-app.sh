@@ -158,8 +158,6 @@ install_pkgsrc() {
 }
 
 install_app() {
-    configure_baseline
-
     if [ $UWSGI_IS_PACKAGED = false ]; then
 	configure_defaults
     fi
@@ -308,6 +306,7 @@ source_dir=$script_dir/..
 . "$script_dir/system-functions.sh"
 
 parse_arguments "$@"
+configure_baseline
 install_app
 signal_app_restart
 

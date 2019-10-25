@@ -47,7 +47,6 @@ get_realpath() (
 )
 
 run_in_virtualenv() {
-    configure_baseline
     pipenv=$(get_command pipenv || true)
 
     if [ -z "$pipenv" ]; then
@@ -123,4 +122,5 @@ eval $("$script_dir/get-os-release.sh" -X)
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
+configure_baseline
 run_in_virtualenv "$@"

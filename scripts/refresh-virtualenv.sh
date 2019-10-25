@@ -127,8 +127,6 @@ refresh_via_pipenv() {
 }
 
 refresh_virtualenv() (
-    configure_baseline
-    source_dir=$script_dir/..
     cd "$source_dir"
 
     for utility in ${pypi_utilities-$PYPI_UTILITIES}; do
@@ -181,10 +179,12 @@ if [ -n "${VIRTUAL_ENV:-}" ]; then
 fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
+source_dir=$script_dir/..
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
 parse_arguments "$@"
+configure_baseline
 refresh_virtualenv
