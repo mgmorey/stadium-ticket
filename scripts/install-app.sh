@@ -249,6 +249,30 @@ install_virtualenv() (
     fi
 )
 
+parse_arguments() {
+    while getopts hp:v: opt; do
+	case $opt in
+	    (h)
+		usage
+		exit 0
+		;;
+	    (p)
+		pypi_utilities=$OPTARG
+		;;
+	    (v)
+		venv_utilities=$OPTARG
+		;;
+	    (\?)
+		printf "%s\n" "" >&2
+		usage
+		exit 2
+		;;
+	esac
+    done
+
+    shift $(($OPTIND - 1))
+}
+
 print_status() {
     case "$1" in
 	(running)
@@ -265,9 +289,17 @@ print_status() {
     esac
 }
 
-if [ $# -gt 0 ]; then
-    abort "%s: Too many arguments\n" "$0"
-fi
+usage() {
+    if [ $# -gt 0 ]; then
+	printf "$@" >&2
+	printf "%s\n" "" >&2
+    fi
+
+    cat <<-EOF >&2
+	Usage: $0: [-p <PYPI-UTILITIES>] [-v <VENV-UTILITIES>]
+	       $0: -h
+	EOF
+}
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
@@ -278,6 +310,7 @@ source_dir=$script_dir/..
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
+parse_arguments "$@"
 install_app
 signal_app_restart
 
