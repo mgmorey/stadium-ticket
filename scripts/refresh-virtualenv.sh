@@ -79,6 +79,30 @@ get_realpath() (
     fi
 )
 
+parse_arguments() {
+    while getopts hp:v: opt; do
+	case $opt in
+	    (h)
+		usage
+		exit 0
+		;;
+	    (p)
+		pypi_utilities=$OPTARG
+		;;
+	    (v)
+		venv_utilities=$OPTARG
+		;;
+	    (\?)
+		printf "%s\n" "" >&2
+		usage
+		exit 2
+		;;
+	esac
+    done
+
+    shift $(($OPTIND - 1))
+}
+
 refresh_via_pipenv() {
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
@@ -107,7 +131,7 @@ refresh_virtualenv() (
     source_dir=$script_dir/..
     cd "$source_dir"
 
-    for utility in $PYPI_UTILITIES; do
+    for utility in ${pypi_utilities-$PYPI_UTILITIES}; do
 	case "$utility" in
 	    (pipenv)
 		pipenv=$(get_command pipenv || true)
@@ -136,9 +160,17 @@ refresh_virtualenv() (
     done
 )
 
-if [ $# -gt 0 ]; then
-    abort "%s: Too many arguments\n" "$0"
-fi
+usage() {
+    if [ $# -gt 0 ]; then
+	printf "$@" >&2
+	printf "%s\n" "" >&2
+    fi
+
+    cat <<-EOF >&2
+	Usage: $0: [-p <PYPI-UTILITIES>] [-v <VENV-UTILITIES>]
+	       $0: -h
+	EOF
+}
 
 if [ "$(id -u)" -eq 0 ]; then
     abort "%s: Must be run as a non-privileged user\n" "$0"
@@ -154,4 +186,5 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
+parse_arguments "$@"
 refresh_virtualenv

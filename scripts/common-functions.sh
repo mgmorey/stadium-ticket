@@ -64,7 +64,7 @@ create_virtualenv() (
 
     printf "%s\n" "Creating virtual environment"
 
-    for utility in $VENV_UTILITIES; do
+    for utility in ${venv_utilities-$VENV_UTILITIES}; do
 	case "$utility" in
 	    (pyvenv)
 		command=$(get_command -p $python $utility || true)
