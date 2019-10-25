@@ -250,14 +250,11 @@ install_virtualenv() (
 )
 
 parse_arguments() {
-    while getopts hp:v: opt; do
+    while getopts hv: opt; do
 	case $opt in
 	    (h)
 		usage
 		exit 0
-		;;
-	    (p)
-		pypi_utilities=$OPTARG
 		;;
 	    (v)
 		venv_utilities=$OPTARG
@@ -296,7 +293,7 @@ usage() {
     fi
 
     cat <<-EOF >&2
-	Usage: $0: [-p <PYPI-UTILITIES>] [-v <VENV-UTILITIES>]
+	Usage: $0: [-v <VENV-UTILITIES>]
 	       $0: -h
 	EOF
 }
