@@ -179,6 +179,7 @@ if [ -n "${VIRTUAL_ENV:-}" ]; then
 fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
+
 source_dir=$script_dir/..
 
 . "$script_dir/common-parameters.sh"
