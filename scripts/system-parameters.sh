@@ -123,7 +123,7 @@ configure_baseline() {
 			    ;;
 		    esac
 		    ;;
-		(ol)
+		(ol|rhel)
 		    case "$VERSION_ID" in
 			(7.7)
 			    configure_linux_redhat_7
