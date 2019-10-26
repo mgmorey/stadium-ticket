@@ -33,11 +33,21 @@ assert() {
 
 configure_platform() {
     case "$kernel_name" in
+	(Linux|GNU)
+	    case "$ID" in
+		(ol|rhel)
+		    install_group=false
+		    ;;
+		(*)
+		    install_group=true
+		    ;;
+	    esac
+	    ;;
 	(FreeBSD)
-	    invoke_usermod=false
+	    install_group=false
 	    ;;
 	(*)
-	    invoke_usermod=true
+	    install_group=true
 	    ;;
     esac
 }
@@ -81,7 +91,7 @@ install_docker() {
     installed_package=$("$script_dir/get-installed-docker-package.sh")
 
     case $installed_package in
-	(docker|docker.io)
+	(docker|docker.io|podman)
 	    printf "Package $installed_package is installed\n"
 	    exit 0
 	    ;;
@@ -110,7 +120,7 @@ install_docker() {
 }
 
 install_docker_group() {
-    if [ "$invoke_usermod" = false ]; then
+    if [ "$install_group" = false ]; then
 	return 0
     fi
 
@@ -221,6 +231,16 @@ validate_platform() {
 			# (31)
 			#     :
 			#     ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
+		    ;;
+		(ol|rhel)
+		    case "$VERSION_ID" in
+			(8|8.*)
+			    :
+			    ;;
 			(*)
 			    abort_not_supported Release
 			    ;;

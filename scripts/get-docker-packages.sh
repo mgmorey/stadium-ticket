@@ -19,7 +19,7 @@
 DARWIN_PKG="docker"
 DARWIN_PKGS="docker-compose"
 
-DEBIAN_10_PKG="docker.io"
+DEBIAN_PKG="docker.io"
 DEBIAN_PKGS="docker-compose"
 
 FEDORA_PKG="docker"
@@ -31,6 +31,9 @@ FREEBSD_PKGS="docker docker-compose"
 OPENSUSE_PKG="docker"
 OPENSUSE_LP_PKGS="docker-compose"
 OPENSUSE_TW_PKGS="%s-docker-compose"
+
+REDHAT_PKG="podman"
+REDHAT_PKGS="podman-docker"
 
 UBUNTU_PKG="docker.io"
 UBUNTU_PKGS="docker-compose"
@@ -53,7 +56,7 @@ get_docker_packages() {
 		(debian|raspbian|kali)
 		    case "$VERSION_ID" in
 			(10)
-			    packages="${package:-$DEBIAN_10_PKG} $DEBIAN_PKGS"
+			    packages="${package:-$DEBIAN_PKG} ${DEBIAN_PKGS-}"
 			    ;;
 		    esac
 		    ;;
@@ -61,21 +64,28 @@ get_docker_packages() {
 		    packages="${package:-$UBUNTU_PKG} $UBUNTU_PKGS"
 		    ;;
 		(opensuse-leap)
-		    packages="${package:-$OPENSUSE_PKG} $OPENSUSE_LP_PKGS"
+		    packages="${package:-$OPENSUSE_PKG} ${OPENSUSE_LP_PKGS-}"
 		    ;;
 		(opensuse-tumbleweed)
-		    packages="${package:-$OPENSUSE_PKG} $OPENSUSE_TW_PKGS"
+		    packages="${package:-$OPENSUSE_PKG} ${OPENSUSE_TW_PKGS-}"
 		    ;;
 		(fedora)
-		    packages="${package:-$FEDORA_PKG} $FEDORA_PKGS"
+		    packages="${package:-$FEDORA_PKG} ${FEDORA_PKGS-}"
+		    ;;
+		(ol|rhel)
+		    case "$VERSION_ID" in
+			(8|8.*)
+			    packages="${package:-$REDHAT_PKG} ${REDHAT_PKGS-}"
+			    ;;
+		    esac
 		    ;;
 	    esac
 	    ;;
 	(Darwin)
-	    packages="${package:-$DARWIN_PKG} $DARWIN_PKGS"
+	    packages="${package:-$DARWIN_PKG} ${DARWIN_PKGS-}"
 	    ;;
 	(FreeBSD)
-	    packages="${package:-$FREEBSD_PKG} $FREEBSD_PKGS"
+	    packages="${package:-$FREEBSD_PKG} ${FREEBSD_PKGS-}"
 	    ;;
     esac
 
