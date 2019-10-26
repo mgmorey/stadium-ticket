@@ -27,13 +27,11 @@ ENV APP_UID=www-data
 ENV UWSGI_PLUGIN_NAME=python3
 
 # Update Debian package repository index and install binary packages
-ENV APT_INSTALL="apt-get install -qy --no-install-recommends build-essential \
-mariadb-client-10.1 python3 python3-dev python3-pip sqlite3 uwsgi \
-uwsgi-plugin-python3"
-ENV APT_UPDATE="apt-get update -qy"
 ENV DEBIAN_FRONTEND=noninteractive
-ENV RETRY='i=0; while [ $i -lt 3 ]; do %s && break; i=$((i + 1)); done\n'
-RUN printf "$RETRY" "$APT_UPDATE" "$APT_INSTALL" | sh -x
+RUN apt-get update -qy
+RUN apt-get install -qy --no-install-recommends build-essential \
+mariadb-client-10.1 python3 python3-dev python3-pip sqlite3 uwsgi \
+uwsgi-plugin-python3
 
 # Install PyPI packages
 RUN pip3 install pipenv
