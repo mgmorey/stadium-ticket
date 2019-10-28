@@ -72,12 +72,12 @@ get_sqlite_packages() {
 		(fedora)
 		    packages=$FEDORA_PKGS
 		    ;;
-		(ol|centos|rhel)
+		(rhel|ol|centos)
 		    case "$VERSION_ID" in
-			(7|7.*)
+			(7|7.[78])
 			    packages=$REDHAT_7_PKGS
 			    ;;
-			(8|8.*)
+			(8|8.[01])
 			    packages=$REDHAT_8_PKGS
 			    ;;
 		    esac

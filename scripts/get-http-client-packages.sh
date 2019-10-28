@@ -50,7 +50,7 @@ get_http_client_packages() {
 		(fedora)
 		    packages="$REDHAT_PKGS"
 		    ;;
-		(ol|centos|rhel)
+		(rhel|ol|centos)
 		    packages="$REDHAT_PKGS"
 		    ;;
 	    esac

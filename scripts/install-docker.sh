@@ -236,9 +236,9 @@ validate_platform() {
 			    ;;
 		    esac
 		    ;;
-		(ol|rhel)
+		(rhel|ol|centos)
 		    case "$VERSION_ID" in
-			(8|8.*)
+			(8|8.[01])
 			    :
 			    ;;
 			(*)
