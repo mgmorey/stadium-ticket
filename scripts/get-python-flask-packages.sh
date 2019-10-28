@@ -53,22 +53,12 @@ get_flask_packages() {
 		(fedora)
 		    packages=$FEDORA_PKGS
 		    ;;
-		(ol)
+		(ol|centos|rhel)
 		    case "$VERSION_ID" in
-			(7.*)
+			(7|7.*)
 			    packages=$REDHAT_7_PKGS
 			    ;;
-			(8.*)
-			    packages=$REDHAT_8_PKGS
-			    ;;
-		    esac
-		    ;;
-		(centos)
-		    case "$VERSION_ID" in
-			(7)
-			    packages=$REDHAT_7_PKGS
-			    ;;
-			(8)
+			(8|8.*)
 			    packages=$REDHAT_8_PKGS
 			    ;;
 		    esac

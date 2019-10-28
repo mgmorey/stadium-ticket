@@ -135,12 +135,12 @@ validate_platform() {
 			    ;;
 		    esac
 		    ;;
-		(ol)
+		(ol|rhel)
 		    case "$VERSION_ID" in
-			(7.7)
+			(7.[789])
 			    :
 			    ;;
-			(8.0)
+			(8.*)
 			    :
 			    ;;
 			(*)

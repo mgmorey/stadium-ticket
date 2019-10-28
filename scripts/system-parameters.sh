@@ -125,10 +125,10 @@ configure_baseline() {
 		    ;;
 		(ol|rhel)
 		    case "$VERSION_ID" in
-			(7.7)
+			(7.[789])
 			    configure_linux_redhat_7
 			    ;;
-			(8.0)
+			(8.*)
 			    configure_linux_redhat_8
 			    ;;
 			(*)
