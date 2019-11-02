@@ -321,6 +321,9 @@ get_sort_command() {
 	(NetBSD)
 	    printf "%s\n" "sort -r"
 	    ;;
+	(SunOS)
+	    printf "%s\n" "gsort -Vr"
+	    ;;
 	(*)
 	    printf "%s\n" "sort -Vr"
 	    ;;
@@ -332,7 +335,7 @@ get_user_name() {
 }
 
 get_versions_all() {
-    pyenv install --list | /usr/bin/awk 'NR > 1 {print $1}' | grep_version ${1-}
+    pyenv install --list | awk 'NR > 1 {print $1}' | grep_version ${1-}
 }
 
 get_versions_passed() (
@@ -349,14 +352,14 @@ get_versions_passed() (
 )
 
 grep_path() {
-    printf "%s\n" "$1" | /usr/bin/awk 'BEGIN {RS=":"} {print $0}' | grep -q "$2"
+    printf "%s\n" "$1" | awk 'BEGIN {RS=":"} {print $0}' | grep "$2" >/dev/null
 }
 
 grep_version() {
     assert [ $# -le 1 ]
 
     if [ $# -eq 1 ]; then
-	grep -E '^'$1'(\.[0-9]+){0,2}$'
+	egrep '^'"$1"'(\.[0-9]+){0,2}$'
     else
 	cat
     fi
@@ -466,7 +469,7 @@ set_unpriv_environment() {
 	fi
     fi
 
-    if ! grep_path $PATH "^$HOME/.local/bin\$"; then
+    if ! grep_path $PATH '^'"$HOME"'/.local/bin$'; then
 	export PATH="$HOME/.local/bin:$PATH"
     fi
 }

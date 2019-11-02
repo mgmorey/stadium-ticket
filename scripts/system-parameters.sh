@@ -197,10 +197,10 @@ configure_baseline() {
 	    configure_unix
 
 	    case $ID in
-		(openindiana)
+		(illumos)
 		    configure_unix_openindiana
 		    ;;
-		(oracle)
+		(solaris)
 		    configure_uwsgi_source
 		    ;;
 		(*)

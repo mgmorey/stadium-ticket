@@ -32,6 +32,24 @@ create_tmpfile() {
     trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
 }
 
+get_grep_command() {
+    grep=
+
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (solaris)
+		grep=ggrep
+		;;
+	esac
+
+	if [ -n "${grep:-}" ]; then
+	    break
+	fi
+    done
+
+    printf "%s\n" "${grep:-grep}"
+}
+
 get_realpath() (
     assert [ $# -ge 1 ]
     realpath=$(which realpath)
@@ -54,12 +72,19 @@ get_uninstalled_packages() {
     "$script_dir/get-installed-packages.sh" >$tmpfile
 
     for package; do
-	if ! grep -Eq "^$package([0-9]*|-[0-9\.]+)?(nb[0-9]+)?\$" $tmpfile; then
+	if ! grep_package $package; then
 	   printf "%s\n" "$package"
 	fi
     done
 }
 
+grep_package() {
+    $grep -Eq '^'$package'([0-9]*|-[0-9\.]+)?(nb[0-9]+)?$' $tmpfile
+}
+
 script_dir=$(get_realpath "$(dirname "$0")")
 
+eval $("$script_dir/get-os-release.sh" -x)
+
+grep=$(get_grep_command)
 get_uninstalled_packages "$@"

@@ -16,13 +16,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FILE=/etc/release
-FILE_OS=/etc/os-release
-IS_SHELL_FORMAT=false
-LOWERCASE="tr '[:upper:]' '[:lower:]'"
-VARS_STANDARD="ID NAME PRETTY_NAME VERSION VERSION_ID"
-VARS_EXTENDED="debian_version kernel_name kernel_release os_version \
-os_version_id redhat_release"
+FILE_DEBIAN_VERSION=/etc/debian_version
+FILE_OS_RELEASE=/etc/os-release
+FILE_REDHAT_RELEASE=/etc/redhat-release
+FILE_RELEASE=/etc/release
+
+SET_1="ID ID_LIKE NAME PRETTY_NAME VERSION VERSION_ID \
+kernel_name os_family"
+SET_2="kernel_release os_version_id"
+
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
 
 abort_conflicting_option() {
     usage "%s: conflicting option -- %s\n" "$0" "$1"
@@ -35,54 +45,103 @@ abort_too_many_arguments() {
 }
 
 collect_data() {
-    input=$(uname -sr)
-    kernel_name=${input% *}
-    kernel_release=${input#* }
+    kernel_data=$(uname -sr)
+    kernel_name=${kernel_data% *}
+    kernel_release=${kernel_data#* }
 
     case "$kernel_name" in
-	(Linux|GNU)
-	    . $FILE_OS
-	    os_version_id=$(get_os_version_id)
-
-	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon|kali)
-		    debian_version=$(cat /etc/debian_version)
-		    ;;
-		(fedora|rhel|ol|centos)
-		    redhat_release=$(cat /etc/redhat-release)
-		    ;;
-	    esac
-	    ;;
-
-	(SunOS)
-	    input=$(awk 'NR == 1 {printf("%s %s:%s\n", $1, $2, $3)}' $FILE)
-	    NAME=${input%:*}
-	    VERSION=${input#*:}
-	    ID=$(printf "%s\n" "${NAME% *}" | $LOWERCASE)
-	    ;;
-
-	(Darwin)
-	    NAME=$(sw_vers -productName)
-	    VERSION=$(sw_vers -productVersion)
-	    ID=macos
-	    ;;
-
 	(CYGWIN_NT-*)
-	    kernel_release=$(printf "%s\n" "${input#* }" | sed -e 's/(.*)//')
-	    NAME="Microsoft Windows"
-	    VERSION=${kernel_name#*-}
-	    ID=ms-windows
+	    collect_data_for_cygwin $kernel_data
 	    ;;
-
+	(Linux|GNU)
+	    collect_data_for_gnu $kernel_data
+	    ;;
+	(Darwin)
+	    collect_data_for_darwin $kernel_data
+	    ;;
+	(SunOS)
+	    collect_data_for_sunos $kernel_data
+	    ;;
 	(*)
-	    NAME=$kernel_name
-	    VERSION=$kernel_release
-	    ID=$(printf "%s\n" "$NAME" | $LOWERCASE)
-	    PRETTY_NAME=$input
+	    collect_data_for_unix $kernel_data
 	    ;;
 
     esac
 
+    collect_defaults
+}
+
+collect_data_for_cygwin() {
+    kernel_release=$(printf "%s\n" "${kernel_data#* }" | sed -e 's/(.*)//')
+    os_family=gnu-cygwin
+    NAME="Microsoft Windows"
+    VERSION=${kernel_name#*-}
+    ID=ms-windows
+    ID_LIKE="cygwin"
+}
+
+collect_data_for_darwin() {
+    os_family=unix
+    NAME=$(sw_vers -productName)
+    VERSION=$(sw_vers -productVersion)
+    ID=macos
+    ID_LIKE="darwin"
+}
+
+collect_data_for_gnu() {
+    case "$kernel_name" in
+	(GNU)
+	    os_family=gnu-hurd
+	    ;;
+	(Linux)
+	    os_family=gnu-linux
+	    ;;
+    esac
+
+    . $FILE_OS_RELEASE
+
+    if [ "$is_extended_set" = true ]; then
+	os_version_id=$(get_os_version_id)
+    fi
+}
+
+collect_data_for_sunos() {
+    ID="$(uname -o | to_lower)"
+
+    case "$ID" in
+	(illumos)
+	    os_data=$(awk 'NR == 1 {printf("%s %s:%s\n", $1, $2, $3)}' $FILE_RELEASE)
+	    os_family=unix
+	    ID_LIKE="solaris sunos"
+	    NAME=${os_data%:*}
+	    VERSION=${os_data#*:}
+	    ;;
+	(solaris)
+	    os_data=$(awk 'NR == 1 {printf("%s %s:%s\n", $1, $2, $3)}' $FILE_RELEASE)
+	    os_family=unix
+	    ID_LIKE="sunos"
+	    NAME=${os_data%:*}
+	    VERSION=${os_data#*:}
+	    ;;
+	(*)
+	    os_data=$(awk 'NR == 1 {printf("%s %s:%s\n", $1, $2, $3)}' $FILE_RELEASE)
+	    os_family=unix
+	    ID_LIKE="sunos"
+	    NAME=${os_data%:*}
+	    VERSION=${os_data#*:}
+	    ;;
+    esac
+}
+
+collect_data_for_unix() {
+    os_family=unix
+    NAME=$kernel_name
+    VERSION=$kernel_release
+    ID=$(printf "%s\n" "$NAME" | to_lower)
+    PRETTY_NAME=$kernel_data
+}
+
+collect_defaults() {
     if [ -z "${VERSION-}" ]; then
 	VERSION=
     fi
@@ -95,12 +154,12 @@ collect_data() {
 	PRETTY_NAME="$NAME $VERSION"
     fi
 
-    if [ -z "${os_version_id-}" ]; then
-	os_version_id=$VERSION_ID
+    if [ "$is_extended_set" = false ]; then
+	return
     fi
 
-    if [ -z "${os_version-}" ]; then
-	os_version=$VERSION
+    if [ -z "${os_version_id-}" ]; then
+	os_version_id=$VERSION_ID
     fi
 }
 
@@ -114,19 +173,30 @@ get_os_version_id() {
 		(ubuntu)
 		    printf "%s\n" "$VERSION" | awk '{print $1}'
 		    ;;
-		(fedora)
-		    awk '{print $3}' /etc/redhat-release
-		    ;;
-		(rhel|ol)
-		    awk '{print $6}' /etc/redhat-release
-		    ;;
-		(centos)
-		    awk '{print $4}' /etc/redhat-release
+		(fedora|rhel|ol|centos)
+		    "$script_dir/get-redhat-version.sh" /etc/redhat-release
 		    ;;
 	    esac
 	    ;;
     esac
 }
+
+get_realpath() (
+    assert [ $# -ge 1 ]
+    realpath=$(which realpath)
+
+    if [ -n "$realpath" ]; then
+	$realpath "$@"
+    else
+	for file; do
+	    if expr "$file" : '/.*' >/dev/null; then
+		printf "%s\n" "$file"
+	    else
+		printf "%s\n" "$PWD/${file#./}"
+	    fi
+	done
+    fi
+)
 
 output_data() {
     if [ -z "${vars-}" ]; then
@@ -147,7 +217,8 @@ output_data() {
 }
 
 parse_arguments() {
-    is_shell_format=$IS_SHELL_FORMAT
+    is_extended_set=false
+    is_shell_format=false
     vars=
 
     while getopts Xhiknprvx opt; do
@@ -171,10 +242,11 @@ parse_arguments() {
 		queue_vars VERSION_ID
 		;;
 	    (x)
-		queue_vars $VARS_STANDARD
+		queue_vars $SET_1
 		;;
 	    (X)
-		queue_vars $VARS_STANDARD $VARS_EXTENDED
+		is_extended_set=true
+		queue_vars $SET_1 $SET_2
 		;;
 	    (h)
 		usage
@@ -212,6 +284,10 @@ queue_vars() {
     fi
 }
 
+to_lower() {
+    tr '[:upper:]' '[:lower:]'
+}
+
 usage() {
     if [ $# -gt 0 ]; then
 	printf "$@" >&2
@@ -225,6 +301,8 @@ usage() {
 	       $0: -h
 	EOF
 }
+
+script_dir=$(get_realpath "$(dirname "$0")")
 
 parse_arguments "$@"
 collect_data

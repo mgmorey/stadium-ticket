@@ -26,43 +26,52 @@ assert() {
 }
 
 get_package_manager() {
-    case "$kernel_name" in
-	(Linux|GNU)
-	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon|kali)
-		    printf "%s\n" apt-get
-		    ;;
-		(opensuse-*)
-		    printf "%s\n" zypper
-		    ;;
-		(fedora)
-		    printf "%s\n" dnf
-		    ;;
-		(rhel|ol|centos)
-		    case "$VERSION_ID" in
-			(7|7.[78])
-			    printf "%s\n" yum /usr/pkg/bin/pkgin
-			    ;;
-			(8|8.[01])
-			    printf "%s\n" dnf
-			    ;;
-		    esac
-		    ;;
-	    esac
-	    ;;
-	(Darwin)
-	    printf "%s\n" /usr/local/bin/brew /opt/pkg/bin/pkgin
-	    ;;
-	(FreeBSD)
-	    printf "%s\n" pkg
-	    ;;
-	(NetBSD)
-	    printf "%s\n" pkgin
-	    ;;
-	(SunOS)
-	    printf "%s\n" pkg pkgin
-	    ;;
-    esac
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (debian)
+		managers="apt-get"
+		;;
+	    (fedora)
+		managers="dnf"
+		;;
+	    (opensuse)
+		managers="zypper"
+		;;
+	    (rhel|ol|centos)
+		case "$VERSION_ID" in
+		    (7|7.[78])
+			managers="yum /usr/pkg/bin/pkgin"
+			;;
+		    (8|8.[01])
+			managers="dnf"
+			;;
+		esac
+		;;
+	    (macos)
+		managers="/usr/local/bin/brew /opt/pkg/bin/pkgin"
+		;;
+	    (freebsd)
+		managers="pkg"
+		;;
+	    (netbsd)
+		managers="pkgin"
+		;;
+	    (illumos)
+		managers="pkg pkgin"
+		;;
+	    (solaris)
+		managers="pkg"
+		;;
+	esac
+
+	if [ -n "${managers-}" ]; then
+	    break
+	fi
+    done
+
+    if [ -n "${managers-}" ]; then
+	printf "%s\n" $managers
+    fi
 }
 
 get_realpath() (
