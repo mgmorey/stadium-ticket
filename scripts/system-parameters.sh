@@ -198,7 +198,10 @@ configure_baseline() {
 
 	    case $ID in
 		(openindiana)
-		    configure_unix_sunos
+		    configure_unix_openindiana
+		    ;;
+		(oracle)
+		    configure_uwsgi_source
 		    ;;
 		(*)
 		    abort_not_supported Distro
@@ -580,7 +583,7 @@ configure_unix_netbsd() {
     UWSGI_IS_PKGSRC=true
 }
 
-configure_unix_sunos() {
+configure_unix_openindiana() {
     # Set application group and user accounts
     APP_GID=webservd
     APP_UID=webservd
