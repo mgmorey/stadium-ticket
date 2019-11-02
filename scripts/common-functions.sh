@@ -52,7 +52,7 @@ create_virtualenv() (
     python=${2-}
 
     if [ -z "${python-}" ]; then
-	python=$(find_system_python | /usr/bin/awk '{print $1}')
+	python=$(find_system_python | awk '{print $1}')
 	python=$(find_user_python $python)
 	version="$(get_python_version $python)"
 
@@ -100,7 +100,7 @@ create_virtualenv() (
 )
 
 find_python() (
-    python=$(find_system_python | /usr/bin/awk '{print $1}')
+    python=$(find_system_python | awk '{print $1}')
     python=$(find_user_python $python)
     version="$(get_python_version $python)"
 
@@ -268,6 +268,21 @@ get_command_helper() (
     return 1
 )
 
+get_compiler() {
+    compiler=
+
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (solaris)
+		compiler=cc
+		break
+		;;
+	esac
+    done
+
+    printf "%s\n" "${compiler:-gcc}"
+}
+
 get_file_metadata() {
     assert [ $# -eq 2 ]
 
@@ -289,7 +304,7 @@ get_home_directory() {
 	    printf "/Users/%s\n" "$1"
 	    ;;
 	(*)
-	    getent passwd "$1" | /usr/bin/awk -F: '{print $6}'
+	    getent passwd "$1" | awk -F: '{print $6}'
 	    ;;
     esac
 }
@@ -335,11 +350,12 @@ get_user_name() {
 }
 
 get_versions_all() {
+    export PATH=/usr/gnu/bin:$PATH
     pyenv install --list | awk 'NR > 1 {print $1}' | grep_version ${1-}
 }
 
 get_versions_passed() (
-    python=$(find_system_python | /usr/bin/awk '{print $1}')
+    python=$(find_system_python | awk '{print $1}')
     python_versions=$($python "$script_dir/check-python.py" --delim '\.')
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
@@ -383,6 +399,8 @@ install_python_version() (
 	return 1
     fi
 
+    export CC=$(get_compiler)
+    export PATH=/usr/gnu/bin:$PATH
     pyenv install -s $python
 )
 
