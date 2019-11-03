@@ -28,10 +28,6 @@ assert() {
 }
 
 build_uwsgi_from_source() {
-    if ! "$script_dir/install-dependencies.sh"; then
-	exit $?
-    fi
-
     if ! run_unpriv "$script_dir/build-uwsgi.sh" "$@"; then
 	abort "%s: Unable to build uWSGI from source\n" "$0"
     fi
@@ -147,6 +143,12 @@ install_app_files() (
     done
 )
 
+install_dependencies() {
+    if ! "$script_dir/install-dependencies.sh"; then
+	abort "%s: Unable to install dependencies\n" "$0"
+    fi
+}
+
 install_pkgsrc() {
     if ! which $UWSGI_PREFIX/bin/pkgin >/dev/null 2>/dev/null; then
 	if [ $dryrun = true ]; then
@@ -212,6 +214,7 @@ install_uwsgi_from_package() (
 
 install_uwsgi_from_source() (
     if [ $dryrun = false ]; then
+	install_dependencies
 	build_uwsgi_from_source $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION
 	home_dir="$(get_home_directory $(get_user_name))"
 
