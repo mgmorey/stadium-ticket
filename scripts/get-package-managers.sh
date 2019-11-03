@@ -56,9 +56,6 @@ get_package_manager() {
 	    (netbsd)
 		managers="pkgin"
 		;;
-	    (illumos)
-		managers="pkg pkgin"
-		;;
 	    (solaris)
 		managers="pkg"
 		;;
