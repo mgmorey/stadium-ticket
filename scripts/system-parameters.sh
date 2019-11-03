@@ -198,7 +198,7 @@ configure_baseline() {
 
 	    case $ID in
 		(illumos)
-		    configure_unix_openindiana
+		    configure_unix_illumos
 		    ;;
 		(solaris)
 		    configure_uwsgi_source
@@ -565,6 +565,26 @@ configure_unix_freebsd_12() {
     configure_unix_freebsd
 }
 
+configure_unix_illumos() {
+    # Set application group and user accounts
+    APP_GID=webservd
+    APP_UID=webservd
+
+    # # Set system Python interpreter
+    # SYSTEM_PYTHON=/opt/local/bin/python3.6
+
+    # # Set uWSGI prefix directory
+    # UWSGI_PREFIX=/opt/local
+
+    # # Set uWSGI binary file
+    # UWSGI_BINARY_NAME=uwsgi-3.6
+
+    # # Set other uWSGI parameters
+    # UWSGI_IS_PKGSRC=true
+
+    configure_uwsgi_source
+}
+
 configure_unix_netbsd() {
     # Set application group and user accounts
     APP_GID=www
@@ -575,24 +595,6 @@ configure_unix_netbsd() {
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/pkg
-
-    # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.6
-
-    # Set other uWSGI parameters
-    UWSGI_IS_PKGSRC=true
-}
-
-configure_unix_openindiana() {
-    # Set application group and user accounts
-    APP_GID=webservd
-    APP_UID=webservd
-
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/opt/local/bin/python3.6
-
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/opt/local
 
     # Set uWSGI binary file
     UWSGI_BINARY_NAME=uwsgi-3.6
