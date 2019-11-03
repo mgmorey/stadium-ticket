@@ -36,15 +36,10 @@ build_uwsgi_binary() (
 
     case $2 in
 	(uwsgi)
-	    $1 uwsgiconfig.py --build $UWSGI_BUILDCONF
+	    CC=gcc $1 uwsgiconfig.py --build $UWSGI_BUILDCONF
 	    ;;
 	(*)
-	    case "$UWSGI_BUILDCONF" in
-		(core)
-		    options="--plugin plugins/python $UWSGI_BUILDCONF"
-		    $1 uwsgiconfig.py $options ${2%_*}
-		    ;;
-	    esac
+	    CC=gcc $1 uwsgiconfig.py $(get_options) ${2%_*}
 	    ;;
     esac
 )
@@ -76,6 +71,19 @@ fetch_uwsgi_source() {
     mkdir -p git
     cd git
     git clone -b $UWSGI_BRANCH $UWSGI_URL $UWSGI_BRANCH
+}
+
+get_options() {
+    case "$UWSGI_BUILDCONF" in
+	(core)
+	    options="--plugin plugins/python $UWSGI_BUILDCONF"
+	    ;;
+	(*)
+	    options=
+	    ;;
+    esac
+
+    printf "%s\n" "$options"
 }
 
 get_realpath() (
