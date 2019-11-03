@@ -309,6 +309,21 @@ get_home_directory() {
     esac
 }
 
+get_path() {
+    path=
+
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (solaris)
+		path=/usr/gnu/bin:$PATH
+		break
+		;;
+	esac
+    done
+
+    printf "%s\n" "${path:-$PATH}"
+}
+
 get_pip_command() {
     if [ -n "${1-}" ]; then
 	get_command -p $1 pip
@@ -350,7 +365,7 @@ get_user_name() {
 }
 
 get_versions_all() {
-    export PATH=/usr/gnu/bin:$PATH
+    export PATH=$(get_path)
     pyenv install --list | awk 'NR > 1 {print $1}' | grep_version ${1-}
 }
 
@@ -400,7 +415,7 @@ install_python_version() (
     fi
 
     export CC=$(get_compiler)
-    export PATH=/usr/gnu/bin:$PATH
+    export PATH=$(get_path)
     pyenv install -s $python
 )
 
