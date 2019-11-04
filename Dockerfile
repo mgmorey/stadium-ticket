@@ -49,8 +49,8 @@ COPY app/ $APP_DIR/app/
 COPY Pipfile* $APP_DIR/
 COPY app.ini $APP_ETCDIR/
 
-# Edit Pipfile in place, setting python_version
-RUN sed -i 's/\(python_version\) = "3.5"/\1 = "3"/' Pipfile
+# Edit value of python_version in Pipfile
+RUN sed -i 's/\(python_version\) = ".+"/\1 = "3.6"/' $APP_DIR/Pipfile
 
 # Grant application ownership of app, run and data directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
