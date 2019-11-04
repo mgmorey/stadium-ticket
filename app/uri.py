@@ -41,7 +41,7 @@ def _get_endpoint(dialect: str):
 
     host = _get_string('DATABASE_HOST', default=HOST)
     port = _get_string('DATABASE_PORT', default=None)
-    return f"{host}:{port}" if port else host
+    return "{}:{}".format(host, port) if port else host
 
 
 def _get_filename(dialect: str, schema: str):
@@ -49,7 +49,7 @@ def _get_filename(dialect: str, schema: str):
     if '{4}' not in _get_uri(dialect):
         return None
 
-    name = f"{schema}.sqlite"
+    name = "{}.sqlite".format(schema)
     name = _get_string('DATABASE_FILENAME', default=name)
     return name
 
@@ -61,13 +61,13 @@ def _get_login(dialect: str):
 
     password = _get_string('DATABASE_PASSWORD', default=None)
     user = _get_string('DATABASE_USER', default=os.getenv('USER', USER))
-    return f"{user}:{password}" if password else user
+    return "{}:{}".format(user, password) if password else user
 
 
 def _get_scheme(dialect: str):
     """Return a database URI scheme parameter value."""
     driver = _get_string('DATABASE_DRIVER', default=_get_driver(dialect))
-    return f"{dialect}+{driver}" if driver else dialect
+    return "{}+{}".format(dialect, driver) if driver else dialect
 
 
 def _get_string(parameter: str, default: str):
@@ -90,7 +90,7 @@ def _validate(parameter: str, value: str) -> str:
     pattern = PATTERN.get(parameter, PATTERN[None])
 
     if not pattern.fullmatch(value):
-        raise ValueError(f"Invalid {parameter} value: \"{value}\"")
+        raise ValueError("Invalid {} value: \"{}\"".format(parameter, value))
 
     return value
 
