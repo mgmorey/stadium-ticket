@@ -45,8 +45,8 @@ ENV WWW_VARDIR=/var/www
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
 # Install application files
+COPY Pipfile-docker $APP_DIR/Pipfile
 COPY app/ $APP_DIR/app/
-COPY Pipfile $APP_DIR/
 COPY app.ini $APP_ETCDIR/
 
 # Edit value of python_version in Pipfile
