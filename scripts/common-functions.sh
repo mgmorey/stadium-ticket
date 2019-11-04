@@ -53,10 +53,15 @@ create_virtualenv() (
 
     if [ -z "${python-}" ]; then
 	python=$(find_system_python | awk '{print $1}')
+
+	if [ -z "${python-}" ]; then
+	    abort "%s\n" "No suitable system Python interpreter found"
+	fi
+
 	python=$(find_user_python $python)
 
 	if [ -z "${python-}" ]; then
-	    abort "%s\n" "No suitable Python interpreter found"
+	    abort "%s\n" "No suitable user Python interpreter found"
 	fi
 
 	version="$(get_python_version $python)"
