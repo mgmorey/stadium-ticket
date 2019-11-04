@@ -46,7 +46,7 @@ RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
 # Install application files
 COPY app/ $APP_DIR/app/
-COPY Pipfile* $APP_DIR/
+COPY Pipfile $APP_DIR/
 COPY app.ini $APP_ETCDIR/
 
 # Edit value of python_version in Pipfile
@@ -63,7 +63,7 @@ USER $APP_UID
 ENV LANG=${LANG:-C.UTF-8}
 ENV LC_ALL=${LC_ALL:-C.UTF-8}
 ENV PIPENV_VENV_IN_PROJECT=true
-RUN pipenv sync
+RUN pipenv install
 RUN pipenv run python3 -m app init-db
 
 # Change to data directory, expose port and start app
