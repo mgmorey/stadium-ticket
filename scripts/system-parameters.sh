@@ -209,7 +209,7 @@ configure_baseline() {
 	    esac
 	    ;;
 	(CYGWIN_NT-10.*)
-	    configure_windows
+	    configure_cygwin
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"
@@ -362,6 +362,17 @@ configure_defaults() {
     if [ -z "${APP_SOCKET-}" ]; then
 	APP_SOCKET=
     fi
+}
+
+configure_cygwin() {
+    # Set ps command format and command column
+    PS_COLUMN=6
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/usr/bin/python3.5
+
+    # Set uWSGI parameters
+    configure_uwsgi_source
 }
 
 configure_gnu() {
@@ -611,14 +622,6 @@ configure_uwsgi_source() {
 
     UWSGI_IS_PACKAGED=false
     UWSGI_IS_SERVICE=false
-}
-
-configure_windows() {
-    # Set ps command format and command column
-    PS_COLUMN=6
-
-    # Set uWSGI parameters
-    configure_uwsgi_source
 }
 
 find_available_plugins() {
