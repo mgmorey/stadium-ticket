@@ -581,7 +581,20 @@ configure_unix_illumos() {
     APP_GID=webservd
     APP_UID=webservd
 
-    configure_uwsgi_source
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/opt/local/bin/python3.6
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/opt/local
+
+    # Set uWSGI binary file
+    UWSGI_BINARY_NAME=uwsgi-3.6
+
+    # Set other uWSGI parameters
+    UWSGI_IS_PKGSRC=true
+
+    export CC=gcc
+    export CFLAGS=-m64
 }
 
 configure_unix_netbsd() {
