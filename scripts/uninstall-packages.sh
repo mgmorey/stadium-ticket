@@ -102,30 +102,34 @@ uninstall_packages_from_args() (
     index=1
 
     while [ $index -le 2 ]; do
-	uninstall_using "$(get_manager $index)" remove \
+	uninstall_using "$(get_manager $index)" \
 			$(get_packages $index)
 	index=$((index + 1))
     done
 )
 
 uninstall_using() (
-    assert [ $# -ge 2 ]
+    assert [ $# -ge 1 ]
 
-    if [ $# -eq 2 ]; then
+    if [ $# -eq 1 ]; then
 	return 0
     elif [ -z "$1" ]; then
 	return 0
     fi
 
-    uninstaller=$1
-    uninstaller_command=$2
-    shift 2
+    manager=$1
+    shift 1
 
-    if [ "$uninstaller" = /usr/local/bin/brew ]; then
-	run_unpriv -c "$uninstaller $uninstaller_command $*"
-    else
-	$uninstaller $uninstaller_command "$@"
-    fi
+    uninstall=$("$script_dir/get-uninstall-command.sh" $manager)
+
+    case "$manager" in
+	(brew|*/brew)
+	    run_unpriv -c "$manager $uninstall $*"
+	    ;;
+	(*)
+	    $manager $uninstall $*
+	    ;;
+    esac
 )
 
 validate_platform() {
