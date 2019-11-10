@@ -16,22 +16,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS=":%s-sqlite3 sqlite"
+DARWIN_PKGS="sqlite"
 
 DEBIAN_PKGS="sqlite3"
 
 FEDORA_PKGS="sqlite"
 
-FREEBSD_PKGS="%s-sqlite3 sqlite3"
+FREEBSD_PKGS="sqlite3"
 
-NETBSD_PKGS="%s-sqlite3 sqlite3"
+ILLUMOS_PKGS="database/sqlite-3"
+
+NETBSD_PKGS="sqlite3"
 
 OPENSUSE_PKGS="sqlite3"
 
-REDHAT_7_PKGS=":%s-sqlite3 sqlite"
-REDHAT_8_PKGS="sqlite"
+REDHAT_PKGS="sqlite"
 
-SUNOS_PKGS="database/sqlite-3 :%s-sqlite3"
+SOLARIS_PKGS="database/sqlite-3"
 
 abort() {
     printf "$@" >&2
@@ -60,43 +61,41 @@ get_realpath() (
 )
 
 get_sqlite_packages() {
-    case "$kernel_name" in
-	(Linux|GNU)
-	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon|kali)
-		    packages=$DEBIAN_PKGS
-		    ;;
-		(opensuse-*)
-		    packages=$OPENSUSE_PKGS
-		    ;;
-		(fedora)
-		    packages=$FEDORA_PKGS
-		    ;;
-		(rhel|ol|centos)
-		    case "$VERSION_ID" in
-			(7|7.[78])
-			    packages=$REDHAT_7_PKGS
-			    ;;
-			(8|8.[01])
-			    packages=$REDHAT_8_PKGS
-			    ;;
-		    esac
-		    ;;
-	    esac
-	    ;;
-	(Darwin)
-	    packages=$DARWIN_PKGS
-	    ;;
-	(FreeBSD)
-	    packages=$FREEBSD_PKGS
-	    ;;
-	(NetBSD)
-	    packages=$NETBSD_PKGS
-	    ;;
-	(SunOS)
-	    packages=$SUNOS_PKGS
-	    ;;
-    esac
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (debian)
+		packages=$DEBIAN_PKGS
+		;;
+	    (opensuse)
+		packages=$OPENSUSE_PKGS
+		;;
+	    (fedora)
+		packages=$FEDORA_PKGS
+		;;
+	    (rhel|ol|centos)
+		packages=$REDHAT_PKGS
+		;;
+	    (darwin)
+		packages=$DARWIN_PKGS
+		;;
+	    (freebsd)
+		packages=$FREEBSD_PKGS
+		;;
+	    (netbsd)
+		packages=$NETBSD_PKGS
+		;;
+	    (illumos)
+		packages=$ILLUMOS_PKGS
+		;;
+	    (solaris)
+		packages=$ILLUMOS_PKGS
+		;;
+	esac
+
+	if [ -n "${packages-}" ]; then
+	    break
+	fi
+    done
 
     "$script_dir/get-python-packages.sh" ${packages-}
 }
