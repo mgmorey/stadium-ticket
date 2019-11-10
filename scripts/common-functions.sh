@@ -278,21 +278,6 @@ get_command_helper() (
     return 1
 )
 
-get_compiler() {
-    compiler=
-
-    for id in $ID $ID_LIKE; do
-	case "$id" in
-	    (solaris)
-		compiler=cc
-		break
-		;;
-	esac
-    done
-
-    printf "%s\n" "${compiler:-gcc}"
-}
-
 get_file_metadata() {
     assert [ $# -eq 2 ]
 
@@ -317,21 +302,6 @@ get_home_directory() {
 	    getent passwd "$1" | awk -F: '{print $6}'
 	    ;;
     esac
-}
-
-get_path() {
-    path=
-
-    for id in $ID $ID_LIKE; do
-	case "$id" in
-	    (solaris)
-		path=/usr/gnu/bin:$PATH
-		break
-		;;
-	esac
-    done
-
-    printf "%s\n" "${path:-$PATH}"
 }
 
 get_pip_command() {
@@ -424,9 +394,14 @@ install_python_version() (
 	return 1
     fi
 
-    export CC=$(get_compiler)
-    export PATH=$(get_path)
-    pyenv install -s $python
+    set_compiler
+    set_flags
+    set_path
+    printenv | egrep '^(CC|CFLAGS|CPPFLAGS|LDFLAGS|PATH)=' | sort
+
+    if ! pyenv install -s $python; then
+	abort "%s: Unable to build and install python via pyenv" "$0"
+    fi
 )
 
 install_via_pip() (
@@ -498,6 +473,45 @@ refresh_via_pip() {
     fi
 }
 
+set_compiler() {
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (illumos)
+	    	break
+	    	;;
+	    (solaris)
+		export CC=cc
+		break
+		;;
+	esac
+    done
+
+    if [ -n "${compiler-}" ]; then
+	printf "%s\n" "$compiler"
+    fi
+}
+
+set_flags() {
+    for id in $ID $ID_LIKE; do
+    	case "$id" in
+    	    (solaris)
+    		break
+    		;;
+    	esac
+    done
+}
+
+set_path() {
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (solaris)
+		export PATH=/usr/gnu/bin:$PATH
+		break
+		;;
+	esac
+    done
+}
+
 set_unpriv_environment() {
     home_dir="$(get_home_directory $(get_user_name))"
 
@@ -530,6 +544,7 @@ upgrade_requirements_via_pip() (
     fi
 
     printf "%s\n" "Installing virtual environment packages via pip"
+    printenv | egrep '^(CC|CFLAGS|CPPFLAGS|LDFLAGS|PATH)=' | sort
     install_via_pip "$pip" $(get_pip_requirements)
 )
 
