@@ -44,7 +44,7 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $("$script_dir/get-os-release.sh" -X)
+eval $("$script_dir/get-os-release.sh" -x)
 
 case "$kernel_name" in
     (Linux|GNU)
@@ -52,13 +52,7 @@ case "$kernel_name" in
 	    (opensuse-*)
 		printf "%s\n" "install -t pattern"
 		;;
-	    (fedora)
-		printf "%s\n" "groupinstall"
-		;;
-	    (ol)
-		printf "%s\n" "groupinstall"
-		;;
-	    (centos)
+	    (fedora|rhel|ol|centos)
 		printf "%s\n" "groupinstall"
 		;;
 	    (*)
