@@ -30,9 +30,9 @@ libuuid-devel make ncurses-devel python3-devel openssl-devel \
 readline-devel sqlite-devel xz-devel zlib-devel"
 
 FREEBSD_11_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses \
-readline sqlite3"
+openssl-devel readline sqlite3"
 FREEBSD_12_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses \
-readline sqlite3"
+openssl-devel readline sqlite3"
 
 NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline \
 sqlite3 :git"
