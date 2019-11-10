@@ -18,6 +18,8 @@
 
 DARWIN_PKGS=":%s-sqlite3"
 
+FEDORA_PKGS="%s-sqlite3"
+
 FREEBSD_PKGS="%s-sqlite3"
 
 ILLUMOS_PKGS=":%s-sqlite3"
@@ -62,6 +64,9 @@ get_sqlite_packages() {
 		case "$VERSION_ID" in
 		    (7|7.*)
 			packages=$REDHAT_7_PKGS
+			;;
+		    (8|8.*)
+			break
 			;;
 		esac
 		;;
