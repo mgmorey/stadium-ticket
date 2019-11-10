@@ -345,7 +345,7 @@ get_user_name() {
 }
 
 get_versions_all() {
-    export PATH=$(get_path)
+    set_path
     pyenv install --list | awk 'NR > 1 {print $1}' | grep_version ${1-}
 }
 
@@ -477,6 +477,7 @@ set_compiler() {
     for id in $ID $ID_LIKE; do
 	case "$id" in
 	    (illumos)
+		unset CC
 	    	break
 	    	;;
 	    (solaris)
@@ -505,7 +506,10 @@ set_path() {
     for id in $ID $ID_LIKE; do
 	case "$id" in
 	    (solaris)
-		export PATH=/usr/gnu/bin:$PATH
+		if ! expr "$PATH" : /usr/gnu/bin >/dev/null; then
+		    export PATH=/usr/gnu/bin:$PATH
+		fi
+
 		break
 		;;
 	esac
