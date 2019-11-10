@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-python-flask-packages: get Python Flask microframework package names
+# get-python-flask-packages: get list of Python Flask package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -22,14 +22,14 @@ FEDORA_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
 FREEBSD_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
+ILLUMOS_PKGS=":%s-flask :%s-flask-restful :%s-flask-sqlalchemy"
+
 NETBSD_PKGS="%s-flask %s-flask-restful %s-flask-sqlalchemy"
 
 OPENSUSE_PKGS="%s-Flask %s-Flask-RESTful %s-Flask-SQLAlchemy"
 
 REDHAT_7_PKGS=":%s-flask :%s-flask-restful :%s-flask-sqlalchemy"
 REDHAT_8_PKGS="%s-flask"
-
-SUNOS_PKGS=":%s-flask :%s-flask-restful :%s-flask-sqlalchemy"
 
 abort() {
     printf "$@" >&2
@@ -40,41 +40,46 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_flask_packages() {
-    case "$kernel_name" in
-	(Linux|GNU)
-	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon|kali)
-		    packages=$DEBIAN_PKGS
-		    ;;
-		(opensuse-*)
-		    packages=$OPENSUSE_PKGS
-		    ;;
-		(fedora)
-		    packages=$FEDORA_PKGS
-		    ;;
-		(rhel|ol|centos)
-		    case "$VERSION_ID" in
-			(7|7.[78])
-			    packages=$REDHAT_7_PKGS
-			    ;;
-			(8|8.[01])
-			    packages=$REDHAT_8_PKGS
-			    ;;
-		    esac
-		    ;;
-	    esac
-	    ;;
-	(FreeBSD)
-	    packages=$FREEBSD_PKGS
-	    ;;
-	(NetBSD)
-	    packages=$NETBSD_PKGS
-	    ;;
-	(SunOS)
-	    packages=$SUNOS_PKGS
-	    ;;
-    esac
+get_python_flask_packages() {
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (debian)
+		packages=$DEBIAN_PKGS
+		;;
+	    (opensuse)
+		packages=$OPENSUSE_PKGS
+		;;
+	    (fedora)
+		packages=$FEDORA_PKGS
+		;;
+	    (rhel|ol|centos)
+		case "$VERSION_ID" in
+		    (7|7.*)
+			packages=$REDHAT_7_PKGS
+			;;
+		    (8|8.*)
+			packages=$REDHAT_8_PKGS
+			;;
+		esac
+		;;
+	    (darwin)
+		packages=$DARWIN_PKGS
+		;;
+	    (freebsd)
+		packages=$FREEBSD_PKGS
+		;;
+	    (netbsd)
+		packages=$NETBSD_PKGS
+		;;
+	    (illumos)
+		packages=$ILLUMOS_PKGS
+		;;
+	esac
+
+	if [ -n "${packages-}" ]; then
+	    break
+	fi
+    done
 
     "$script_dir/get-python-packages.sh" ${packages-}
 }
@@ -100,4 +105,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-get_flask_packages
+get_python_flask_packages
