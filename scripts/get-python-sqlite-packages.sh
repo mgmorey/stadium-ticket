@@ -18,8 +18,6 @@
 
 DARWIN_PKGS=":%s-sqlite3"
 
-FEDORA_PKGS="%s-sqlite3"
-
 FREEBSD_PKGS="%s-sqlite3"
 
 ILLUMOS_PKGS=":%s-sqlite3"
@@ -57,9 +55,6 @@ get_realpath() (
 get_sqlite_packages() {
     for id in $ID $ID_LIKE; do
 	case "$id" in
-	    (fedora)
-		packages=$FEDORA_PKGS
-		;;
 	    (rhel|ol|centos)
 		case "$VERSION_ID" in
 		    (7|7.*)
