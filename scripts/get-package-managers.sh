@@ -25,42 +25,42 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_package_manager() {
+get_package_managers() {
     for id in $ID $ID_LIKE; do
 	case "$id" in
 	    (debian)
-		managers="apt-get"
+		managers="/usr/bin/apt-get"
 		;;
 	    (fedora)
-		managers="dnf"
+		managers="/usr/bin/dnf"
 		;;
 	    (opensuse)
-		managers="zypper"
+		managers="/usr/bin/zypper"
 		;;
 	    (rhel|ol|centos)
 		case "$VERSION_ID" in
-		    (7|7.[78])
-			managers="yum /usr/pkg/bin/pkgin"
+		    (7|7.*)
+			managers="/usr/bin/yum /usr/pkg/bin/pkgin"
 			;;
-		    (8|8.[01])
-			managers="dnf"
+		    (8|8.*)
+			managers="/usr/bin/dnf"
 			;;
 		esac
 		;;
-	    (macos)
+	    (darwin)
 		managers="/usr/local/bin/brew /opt/pkg/bin/pkgin"
 		;;
 	    (freebsd)
-		managers="pkg"
+		managers="/usr/local/sbin/pkg"
 		;;
 	    (netbsd)
-		managers="pkgin"
+		managers="/usr/pkg/bin/pkgin"
 		;;
 	    (illumos)
-		managers="pkg pkgin"
+		managers="/usr/bin/pkg /opt/local/bin/pkgin"
 		;;
 	    (solaris)
-		managers="pkg"
+		managers="/usr/bin/pkg /opt/csw/bin/pkgutil"
 		;;
 	esac
 
@@ -95,4 +95,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -X)
 
-get_package_manager
+get_package_managers
