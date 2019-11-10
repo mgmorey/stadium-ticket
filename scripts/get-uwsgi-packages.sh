@@ -24,6 +24,8 @@ FEDORA_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
 FREEBSD_PKGS="uwsgi"
 
+ILLUMOS_PKGS=":%s-uwsgi"
+
 NETBSD_PKGS="%s-uwsgi"
 
 OPENSUSE_PKGS="system-user-wwwrun util-linux uwsgi uwsgi-%s"
@@ -31,10 +33,8 @@ OPENSUSE_PKGS="system-user-wwwrun util-linux uwsgi uwsgi-%s"
 REDHAT_7_PKGS=":%s-uwsgi"
 REDHAT_8_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
-SUNOS_PKGS=":%s-uwsgi"
-
 UBUNTU_18_PKGS="setpriv uwsgi uwsgi-plugin-%s"
-UBUNTU_19_PKGS=$DEBIAN_10_PKGS
+UBUNTU_19_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
 abort() {
     printf "$@" >&2
@@ -63,74 +63,55 @@ get_realpath() (
 )
 
 get_uwsgi_packages() {
-    case "$kernel_name" in
-	(Linux|GNU)
-	    case "$ID" in
-		(debian|raspbian)
-		    case "$VERSION_ID" in
-			(10)
-			    packages=$DEBIAN_10_PKGS
-			    ;;
-		    esac
-		    ;;
-		(ubuntu|neon)
-		    case "$VERSION_ID" in
-			(18.04)
-			    packages=$UBUNTU_18_PKGS
-			    ;;
-			(19.04)
-			    packages=$UBUNTU_19_PKGS
-			    ;;
-			(19.10)
-			    packages=$UBUNTU_19_PKGS
-			    ;;
-		    esac
-		    ;;
-		(linuxmint)
-		    case "$VERSION_ID" in
-			(19.2)
-			    packages=$UBUNTU_18_PKGS
-			    ;;
-		    esac
-		    ;;
-		(kali)
-		    case "$VERSION_ID" in
-			(2019.3)
-			    packages=$DEBIAN_10_PKGS
-			    ;;
-		    esac
-		    ;;
-		(opensuse-*)
-		    packages=$OPENSUSE_PKGS
-		    ;;
-		(fedora)
-		    packages=$FEDORA_PKGS
-		    ;;
-		(rhel|ol|centos)
-		    case "$VERSION_ID" in
-			(7|7.[78])
-			    packages=$REDHAT_7_PKGS
-			    ;;
-			(8|8.[01])
-			    packages=$REDHAT_8_PKGS
-			    ;;
-		    esac
-		    ;;
-	    esac
-	    ;;
-	(Darwin)
-	    packages=$DARWIN_PKGS
-	    ;;
-	(FreeBSD)
-	    packages=$FREEBSD_PKGS
-	    ;;
-	(NetBSD)
-	    packages=$NETBSD_PKGS
-	    ;;
-	(SunOS)
-	    packages=$SUNOS_PKGS
-	    ;;
-    esac
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (debian)
+		packages=$DEBIAN_10_PKGS
+		;;
+	    (ubuntu)
+		case "$VERSION_ID" in
+		    (18.*)
+			packages=$UBUNTU_18_PKGS
+			;;
+		    (19.*)
+			packages=$UBUNTU_19_PKGS
+			;;
+		esac
+		;;
+	    (opensuse-)
+		packages=$OPENSUSE_PKGS
+		;;
+	    (fedora)
+		packages=$FEDORA_PKGS
+		;;
+	    (rhel|ol|centos)
+		case "$VERSION_ID" in
+		    (7|7.*)
+			packages=$REDHAT_7_PKGS
+			;;
+		    (8|8.*)
+			packages=$REDHAT_8_PKGS
+			;;
+		esac
+		;;
+	    (darwin)
+		packages=$DARWIN_PKGS
+		;;
+	    (freebsd)
+		packages=$FREEBSD_PKGS
+		;;
+	    (netbsd)
+		packages=$NETBSD_PKGS
+		;;
+	    (illumos)
+		packages=$ILLUMOS_PKGS
+		;;
+	esac
+
+	if [ -n "${packages-}" ]; then
+	    break
+	fi
+    done
 
     "$script_dir/get-python-packages.sh" ${packages-}
 }
