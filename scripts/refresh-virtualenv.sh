@@ -80,17 +80,20 @@ get_realpath() (
 )
 
 parse_arguments() {
-    while getopts hp:v: opt; do
+    while getopts gp:v:h opt; do
 	case $opt in
-	    (h)
-		usage
-		exit 0
+	    (g)
+		env_debug=true
 		;;
 	    (p)
 		pypi_utilities=$OPTARG
 		;;
 	    (v)
 		venv_utilities=$OPTARG
+		;;
+	    (h)
+		usage
+		exit 0
 		;;
 	    (\?)
 		printf "%s\n" "" >&2
@@ -165,7 +168,7 @@ usage() {
     fi
 
     cat <<-EOF >&2
-	Usage: $0: [-p <PYPI-UTILITIES>] [-v <VENV-UTILITIES>]
+	Usage: $0: [-g] [-p <PYPI-UTILITIES>] [-v <VENV-UTILITIES>]
 	       $0: -h
 	EOF
 }

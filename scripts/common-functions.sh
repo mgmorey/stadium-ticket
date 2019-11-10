@@ -397,7 +397,10 @@ install_python_version() (
     set_compiler
     set_flags
     set_path
-    printenv | egrep '^(CC|CFLAGS|CPPFLAGS|LDFLAGS|PATH)=' | sort
+
+    if [ "${env_debug-$ENV_DEBUG}" = true ]; then
+	printenv | egrep '^(CC|CFLAGS|CPPFLAGS|LDFLAGS|PATH)=' | sort
+    fi
 
     if ! pyenv install -s $python; then
 	abort "%s: Unable to build and install python via pyenv" "$0"
@@ -414,10 +417,6 @@ install_via_pip() (
 	printf "Using %s\n" "$($pip --version)"
     fi
 
-    if [ "$id" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
-	export PATH=$HOME/.local/bin:$PATH
-    fi
-
     if [ "$id" -eq 0 ]; then
 	options=--no-cache-dir
     else
@@ -426,6 +425,14 @@ install_via_pip() (
 
     if [ "$PIP_INSTALL_QUIET" = true ]; then
 	options="${options+$options }--quiet"
+    fi
+
+    if [ "$id" -eq 0 -a -z "${VIRTUAL_ENV:-}" ]; then
+	export PATH=$HOME/.local/bin:$PATH
+    fi
+
+    if [ "${env_debug-$ENV_DEBUG}" = true ]; then
+	printenv | egrep '^(CC|CFLAGS|CPPFLAGS|LDFLAGS|PATH)=' | sort
     fi
 
     $pip install $options "$@"
@@ -548,7 +555,6 @@ upgrade_requirements_via_pip() (
     fi
 
     printf "%s\n" "Installing virtual environment packages via pip"
-    printenv | egrep '^(CC|CFLAGS|CPPFLAGS|LDFLAGS|PATH)=' | sort
     install_via_pip "$pip" $(get_pip_requirements)
 )
 
