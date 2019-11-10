@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# install-pkgsrc: install the portable package build system
+# install-pkgsrc: install PkgSrc portable package build system
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,22 +16,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+BASE_URL=https://pkgsrc.joyent.com
+
 DARWIN_BOOT_OS=Darwin
 DARWIN_BOOT_PGP=1F32A9AD
 DARWIN_BOOT_SHA=1c554a806fb41dcc382ef33e64841ace13988479
 DARWIN_BOOT_TAR=bootstrap-trunk-x86_64-20190524.tar.gz
 
-ILLUMOS_BOOT_OS=SmartOS
-ILLUMOS_BOOT_PGP=DE817B8E
-ILLUMOS_BOOT_SHA=cda0f6cd27b2d8644e24bc54d19e489d89786ea7
-ILLUMOS_BOOT_TAR=bootstrap-trunk-x86_64-20190317.tar.gz
+RHEL_7_BOOT_OS=Linux/el7
+RHEL_7_BOOT_PGP=56AAACAF
+RHEL_7_BOOT_SHA=eb0d6911489579ca893f67f8a528ecd02137d43a
+RHEL_7_BOOT_TAR=bootstrap-trunk-x86_64-20170127.tar.gz
 
-REDHAT_BOOT_OS=Linux/el7
-REDHAT_BOOT_PGP=56AAACAF
-REDHAT_BOOT_SHA=eb0d6911489579ca893f67f8a528ecd02137d43a
-REDHAT_BOOT_TAR=bootstrap-trunk-x86_64-20170127.tar.gz
-
-URL=https://pkgsrc.joyent.com
+SMARTOS_BOOT_OS=SmartOS
+SMARTOS_BOOT_PGP=DE817B8E
+SMARTOS_BOOT_SHA=cda0f6cd27b2d8644e24bc54d19e489d89786ea7
+SMARTOS_BOOT_TAR=bootstrap-trunk-x86_64-20190317.tar.gz
 
 abort() {
     printf "$@" >&2
@@ -64,16 +64,15 @@ get_realpath() (
 )
 
 install_pkgsrc() {
-    assert [ $# -eq 1 ]
-    target="$1"
+    target="${1-/}"
 
     case "$kernel_name" in
 	(Linux)
 	    case "$ID" in
 		(ol)
 		    case "$VERSION_ID" in
-			(7.7)
-			    key=REDHAT
+			(7.*)
+			    key=RHEL_7
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -83,7 +82,7 @@ install_pkgsrc() {
 		(centos)
 		    case "$VERSION_ID" in
 			(7)
-			    key=REDHAT
+			    key=RHEL_7
 			    ;;
 			(*)
 			    abort_not_supported Release
@@ -106,7 +105,14 @@ install_pkgsrc() {
 	    esac
 	    ;;
 	(SunOS)
-	    key=ILLUMOS
+	    case "$ID" in
+		(illumos)
+		    key=SMARTOS
+		    ;;
+		(*)
+		    abort_not_supported Distro
+		    ;;
+	    esac
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"
@@ -117,8 +123,8 @@ install_pkgsrc() {
     boot_pgp="\${${key}_BOOT_PGP}"
     boot_sha="\${${key}_BOOT_SHA}"
     boot_tar="\${${key}_BOOT_TAR}"
-    boot_url=$URL/packages/$boot_os/bootstrap
-    pgp_url=$URL/pgp
+    boot_url=$BASE_URL/packages/$boot_os/bootstrap
+    pgp_url=$BASE_URL/pgp
     cd "${TMPDIR-/tmp}"
     eval curl -O $boot_url/$boot_tar
     verify_checksum
@@ -150,16 +156,12 @@ verify_signature() {
     fi
 }
 
-if [ $# -lt 1 ]; then
-    abort "%s: Not enough arguments\n" "$0"
-fi
-
 if [ $# -gt 1 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $("$script_dir/get-os-release.sh" -X)
+eval $("$script_dir/get-os-release.sh" -x)
 
 install_pkgsrc "$@"
