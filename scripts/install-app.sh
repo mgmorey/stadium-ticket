@@ -149,16 +149,6 @@ install_dependencies() {
     fi
 }
 
-install_pkgsrc() {
-    if ! which $UWSGI_PREFIX/bin/pkgin >/dev/null 2>/dev/null; then
-	if [ $dryrun = true ]; then
-	    check_permissions_single "${PKGSRC_PREFIX-/}"
-	else
-	    "$script_dir/install-pkgsrc.sh" "${PKGSRC_PREFIX-/}"
-	fi
-    fi
-}
-
 install_app() {
     if [ $UWSGI_IS_PACKAGED = false ]; then
 	configure_defaults
@@ -171,10 +161,6 @@ install_app() {
 	    configure_defaults
 	    install_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	else
-	    if [ $UWSGI_IS_PKGSRC = true ]; then
-		install_pkgsrc
-	    fi
-
 	    install_uwsgi_from_package
 	fi
 
