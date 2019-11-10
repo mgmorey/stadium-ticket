@@ -25,6 +25,21 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+get_pattern_install_command() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case "$(basename $1)" in
+	(dnf|yum)
+	    install="groupinstall"
+	(zypper)
+	    install="install -t pattern"
+	    ;;
+    esac
+
+    printf "%s\n" "${install:-install}"
+}
+
 get_realpath() (
     assert [ $# -ge 1 ]
     realpath=$(which realpath)
@@ -46,21 +61,4 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -x)
 
-case "$kernel_name" in
-    (Linux|GNU)
-	case "$ID" in
-	    (opensuse-*)
-		printf "%s\n" "install -t pattern"
-		;;
-	    (fedora|rhel|ol|centos)
-		printf "%s\n" "groupinstall"
-		;;
-	    (*)
-		printf "%s\n" "install"
-		;;
-	esac
-	;;
-    (*)
-	printf "%s\n" "install"
-	;;
-esac
+get_pattern_install_command "$@"
