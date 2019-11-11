@@ -32,6 +32,7 @@ get_pattern_install_command() {
     case "$(basename $1)" in
 	(dnf|yum)
 	    install="groupinstall"
+	    ;;
 	(zypper)
 	    install="install -t pattern"
 	    ;;
