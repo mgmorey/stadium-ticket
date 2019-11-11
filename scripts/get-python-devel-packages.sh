@@ -44,6 +44,11 @@ REDHAT_8_PKGS="%s-pip %s-pytest %s-virtualenv"
 SOLARIS_PKGS="developer/python/pylint-%s library/python/pip-%s \
 library/python/pytest-%s library/python/virtualenv-%s"
 
+UBUNTU_18_PKGS="pylint3 %s-openssl %s-packaging %s-pip %s-pycodestyle \
+%s-pytest %s-venv %s-virtualenv virtualenv"
+UBUNTU_19_PKGS="pylint %s-openssl %s-packaging %s-pip %s-pycodestyle \
+%s-pytest %s-venv %s-virtualenv virtualenv"
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -75,6 +80,16 @@ get_python_devel_packages() {
 	case "$id" in
 	    (debian)
 		packages=$DEBIAN_PKGS
+		;;
+	    (ubuntu)
+		case "$VERSION_ID" in
+		    (18.*)
+			packages=$UBUNTU_18_PKGS
+			;;
+		    (19.*)
+			packages=$UBUNTU_19_PKGS
+			;;
+		esac
 		;;
 	    (opensuse)
 		packages=$OPENSUSE_PKGS
