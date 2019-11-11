@@ -22,6 +22,8 @@ DEBIAN_10_PKG="mariadb-server-10.3"
 
 FEDORA_PKG="mariadb-server"
 
+ILLUMOS_PKG="database/mariadb-103"
+
 FREEBSD_PKG="mariadb103-server"
 
 NETBSD_PKG="mariadb-server"
@@ -30,7 +32,7 @@ OPENSUSE_PKG="mariadb"
 
 REDHAT_PKG="mariadb-server"
 
-SUNOS_PKG="database/mariadb-103"
+SOLARIS_PKG="database/mysql-57"
 
 UBUNTU_18_04_PKG="mariadb-server-10.1"
 UBUNTU_19_04_PKG="mariadb-server-10.3"
@@ -116,7 +118,14 @@ get_dbms_server_packages() {
 	    packages="${package:-$NETBSD_PKG}"
 	    ;;
 	(SunOS)
-	    packages="${package:-$SUNOS_PKG}"
+	    case "$ID" in
+		(illumos)
+		    packages="${package:-$ILLUMOS_PKG}"
+		    ;;
+		(solaris)
+		    packages="${package:-$SOLARIS_PKG}"
+		    ;;
+	    esac
 	    ;;
     esac
 
