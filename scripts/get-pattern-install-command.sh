@@ -36,9 +36,12 @@ get_pattern_install_command() {
 	(zypper)
 	    install="install -t pattern"
 	    ;;
+	(*)
+	    install="install"
+	    ;;
     esac
 
-    printf "%s\n" "${install:-install}"
+    printf "%s\n" "$install"
 }
 
 get_realpath() (
@@ -57,9 +60,5 @@ get_realpath() (
 	done
     fi
 )
-
-script_dir=$(get_realpath "$(dirname "$0")")
-
-eval $("$script_dir/get-os-release.sh" -x)
 
 get_pattern_install_command "$@"
