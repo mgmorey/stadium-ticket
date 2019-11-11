@@ -32,7 +32,7 @@ readline-devel sqlite-devel xz-devel zlib-devel"
 FREEBSD_11_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses \
 readline sqlite3"
 FREEBSD_12_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses \
-openssl-devel readline sqlite3"
+openssl111 readline sqlite3"
 
 NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline \
 sqlite3 :git"
