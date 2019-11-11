@@ -369,7 +369,7 @@ configure_cygwin() {
     PS_COLUMN=6
 
     # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/bin/python3.5
+    SYSTEM_PYTHON=/usr/bin/python3.6
 
     # Set uWSGI parameters
     configure_uwsgi_source
