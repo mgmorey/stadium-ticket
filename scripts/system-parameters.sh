@@ -123,12 +123,12 @@ configure_baseline() {
 			    ;;
 		    esac
 		    ;;
-		(ol|rhel)
+		(rhel|ol)
 		    case "$VERSION_ID" in
-			(7.[789])
+			(7.[78])
 			    configure_linux_redhat_7
 			    ;;
-			(8.*)
+			(8.[12])
 			    configure_linux_redhat_8
 			    ;;
 			(*)
@@ -140,9 +140,6 @@ configure_baseline() {
 		    case "$VERSION_ID" in
 			(7)
 			    configure_linux_redhat_7
-			    ;;
-			(8)
-			    configure_linux_redhat_8
 			    ;;
 			(*)
 			    abort_not_supported Release

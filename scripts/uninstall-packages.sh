@@ -133,36 +133,39 @@ uninstall_using() (
 )
 
 validate_platform() {
-    case "$kernel_name" in
-	(Linux|GNU)
-	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon|kali)
-		    :
-		    ;;
-		(opensuse-*|fedora|rhel|ol|centos)
-		    :
-		    ;;
-		(*)
-		    abort_not_supported Distro
-		    ;;
-	    esac
-	    ;;
-	(Darwin)
-	    :
-	    ;;
-	(FreeBSD)
-	    :
-	    ;;
-	(NetBSD)
-	    :
-	    ;;
-	(SunOS)
-	    :
-	    ;;
-	(*)
-	    abort_not_supported "Operating system"
-	    ;;
-    esac
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (debian)
+		return
+		;;
+	    (fedora)
+		return
+		;;
+	    (opensuse)
+		return
+		;;
+	    (rhel|ol|centos)
+		return
+		;;
+	    (darwin)
+		return
+		;;
+	    (freebsd)
+		return
+		;;
+	    (netbsd)
+		return
+		;;
+	    (illumos)
+		return
+		;;
+	    (solaris)
+		return
+		;;
+	esac
+    done
+
+    abort_not_supported "Operating system"
 }
 
 script_dir=$(get_realpath "$(dirname "$0")")

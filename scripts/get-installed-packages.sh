@@ -62,12 +62,12 @@ get_installed_packages() {
 		;;
 	    (rhel|ol|centos)
 		case "$VERSION_ID" in
-		    (7|7.[78])
+		    (7|7.*)
 			$manager1 list installed | awk '{print $1}' | awk -F. '{print $1}'
 			$manager2 list | awk '{print ":" $1}'
 			return
 			;;
-		    (8|8.[01])
+		    (8|8.*)
 			$manager1 list installed | awk '{print $1}' | awk -F. '{print $1}'
 			return
 			;;

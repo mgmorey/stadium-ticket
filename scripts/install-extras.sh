@@ -107,12 +107,22 @@ validate_platform() {
 		    ;;
 	    esac
 	    ;;
-	(rhel|ol|centos)
+	(rhel|ol)
 	    case "$VERSION_ID" in
-		(7|7.[78])
+		(7.[78])
 		    :
 		    ;;
-		(8|8.[12])
+		(8.[12])
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(centos)
+	    case "$VERSION_ID" in
+		(7)
 		    :
 		    ;;
 		(*)

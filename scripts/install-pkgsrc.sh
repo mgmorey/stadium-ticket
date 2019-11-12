@@ -69,19 +69,9 @@ install_pkgsrc() {
     case "$kernel_name" in
 	(Linux)
 	    case "$ID" in
-		(ol)
+		(ol|centos)
 		    case "$VERSION_ID" in
-			(7.*)
-			    key=RHEL_7
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(centos)
-		    case "$VERSION_ID" in
-			(7)
+			(7|7.*)
 			    key=RHEL_7
 			    ;;
 			(*)

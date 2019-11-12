@@ -122,7 +122,7 @@ get_devel_packages() {
 			(7|7.[78])
 			    packages=$REDHAT_7_PKGS
 			    ;;
-			(8|8.[01])
+			(8|8.[12])
 			    packages=$REDHAT_8_PKGS
 			    ;;
 		    esac

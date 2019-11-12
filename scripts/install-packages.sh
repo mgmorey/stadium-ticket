@@ -237,14 +237,7 @@ validate_platform() {
 		return
 		;;
 	    (rhel|ol|centos)
-		case "$VERSION_ID" in
-		    (7|7.*)
-			return
-			;;
-		    (8|8.*)
-			return
-			;;
-		esac
+		return
 		;;
 	    (darwin)
 		return
