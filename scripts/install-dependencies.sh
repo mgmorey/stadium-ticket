@@ -49,6 +49,7 @@ get_realpath() (
 )
 
 install_dependencies() {
+    validate_platform
     packages=$("$script_dir/get-dependencies.sh")
     pattern=$("$script_dir/get-devel-pattern.sh")
 
@@ -69,6 +70,112 @@ install_pkgsrc() {
     if ! which $UWSGI_PREFIX/bin/pkgin >/dev/null 2>/dev/null; then
 	"$script_dir/install-pkgsrc.sh" "${PKGSRC_PREFIX-/}"
     fi
+}
+
+validate_platform() {
+    case "$ID" in
+	(debian|raspbian)
+	    case "$VERSION_ID" in
+		(10)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(ubuntu)
+	    case "$VERSION_ID" in
+		(18.04)
+		    :
+		    ;;
+		(19.10)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(opensuse-leap)
+	    case "$VERSION_ID" in
+		(15.0|15.1)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(opensuse-tumbleweed)
+	    case "$VERSION_ID" in
+		(2019*)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(fedora)
+	    case "$VERSION_ID" in
+		(31)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(rhel|ol|centos)
+	    case "$VERSION_ID" in
+		(7|7.[78])
+		    :
+		    ;;
+		(8|8.[12])
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(darwin)
+	    case "$VERSION_ID" in
+		(10.14.*)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(freebsd)
+	    case "$VERSION_ID" in
+		(11.*)
+		    :
+		    ;;
+		(12.*)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(netbsd)
+	    :
+	    ;;
+	(illumos)
+	    :
+	    ;;
+	(solaris)
+	    :
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
 }
 
 if [ $# -gt 0 ]; then
