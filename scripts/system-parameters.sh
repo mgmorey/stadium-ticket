@@ -112,9 +112,6 @@ configure_baseline() {
 		    ;;
 		(fedora)
 		    case "$VERSION_ID" in
-			(30)
-			    configure_linux_fedora_30
-			    ;;
 			(31)
 			    configure_linux_fedora_31
 			    ;;
@@ -422,18 +419,8 @@ configure_linux_fedora() {
     UWSGI_PLUGIN_DIR=/usr/lib64/uwsgi
 }
 
-configure_linux_fedora_30() {
-    configure_linux_fedora
-
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/bin/python3.7
-}
-
 configure_linux_fedora_31() {
     configure_linux_fedora
-
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/bin/python3.7
 }
 
 configure_linux_kali_2019_4() {
