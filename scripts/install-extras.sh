@@ -150,7 +150,14 @@ validate_platform() {
 	    :
 	    ;;
 	(solaris)
-	    :
+	    case "$VERSION_ID" in
+		(11.4)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"
