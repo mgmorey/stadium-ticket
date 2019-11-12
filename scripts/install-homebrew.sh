@@ -1,6 +1,6 @@
-#!/bin/sh -eu
+#!/bin/sh -u
 
-# get-pattern-install-command: get pattern installation command
+# install-homebrew: install the HomeBrew package manager brew
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,32 +16,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+HOMEBREW_URL=https://raw.githubusercontent.com/Homebrew/install/master/install
+
+PKG_DIR=/Library/Developer/CommandLineTools/Packages/
+PKG_NAME=macOS_SDK_headers_for_macOS_10.14.pkg
+
 abort() {
     printf "$@" >&2
     exit 1
 }
 
-assert() {
-    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+abort_not_supported() {
+    abort "%s: %s: %s not supported\n" "$0" "$PRETTY_NAME" "$*"
 }
 
-get_pattern_install_command() {
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-
-    case "$(basename $1)" in
-	(dnf|yum)
-	    install="groupinstall"
-	    ;;
-	(zypper)
-	    install="install -t pattern"
-	    ;;
-	(*)
-	    install="install"
-	    ;;
-    esac
-
-    printf "%s\n" "$install"
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
 get_realpath() (
@@ -61,4 +51,35 @@ get_realpath() (
     fi
 )
 
-get_pattern_install_command "$@"
+install_homebrew() {
+    validate_platform
+
+    if brew --version >/dev/null 2>&1; then
+	brew update
+	brew upgrade
+    else
+	installer -allowUntrusted -pkg $PKG_DIR/$PKG_NAME -target /
+	/usr/bin/ruby -e "$(curl -fsSL $HOMEBREW_URL)"
+    fi
+}
+
+validate_platform() {
+    case "$kernel_name" in
+	(Darwin)
+	    :
+	    ;;
+	(*)
+	    abort_not_supported "Operating system"
+	    ;;
+    esac
+}
+
+if [ $# -gt 0 ]; then
+    abort "%s: Too many arguments\n" "$0"
+fi
+
+script_dir=$(get_realpath "$(dirname "$0")")
+
+eval $("$script_dir/get-os-release.sh" -x)
+
+install_homebrew

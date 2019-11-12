@@ -53,120 +53,74 @@ install_extras() {
 }
 
 validate_platform() {
-    case "$kernel_name" in
-	(Linux|GNU)
-	    case "$ID" in
-		(debian|raspbian)
-		    case "$VERSION_ID" in
-			(10)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(ubuntu|neon)
-		    case "$VERSION_ID" in
-			(18.04)
-			    :
-			    ;;
-			(19.04)
-			    :
-			    ;;
-			(19.10)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(linuxmint)
-		    case "$VERSION_ID" in
-			(19.2)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(kali)
-		    case "$VERSION_ID" in
-			(2019.3)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(opensuse-leap)
-		    case "$VERSION_ID" in
-			(15.0|15.1)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(opensuse-tumbleweed)
-		    case "$VERSION_ID" in
-			(2019*)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(fedora)
-		    case "$VERSION_ID" in
-			(30)
-			    :
-			    ;;
-			(31)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(ol|rhel)
-		    case "$VERSION_ID" in
-			(7.[789])
-			    :
-			    ;;
-			(8.*)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
-		    ;;
-		(centos)
-		    case "$VERSION_ID" in
-			(7)
-			    :
-			    ;;
-			(8)
-			    :
-			    ;;
-			(*)
-			    abort_not_supported Release
-			    ;;
-		    esac
+    case "$ID" in
+	(debian|raspbian)
+	    case "$VERSION_ID" in
+		(10)
+		    :
 		    ;;
 		(*)
-		    abort_not_supported Distro
+		    abort_not_supported Release
 		    ;;
 	    esac
 	    ;;
-	(Darwin)
+	(ubuntu)
+	    case "$VERSION_ID" in
+		(18.04)
+		    :
+		    ;;
+		(19.10)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(opensuse-leap)
+	    case "$VERSION_ID" in
+		(15.0|15.1)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(opensuse-tumbleweed)
+	    case "$VERSION_ID" in
+		(2019*)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(fedora)
+	    case "$VERSION_ID" in
+		(31)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(rhel|ol|centos)
+	    case "$VERSION_ID" in
+		(7|7.[78])
+		    :
+		    ;;
+		(8|8.[12])
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(darwin)
 	    case "$VERSION_ID" in
 		(10.14.*)
 		    :
@@ -176,7 +130,7 @@ validate_platform() {
 		    ;;
 	    esac
 	    ;;
-	(FreeBSD)
+	(freebsd)
 	    case "$VERSION_ID" in
 		(11.*)
 		    :
@@ -189,10 +143,13 @@ validate_platform() {
 		    ;;
 	    esac
 	    ;;
-	(NetBSD)
+	(netbsd)
 	    :
 	    ;;
-	(SunOS)
+	(illumos)
+	    :
+	    ;;
+	(solaris)
 	    :
 	    ;;
 	(*)

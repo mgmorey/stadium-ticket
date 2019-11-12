@@ -62,9 +62,6 @@ get_python_flask_packages() {
 			;;
 		esac
 		;;
-	    (darwin)
-		packages=$DARWIN_PKGS
-		;;
 	    (freebsd)
 		packages=$FREEBSD_PKGS
 		;;
