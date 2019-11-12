@@ -116,7 +116,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 source_dir=$script_dir/..
 
-eval $("$script_dir/get-os-release.sh" -X)
+eval $("$script_dir/get-os-release.sh" -x)
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"

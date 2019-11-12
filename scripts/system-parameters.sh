@@ -37,7 +37,7 @@ configure_all() {
 }
 
 configure_baseline() {
-    eval $("$script_dir/get-os-release.sh" -X)
+    eval $("$script_dir/get-os-release.sh" -x)
 
     case "$kernel_name" in
 	(Linux|GNU)
@@ -209,7 +209,14 @@ configure_baseline() {
 	    esac
 	    ;;
 	(CYGWIN_NT-10.*)
-	    configure_cygwin
+	    case "$VERSION_ID" in
+		(10.0)
+		    configure_cygwin
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
 	    ;;
 	(*)
 	    abort_not_supported "Operating system"

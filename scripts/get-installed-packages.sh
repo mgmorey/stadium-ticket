@@ -115,6 +115,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/system-functions.sh"
 
-eval $("$script_dir/get-os-release.sh" -X)
+eval $("$script_dir/get-os-release.sh" -x)
 
 get_installed_packages

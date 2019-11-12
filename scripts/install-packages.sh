@@ -269,6 +269,6 @@ validate_platform() {
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $("$script_dir/get-os-release.sh" -X)
+eval $("$script_dir/get-os-release.sh" -x)
 
 install_packages "$@"
