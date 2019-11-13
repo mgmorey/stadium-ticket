@@ -368,6 +368,8 @@ configure_gnu_cygwin() {
 
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=/usr/bin
+
+    # Set uWSGI parameters
     UWSGI_HAS_PLUGIN=false
     UWSGI_ORIGIN=pypi
 }
@@ -476,8 +478,12 @@ configure_linux_redhat_7() {
 configure_linux_redhat_8() {
     configure_linux_redhat
 
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=/usr/local/bin
+
     # Set uWSGI parameters
-    configure_uwsgi_source
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_ORIGIN=pypi
 }
 
 configure_linux_ubuntu_18_04() {
@@ -594,6 +600,7 @@ configure_unix_solaris() {
     APP_GID=webservd
     APP_UID=webservd
 
+    # Set uWSGI parameters
     configure_uwsgi_source
 }
 
