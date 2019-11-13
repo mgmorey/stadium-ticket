@@ -263,24 +263,8 @@ configure_baseline() {
 	UWSGI_BUILDCONF=core
     fi
 
-    if [ -z "${UWSGI_IS_PACKAGED-}" ]; then
-	UWSGI_IS_PACKAGED=true
-    fi
-
-    if [ -z "${UWSGI_IS_PKGSRC-}" ]; then
-	UWSGI_IS_PKGSRC=false
-    fi
-
-    if [ -z "${UWSGI_IS_SERVICE-}" ]; then
-	if [ "${UWSGI_IS_PACKAGED}" = true ]; then
-	    if [ "${UWSGI_IS_PKGSRC}" = true ]; then
-		UWSGI_IS_SERVICE=false
-	    else
-		UWSGI_IS_SERVICE=true
-	    fi
-	else
-	    UWSGI_IS_SERVICE=false
-	fi
+    if [ -z "${UWSGI_ORIGIN-}" ]; then
+	UWSGI_ORIGIN=distro
     fi
 
     # Set uWSGI directory prefix
@@ -289,7 +273,7 @@ configure_baseline() {
     fi
 
     if [ -z "${UWSGI_ETCDIR-}" ]; then
-	if [ "$UWSGI_IS_SERVICE" = true ]; then
+	if [ "$(is_uwsgi_service)" = true ]; then
 	    UWSGI_ETCDIR=${UWSGI_PREFIX:-}/etc/uwsgi
 	fi
     fi
@@ -326,7 +310,7 @@ configure_defaults() {
     if [ -z "${UWSGI_HAS_PLUGIN-}" ]; then
 	if [ "$UWSGI_BUILDCONF" = pyonly ]; then
 	    UWSGI_HAS_PLUGIN=false
-	elif [ "$UWSGI_IS_PKGSRC" = true ]; then
+	elif [ "$UWSGI_ORIGIN" = pkgsrc ]; then
 	    UWSGI_HAS_PLUGIN=false
 	else
 	    UWSGI_HAS_PLUGIN=true
@@ -369,17 +353,16 @@ configure_cygwin() {
     # Set ps command format and command column
     PS_COLUMN=6
 
-    configure_uwsgi_source
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=/usr/bin
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_SOURCE=pypi
 }
 
 configure_gnu() {
     # Set ps command format and command column
     PS_COLUMN=10
     PS_FORMAT=pid,ppid,user,tt,lstart,command
-
-    if [ "${kernel_name}" = GNU ]; then
-	UWSGI_IS_SERVICE=false
-    fi
 }
 
 configure_linux_debian() {
@@ -480,8 +463,7 @@ configure_linux_redhat_7() {
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
-    UWSGI_IS_PKGSRC=true
-    UWSGI_IS_SERVICE=false
+    UWSGI_ORIGIN=pkgsrc
 }
 
 configure_linux_redhat_8() {
@@ -540,7 +522,7 @@ configure_unix_darwin() {
     UWSGI_BINARY_NAME=uwsgi-3.6
 
     # Set other uWSGI parameters
-    UWSGI_IS_PKGSRC=true
+    UWSGI_ORIGIN=pkgsrc
 }
 
 configure_unix_freebsd() {
@@ -552,7 +534,6 @@ configure_unix_freebsd() {
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
-    UWSGI_IS_SERVICE=false
 }
 
 configure_unix_freebsd_11() {
@@ -580,7 +561,7 @@ configure_unix_illumos() {
     # Set other uWSGI parameters
     UWSGI_CC=gcc
     UWSGI_CFLAGS=-m64
-    UWSGI_IS_PKGSRC=true
+    UWSGI_ORIGIN=pkgsrc
 }
 
 configure_unix_netbsd() {
@@ -598,7 +579,7 @@ configure_unix_netbsd() {
     UWSGI_BINARY_NAME=uwsgi-3.6
 
     # Set other uWSGI parameters
-    UWSGI_IS_PKGSRC=true
+    UWSGI_ORIGIN=pkgsrc
 }
 
 configure_unix_solaris() {
@@ -619,8 +600,7 @@ configure_uwsgi_source() {
 	UWSGI_BUILDCONF=pyonly
     fi
 
-    UWSGI_IS_PACKAGED=false
-    UWSGI_IS_SERVICE=false
+    UWSGI_ORIGIN=source
 }
 
 find_available_plugins() {
@@ -688,6 +668,57 @@ get_uwsgi_version() {
     else
 	printf "%s\n" "<none>"
     fi
+}
+
+is_uwsgi_packaged() {
+    case "$UWSGI_ORIGIN" in
+	(distro)
+ 	    is_service=true
+	    ;;
+	(pkgsrc)
+	    is_service=true
+	    ;;
+	(pypi)
+	    is_service=false
+	    ;;
+	(source)
+	    is_service=false
+	    ;;
+	(*)
+	    is_service=false
+	    ;;
+    esac
+
+    printf "%s\n" "$is_service"
+}
+
+is_uwsgi_service() {
+    case "$kernel_name" in
+	(GNU|FreeBSD)
+	    is_service=false
+	    ;;
+	(*)
+	    case "$UWSGI_ORIGIN" in
+		(distro)
+		    is_service=true
+		    ;;
+		(pkgsrc)
+		    is_service=false
+		    ;;
+		(pypi)
+		    is_service=false
+		    ;;
+		(source)
+		    is_service=false
+		    ;;
+		(*)
+		    is_service=false
+		    ;;
+	    esac
+	    ;;
+    esac
+
+    printf "%s\n" "$is_service"
 }
 
 print_app_log_file() {

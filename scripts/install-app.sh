@@ -69,7 +69,7 @@ generate_sed_program() (
     for var; do
 	eval value=\${$var-}
 
-	case $var in
+	case "$var" in
 	    (APP_PLUGIN)
 		if [ -n "$value" ]; then
 		    pattern="\(plugin\) = python[0-9]*"
@@ -150,14 +150,14 @@ install_dependencies() {
 }
 
 install_app() {
-    if [ $UWSGI_IS_PACKAGED = false ]; then
+    if [ "$(is_uwsgi_packaged)" = false ]; then
 	configure_defaults
     fi
 
     cd "$source_dir"
 
     for dryrun in true false; do
-	if [ $UWSGI_IS_PACKAGED = false ]; then
+	if [ "$(is_uwsgi_packaged)" = false ]; then
 	    configure_defaults
 	    install_uwsgi_from_source $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
 	else
@@ -165,7 +165,7 @@ install_app() {
 	fi
 
 	if [ $dryrun = false ]; then
-	    if [ $UWSGI_IS_PACKAGED = true ]; then
+	    if [ "$(is_uwsgi_packaged)" = true ]; then
 		configure_defaults
 	    fi
 

@@ -40,7 +40,7 @@ get_realpath() (
 )
 
 start_uwsgi() {
-    if [ "$UWSGI_IS_SERVICE" = false ]; then
+    if [ "$(is_uwsgi_service)" = false ]; then
 	return 0
     elif ! is_service_loaded uwsgi; then
 	return 0
@@ -60,7 +60,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 configure_baseline
 
-if [ "$UWSGI_IS_SERVICE" = false ]; then
+if [ "$(is_uwsgi_service)" = false ]; then
     exit 0
 fi
 

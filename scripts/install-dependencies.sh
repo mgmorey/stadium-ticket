@@ -53,7 +53,7 @@ install_dependencies() {
     packages=$("$script_dir/get-dependencies.sh")
     pattern=$("$script_dir/get-devel-pattern.sh")
 
-    if [ $UWSGI_IS_PKGSRC = true ]; then
+    if [ $UWSGI_ORIGIN = pkgsrc ]; then
 	install_pkgsrc
     fi
 

@@ -138,7 +138,7 @@ start_app() {
 	return 0
     fi
 
-    if [ $UWSGI_IS_SERVICE = true ]; then
+    if [ "$(is_uwsgi_service)" = true ]; then
 	for dryrun in true false; do
 	    control_app_enable
 	    control_app_start

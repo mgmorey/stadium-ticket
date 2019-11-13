@@ -54,7 +54,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 configure_baseline
 
-if [ "$UWSGI_IS_SERVICE" = false ]; then
+if [ "$(is_uwsgi_service)" = false ]; then
     exit 0
 fi
 

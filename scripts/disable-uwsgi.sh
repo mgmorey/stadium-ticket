@@ -23,7 +23,7 @@ assert() {
 }
 
 disable_service() {
-    if [ $UWSGI_IS_SERVICE = false ]; then
+    if [ "$(is_uwsgi_service)" = false ]; then
 	return 0
     fi
 

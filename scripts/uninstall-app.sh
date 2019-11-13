@@ -82,7 +82,7 @@ remove_service() {
 	fi
     fi
 
-    if [ $UWSGI_IS_PACKAGED = false ]; then
+    if [ "$(is_uwsgi_packaged)" = false ]; then
 	binary=$(get_uwsgi_binary_path)
 	plugin=$(get_uwsgi_plugin_path)
 
@@ -99,7 +99,7 @@ remove_service() {
 uninstall_app() {
     for dryrun in true false; do
 	if [ $dryrun = false ] && is_app_running; then
-	    control_app stop $UWSGI_IS_PACKAGED
+	    control_app stop "$(is_uwsgi_packaged)"
 	fi
 
 	remove_service

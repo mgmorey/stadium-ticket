@@ -93,12 +93,12 @@ control_app_via_launchd() {
 
     case $1 in
 	(disable)
-	    if [ $UWSGI_IS_SERVICE = true -a -e $target ]; then
+	    if [ "$(is_uwsgi_service)" = true -a -e $target ]; then
 		control_app_via_launchctl unload remove_files $target
 	    fi
 	    ;;
 	(enable)
-	    if [ $UWSGI_IS_SERVICE = true -a ! -e $target ]; then
+	    if [ "$(is_uwsgi_service)" = true -a ! -e $target ]; then
 		control_app_via_launchctl load generate_launch_agent $target
 	    fi
 	    ;;
@@ -231,7 +231,7 @@ get_service_status() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
 
-    if [ "$UWSGI_IS_SERVICE" = false ]; then
+    if [ "$(is_uwsgi_service)" = false ]; then
 	return 0
     elif ! is_system_running; then
 	return 0
