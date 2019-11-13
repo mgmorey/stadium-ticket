@@ -88,7 +88,7 @@ get_sqlite_packages() {
 		packages=$ILLUMOS_PKGS
 		;;
 	    (solaris)
-		packages=$ILLUMOS_PKGS
+		packages=$SOLARIS_PKGS
 		;;
 	esac
 

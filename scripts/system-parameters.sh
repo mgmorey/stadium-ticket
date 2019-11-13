@@ -202,7 +202,14 @@ configure_baseline() {
 		    esac
 		    ;;
 		(solaris)
-		    configure_unix_solaris
+		    case "$VERSION_ID" in
+			(11.4)
+			    configure_unix_solaris
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
 		    ;;
 		(*)
 		    abort_not_supported Distro
