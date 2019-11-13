@@ -125,7 +125,7 @@ configure_baseline() {
 			(7.[78])
 			    configure_linux_redhat_7
 			    ;;
-			(8.[12])
+			(8.[012])
 			    configure_linux_redhat_8
 			    ;;
 			(*)

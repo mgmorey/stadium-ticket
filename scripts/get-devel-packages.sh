@@ -119,10 +119,10 @@ get_devel_packages() {
 		    ;;
 		(rhel|ol|centos)
 		    case "$VERSION_ID" in
-			(7|7.[78])
+			(7|7.*)
 			    packages=$REDHAT_7_PKGS
 			    ;;
-			(8|8.[12])
+			(8|8.*)
 			    packages=$REDHAT_8_PKGS
 			    ;;
 		    esac
