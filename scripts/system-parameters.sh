@@ -40,6 +40,16 @@ configure_baseline() {
     eval $("$script_dir/get-os-release.sh" -x)
 
     case "$kernel_name" in
+	(CYGWIN_NT-*)
+	    case "$VERSION_ID" in
+		(10.0)
+		    configure_gnu_cygwin
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
 	(Linux|GNU)
 	    configure_gnu
 
@@ -213,16 +223,6 @@ configure_baseline() {
 		    ;;
 		(*)
 		    abort_not_supported Distro
-		    ;;
-	    esac
-	    ;;
-	(CYGWIN_NT-10.*)
-	    case "$VERSION_ID" in
-		(10.0)
-		    configure_gnu_cygwin
-		    ;;
-		(*)
-		    abort_not_supported Release
 		    ;;
 	    esac
 	    ;;
@@ -760,7 +760,7 @@ print_app_processes() {
 
 ps_uwsgi() {
     case "$kernel_name" in
-	(CYGWIN_NT-10.*)
+	(CYGWIN_NT-*)
 	    ps -ef
 	    ;;
 	(*)
