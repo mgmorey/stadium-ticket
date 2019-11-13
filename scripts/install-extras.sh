@@ -157,7 +157,14 @@ validate_platform() {
 	    :
 	    ;;
 	(illumos)
-	    :
+	    case "$VERSION_ID" in
+		(2019.10)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
 	    ;;
 	(solaris)
 	    case "$VERSION_ID" in

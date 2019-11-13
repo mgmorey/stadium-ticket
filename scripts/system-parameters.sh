@@ -192,7 +192,14 @@ configure_baseline() {
 
 	    case $ID in
 		(illumos)
-		    configure_unix_illumos
+		    case "$VERSION_ID" in
+			(2019.10)
+			    configure_unix_illumos
+			    ;;
+			(*)
+			    abort_not_supported Release
+			    ;;
+		    esac
 		    ;;
 		(solaris)
 		    configure_unix_solaris
