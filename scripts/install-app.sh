@@ -191,11 +191,18 @@ install_uwsgi_from_package() (
 	return 0
     fi
 
-    packages=$(get_packages_in $CATEGORIES | sort -u)
+    case "$UWSGI_ORIGIN" in
+	(distro)
+	    packages=$(get_packages_in $CATEGORIES | sort -u)
 
-    if [ -n "$packages" ]; then
-	"$script_dir/install-packages.sh" $packages
-    fi
+	    if [ -n "$packages" ]; then
+		"$script_dir/install-packages.sh" $packages
+	    fi
+	    ;;
+	(pypi)
+	    install_via_pip "$(get_pip_command)" uwsgi
+	    ;;
+    esac
 )
 
 install_uwsgi_from_source() (

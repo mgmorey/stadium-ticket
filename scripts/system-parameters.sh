@@ -212,7 +212,7 @@ configure_baseline() {
 	(CYGWIN_NT-10.*)
 	    case "$VERSION_ID" in
 		(10.0)
-		    configure_cygwin
+		    configure_gnu_cygwin
 		    ;;
 		(*)
 		    abort_not_supported Release
@@ -356,20 +356,20 @@ configure_defaults() {
     fi
 }
 
-configure_cygwin() {
+configure_gnu() {
+    # Set ps command format and command column
+    PS_COLUMN=10
+    PS_FORMAT=pid,ppid,user,tt,lstart,command
+}
+
+configure_gnu_cygwin() {
     # Set ps command format and command column
     PS_COLUMN=6
 
     # Set uWSGI binary/plugin directories
     UWSGI_BINARY_DIR=/usr/bin
     UWSGI_HAS_PLUGIN=false
-    UWSGI_SOURCE=pypi
-}
-
-configure_gnu() {
-    # Set ps command format and command column
-    PS_COLUMN=10
-    PS_FORMAT=pid,ppid,user,tt,lstart,command
+    UWSGI_ORIGIN=pypi
 }
 
 configure_linux_debian() {
@@ -680,23 +680,23 @@ get_uwsgi_version() {
 is_uwsgi_packaged() {
     case "$UWSGI_ORIGIN" in
 	(distro)
- 	    is_service=true
+ 	    is_packaged=true
 	    ;;
 	(pkgsrc)
-	    is_service=true
+	    is_packaged=true
 	    ;;
 	(pypi)
-	    is_service=false
+	    is_packaged=true
 	    ;;
 	(source)
-	    is_service=false
+	    is_packaged=false
 	    ;;
 	(*)
-	    is_service=false
+	    is_packaged=false
 	    ;;
     esac
 
-    printf "%s\n" "$is_service"
+    printf "%s\n" "$is_packaged"
 }
 
 is_uwsgi_service() {
