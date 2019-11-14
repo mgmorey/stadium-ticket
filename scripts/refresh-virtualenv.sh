@@ -130,7 +130,9 @@ refresh_via_pipenv() {
 }
 
 refresh_virtualenv() (
-    cd "$source_dir"
+    if [ -n "${source_dir-}" ]; then
+	cd "$source_dir"
+    fi
 
     for utility in ${pypi_utilities-$PYPI_UTILITIES}; do
 	case "$utility" in
@@ -189,8 +191,8 @@ until [ "$source_dir" = / -o -r "$source_dir/Pipfile" ]; do
     source_dir="$(dirname $source_dir)"
 done
 
-if [ ! -r "$source_dir/Pipfile" ]; then
-    abort "%s: %s: No such file\n" "$0" "$source_dir/Pipfile"
+if [ "$source_dir" = / ]; then
+    unset source_dir
 fi
 
 . "$script_dir/common-parameters.sh"
