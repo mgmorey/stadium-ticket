@@ -37,31 +37,31 @@ compose:	.env .env-mysql .update
 	docker-compose up --build
 
 debug:		.update init-db
-	$(script_dir)/run.sh flask run --port 5001
+	$(script_dir)/run-app.sh flask run --port 5001
 
 disable:
 	$(script_dir)/disable-uwsgi.sh
 
 drop-db:
-	$(script_dir)/run.sh python3 -m app drop-db
+	$(script_dir)/run-app.sh python3 -m app drop-db
 
 enable:
 	$(script_dir)/enable-uwsgi.sh
 
 init-db:
-	$(script_dir)/run.sh python3 -m app init-db
+	$(script_dir)/run-app.sh python3 -m app init-db
 
 install:	.env .update
 	$(script_dir)/install-app.sh
 
 pycode:		.update
-	$(script_dir)/run.sh pycodestyle app tests
+	$(script_dir)/run-app.sh pycodestyle app tests
 
 pylint:		.update
-	$(script_dir)/run.sh pylint app tests
+	$(script_dir)/run-app.sh pylint app tests
 
 pytest:		.update init-db
-	$(script_dir)/run.sh pytest tests
+	$(script_dir)/run-app.sh pytest tests
 
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update app/app/*.sqlite
