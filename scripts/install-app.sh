@@ -154,7 +154,9 @@ install_app() {
 	configure_defaults
     fi
 
-    cd "$source_dir"
+    if [ -n "${source_dir-}" ]; then
+	cd "$source_dir"
+    fi
 
     for dryrun in true false; do
 	if [ "$(is_uwsgi_packaged)" = false ]; then
@@ -302,8 +304,8 @@ until [ "$source_dir" = / -o -r "$source_dir/app.ini" ]; do
     source_dir="$(dirname $source_dir)"
 done
 
-if [ ! -r "$source_dir/app.ini" ]; then
-    abort "%s: %s: No such configuration file\n" "$0" "$source_dir/app.ini"
+if [ "$source_dir" = / ]; then
+    unset source_dir
 fi
 
 . "$script_dir/common-parameters.sh"

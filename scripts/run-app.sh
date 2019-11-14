@@ -53,7 +53,7 @@ run_in_virtualenv() {
 	pip=$(get_command -v "$PYTHON_VERSIONS" pip || true)
     fi
 
-    if [ -n "$source_dir" ]; then
+    if [ -n "${source_dir-}" ]; then
 	cd "$source_dir"
     fi
 
