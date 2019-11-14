@@ -53,7 +53,9 @@ run_in_virtualenv() {
 	pip=$(get_command -v "$PYTHON_VERSIONS" pip || true)
     fi
 
-    cd "$source_dir"
+    if [ -n "$source_dir" ]; then
+	cd "$source_dir"
+    fi
 
     if [ -n "$pipenv" ]; then
 	run_via_pipenv "$@"
@@ -114,7 +116,15 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$script_dir/..
+source_dir=$(pwd)
+
+until [ "$source_dir" = / -o -r "$source_dir/.env" ]; do
+    source_dir="$(dirname $source_dir)"
+done
+
+if [ "$source_dir" = / ]; then
+    unset source_dir
+fi
 
 eval $("$script_dir/get-os-release.sh" -x)
 
