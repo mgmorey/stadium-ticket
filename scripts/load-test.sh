@@ -67,7 +67,11 @@ until [ "$source_dir" = / -o -r "$source_dir/.env" ]; do
     source_dir="$(dirname $source_dir)"
 done
 
-if [ -r "$source_dir/.env" ]; then
+if [ "$source_dir" = / ]; then
+    unset source_dir
+fi
+
+if [ -n "{source_dir-}" ] && [ -r "$source_dir/.env" ]; then
     printf "%s\n" "Loading .env environment variables"
     . "$source_dir/.env"
 fi
