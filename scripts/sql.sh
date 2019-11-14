@@ -125,15 +125,17 @@ run_sql() {
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$script_dir/..
+source_dir=$(pwd)
 
-sql_dir=$source_dir/sql
+until [ "$source_dir" = / -o -r "$source_dir/.env" ]; do
+    source_dir="$(dirname $source_dir)"
+done
 
-if [ -r .env ]; then
-    . ./.env
-elif [ -r "$source_dir/.env" ]; then
+if [ -r "$source_dir/.env" ]; then
+    printf "%s\n" "Loading .env environment variables"
     . "$source_dir/.env"
 elif [ -r "$HOME/.env" ]; then
+    printf "%s\n" "Loading .env environment variables"
     . "$HOME/.env"
 fi
 

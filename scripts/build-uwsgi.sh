@@ -121,8 +121,6 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$script_dir/..
-
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"

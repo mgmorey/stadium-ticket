@@ -61,9 +61,13 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$script_dir/..
+source_dir=$(pwd)
 
-if [ -r "source_dir/.env" ]; then
+until [ "$source_dir" = / -o -r "$source_dir/.env" ]; do
+    source_dir="$(dirname $source_dir)"
+done
+
+if [ -r "$source_dir/.env" ]; then
     printf "%s\n" "Loading .env environment variables"
     . "$source_dir/.env"
 fi

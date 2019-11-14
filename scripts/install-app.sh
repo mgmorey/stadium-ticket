@@ -296,7 +296,15 @@ usage() {
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$script_dir/..
+source_dir=$(pwd)
+
+until [ "$source_dir" = / -o -r "$source_dir/app.ini" ]; do
+    source_dir="$(dirname $source_dir)"
+done
+
+if [ ! -r "$source_dir/app.ini" ]; then
+    abort "%s: %s: No such configuration file\n" "$0" "$source_dir/app.ini"
+fi
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"

@@ -183,7 +183,15 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$script_dir/..
+source_dir=$(pwd)
+
+until [ "$source_dir" = / -o -r "$source_dir/Pipfile" ]; do
+    source_dir="$(dirname $source_dir)"
+done
+
+if [ ! -r "$source_dir/Pipfile" ]; then
+    abort "%s: %s: No such file\n" "$0" "$source_dir/Pipfile"
+fi
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"

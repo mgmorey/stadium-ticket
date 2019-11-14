@@ -403,7 +403,7 @@ install_python_version() (
     fi
 
     if ! pyenv install -s $python; then
-	abort "%s: Unable to build and install python via pyenv" "$0"
+	abort "%s: Unable to build and install python via pyenv\n" "$0"
     fi
 )
 
