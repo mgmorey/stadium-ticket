@@ -71,9 +71,9 @@ if [ "$source_dir" = / ]; then
     unset source_dir
 fi
 
-if [ -n "{$source_dir-}" ] && [ -r "$source_dir/.env" ]; then
+if [ -r "${source_dir+$source_dir/}.env" ]; then
     printf "%s\n" "Loading .env environment variables"
-    . "$source_dir/.env"
+    . "${source_dir+$source_dir/}.env"
 fi
 
 host=${FLASK_HOST-localhost}
