@@ -238,7 +238,6 @@ install_virtualenv() (
 	check_permissions_single "$1"
     else
 	printf "Installing virtual environment in %s\n" "$1"
-	cd "$script_dir/.."
 	venv_force_sync=true
 	venv_requirements=requirements.txt
 	[ -n "${UWSGI_CC-}" ] && export CC="$UWSGI_CC"

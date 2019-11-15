@@ -49,9 +49,7 @@ def get_difference(v1, v2):
 
 def get_filepath():
     """Return the fully-qualified path name of the input file."""
-    script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-    source_dir = os.path.dirname(script_dir)
-    return os.path.join(source_dir, INPUT)
+    return INPUT
 
 
 def get_minimum_version():
