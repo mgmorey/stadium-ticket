@@ -25,7 +25,7 @@ if [ -h $0 ]; then
     abort "This script must be run as %s.\n" "$(realpath $0)"
 fi
 
-script_dir=$(pwd)
+working_dir=$(pwd)
 cd
 
 if [ ! -d Documents/bin ]; then
@@ -45,13 +45,17 @@ fi
 for file in bin/*; do
     if [ -h $file -a ! -e $file ]; then
 	printf "Removing broken link: %s\n" "$file"
-	/bin/rm -f $file
+	/bin/rm -f "$file"
     fi
 done
 
-for file in "$script_dir"/*; do
-    case "$(basename $file)" in
+for file in "$working_dir"/*; do
+    case "$(basename "$file")" in
+	("$(basename "$0")")
+	    :
+	    ;;
 	(LICENSE|README*)
+	    :
 	    ;;
 	(*)
 	    if [ ! -e "bin/$(basename "$file")" ]; then
