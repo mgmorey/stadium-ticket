@@ -146,7 +146,7 @@ install_packages_using() (
 
     case "$(basename $manager)" in
 	(brew)
-	    run_unpriv -c "$manager $install $options $*"
+	    run_unpriv sh -c "$manager $install $options $*"
 	    ;;
 	(*)
 	    $manager $install $options $*
@@ -179,7 +179,7 @@ install_pattern_using() (
 
     case "$(basename $manager)" in
 	(brew)
-	    run_unpriv -c "$manager $install $options \"$1\""
+	    run_unpriv sh -c "$manager $install $options \"$1\""
 	    ;;
 	(*)
 	    $manager $install $options "$1"
