@@ -74,7 +74,7 @@ get_installed_packages() {
 		esac
 		;;
 	    (macos)
-		run_unpriv -c "$manager1 list -1"
+		run_unpriv sh -c "$manager1 list -1"
 		$manager2 list | awk '{print ":" $1}'
 		return
 		;;
