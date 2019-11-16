@@ -78,7 +78,7 @@ get_uwsgi_packages() {
 			;;
 		esac
 		;;
-	    (opensuse-)
+	    (opensuse)
 		packages=$OPENSUSE_PKGS
 		;;
 	    (fedora)
