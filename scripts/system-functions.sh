@@ -272,8 +272,8 @@ get_setpriv_command() (
 	    ;;
     esac
 
-    regid="$(id -u $1)"
-    reuid="$(id -g $1)"
+    regid="$(id -g $1)"
+    reuid="$(id -u $1)"
     printf "setpriv --reuid %s --regid %s %s\n" "$reuid" "$regid" "$options"
 )
 
