@@ -70,14 +70,6 @@ get_realpath() (
     fi
 )
 
-invoke_manager() (
-    if [ "$1" = /usr/local/bin/brew ]; then
-	run_unpriv -c "$*"
-    else
-	"$@"
-    fi
-)
-
 parse_arguments() {
     packages="$@"
 }
