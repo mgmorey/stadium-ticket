@@ -45,12 +45,9 @@ ENV WWW_VARDIR=/var/www
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
 # Install application files
-COPY Pipfile $APP_DIR
+COPY Pipfile-docker $APP_DIR/Pipfile
 COPY app/ $APP_DIR/app/
 COPY app.ini $APP_ETCDIR/
-
-# Edit value of python_version in Pipfile
-RUN sed -i 's/\(python_version\) = ".+"/\1 = "3.6"/' $APP_DIR/Pipfile
 
 # Grant application ownership of app, run and data directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
