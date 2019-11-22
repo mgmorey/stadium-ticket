@@ -18,7 +18,7 @@ script_dir = scripts
 
 all:	.env .update pycode pylint pytest
 
-build:	.env .update
+build:	.env .update Dockerfile Pipfile-docker
 	docker build -t stadium-ticket .
 
 clean:
@@ -33,7 +33,7 @@ client:		.env
 client-debug:	.env
 	$(script_dir)/app-test.sh -h localhost -p 5001
 
-compose:	.env .env-mysql .update
+compose:	.env .env-mysql .update Dockerfile Pipfile-docker
 	docker-compose up --build
 
 debug:		.update init-db
@@ -102,3 +102,6 @@ uninstall:	stop
 
 Makefile:	GNUmakefile
 	ln -s $< $@
+
+Pipfile-docker:	Pipfile
+	@sed 's/^python_version = "3\.[0-9]*"/python_version = "3"/g' $< >$@
