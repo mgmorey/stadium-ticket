@@ -66,6 +66,9 @@ pytest:		.update init-db
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update app/app/*.sqlite
 
+scripts:
+	$(script_dir)/install-utility-scripts.sh
+
 start:
 	$(script_dir)/start-app.sh
 
@@ -89,7 +92,8 @@ uninstall:	stop
 
 .PHONY: all build clean clean-virtualenv client client-debug compose debug
 .PHONY: disable drop-db enable init-db install pycode pylint pytest init-db
-.PHONY: realclean start start-uwgi status stop stop-uwsgi stress uninstall
+.PHONY: realclean scripts start start-uwgi status stop stop-uwsgi stress
+.PHONY: uninstall
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh $@ $<
