@@ -48,7 +48,10 @@ install_utility_scripts() {
 	git pull origin master
     else
 	git clone $UTILITY_SCRIPTS_URL
+	cd $PROJECT
     fi
+
+    ./install-scripts
 }
 
 install_utility_scripts
