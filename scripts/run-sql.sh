@@ -139,5 +139,6 @@ elif [ -r "$HOME/.env" ]; then
     . "$HOME/.env"
 fi
 
+sql_dir=$source_dir/sql
 parse_arguments "$@"
 run_sql
