@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_AWK='$1 = "install" && $2 == "ok" && $3 == "installed" {print $4}'
+DPKG_AWK='$1 = "install" && $2 == "ok" && $3 == "installed" {print $4}'
 
 FREEBSD_AWK='{
 n = split($1, a, "-");
@@ -32,6 +32,8 @@ for(i = 1; i < n; i++) {
 printf("\n")
 }'
 
+PREFIX_AWK='{printf("%s%s\n", prefix, $0)}'
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -42,56 +44,55 @@ assert() {
 }
 
 get_installed_packages() {
-    managers=$("$script_dir/get-package-managers.sh")
-    manager1=$(printf "%s\n" $managers | awk 'NR == 1 {print $0}')
-    manager2=$(printf "%s\n" $managers | awk 'NR == 2 {print $0}')
+    prefix=
 
-    for id in $ID $ID_LIKE; do
-	case "$id" in
-	    (debian)
-		dpkg-query -Wf '${Status} ${Package}\n' | awk "$DEBIAN_AWK"
-		return
-		;;
-	    (opensuse)
-		$manager1 -q search -i -t package | awk 'NR > 3 {print $3}'
-		return
-		;;
-	    (fedora)
-		$manager1 list installed | awk '{print $1}' | awk -F. '{print $1}'
-		return
-		;;
-	    (rhel|ol|centos)
-		case "$VERSION_ID" in
-		    (7|7.*)
-			$manager1 list installed | awk '{print $1}' | awk -F. '{print $1}'
-			$manager2 list | awk '{print ":" $1}'
-			return
-			;;
-		    (8|8.*)
-			$manager1 list installed | awk '{print $1}' | awk -F. '{print $1}'
-			return
-			;;
-		esac
-		;;
-	    (macos)
-		run_unpriv sh -c "$manager1 list -1"
-		$manager2 list | awk '{print ":" $1}'
-		return
-		;;
-	    (freebsd)
-		$manager1 info | awk "$FREEBSD_AWK"
-		return
-		;;
-	    (netbsd)
-		$manager1 list | awk '{print $1}'
-		return
-		;;
-	    (solaris)
-		$manager1 list -s | awk '{print $1}'
-		return
-		;;
-	esac
+    for manager; do
+	if ! which $manager >/dev/null 2>&1; then
+	    continue
+	fi
+
+	(get_packages_using $manager || true) | prefix_lines "$prefix"
+	prefix=:
     done
+}
+
+get_packages_using() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case "$(basename $1)" in
+	(apt-get)
+	    dpkg-query -Wf '${Status} ${Package}\n' | awk "$DPKG_AWK"
+	    ;;
+	(brew)
+	    run_unpriv sh -c "$1 list -1"
+	    ;;
+	(dnf)
+	    $1 list installed | awk 'NF == 3 {print $1}' | awk -F. '{print $1}'
+	    ;;
+	(pkg)
+	    case "$ID" in
+		(freebsd)
+		    $1 info --all | awk "$FREEBSD_AWK"
+		    ;;
+		(*)
+		    $1 list | awk 'NR > 1 {print $1}'
+		    ;;
+	    esac
+	    ;;
+	(pkgin)
+	    $1 list | awk '{print $1}'
+	    ;;
+	(pkgutil)
+	    $1 --list | awk '{print $1}'
+	    ;;
+	(yum)
+	    $1 list installed | awk 'NF == 3 {print $1}' | awk -F. '{print $1}'
+	    ;;
+	(zypper)
+	    $1 -q search -i -t package | awk 'NR > 3 {print $3}'
+	    ;;
+    esac
 }
 
 get_realpath() (
@@ -99,7 +100,7 @@ get_realpath() (
     realpath=$(which realpath)
 
     if [ -n "$realpath" ]; then
-	$realpath "$@"
+    	$realpath "$@"
     else
 	for file; do
 	    if expr "$file" : '/.*' >/dev/null; then
@@ -111,10 +112,89 @@ get_realpath() (
     fi
 )
 
-script_dir=$(get_realpath "$(dirname "$0")")
+get_setpriv_command() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    version="$(setpriv --version 2>/dev/null)"
 
-. "$script_dir/system-functions.sh"
+    case "${version##* }" in
+	('')
+	    return 1
+	    ;;
+	([01].*)
+	    return 1
+	    ;;
+	(2.[0-9].*)
+	    return 1
+	    ;;
+	(2.[12][0-9].*)
+	    return 1
+	    ;;
+	(2.3[012].*)
+	    return 1
+	    ;;
+	(*)
+	    options="--init-groups --reset-env"
+	    ;;
+    esac
+
+    regid="$(id -g $1)"
+    reuid="$(id -u $1)"
+    printf "setpriv --reuid %s --regid %s %s\n" "$reuid" "$regid" "$options"
+)
+
+get_su_command() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case "${kernel_name=$(uname -s)}" in
+	(GNU|Linux)
+	    if get_setpriv_command $1; then
+		return 0
+	    else
+		options=-l
+	    fi
+	    ;;
+	(Darwin|FreeBSD)
+	    options=-l
+	    ;;
+	(*)
+	    options=-
+	    ;;
+    esac
+
+    printf "su %s %s\n" "$options" "$1"
+)
+
+prefix_lines() {
+    assert [ $# -eq 1 ]
+    awk -v prefix=$1 "$PREFIX_AWK"
+}
+
+run_unpriv() (
+    assert [ $# -ge 1 ]
+
+    if [ "$1" = -c ]; then
+	sh_opts="$1"
+	shift
+    else
+	sh_opts=
+    fi
+
+    if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
+	su="$(get_su_command $SUDO_USER) $sh_opts"
+    elif [ -n "$sh_opts" ]; then
+	su="sh $sh_opts"
+    else
+	su=
+    fi
+
+    $su "$@"
+)
+
+script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -x)
 
-get_installed_packages
+managers=$("$script_dir/get-package-managers.sh")
+get_installed_packages $managers

@@ -34,12 +34,42 @@ configure_platform() {
 
     for id in $ID $ID_LIKE; do
 	case "$id" in
+	    (centos)
+		is_pattern_supported=true
+
+		case "$VERSION_ID" in
+		    (7)
+			"$script_dir/install-epel.sh"
+			;;
+		    (8)
+			"$script_dir/install-epel.sh"
+			;;
+		esac
+		break
+		;;
 	    (debian)
 		is_pattern_supported=true
 		break
 		;;
-	    (opensuse|fedora|rhel)
+	    (fedora)
 		is_pattern_supported=true
+		break
+		;;
+	    (rhel|ol)
+		is_pattern_supported=true
+
+		case "$VERSION_ID" in
+		    (7.*)
+			"$script_dir/install-epel.sh"
+			;;
+		    (8.*)
+			"$script_dir/install-epel.sh"
+			;;
+		esac
+		break
+		;;
+	    (solaris)
+		"$script_dir/set-publisher-sfe.sh"
 		break
 		;;
 	esac
@@ -237,7 +267,14 @@ validate_platform() {
 		return
 		;;
 	    (rhel|ol|centos)
-		return
+		case "$VERSION_ID" in
+		    (7|7.*)
+			return
+			;;
+		    (8|8.*)
+			return
+			;;
+		esac
 		;;
 	    (darwin)
 		return
@@ -263,5 +300,7 @@ validate_platform() {
 script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-os-release.sh" -x)
+
+. "$script_dir/system-functions.sh"
 
 install_packages "$@"
