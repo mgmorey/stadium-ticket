@@ -468,14 +468,13 @@ configure_linux_redhat_7() {
     configure_linux_redhat
 
     # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/pkg/bin/python3.6
-    SYSTEM_PYTHON_VERSION=3.6.9
+    SYSTEM_PYTHON=/usr/pkg/bin/python3.7
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/pkg
 
     # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.6
+    UWSGI_BINARY_NAME=uwsgi-3.7
 
     # Set other uWSGI parameters
     UWSGI_HAS_PLUGIN=false
