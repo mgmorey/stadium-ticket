@@ -194,7 +194,7 @@ install_uwsgi_from_package() (
     fi
 
     case "$UWSGI_ORIGIN" in
-	(distro)
+	(distro|pkgsrc)
 	    packages=$(get_packages_in $CATEGORIES | sort -u)
 
 	    if [ -n "$packages" ]; then
