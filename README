@@ -8,7 +8,7 @@ platforms:
 +============+================+===============================+========+
 | GNU/Cygwin | MS Windows     | 10.0 (x86_64)                 | 3.6.9  |
 +------------+----------------+-------------------------------+--------+
-| GNU/Linux  | CentOS         | 7 (x86_64)                    | 3.6.9* |
+| GNU/Linux  | CentOS         | 7 (x86_64)                    | 3.7.5* |
 +------------+----------------+-------------------------------+--------+
 | GNU/Linux  | Debian         | 10 (amd64, s390x)             | 3.7.3  |
 +------------+----------------+-------------------------------+--------+
@@ -39,7 +39,7 @@ platforms:
 | Unix       | OpenIndiana    | Hipster 2019.10 (x86_64)      | 3.5.7  |
 +------------+----------------+-------------------------------+--------+
 
-Note: (*) above denotes a non-native (third-party) Python interpreter.
+Note: (*) denotes a non-native (third-party) Python interpreter.
 
 Installation as a service has been tested on the following platforms:
 
