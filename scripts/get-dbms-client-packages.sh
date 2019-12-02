@@ -27,7 +27,7 @@ FEDORA_PKGS="%s-PyMySQL %s-sqlalchemy"
 FREEBSD_PKG="mariadb103-client"
 FREEBSD_PKGS="%s-pymysql %s-sqlalchemy12"
 
-ILLUMOS_PKG="database/mariadb-103/client"
+ILLUMOS_PKG="database/mariadb-101/client"
 ILLUMOS_PKGS=":%s-pymysql :%s-sqlalchemy"
 
 NETBSD_PKG="mariadb-client"
@@ -41,7 +41,6 @@ REDHAT_PKG="mariadb"
 SOLARIS_PKG="database/mysql-57/client"
 
 UBUNTU_18_04_PKG="mariadb-client-10.1"
-UBUNTU_19_04_PKG="mariadb-client-10.3"
 UBUNTU_19_10_PKG="mariadb-client-10.3"
 UBUNTU_PKGS="%s-pymysql %s-sqlalchemy"
 
@@ -81,9 +80,6 @@ get_dbms_client_packages() {
 		    case "$VERSION_ID" in
 			(18.04)
 			    packages="${package:-$UBUNTU_18_04_PKG} $UBUNTU_PKGS"
-			    ;;
-			(19.04)
-			    packages="${package:-$UBUNTU_19_04_PKG} $UBUNTU_PKGS"
 			    ;;
 			(19.10)
 			    packages="${package:-$UBUNTU_19_10_PKG} $UBUNTU_PKGS"
