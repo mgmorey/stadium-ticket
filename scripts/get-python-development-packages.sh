@@ -1,7 +1,7 @@
 #!/bin/sh -eu
 
-# get-dependencies: get list of prerequisites for developing app
-# Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
+# get-python-devel-packages: get list of Python development packages
+# Copyright (C) 2019  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CATEGORIES="development http-client python-build python-development \
-python-flask python-sqlite sqlite"
+CATEGORIES="pip utility virtualenv"
 
 abort() {
     printf "$@" >&2
@@ -28,13 +27,13 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_dependencies() {
+get_python_devel_packages() {
     get_packages_in $CATEGORIES | sort -u
 }
 
 get_packages_in() {
     for category; do
-	"$script_dir/get-$category-packages.sh"
+	"$script_dir/get-python-$category-packages.sh"
     done
 }
 
@@ -57,4 +56,6 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-get_dependencies
+eval $("$script_dir/get-os-release.sh" -x)
+
+get_python_devel_packages

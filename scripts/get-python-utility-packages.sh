@@ -16,38 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS=":%s-codestyle :%s-packaging :%s-pip :%s-pylint :%s-test \
-:%s-virtualenv"
+DARWIN_PKGS=":%s-codestyle :%s-pylint :%s-test :%s-virtualenv"
 
-DEBIAN_PKGS="pylint3 %s-openssl %s-packaging %s-pip %s-pycodestyle \
-%s-pytest %s-venv %s-virtualenv virtualenv"
+DEBIAN_PKGS="%s-pycodestyle %s-pytest"
 
-FREEBSD_PKGS="pylint-%s %s-packaging %s-pip %s-pycodestyle %s-pytest \
-%s-virtualenv"
+FREEBSD_PKGS="pylint-%s %s-pycodestyle %s-pytest"
 
-FEDORA_PKGS="%s-packaging %s-pip %s-pycodestyle %s-pylint %s-pytest \
-%s-virtualenv"
+FEDORA_PKGS="%s-pycodestyle %s-pylint %s-pytest"
 
-ILLUMOS_PKGS=":%s-codestyle :%s-packaging :%s-pip :%s-test \
-:%s-virtualenv"
+ILLUMOS_PKGS=":%s-codestyle :%s-test :%s-virtualenv"
 
-NETBSD_PKGS="%s-codestyle %s-packaging %s-pip %s-pylint %s-test \
-%s-virtualenv"
+NETBSD_PKGS="%s-codestyle %s-pylint %s-test"
 
-OPENSUSE_PKGS="%s-packaging %s-pip %s-pycodestyle %s-pylint %s-pytest \
-%s-virtualenv"
+OPENSUSE_PKGS="%s-pycodestyle %s-pylint %s-pytest"
 
-REDHAT_7_PKGS=":%s-codestyle :%s-packaging :%s-pip :%s-pylint :%s-test \
-:%s-virtualenv"
-REDHAT_8_PKGS="%s-pip %s-pytest %s-virtualenv"
+REDHAT_7_PKGS=":%s-codestyle :%s-pylint :%s-test"
+REDHAT_8_PKGS="%s-pytest"
 
-SOLARIS_PKGS="developer/python/pylint-%s library/python/pip-%s \
-library/python/pytest-%s library/python/virtualenv-%s"
-
-UBUNTU_18_PKGS="pylint3 %s-openssl %s-packaging %s-pip %s-pycodestyle \
-%s-pytest %s-venv %s-virtualenv virtualenv"
-UBUNTU_19_PKGS="pylint %s-openssl %s-packaging %s-pip %s-pycodestyle \
-%s-pytest %s-venv %s-virtualenv virtualenv"
+SOLARIS_PKGS="developer/python/pylint-%s library/python/pytest-%s"
 
 abort() {
     printf "$@" >&2
@@ -79,17 +65,7 @@ get_python_devel_packages() {
     for id in $ID $ID_LIKE; do
 	case "$id" in
 	    (debian)
-		packages=$DEBIAN_PKGS
-		;;
-	    (ubuntu)
-		case "$VERSION_ID" in
-		    (18.*)
-			packages=$UBUNTU_18_PKGS
-			;;
-		    (19.*)
-			packages=$UBUNTU_19_PKGS
-			;;
-		esac
+		packages="$DEBIAN_PKGS pylint3"
 		;;
 	    (opensuse)
 		packages=$OPENSUSE_PKGS
@@ -107,17 +83,27 @@ get_python_devel_packages() {
 			;;
 		esac
 		;;
+	    (ubuntu)
+		case "$VERSION_ID" in
+		    (18.*)
+			packages="$DEBIAN_PKGS pylint3"
+			;;
+		    (19.*)
+			packages="$DEBIAN_PKGS pylint"
+			;;
+		esac
+		;;
 	    (darwin)
 		packages=$DARWIN_PKGS
 		;;
 	    (freebsd)
 		packages=$FREEBSD_PKGS
 		;;
-	    (netbsd)
-		packages=$NETBSD_PKGS
-		;;
 	    (illumos)
 		packages=$ILLUMOS_PKGS
+		;;
+	    (netbsd)
+		packages=$NETBSD_PKGS
 		;;
 	    (solaris)
 		packages=$SOLARIS_PKGS

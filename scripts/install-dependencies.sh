@@ -51,7 +51,7 @@ get_realpath() (
 install_dependencies() {
     validate_platform
     packages=$("$script_dir/get-dependencies.sh")
-    pattern=$("$script_dir/get-devel-pattern.sh")
+    pattern=$("$script_dir/get-development-pattern.sh")
 
     if [ $UWSGI_ORIGIN = pkgsrc ]; then
 	install_pkgsrc

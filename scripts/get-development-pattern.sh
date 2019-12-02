@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-devel-pattern: get essential build/development pattern
+# get-development-pattern: get essential build/development pattern
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DEBIAN_PATT="build-essential"
+DEBIAN_PATTERN="build-essential"
 
-OPENSUSE_PATT="devel_basis"
+OPENSUSE_PATTERN="devel_basis"
 
-SUNOS_PATT="metapackages/build-essential"
+REDHAT_PATTERN="Development Tools"
+
+ILLUMOS_PATTERN="build-essential"
 
 abort() {
     printf "$@" >&2
@@ -32,24 +34,29 @@ assert() {
 }
 
 get_devel_pattern() {
-    case "$kernel_name" in
-	(Linux|GNU)
-	    case "$ID" in
-		(debian|raspbian|ubuntu|linuxmint|neon|kali)
-		    pattern=$DEBIAN_PATT
-		    ;;
-		(opensuse-*)
-		    pattern=$OPENSUSE_PATT
-		    ;;
-	    esac
-	    ;;
-	(SunOS)
-	    pattern=$SUNOS_PATT
-	    ;;
-    esac
+    for id in $ID $ID_LIKE; do
+	case "$id" in
+	    (debian)
+		pattern=$DEBIAN_PATTERN
+		;;
+	    (opensuse)
+		pattern=$OPENSUSE_PATTERN
+		;;
+	    (rhel|fedora)
+		pattern=$REDHAT_PATTERN
+		;;
+	    (illumos)
+		pattern=$ILLUMOS_PATTERN
+		;;
+	esac
+
+	if [ -n "${pattern-}" ]; then
+	    break
+	fi
+    done
 
     if [ -n "${pattern-}" ]; then
-	printf "%s\n" $pattern
+	printf "%s\n" "$pattern"
     fi
 }
 
