@@ -476,22 +476,21 @@ remove_files() {
 run_unpriv() (
     assert [ $# -ge 1 ]
 
-    if [ "$1" = -c ]; then
-	sh_opts="$1"
-	shift
-    else
-	sh_opts=
-    fi
-
     if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	su="$(get_su_command $SUDO_USER) $sh_opts"
-    elif [ -n "$sh_opts" ]; then
-	su="sh $sh_opts"
+	su="$(get_su_command $SUDO_USER)"
     else
 	su=
     fi
 
-    $su "$@"
+    if expr "$su" : 'su ' >/dev/null; then
+	if [ "${1-}" = /bin/sh -a "${2-}" = -c ]; then
+	    shift
+	else
+	    su="$su -c"
+	fi
+    fi
+
+    ${su+$su }"$@"
 )
 
 signal_process() {
