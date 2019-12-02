@@ -34,6 +34,10 @@ readline sqlite3"
 FREEBSD_12_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses \
 openssl111 readline sqlite3"
 
+ILLUMOS_PKGS="database/sqlite-3 developer/illumos-gcc
+developer/build/gnu-make library/libffi library/ncurses library/readline \
+shell/bash"
+
 NETBSD_PKGS="bash bzip2 curl gdbm gmake libffi lzma ncurses readline \
 sqlite3 :git"
 
@@ -48,7 +52,7 @@ REDHAT_8_PKGS="bash bzip2-devel curl gcc gdbm-devel libffi-devel \
 libuuid-devel make ncurses-devel openssl-devel python36-devel \
 readline-devel sqlite-devel xz-devel zlib-devel"
 
-SUNOS_PKGS="database/sqlite-3 developer/gcc developer/build/gnu-make \
+SOLARIS_PKGS="database/sqlite-3 developer/gcc developer/build/gnu-make \
 library/libffi library/ncurses library/readline shell/bash"
 
 UBUNTU_18_04_PKGS="bash curl gcc libbz2-dev libffi-dev libgdbm-dev \
@@ -146,7 +150,14 @@ get_devel_packages() {
 	    packages=$NETBSD_PKGS
 	    ;;
 	(SunOS)
-	    packages=$SUNOS_PKGS
+	    case "$ID" in
+		(illumos)
+		    packages=$ILLUMOS_PKGS
+		    ;;
+		(solaris)
+		    packages=$SOLARIS_PKGS
+		    ;;
+	    esac
 	    ;;
     esac
 
