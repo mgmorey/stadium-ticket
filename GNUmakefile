@@ -60,7 +60,7 @@ pycode:		.update
 pylint:		.update
 	$(script_dir)/run-app.sh pylint app tests
 
-pytest:		.update init-db
+pytest:		.update
 	$(script_dir)/run-app.sh pytest tests
 
 realclean:	clean clean-virtualenv

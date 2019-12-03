@@ -22,6 +22,7 @@ class TestTicketsMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         with app.app_context():
+            db.create_all()
             events = [Events(name=name, sold=0, total=1000) for name in EVENTS]
 
             for event in events:
