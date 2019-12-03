@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """Define methods to construct a SQLAlchemy database URI string."""
 
-import os
 import re
 
-from decouple import config
+import decouple
 
 DIALECT = 'sqlite'
 DRIVER = {
@@ -49,9 +48,7 @@ def _get_filename(dialect: str, schema: str):
     if '{4}' not in _get_uri(dialect):
         return None
 
-    name = "{}.sqlite".format(schema)
-    name = _get_string('DATABASE_FILENAME', default=name)
-    return name
+    return _get_string('DATABASE_FILENAME', default="{}.sqlite".format(schema))
 
 
 def _get_login(dialect: str):
@@ -60,8 +57,8 @@ def _get_login(dialect: str):
         return None
 
     password = _get_string('DATABASE_PASSWORD', default=None)
-    user = _get_string('DATABASE_USER', default=os.getenv('USER', USER))
-    return "{}:{}".format(user, password) if password else user
+    username = _get_string('DATABASE_USER', default=None)
+    return "{}:{}".format(username, password) if password else username
 
 
 def _get_scheme(dialect: str):
@@ -72,7 +69,7 @@ def _get_scheme(dialect: str):
 
 def _get_string(parameter: str, default: str):
     """Return a validated string parameter value."""
-    value = config(parameter, default=default)
+    value = decouple.config(parameter, default=default)
 
     if not value:
         value = default
