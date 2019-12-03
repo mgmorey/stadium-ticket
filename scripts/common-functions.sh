@@ -71,7 +71,7 @@ create_virtualenv() (
 	fi
     fi
 
-    printf "%s\n" "Creating virtual environment"
+    printf "Creating virtual environment in %s\n" "$1"
 
     for utility in ${venv_utilities-$VENV_UTILITIES}; do
 	case "$utility" in
