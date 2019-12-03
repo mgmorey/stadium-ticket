@@ -46,39 +46,37 @@ class TestUriMethods(unittest.TestCase):
         self.assertRaises(ValueError,
                           _validate,
                           'DATABASE_PATHNAME',
-                          '.foo')
+                          'foo.')
 
     def test_validate_filename_fail_4(self):
         self.assertRaises(ValueError,
                           _validate,
                           'DATABASE_PATHNAME',
-                          'foo.')
-
-    def test_validate_filename_fail_5(self):
-        self.assertRaises(ValueError,
-                          _validate,
-                          'DATABASE_PATHNAME',
-                          '.foo.sqlite')
+                          '.foo.')
 
     def test_validate_filename_pass_1(self):
         value = _validate('DATABASE_PATHNAME', 'foo')
         self.assertEqual(value, 'foo')
 
     def test_validate_filename_pass_2(self):
-        value = _validate('DATABASE_PATHNAME', 'stadium-tickets')
-        self.assertEqual(value, 'stadium-tickets')
+        value = _validate('DATABASE_PATHNAME', '.foo')
+        self.assertEqual(value, '.foo')
 
     def test_validate_filename_pass_3(self):
-        value = _validate('DATABASE_PATHNAME', '/tmp/foo.sqlite')
-        self.assertEqual(value, '/tmp/foo.sqlite')
+        value = _validate('DATABASE_PATHNAME', 'foo-bar')
+        self.assertEqual(value, 'foo-bar')
 
     def test_validate_filename_pass_4(self):
-        value = _validate('DATABASE_PATHNAME', '/home/jsmith/foo.sqlite')
-        self.assertEqual(value, '/home/jsmith/foo.sqlite')
+        value = _validate('DATABASE_PATHNAME', 'foo-bar.sqlite')
+        self.assertEqual(value, 'foo-bar.sqlite')
 
     def test_validate_filename_pass_5(self):
-        value = _validate('DATABASE_PATHNAME', 'stadium-tickets.sqlite')
-        self.assertEqual(value, 'stadium-tickets.sqlite')
+        value = _validate('DATABASE_PATHNAME', '/tmp/foo-bar.sqlite')
+        self.assertEqual(value, '/tmp/foo-bar.sqlite')
+
+    def test_validate_filename_pass_6(self):
+        value = _validate('DATABASE_PATHNAME', '/home/jdoe/foo-bar.sqlite')
+        self.assertEqual(value, '/home/jdoe/foo-bar.sqlite')
 
     def test_validate_host_fail(self):
         self.assertRaises(ValueError,
@@ -90,15 +88,13 @@ class TestUriMethods(unittest.TestCase):
         value = _validate('DATABASE_HOST', 'localhost')
         self.assertEqual(value, 'localhost')
 
-    def test_validate_password_fail(self):
-        self.assertRaises(ValueError,
-                          _validate,
-                          'DATABASE_PASSWORD',
-                          'Hello!@')
-
-    def test_validate_password_pass(self):
+    def test_validate_password_pass_1(self):
         value = _validate('DATABASE_PASSWORD', 'Hello!')
         self.assertEqual(value, 'Hello!')
+
+    def test_validate_password_pass_2(self):
+        value = _validate('DATABASE_PASSWORD', 'Hello!@')
+        self.assertEqual(value, 'Hello!@')
 
     def test_validate_schema_fail(self):
         self.assertRaises(ValueError,

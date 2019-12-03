@@ -3,6 +3,7 @@
 
 import os
 import re
+import urllib.parse
 
 from decouple import config
 
@@ -26,9 +27,10 @@ USER = 'root'
 
 PATTERN = {
     'DATABASE_DIALECT': re.compile(r'[\w]+'),
-    'DATABASE_PATHNAME': re.compile(r'[/]?[\w\d]+([/]?[\.]?[\w\d\-]+)*'),
+    'DATABASE_DRIVER': re.compile(r'[\w\d\-]+'),
+    'DATABASE_PATHNAME': re.compile(r'([/]?[\.]?[\w\d\-]+)+'),
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
-    'DATABASE_PASSWORD': re.compile(r'[\w\d\-\.!\#\$\^&\*\=\+]+'),
+    'DATABASE_PASSWORD': re.compile(r'.*'),
     'DATABASE_PORT': re.compile(r'([\d]+|[\w-]+)'),
     None: re.compile(r'[\w\d\-]+')
 }
@@ -57,7 +59,8 @@ def _get_login(dialect: str):
 
     password = _get_string('DATABASE_PASSWORD', default='')
     username = _get_string('DATABASE_USER', default='root')
-    return "{}:{}".format(username, password) if password else username
+    return ("{}:{}".format(username, urllib.parse.quote_plus(password))
+            if password else username)
 
 
 def _get_pathname(dialect: str, schema: str):
