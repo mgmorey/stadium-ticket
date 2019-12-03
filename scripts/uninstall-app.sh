@@ -99,7 +99,7 @@ remove_service() {
 uninstall_app() {
     for dryrun in true false; do
 	if [ $dryrun = false ] && is_app_running; then
-	    control_app stop "$(is_uwsgi_packaged)"
+	    control_app stop
 	fi
 
 	remove_service
