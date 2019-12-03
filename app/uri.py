@@ -32,11 +32,17 @@ PATTERN = {
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
     'DATABASE_PASSWORD': re.compile(r'.*'),
     'DATABASE_PORT': re.compile(r'([\d]+|[\w-]+)'),
-    None: re.compile(r'[\w\d\-]+')
+    'DATABASE_SCHEMA': re.compile(r'[\w\d\-]+'),
+    'DATABASE_USER': re.compile(r'[\w\d\-]+'),
 }
 
 
 def _get_driver(dialect: str):
+    """Return a database URI driver parameter default value."""
+    return _get_string('DATABASE_DRIVER', default=_get_driver_default(dialect))
+
+
+def _get_driver_default(dialect: str):
     """Return a database URI driver parameter value."""
     driver = DRIVER.get(dialect)
     return driver.format(dialect) if driver else None
@@ -109,9 +115,7 @@ def _get_uri(dialect: str):
 
 def _validate(parameter: str, value: str) -> str:
     """Raise a ValueError if parameter value is invalid."""
-    pattern = PATTERN.get(parameter, PATTERN[None])
-
-    if not pattern.fullmatch(value):
+    if not PATTERN[parameter].fullmatch(value):
         raise ValueError("Invalid {} value: \"{}\"".format(parameter, value))
 
     return value
