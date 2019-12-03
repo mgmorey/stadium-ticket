@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 """Define methods to construct a SQLAlchemy database URI string."""
 
+import os
 import re
 
-import decouple
+from decouple import config
+
+APP_NAME = 'stadium-ticket'
+APP_SCHEMA = 'stadium-tickets'
+APP_VARDIR = '/var/opt/{}'.format(APP_NAME)
 
 DIALECT = 'sqlite'
 DRIVER = {
@@ -13,7 +18,6 @@ HOST = 'localhost'
 PORT = {
     'mysql': '3306'
 }
-SCHEMA = 'stadium-tickets'
 URI = {
     'sqlite': "{0}:///{4}",
     None: "{0}://{3}@{2}/{1}"
@@ -22,7 +26,7 @@ USER = 'root'
 
 PATTERN = {
     'DATABASE_DIALECT': re.compile(r'[\w]+'),
-    'DATABASE_FILENAME': re.compile(r'([\w\d\-][\w\d\-\.]*){1,}'),
+    'DATABASE_PATHNAME': re.compile(r'[/]?[\w\d]+([/]?[\.]?[\w\d\-]+)*'),
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
     'DATABASE_PASSWORD': re.compile(r'[\w\d\-\.!\#\$\^&\*\=\+]+'),
     'DATABASE_PORT': re.compile(r'([\d]+|[\w-]+)'),
@@ -46,14 +50,6 @@ def _get_endpoint(dialect: str):
     return "{}:{}".format(host, port) if port else host
 
 
-def _get_filename(dialect: str, schema: str):
-    """Return a database filename (SQLite3 only)."""
-    if '{4}' not in _get_uri(dialect):
-        return None
-
-    return _get_string('DATABASE_FILENAME', default="{}.sqlite".format(schema))
-
-
 def _get_login(dialect: str):
     """Return a database URI login parameter value."""
     if '{3}' not in _get_uri(dialect):
@@ -64,6 +60,29 @@ def _get_login(dialect: str):
     return "{}:{}".format(username, password) if password else username
 
 
+def _get_pathname(dialect: str, schema: str):
+    """Return a database filename (SQLite3 only)."""
+    if '{4}' not in _get_uri(dialect):
+        return None
+
+    dirs = [APP_VARDIR]
+    home = os.getenv('HOME')
+
+    if home:
+        dirs.append("{}/.local".format(home))
+        dirs.append(home)
+
+    dirs.append('/tmp')
+
+    for dirname in dirs:
+        if os.access(dirname, os.W_OK):
+            break
+
+    filename = "{}.sqlite".format(schema)
+    pathname = os.path.join(dirname, filename)
+    return _get_string('DATABASE_PATHNAME', default=pathname)
+
+
 def _get_scheme(dialect: str):
     """Return a database URI scheme parameter value."""
     driver = _get_string('DATABASE_DRIVER', default=_get_driver(dialect))
@@ -72,7 +91,7 @@ def _get_scheme(dialect: str):
 
 def _get_string(parameter: str, default: str):
     """Return a validated string parameter value."""
-    value = decouple.config(parameter, default=default)
+    value = config(parameter, default=default)
 
     if not value:
         value = default
@@ -98,9 +117,9 @@ def _validate(parameter: str, value: str) -> str:
 def get_uri():
     """Return a database connection URI string."""
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
-    scheme = _get_scheme(dialect)
     endpoint = _get_endpoint(dialect)
     login = _get_login(dialect)
-    name = _get_filename(dialect, SCHEMA)
+    pathname = _get_pathname(dialect, APP_SCHEMA)
+    scheme = _get_scheme(dialect)
     uri = _get_uri(dialect)
-    return uri.format(scheme, SCHEMA, endpoint, login, name)
+    return uri.format(scheme, APP_SCHEMA, endpoint, login, pathname)

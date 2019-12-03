@@ -33,18 +33,52 @@ class TestUriMethods(unittest.TestCase):
     def test_validate_filename_fail_1(self):
         self.assertRaises(ValueError,
                           _validate,
-                          'DATABASE_FILENAME',
+                          'DATABASE_PATHNAME',
                           '.')
 
     def test_validate_filename_fail_2(self):
         self.assertRaises(ValueError,
                           _validate,
-                          'DATABASE_FILENAME',
+                          'DATABASE_PATHNAME',
+                          '..')
+
+    def test_validate_filename_fail_3(self):
+        self.assertRaises(ValueError,
+                          _validate,
+                          'DATABASE_PATHNAME',
+                          '.foo')
+
+    def test_validate_filename_fail_4(self):
+        self.assertRaises(ValueError,
+                          _validate,
+                          'DATABASE_PATHNAME',
+                          'foo.')
+
+    def test_validate_filename_fail_5(self):
+        self.assertRaises(ValueError,
+                          _validate,
+                          'DATABASE_PATHNAME',
                           '.foo.sqlite')
 
-    def test_validate_filename_pass(self):
-        value = _validate('DATABASE_FILENAME', 'foo.sqlite')
-        self.assertEqual(value, 'foo.sqlite')
+    def test_validate_filename_pass_1(self):
+        value = _validate('DATABASE_PATHNAME', 'foo')
+        self.assertEqual(value, 'foo')
+
+    def test_validate_filename_pass_2(self):
+        value = _validate('DATABASE_PATHNAME', 'stadium-tickets')
+        self.assertEqual(value, 'stadium-tickets')
+
+    def test_validate_filename_pass_3(self):
+        value = _validate('DATABASE_PATHNAME', '/tmp/foo.sqlite')
+        self.assertEqual(value, '/tmp/foo.sqlite')
+
+    def test_validate_filename_pass_4(self):
+        value = _validate('DATABASE_PATHNAME', '/home/jsmith/foo.sqlite')
+        self.assertEqual(value, '/home/jsmith/foo.sqlite')
+
+    def test_validate_filename_pass_5(self):
+        value = _validate('DATABASE_PATHNAME', 'stadium-tickets.sqlite')
+        self.assertEqual(value, 'stadium-tickets.sqlite')
 
     def test_validate_host_fail(self):
         self.assertRaises(ValueError,

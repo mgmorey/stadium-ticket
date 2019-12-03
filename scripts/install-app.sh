@@ -51,6 +51,17 @@ change_owner() (
     fi
 )
 
+create_database() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ $dryrun = true ]; then
+	check_permissions $1
+    else
+	cd $1 && "$script_dir/run-app.sh" python3 -m app init-db
+    fi
+)
+
 create_dirs() (
     assert [ $# -ge 1 ]
     dirs=$(printf "%s\n" "$@" | sort -u)
@@ -182,6 +193,7 @@ install_app() {
 	install_virtualenv $APP_DIR/$VENV_FILENAME
 	generate_service_ini $APP_CONFIG "$APP_VARS"
 	create_dirs $APP_VARDIR $APP_LOGDIR $APP_RUNDIR
+	create_database $APP_DIR
 	change_owner $APP_ETCDIR $APP_DIR $APP_VARDIR
     done
 
