@@ -10,6 +10,9 @@ DRIVER = {
     'mysql': 'py{0}'
 }
 HOST = 'localhost'
+PORT = {
+    'mysql': '3306'
+}
 SCHEMA = 'stadium-tickets'
 URI = {
     'sqlite': "{0}:///{4}",
@@ -39,7 +42,7 @@ def _get_endpoint(dialect: str):
         return None
 
     host = _get_string('DATABASE_HOST', default=HOST)
-    port = _get_string('DATABASE_PORT', default=None)
+    port = _get_string('DATABASE_PORT', default=PORT.get(dialect))
     return "{}:{}".format(host, port) if port else host
 
 
@@ -56,8 +59,8 @@ def _get_login(dialect: str):
     if '{3}' not in _get_uri(dialect):
         return None
 
-    password = _get_string('DATABASE_PASSWORD', default=None)
-    username = _get_string('DATABASE_USER', default=None)
+    password = _get_string('DATABASE_PASSWORD', default='')
+    username = _get_string('DATABASE_USER', default='root')
     return "{}:{}".format(username, password) if password else username
 
 
