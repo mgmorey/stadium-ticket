@@ -38,9 +38,9 @@ RUN pip3 install pipenv
 
 # Create application directories
 ENV APP_DIR=/opt/$APP_NAME
-ENV APP_ETCDIR=/opt/etc/$APP_NAME
+ENV APP_ETCDIR=/etc/opt/$APP_NAME
 ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
-ENV APP_VARDIR=/opt/var/$APP_NAME
+ENV APP_VARDIR=/var/opt/$APP_NAME
 ENV WWW_VARDIR=/var/www
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
