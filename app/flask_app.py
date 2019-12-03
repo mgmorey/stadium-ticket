@@ -12,8 +12,11 @@ from .apps import Events
 from .tickets import SoldOut, Tickets
 from .uri import get_uri
 
+APP_NAME = 'stadium-ticket'
+APP_SCHEMA = 'stadium-tickets'
+APP_VARDIR = '/var/opt/{}'.format(APP_NAME)
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
-SQLALCHEMY_DATABASE_URI = get_uri()
+SQLALCHEMY_DATABASE_URI = get_uri(APP_SCHEMA, APP_VARDIR)
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 app = create_app(__name__)  # pylint: disable=invalid-name

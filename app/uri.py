@@ -7,10 +7,6 @@ import urllib.parse
 
 from decouple import config
 
-APP_NAME = 'stadium-ticket'
-APP_SCHEMA = 'stadium-tickets'
-APP_VARDIR = '/var/opt/{}'.format(APP_NAME)
-
 DIALECT = 'sqlite'
 DRIVER = {
     'mysql': 'py{0}'
@@ -69,12 +65,12 @@ def _get_login(dialect: str):
             if password else username)
 
 
-def _get_pathname(dialect: str, schema: str):
+def _get_pathname(dialect: str, schema: str, vardir: str):
     """Return a database filename (SQLite3 only)."""
     if '{4}' not in _get_uri(dialect):
         return None
 
-    dirs = [APP_VARDIR]
+    dirs = [vardir]
     home = os.getenv('HOME')
 
     if home:
@@ -121,12 +117,12 @@ def _validate(parameter: str, value: str) -> str:
     return value
 
 
-def get_uri():
+def get_uri(schema: str, vardir: str):
     """Return a database connection URI string."""
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
     endpoint = _get_endpoint(dialect)
     login = _get_login(dialect)
-    pathname = _get_pathname(dialect, APP_SCHEMA)
+    pathname = _get_pathname(dialect, schema, vardir)
     scheme = _get_scheme(dialect)
     uri = _get_uri(dialect)
-    return uri.format(scheme, APP_SCHEMA, endpoint, login, pathname)
+    return uri.format(scheme, schema, endpoint, login, pathname)
