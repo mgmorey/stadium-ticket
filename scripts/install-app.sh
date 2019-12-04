@@ -109,7 +109,7 @@ generate_service_ini() {
 	generate_sed_program $2 >$sedfile
 	create_tmpfile
 	inifile=$tmpfile
-	sed -f $sedfile app.ini >$inifile
+	sed -f $sedfile uwsgi/app.ini >$inifile
     else
 	inifile=
     fi
@@ -307,21 +307,12 @@ usage() {
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$(pwd)
-
-until [ "$source_dir" = / -o -r "$source_dir/app.ini" ]; do
-    source_dir="$(dirname $source_dir)"
-done
-
-if [ "$source_dir" = / ]; then
-    unset source_dir
-fi
-
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
+source_dir=$(get_source_directory)
 parse_arguments "$@"
 configure_baseline
 install_app
