@@ -340,6 +340,16 @@ get_sort_command() {
     esac
 }
 
+get_source_directory() {
+    source_dir=$(pwd)
+
+    until [ "$source_dir" = / -o -r "$source_dir/Pipfile" ]; do
+	source_dir="$(dirname $source_dir)"
+    done
+
+    printf "%s\n" "$source_dir"
+}
+
 get_user_name() {
     printf "%s\n" "${SUDO_USER-${USER-${LOGNAME}}}"
 }
