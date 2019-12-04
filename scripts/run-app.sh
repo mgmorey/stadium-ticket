@@ -132,5 +132,4 @@ eval $("$script_dir/get-os-release.sh" -x)
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
-configure_baseline
 run_in_virtualenv "$@"
