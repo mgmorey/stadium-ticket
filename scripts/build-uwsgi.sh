@@ -105,18 +105,8 @@ get_realpath() (
 
 if [ $# -lt 2 ]; then
     abort "%s: Not enough arguments\n" "$0"
-fi
-
-if [ $# -gt 2 ]; then
+elif [ $# -gt 2 ]; then
     abort "%s: Too many arguments\n" "$0"
-fi
-
-if [ $# -eq 2 ]; then
-    assert [ -n "$1" ]
-    assert [ -n "$2" ]
-    SYSTEM_PYTHON=$1
-    SYSTEM_PYTHON_VERSION=$2
-    shift 2
 fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
@@ -125,6 +115,9 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
+
+SYSTEM_PYTHON=$1
+SYSTEM_PYTHON_VERSION=$2
 
 configure_all
 set_unpriv_environment
