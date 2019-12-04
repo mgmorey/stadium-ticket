@@ -159,6 +159,8 @@ install_dependencies() {
 }
 
 install_app() {
+    eval $("$script_dir/get-parameters.sh")
+
     if [ "$(is_uwsgi_packaged)" = false ]; then
 	configure_defaults
     fi
@@ -277,6 +279,10 @@ parse_arguments() {
     shift $(($OPTIND - 1))
 }
 
+preinstall_app() {
+    run_unpriv /bin/sh -c "$script_dir/run-app.sh pytest tests"
+}
+
 print_status() {
     case "$1" in
 	(running)
@@ -315,6 +321,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 source_dir=$(get_source_directory)
 parse_arguments "$@"
 configure_baseline
+preinstall_app
 install_app
 signal_app_restart
 
