@@ -27,7 +27,7 @@ clean:
 clean-virtualenv:
 	$(script_dir)/clean-virtualenv.sh
 
-client:		.env
+client:	.env
 	$(script_dir)/app-test.sh
 
 client-debug:	.env
@@ -48,13 +48,13 @@ init-db:
 install:	.env .update
 	$(script_dir)/install-app.sh
 
-pycode:		.update
+pycode:	.update
 	$(script_dir)/run-app.sh pycodestyle app tests
 
-pylint:		.update
+pylint:	.update
 	$(script_dir)/run-app.sh pylint app tests
 
-pytest:		.update
+pytest:	.update
 	$(script_dir)/run-app.sh pytest tests
 
 realclean:	clean clean-virtualenv
@@ -81,9 +81,12 @@ stress:
 uninstall:	stop
 	$(script_dir)/uninstall-app.sh
 
-.PHONY: all build clean clean-virtualenv client client-debug compose debug
-.PHONY: drop-db init-db install pycode pylint pytest init-db realclean
-.PHONY: restart scripts start status stop stress uninstall
+uninstall-all:	stop
+	$(script_dir)/uninstall-app.sh -p
+
+.PHONY:	all build clean clean-virtualenv client client-debug compose debug
+.PHONY:	drop-db init-db install pycode pylint pytest init-db realclean
+.PHONY:	restart scripts start status stop stress uninstall uninstall-all
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh $@ $<
