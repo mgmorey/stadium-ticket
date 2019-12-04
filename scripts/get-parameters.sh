@@ -1,7 +1,7 @@
 #!/bin/sh -eu
 
-# disable-uwsgi.sh: disable uWSGI service
-# Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
+# get-parameters.sh: print application parameter values
+# Copyright (C) 2019  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,6 +13,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 abort() {
     printf "$@" >&2
     exit 1
@@ -22,14 +25,8 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-disable_service() {
-    if [ "$(is_uwsgi_service)" = false ]; then
-	return 0
-    fi
-
-    for dryrun in false; do
-	control_service disable uwsgi
-    done
+get_parameters() {
+    run_unpriv /bin/sh -c "$script_dir/run-app.sh python3 -m app get-parameters"
 }
 
 get_realpath() (
@@ -51,10 +48,6 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-. "$script_dir/common-parameters.sh"
-. "$script_dir/common-functions.sh"
-. "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
-configure_baseline
-disable_service
+get_parameters

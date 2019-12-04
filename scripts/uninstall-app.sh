@@ -126,6 +126,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
+eval $("$script_dir/get-parameters.sh")
 parse_arguments "$@"
 configure_baseline
 uninstall_app

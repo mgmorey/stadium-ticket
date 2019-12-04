@@ -132,10 +132,10 @@ until [ "$source_dir" = / -o -r "$source_dir/.env" ]; do
 done
 
 if [ -r "$source_dir/.env" ]; then
-    printf "%s\n" "Loading .env environment variables"
+    printf "%s\n" "Loading .env environment variables" >&2
     . "$source_dir/.env"
 elif [ -r "$HOME/.env" ]; then
-    printf "%s\n" "Loading .env environment variables"
+    printf "%s\n" "Loading .env environment variables" >&2
     . "$HOME/.env"
 fi
 

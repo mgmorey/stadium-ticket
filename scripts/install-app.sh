@@ -28,7 +28,7 @@ assert() {
 }
 
 build_uwsgi_from_source() {
-    if ! run_unpriv "$script_dir/build-uwsgi.sh" "$@"; then
+    if ! run_unpriv /bin/sh -c "$script_dir/build-uwsgi.sh $*"; then
 	abort "%s: Unable to build uWSGI from source\n" "$0"
     fi
 }
@@ -109,7 +109,7 @@ generate_service_ini() {
 	generate_sed_program $2 >$sedfile
 	create_tmpfile
 	inifile=$tmpfile
-	sed -f $sedfile app.ini >$inifile
+	sed -f $sedfile uwsgi/app.ini >$inifile
     else
 	inifile=
     fi
@@ -159,6 +159,9 @@ install_dependencies() {
 }
 
 install_app() {
+    eval $("$script_dir/get-parameters.sh")
+    configure_baseline
+
     if [ "$(is_uwsgi_packaged)" = false ]; then
 	configure_defaults
     fi
@@ -277,6 +280,10 @@ parse_arguments() {
     shift $(($OPTIND - 1))
 }
 
+preinstall_app() {
+    run_unpriv /bin/sh -c "$script_dir/run-app.sh pytest tests"
+}
+
 print_status() {
     case "$1" in
 	(running)
@@ -307,23 +314,14 @@ usage() {
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$(pwd)
-
-until [ "$source_dir" = / -o -r "$source_dir/app.ini" ]; do
-    source_dir="$(dirname $source_dir)"
-done
-
-if [ "$source_dir" = / ]; then
-    unset source_dir
-fi
-
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
+source_dir=$(get_source_directory)
 parse_arguments "$@"
-configure_baseline
+preinstall_app
 install_app
 signal_app_restart
 

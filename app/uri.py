@@ -24,9 +24,9 @@ USER = 'root'
 PATTERN = {
     'DATABASE_DIALECT': re.compile(r'[\w]+'),
     'DATABASE_DRIVER': re.compile(r'[\w\d\-]+'),
-    'DATABASE_PATHNAME': re.compile(r'([/]?[\.]?[\w\d\-]+)+'),
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
     'DATABASE_PASSWORD': re.compile(r'.*'),
+    'DATABASE_PATHNAME': re.compile(r'([/]?[\.]?[\w\d\-]+)+'),
     'DATABASE_PORT': re.compile(r'([\d]+|[\w-]+)'),
     'DATABASE_SCHEMA': re.compile(r'[\w\d\-]+'),
     'DATABASE_USER': re.compile(r'[\w\d\-]+'),

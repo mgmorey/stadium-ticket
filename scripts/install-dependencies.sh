@@ -53,10 +53,6 @@ install_dependencies() {
     packages=$("$script_dir/get-dependencies.sh")
     pattern=$("$script_dir/get-development-pattern.sh")
 
-    if [ $UWSGI_ORIGIN = pkgsrc ]; then
-	install_pkgsrc
-    fi
-
     if [ -n "$packages" ]; then
 	"$script_dir/install-packages.sh" ${pattern:+-p $pattern }$packages
     fi
@@ -208,8 +204,6 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-. "$script_dir/common-parameters.sh"
-. "$script_dir/system-parameters.sh"
+eval $("$script_dir/get-os-release.sh" -x)
 
-configure_baseline
 install_dependencies

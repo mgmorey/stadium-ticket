@@ -78,7 +78,7 @@ run_via_pip() {
     done
 
     if [ -r .env ]; then
-	printf "%s\n" "Loading .env environment variables"
+	printf "%s\n" "Loading .env environment variables" >&2
 	. ./.env
     fi
 
@@ -132,5 +132,4 @@ eval $("$script_dir/get-os-release.sh" -x)
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
-configure_baseline
 run_in_virtualenv "$@"
