@@ -187,9 +187,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
-. "$script_dir/system-parameters.sh"
 
 source_dir=$(get_source_directory)
 parse_arguments "$@"
-configure_baseline
 refresh_virtualenv

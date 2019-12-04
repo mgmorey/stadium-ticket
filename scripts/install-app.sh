@@ -160,6 +160,7 @@ install_dependencies() {
 
 install_app() {
     eval $("$script_dir/get-parameters.sh")
+    configure_baseline
 
     if [ "$(is_uwsgi_packaged)" = false ]; then
 	configure_defaults
@@ -320,7 +321,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 source_dir=$(get_source_directory)
 parse_arguments "$@"
-configure_baseline
 preinstall_app
 install_app
 signal_app_restart
