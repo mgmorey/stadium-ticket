@@ -20,7 +20,7 @@ activate_virtualenv() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     assert [ -d $1/bin -a -r $1/bin/activate ]
-    printf "%s\n" "Activating virtual environment"
+    printf "%s\n" "Activating virtual environment" >&2
     set +u
     . "$1/bin/activate"
     set -u
