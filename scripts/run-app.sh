@@ -78,7 +78,7 @@ run_via_pip() {
     done
 
     if [ -r .env ]; then
-	printf "%s\n" "Loading .env environment variables"
+	printf "%s\n" "Loading .env environment variables" >&2
 	. ./.env
     fi
 
