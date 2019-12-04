@@ -72,7 +72,7 @@ if [ "$source_dir" = / ]; then
 fi
 
 if [ -r "${source_dir+$source_dir/}.env" ]; then
-    printf "%s\n" "Loading .env environment variables"
+    printf "%s\n" "Loading .env environment variables" >&2
     . "${source_dir+$source_dir/}.env"
 fi
 
