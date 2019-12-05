@@ -54,14 +54,18 @@ parse_arguments() {
 		exit 0
 		;;
 	    (d)
-		printf "Changing directory from: %s\n" "$(pwd)" >&2
-		printf "Changing directory to: %s\n" "$OPTARG" >&2
-		cd "$OPTARG"
+		if [ "$OPTARG" != "$(pwd)" ]; then
+		    printf "Changing directory from: %s\n" "$(pwd)" >&2
+		    printf "Changing directory to: %s\n" "$OPTARG" >&2
+		    cd "$OPTARG"
+		fi
 		;;
 	    (p)
-		printf "Changing PATH from: %s\n" "$PATH" >&2
-		printf "Changing PATH to: %s\n" "$OPTARG" >&2
-		export PATH="$OPTARG"
+		if [ "$OPTARG" != "$PATH" ]; then
+		    printf "Changing PATH from: %s\n" "$PATH" >&2
+		    printf "Changing PATH to: %s\n" "$OPTARG" >&2
+		    export PATH="$OPTARG"
+		fi
 		;;
 	    (\?)
 		printf "%s\n" "" >&2
