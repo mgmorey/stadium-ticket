@@ -26,8 +26,10 @@ assert() {
 }
 
 get_parameters() {
-    command="$script_dir/run-app.sh -d $(pwd) python3 -m app get-parameters"
-    run_unpriv /bin/sh -c "$command"
+    command="$script_dir/run-app.sh"
+    homedir="$(get_home_directory "${SUDO_USER-$USER}")"
+    options="-d $(pwd) -p $homedir/.pyenv/bin:$homedir/.local/bin:$PATH"
+    run_unpriv /bin/sh -c "$command $options python3 -m app get-parameters"
 }
 
 get_realpath() (
@@ -49,6 +51,7 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
+. "$script_dir/common-functions.sh"
 . "$script_dir/system-functions.sh"
 
 get_parameters
