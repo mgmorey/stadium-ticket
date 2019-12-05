@@ -26,7 +26,8 @@ assert() {
 }
 
 get_parameters() {
-    run_unpriv /bin/sh -c "$script_dir/run-app.sh -d $(pwd) python3 -m app get-parameters"
+    command="$script_dir/run-app.sh -d $(pwd) python3 -m app get-parameters"
+    run_unpriv /bin/sh -c "$command"
 }
 
 get_realpath() (
