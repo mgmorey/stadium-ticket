@@ -43,7 +43,7 @@ configure_baseline() {
 	(CYGWIN_NT-*)
 	    case "$VERSION_ID" in
 		(10.0)
-		    configure_gnu_cygwin
+		    configure_windows
 		    ;;
 		(*)
 		    abort_not_supported Release
@@ -363,22 +363,23 @@ configure_defaults() {
     fi
 }
 
+configure_from_source() {
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/usr/local
+
+    # Set other uWSGI parameters
+
+    if [ -z "${UWSGI_BUILDCONF-}" ]; then
+	UWSGI_BUILDCONF=pyonly
+    fi
+
+    UWSGI_ORIGIN=source
+}
+
 configure_gnu() {
     # Set ps command format and command column
     PS_COLUMN=10
     PS_FORMAT=pid,ppid,user,tt,lstart,command
-}
-
-configure_gnu_cygwin() {
-    # Set ps command format and command column
-    PS_COLUMN=6
-
-    # Set uWSGI binary/plugin directories
-    UWSGI_BINARY_DIR=/usr/bin
-
-    # Set uWSGI parameters
-    UWSGI_HAS_PLUGIN=false
-    UWSGI_ORIGIN=pypi
 }
 
 configure_linux_debian() {
@@ -607,20 +608,19 @@ configure_unix_solaris() {
     APP_UID=webservd
 
     # Set uWSGI parameters
-    configure_uwsgi_source
+    configure_from_source
 }
 
-configure_uwsgi_source() {
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/usr/local
+configure_windows() {
+    # Set ps command format and command column
+    PS_COLUMN=6
 
-    # Set other uWSGI parameters
+    # Set uWSGI binary/plugin directories
+    UWSGI_BINARY_DIR=/usr/bin
 
-    if [ -z "${UWSGI_BUILDCONF-}" ]; then
-	UWSGI_BUILDCONF=pyonly
-    fi
-
-    UWSGI_ORIGIN=source
+    # Set uWSGI parameters
+    UWSGI_HAS_PLUGIN=false
+    UWSGI_ORIGIN=pypi
 }
 
 find_available_plugins() {

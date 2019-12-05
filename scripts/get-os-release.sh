@@ -76,8 +76,7 @@ collect_data_for_cygwin() {
     os_family=gnu-cygwin
     NAME="Microsoft Windows"
     VERSION=${kernel_name#*-}
-    ID=ms-windows
-    ID_LIKE="cygwin"
+    ID=windows
 }
 
 collect_data_for_darwin() {
