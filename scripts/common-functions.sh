@@ -173,8 +173,7 @@ find_user_python() (
 		fi
 	    fi
 
-	    if [ -z "$python" ]; then
-		install_python_version >&2
+	    if [ -z "$python" ] && install_python_version >&2; then
 		python=$(find_user_python_installed $pyenv_root $version)
 	    fi
 
@@ -410,6 +409,12 @@ have_same_device_and_inode() (
 )
 
 install_python_version() (
+    case "${kernel_name=$(uname -s)}" in
+	(CYGWIN_NT-*)
+	    return 1
+	    ;;
+    esac
+
     python=${1-$(get_versions_passed | $(get_sort_command) | head -n 1)}
 
     if [ -z "$python" ]; then
