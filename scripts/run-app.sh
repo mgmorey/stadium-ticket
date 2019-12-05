@@ -46,25 +46,44 @@ get_realpath() (
     fi
 )
 
-run_in_virtualenv() {
+parse_arguments() {
+    while getopts hd: opt; do
+	case $opt in
+	    (h)
+		usage
+		exit 0
+		;;
+	    (d)
+		printf "Changing directory to: %s\n" "$OPTARG" >&2
+		cd $OPTARG
+		;;
+	    (\?)
+		printf "%s\n" "" >&2
+		usage
+		exit 2
+		;;
+	esac
+    done
+
+    shift $(($OPTIND - 1))
+    command="$@"
+}
+
+run_in_virtualenv() (
     pipenv=$(get_command pipenv || true)
 
     if [ -z "$pipenv" ]; then
 	pip=$(get_command -v "$PYTHON_VERSIONS" pip || true)
     fi
 
-    if [ -n "${source_dir-}" ]; then
-	cd "$source_dir"
-    fi
-
     if [ -n "$pipenv" ]; then
-	run_via_pipenv "$@"
+	run_via_pipenv $command
     elif [ -n "$pip" ]; then
-	run_via_pip "$@"
+	run_via_pip $command
     else
 	abort "%s: Neither pip nor pipenv command found in PATH\n" "$0"
     fi
-}
+)
 
 run_via_pip() {
     venv_requirements=$VENV_REQUIREMENTS
@@ -82,7 +101,7 @@ run_via_pip() {
 	. ./.env
     fi
 
-    "$@"
+    $command
 }
 
 run_via_pipenv() {
@@ -100,9 +119,9 @@ run_via_pipenv() {
     fi
 
     if [ "${PIPENV_ACTIVE:-0}" -gt 0 ]; then
-	"$@"
+	$command
     else
-	$pipenv run "$@"
+	$pipenv run $command
     fi
 }
 
@@ -116,20 +135,11 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$(pwd)
-
-until [ "$source_dir" = / -o -r "$source_dir/.env" ]; do
-    source_dir="$(dirname $source_dir)"
-done
-
-if [ "$source_dir" = / ]; then
-    unset source_dir
-fi
-
 eval $("$script_dir/get-os-release.sh" -x)
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
-run_in_virtualenv "$@"
+parse_arguments "$@"
+run_in_virtualenv
