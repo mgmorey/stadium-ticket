@@ -69,7 +69,7 @@ parse_arguments() {
     command="$@"
 }
 
-run_in_virtualenv() (
+run_in_virtualenv() {
     pipenv=$(get_command pipenv || true)
 
     if [ -z "$pipenv" ]; then
@@ -83,7 +83,7 @@ run_in_virtualenv() (
     else
 	abort "%s: Neither pip nor pipenv command found in PATH\n" "$0"
     fi
-)
+}
 
 run_via_pip() {
     venv_requirements=$VENV_REQUIREMENTS
