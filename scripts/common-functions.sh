@@ -33,7 +33,7 @@ check_python() {
     printf "Python %s interpreter found: %s\n" "$2" "$1" >&2
     printf "Current directory: %s\n" "$(pwd)" >&2
 
-    if ! "$1" "$script_dir/check-python.py" $2; then
+    if ! "$1" "$script_dir/check-python.py" $2 >&2; then
 	return 1
     fi
 
@@ -72,7 +72,7 @@ create_virtualenv() (
 	fi
     fi
 
-    printf "Creating virtual environment in %s\n" "$1"
+    printf "Creating virtual environment in %s\n" "$1" >&2
 
     for utility in ${venv_utilities-$VENV_UTILITIES}; do
 	case "$utility" in
