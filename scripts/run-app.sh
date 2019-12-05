@@ -47,7 +47,7 @@ get_realpath() (
 )
 
 parse_arguments() {
-    while getopts hd: opt; do
+    while getopts hd:p: opt; do
 	case $opt in
 	    (h)
 		usage
@@ -55,7 +55,11 @@ parse_arguments() {
 		;;
 	    (d)
 		printf "Changing directory to: %s\n" "$OPTARG" >&2
-		cd $OPTARG
+		cd "$OPTARG"
+		;;
+	    (p)
+		printf "Changing PATH to: %s\n" "$OPTARG" >&2
+		export PATH="$OPTARG"
 		;;
 	    (\?)
 		printf "%s\n" "" >&2
