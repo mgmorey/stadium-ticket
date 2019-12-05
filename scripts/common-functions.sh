@@ -30,7 +30,8 @@ check_python() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
-    printf "Python %s interpreter found: %s\n" "$2" "$1"
+    printf "Python %s interpreter found: %s\n" "$2" "$1" >&2
+    printf "Current directory: %s\n" "$(pwd)" >&2
 
     if ! "$1" "$script_dir/check-python.py" $2; then
 	return 1
@@ -98,7 +99,7 @@ create_virtualenv() (
 	    version=$($pathname --version)
 	    printf "Using %s %s from %s\n" "$utility" \
 		   "${version#Python }" \
-		   "$(which $pathname)"
+		   "$(which $pathname)" >&2
 	fi
 
 	if $command $options; then
@@ -150,6 +151,7 @@ find_system_pythons() (
 
 find_user_python() (
     assert [ $# -eq 1 ]
+    printf "Current directory: %s\n" "$(pwd)" >&2
     python_versions=$($1 "$script_dir/check-python.py")
 
     if pyenv --version >/dev/null 2>&1; then
@@ -360,6 +362,7 @@ get_versions_all() {
 }
 
 get_versions_passed() (
+    printf "Current directory: %s\n" "$(pwd)" >&2
     python=$(find_system_python | awk '{print $1}')
     python_versions=$($python "$script_dir/check-python.py" --delim '\.')
 
@@ -424,7 +427,7 @@ install_via_pip() (
     id="$(id -u)"
 
     if [ "$PIP_VERBOSE" = true ]; then
-	printf "Using %s\n" "$($pip --version)"
+	printf "Using %s\n" "$($pip --version)" >&2
     fi
 
     if [ "$id" -eq 0 ]; then
@@ -445,7 +448,7 @@ install_via_pip() (
 	printenv | egrep '^(CC|CFLAGS|CPPFLAGS|LDFLAGS|PATH)=' | sort
     fi
 
-    $pip install $options "$@"
+    $pip install $options "$@" >&2
 )
 
 refresh_via_pip() {
@@ -560,7 +563,7 @@ upgrade_requirements_via_pip() (
     fi
 
     if [ "$PIP_UPGRADE_VENV" = true ]; then
-	printf "%s\n" "Upgrading virtual environment packages via pip"
+	printf "%s\n" "Upgrading virtual environment packages via pip" >&2
 	install_via_pip "$pip" --upgrade pip || true
     fi
 
@@ -575,6 +578,6 @@ upgrade_via_pip() (
 	abort "%s: No pip command found in PATH\n" "$0"
     fi
 
-    printf "%s\n" "Upgrading user packages via pip"
+    printf "%s\n" "Upgrading user packages via pip" >&2
     install_via_pip "$pip" --upgrade --user "$@"
 )
