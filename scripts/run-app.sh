@@ -46,7 +46,7 @@ get_realpath() (
     fi
 )
 
-parse_arguments() {
+run_in_virtualenv() {
     while getopts hd:p: opt; do
 	case $opt in
 	    (h)
@@ -82,10 +82,6 @@ parse_arguments() {
     done
 
     shift $(($OPTIND - 1))
-    command="$@"
-}
-
-run_in_virtualenv() {
     pipenv=$(get_command pipenv || true)
 
     if [ -z "$pipenv" ]; then
@@ -93,9 +89,9 @@ run_in_virtualenv() {
     fi
 
     if [ -n "$pipenv" ]; then
-	run_via_pipenv $command
+	run_via_pipenv "$@"
     elif [ -n "$pip" ]; then
-	run_via_pip $command
+	run_via_pip "$@"
     else
 	abort "%s: Neither pip nor pipenv command found in PATH\n" "$0"
     fi
@@ -117,7 +113,7 @@ run_via_pip() {
 	. ./.env
     fi
 
-    $command
+    eval "$@"
 }
 
 run_via_pipenv() {
@@ -135,9 +131,9 @@ run_via_pipenv() {
     fi
 
     if [ "${PIPENV_ACTIVE:-0}" -gt 0 ]; then
-	$command
+	eval "$@"
     else
-	$pipenv run $command
+	eval $pipenv run "$@"
     fi
 }
 
@@ -157,5 +153,4 @@ eval $("$script_dir/get-os-release.sh" -x)
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
-parse_arguments "$@"
-run_in_virtualenv
+run_in_virtualenv "$@"

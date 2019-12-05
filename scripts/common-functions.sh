@@ -303,7 +303,7 @@ get_home_directory() {
     esac
 }
 
-get_path_via_home() {
+get_profile_path() {
     path=$PATH
 
     for prefix in "$1/.pyenv" "$1/.local"; do
