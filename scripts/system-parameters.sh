@@ -532,13 +532,13 @@ configure_unix_darwin() {
     APP_UID=_www
 
     # Set system Python interpreter
-    SYSTEM_PYTHON=/opt/pkg/bin/python3.6
+    SYSTEM_PYTHON=/opt/pkg/bin/python3.7
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/opt/pkg
 
     # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.6
+    UWSGI_BINARY_NAME=uwsgi-3.7
 
     # Set other uWSGI parameters
     UWSGI_ORIGIN=pkgsrc
@@ -569,13 +569,13 @@ configure_unix_illumos() {
     APP_UID=webservd
 
     # Set system Python interpreter
-    SYSTEM_PYTHON=/opt/local/bin/python3.6
+    SYSTEM_PYTHON=/opt/local/bin/python3.7
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/opt/local
 
     # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.6
+    UWSGI_BINARY_NAME=uwsgi-3.7
 
     # Set other uWSGI parameters
     UWSGI_CC=gcc
@@ -589,13 +589,13 @@ configure_unix_netbsd() {
     APP_UID=www
 
     # Set system Python interpreter
-    SYSTEM_PYTHON=/usr/pkg/bin/python3.6
+    SYSTEM_PYTHON=/usr/pkg/bin/python3.7
 
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/pkg
 
     # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.6
+    UWSGI_BINARY_NAME=uwsgi-3.7
 
     # Set other uWSGI parameters
     UWSGI_ORIGIN=pkgsrc
