@@ -281,7 +281,7 @@ parse_arguments() {
 }
 
 preinstall_app() {
-    run_unpriv /bin/sh -c "$script_dir/run-app.sh pytest tests"
+    run_unpriv /bin/sh -c "$script_dir/run-app.sh -d $(pwd) pytest tests"
 }
 
 print_status() {
