@@ -493,7 +493,8 @@ run_unpriv() (
 		command="$command $(get_setpriv_options $SUDO_USER)"
 		;;
 	    (su)
-		command="$command $(get_su_options $SUDO_USER)"
+		# command="$command $(get_su_options $SUDO_USER)"
+		command="$command $SUDO_USER"
 
 		if [ "${1-}${2+ $2}" = "/bin/sh -c" ]; then
 		    shift
