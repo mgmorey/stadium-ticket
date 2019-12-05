@@ -55,15 +55,21 @@ parse_arguments() {
 		;;
 	    (d)
 		if [ "$OPTARG" != "$(pwd)" ]; then
-		    printf "Changing directory from: %s\n" "$(pwd)" >&2
-		    printf "Changing directory to: %s\n" "$OPTARG" >&2
+		    if [ "${ENV_VERBOSE-false}" = true ]; then
+			printf "Changing directory from: %s\n" "$(pwd)" >&2
+			printf "Changing directory to: %s\n" "$OPTARG" >&2
+		    fi
+
 		    cd "$OPTARG"
 		fi
 		;;
 	    (p)
 		if [ "$OPTARG" != "$PATH" ]; then
-		    printf "Changing PATH from: %s\n" "$PATH" >&2
-		    printf "Changing PATH to: %s\n" "$OPTARG" >&2
+		    if [ "${ENV_VERBOSE-false}" = true ]; then
+			printf "Changing PATH from: %s\n" "$PATH" >&2
+			printf "Changing PATH to: %s\n" "$OPTARG" >&2
+		    fi
+
 		    export PATH="$OPTARG"
 		fi
 		;;

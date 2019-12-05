@@ -16,11 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS=":%s-sqlite3"
-
 FREEBSD_PKGS="%s-sqlite3"
 
 ILLUMOS_PKGS=":%s-sqlite3"
+
+MACOS_PKGS=":%s-sqlite3"
 
 NETBSD_PKGS="%s-sqlite3"
 
@@ -65,17 +65,17 @@ get_sqlite_packages() {
 			;;
 		esac
 		;;
-	    (darwin)
-		packages=$DARWIN_PKGS
-		;;
 	    (freebsd)
 		packages=$FREEBSD_PKGS
 		;;
-	    (netbsd)
-		packages=$NETBSD_PKGS
-		;;
 	    (illumos)
 		packages=$ILLUMOS_PKGS
+		;;
+	    (macos)
+		packages=$MACOS_PKGS
+		;;
+	    (netbsd)
+		packages=$NETBSD_PKGS
 		;;
 	esac
 

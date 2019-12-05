@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-DARWIN_PKGS=":%s-uwsgi"
-
 DEBIAN_10_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 
 FEDORA_PKGS="util-linux uwsgi uwsgi-plugin-%s"
@@ -25,6 +23,8 @@ FEDORA_PKGS="util-linux uwsgi uwsgi-plugin-%s"
 FREEBSD_PKGS="uwsgi"
 
 ILLUMOS_PKGS=":%s-uwsgi"
+
+MACOS_PKGS=":%s-uwsgi"
 
 NETBSD_PKGS="%s-uwsgi"
 
@@ -94,17 +94,17 @@ get_uwsgi_packages() {
 			;;
 		esac
 		;;
-	    (darwin)
-		packages=$DARWIN_PKGS
-		;;
 	    (freebsd)
 		packages=$FREEBSD_PKGS
 		;;
-	    (netbsd)
-		packages=$NETBSD_PKGS
-		;;
 	    (illumos)
 		packages=$ILLUMOS_PKGS
+		;;
+	    (macos)
+		packages=$MACOS_PKGS
+		;;
+	    (netbsd)
+		packages=$NETBSD_PKGS
 		;;
 	esac
 

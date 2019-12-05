@@ -130,16 +130,6 @@ validate_platform() {
 		    ;;
 	    esac
 	    ;;
-	(darwin)
-	    case "$VERSION_ID" in
-		(10.14.*)
-		    :
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
 	(freebsd)
 	    case "$VERSION_ID" in
 		(11.*)
@@ -153,9 +143,6 @@ validate_platform() {
 		    ;;
 	    esac
 	    ;;
-	(netbsd)
-	    :
-	    ;;
 	(illumos)
 	    case "$VERSION_ID" in
 		(2019.10)
@@ -165,6 +152,19 @@ validate_platform() {
 		    abort_not_supported Release
 		    ;;
 	    esac
+	    ;;
+	(macos)
+	    case "$VERSION_ID" in
+		(10.14.*)
+		    :
+		    ;;
+		(*)
+		    abort_not_supported Release
+		    ;;
+	    esac
+	    ;;
+	(netbsd)
+	    :
 	    ;;
 	(solaris)
 	    case "$VERSION_ID" in

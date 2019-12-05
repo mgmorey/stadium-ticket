@@ -139,16 +139,16 @@ validate_platform() {
 	    (rhel|ol|centos)
 		return
 		;;
-	    (darwin)
-		return
-		;;
 	    (freebsd)
 		return
 		;;
-	    (netbsd)
+	    (illumos)
 		return
 		;;
-	    (illumos)
+	    (macos)
+		return
+		;;
+	    (netbsd)
 		return
 		;;
 	    (solaris)

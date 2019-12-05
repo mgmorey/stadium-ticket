@@ -85,7 +85,6 @@ collect_data_for_darwin() {
     NAME=$(sw_vers -productName)
     VERSION=$(sw_vers -productVersion)
     ID=macos
-    ID_LIKE="darwin"
 }
 
 collect_data_for_gnu() {

@@ -276,16 +276,16 @@ validate_platform() {
 			;;
 		esac
 		;;
-	    (darwin)
-		return
-		;;
 	    (freebsd)
 		return
 		;;
-	    (netbsd)
+	    (illumos)
 		return
 		;;
-	    (illumos)
+	    (macos)
+		return
+		;;
+	    (netbsd)
 		return
 		;;
 	    (solaris)

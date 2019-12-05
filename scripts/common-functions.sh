@@ -438,7 +438,7 @@ install_via_pip() (
     shift
     id="$(id -u)"
 
-    if [ "$PIP_VERBOSE" = true ]; then
+    if [ "$PIP_INSTALL_VERBOSE" = true ]; then
 	printf "Using %s\n" "$($pip --version)" >&2
     fi
 

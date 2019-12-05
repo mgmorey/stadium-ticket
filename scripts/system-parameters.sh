@@ -163,7 +163,7 @@ configure_baseline() {
 
 	    case "$VERSION_ID" in
 		(10.14.*)
-		    configure_unix_darwin
+		    configure_unix_macos
 		    ;;
 		(*)
 		    abort_not_supported Release
@@ -526,24 +526,6 @@ configure_unix_bsd() {
     PS_FORMAT=pid,ppid,user,tt,lstart,command
 }
 
-configure_unix_darwin() {
-    # Set application group and user accounts
-    APP_GID=_www
-    APP_UID=_www
-
-    # Set system Python interpreter
-    SYSTEM_PYTHON=/opt/pkg/bin/python3.7
-
-    # Set uWSGI prefix directory
-    UWSGI_PREFIX=/opt/pkg
-
-    # Set uWSGI binary file
-    UWSGI_BINARY_NAME=uwsgi-3.7
-
-    # Set other uWSGI parameters
-    UWSGI_ORIGIN=pkgsrc
-}
-
 configure_unix_freebsd() {
     # Set uWSGI prefix directory
     UWSGI_PREFIX=/usr/local
@@ -580,6 +562,24 @@ configure_unix_illumos() {
     # Set other uWSGI parameters
     UWSGI_CC=gcc
     UWSGI_CFLAGS=-m64
+    UWSGI_ORIGIN=pkgsrc
+}
+
+configure_unix_macos() {
+    # Set application group and user accounts
+    APP_GID=_www
+    APP_UID=_www
+
+    # Set system Python interpreter
+    SYSTEM_PYTHON=/opt/pkg/bin/python3.7
+
+    # Set uWSGI prefix directory
+    UWSGI_PREFIX=/opt/pkg
+
+    # Set uWSGI binary file
+    UWSGI_BINARY_NAME=uwsgi-3.7
+
+    # Set other uWSGI parameters
     UWSGI_ORIGIN=pkgsrc
 }
 

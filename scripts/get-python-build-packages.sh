@@ -21,8 +21,6 @@
 CENTOS_7_PKGS="bzip2-devel gdbm-devel libffi-devel libuuid-devel ncurses-devel \
 openssl-devel python3-devel readline-devel sqlite-devel xz-devel zlib-devel"
 
-DARWIN_PKGS="gdbm libffi openssl readline sqlite xz zlib"
-
 DEBIAN_10_PKGS="libbz2-dev libffi-dev libgdbm-dev libncurses5-dev \
 libncursesw5-dev libpython3-dev libreadline-dev libsqlite3-dev \
 libssl-dev libxml2-dev libxmlsec1-dev liblzma-dev uuid-dev \
@@ -37,6 +35,8 @@ FREEBSD_12_PKGS="bzip2 gdbm libffi lzma ncurses openssl111 readline sqlite3"
 ILLUMOS_PKGS="database/sqlite-3 library/libffi library/ncurses library/readline"
 
 NETBSD_PKGS="bzip2 gdbm libffi lzma ncurses readline sqlite3"
+
+MACOS_PKGS="gdbm libffi openssl readline sqlite xz zlib"
 
 OPENSUSE_PKGS="gdbm-devel libbz2-devel libffi-devel libopenssl-devel \
 lzma-sdk-devel ncurses-devel python3-devel readline-devel sqlite3-devel \
@@ -121,9 +121,6 @@ get_python_build_deps() {
 			;;
 		esac
 		;;
-	    (darwin)
-		packages=$DARWIN_PKGS
-		;;
 	    (freebsd)
 		case "$VERSION_ID" in
 		    (11.*)
@@ -136,6 +133,9 @@ get_python_build_deps() {
 		;;
 	    (illumos)
 		packages=$ILLUMOS_PKGS
+		;;
+	    (macos)
+		packages=$MACOS_PKGS
 		;;
 	    (netbsd)
 		packages=$NETBSD_PKGS
