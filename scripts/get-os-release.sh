@@ -35,12 +35,12 @@ assert() {
 }
 
 abort_conflicting_option() {
-    usage "%s: conflicting option -- %s\n" "$0" "$1"
+    usage "%s: Conflicting option -- %s\n" "$0" "$1"
     exit 2
 }
 
 abort_too_many_arguments() {
-    usage "%s: too many arguments -- %s\n" "$0" "$*"
+    usage "%s: Too many arguments -- %s\n" "$0" "$*"
     exit 2
 }
 
