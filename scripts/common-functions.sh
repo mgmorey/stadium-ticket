@@ -567,7 +567,7 @@ upgrade_requirements_via_pip() (
 	install_via_pip "$pip" --upgrade pip || true
     fi
 
-    printf "%s\n" "Installing virtual environment packages via pip"
+    printf "%s\n" "Installing virtual environment packages via pip" >&2
     install_via_pip "$pip" $(get_pip_requirements)
 )
 
