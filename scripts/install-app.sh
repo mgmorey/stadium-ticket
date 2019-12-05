@@ -250,7 +250,7 @@ install_virtualenv() (
     if [ $dryrun = true ]; then
 	check_permissions_single "$1"
     else
-	printf "Installing virtual environment in %s\n" "$1"
+	printf "Installing virtual environment in %s\n" "$1" >&2
 	venv_force_sync=true
 	venv_requirements=requirements.txt
 	[ -n "${UWSGI_CC-}" ] && export CC="$UWSGI_CC"
@@ -281,7 +281,10 @@ parse_arguments() {
 }
 
 preinstall_app() {
-    run_unpriv /bin/sh -c "$script_dir/run-app.sh -d $(pwd) pytest tests"
+    command="$script_dir/run-app.sh"
+    homedir="$(get_home_directory "${SUDO_USER-$USER}")"
+    options="-d $(pwd) -p $homedir/.pyenv/bin:$homedir/.local/bin:$PATH"
+    run_unpriv /bin/sh -c "$command $options pytest tests"
 }
 
 print_status() {
