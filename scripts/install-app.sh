@@ -283,7 +283,7 @@ parse_arguments() {
 preinstall_app() {
     command="$script_dir/run-app.sh"
     homedir="$(get_home_directory "${SUDO_USER-$USER}")"
-    options="-d $(pwd) -p $homedir/.pyenv/bin:$homedir/.local/bin:$PATH"
+    options="-d $(pwd) -p $(get_path_via_home $homedir)"
     run_unpriv /bin/sh -c "$command $options pytest tests"
 }
 
