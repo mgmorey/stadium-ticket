@@ -306,6 +306,18 @@ get_home_directory() {
     esac
 }
 
+get_path_via_home() {
+    path=$PATH
+
+    for prefix in "$1/.pyenv" "$1/.local"; do
+	if is_to_be_included "$prefix/bin" "$path"; then
+	   path="$prefix/bin:$path"
+	fi
+    done
+
+    printf "%s\n" "$path"
+}
+
 get_pip_command() {
     if [ -n "${1-}" ]; then
 	get_command -p $1 pip
@@ -450,6 +462,18 @@ install_via_pip() (
 
     $pip install $options "$@" >&2
 )
+
+is_included() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    printf "%s\n" "$2" | egrep '(^|:)'$1'(:|$)' >/dev/null
+}
+
+is_to_be_included() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    test -d $1 && ! is_included $1 "$2"
+}
 
 refresh_via_pip() {
     assert [ $# -ge 1 ]
