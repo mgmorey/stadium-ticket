@@ -31,7 +31,6 @@ check_python() {
     assert [ -n "$1" ]
     assert [ -n "$2" ]
     printf "Python %s interpreter found: %s\n" "$2" "$1" >&2
-    printf "Current directory: %s\n" "$(pwd)" >&2
 
     if ! "$1" "$script_dir/check-python.py" $2 >&2; then
 	return 1
@@ -151,7 +150,6 @@ find_system_pythons() (
 
 find_user_python() (
     assert [ $# -eq 1 ]
-    printf "Current directory: %s\n" "$(pwd)" >&2
     python_versions=$($1 "$script_dir/check-python.py")
 
     if pyenv --version >/dev/null 2>&1; then
@@ -374,7 +372,6 @@ get_versions_all() {
 }
 
 get_versions_passed() (
-    printf "Current directory: %s\n" "$(pwd)" >&2
     python=$(find_system_python | awk '{print $1}')
     python_versions=$($python "$script_dir/check-python.py" --delim '\.')
 
