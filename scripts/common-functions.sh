@@ -75,7 +75,9 @@ create_virtualenv() (
 	fi
     fi
 
-    printf "Creating virtual environment in %s\n" "$1" >&2
+    if [ "$VENV_VERBOSE" = true ]; then
+	printf "Creating virtual environment in %s\n" "$1" >&2
+    fi
 
     for utility in ${venv_utilities-$VENV_UTILITIES}; do
 	case "$utility" in
@@ -422,7 +424,7 @@ install_python_version() (
     set_flags
     set_path
 
-    if [ "${env_debug-$ENV_DEBUG}" = true ]; then
+    if [ "${pyenv_install_verbose-$PYENV_INSTALL_VERBOSE}" = true ]; then
 	printenv | egrep '^(CC|CFLAGS|CPPFLAGS|LDFLAGS|PATH)=' | sort
     fi
 
@@ -455,7 +457,7 @@ install_via_pip() (
 	export PATH=$HOME/.local/bin:$PATH
     fi
 
-    if [ "${env_debug-$ENV_DEBUG}" = true ]; then
+    if [ "${pip_install_verbose-$PIP_INSTALL_VERBOSE}" = true ]; then
 	printenv | egrep '^(CC|CFLAGS|CPPFLAGS|LDFLAGS|PATH)=' | sort
     fi
 
