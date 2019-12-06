@@ -413,6 +413,9 @@ install_python_version() (
 	(CYGWIN_NT-*)
 	    return 1
 	    ;;
+	(Darwin)
+	    return 1
+	    ;;
     esac
 
     python=${1-$(get_versions_passed | $(get_sort_command) | head -n 1)}
