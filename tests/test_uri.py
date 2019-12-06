@@ -70,12 +70,6 @@ class TestUriMethods(unittest.TestCase):
                           'DATABASE_HOST',
                           '123abc')
 
-    def test_validate_host_fail_4(self):
-        self.assertRaises(ValueError,
-                          _validate,
-                          'DATABASE_HOST',
-                          'localhost.localdomain')
-
     def test_validate_host_pass_1(self):
         value = _validate('DATABASE_HOST', '127.0.0.1')
         self.assertEqual(value, '127.0.0.1')
@@ -83,6 +77,10 @@ class TestUriMethods(unittest.TestCase):
     def test_validate_host_pass_2(self):
         value = _validate('DATABASE_HOST', 'localhost')
         self.assertEqual(value, 'localhost')
+
+    def test_validate_host_fail_4(self):
+        value = _validate('DATABASE_HOST', 'localhost.localdomain')
+        self.assertEqual(value, 'localhost.localdomain')
 
     def test_validate_pathname_fail_1(self):
         self.assertRaises(ValueError,
