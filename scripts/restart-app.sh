@@ -66,6 +66,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
+set_unpriv_environment
 eval $("$script_dir/get-parameters.sh")
 configure_all
 signal_app_restart
