@@ -98,7 +98,7 @@ def _get_login(dialect: str):
             if password else username)
 
 
-def _get_parameters(dialect: str):
+def _get_tuples(dialect: str):
     charset = _get_charset(dialect)
     return f"?charset={charset}" if charset else ''
 
@@ -143,8 +143,8 @@ def get_uri(schema: str, vardir: str):
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
     endpoint = _get_endpoint(dialect)
     login = _get_login(dialect)
-    parameters = _get_parameters(dialect)
     pathname = _get_pathname(dialect, schema, vardir)
     scheme = _get_scheme(dialect)
+    tuples = _get_tuples(dialect)
     uri = URI.get(dialect, URI[None])
-    return uri.format(scheme, login, endpoint, schema, parameters, pathname)
+    return uri.format(scheme, login, endpoint, schema, tuples, pathname)
