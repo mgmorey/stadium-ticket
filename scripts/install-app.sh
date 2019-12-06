@@ -28,7 +28,7 @@ assert() {
 }
 
 build_uwsgi_from_source() {
-    if ! run_unpriv /bin/sh -c "$script_dir/build-uwsgi.sh $*"; then
+    if ! run_unpriv /bin/sh -c "\"$script_dir/build-uwsgi.sh\" $*"; then
 	abort "%s: Unable to build uWSGI from source\n" "$0"
     fi
 }
@@ -147,8 +147,8 @@ install_app_files() (
     assert [ -n "$3" ]
     assert [ -d $2 ]
 
-    for source in $(find $2 -type f ! -name '*.pyc' -print | sort); do
-	install_file $1 $source $3/$source
+    for file in $(find $2 -type f ! -name '*.pyc' -print | sort); do
+	install_file $1 $file $3/$file
     done
 )
 
