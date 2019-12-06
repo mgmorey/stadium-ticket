@@ -26,10 +26,10 @@ assert() {
 }
 
 get_parameters() {
-    command="$script_dir/run-app.sh"
-    home="$(get_home_directory "${SUDO_USER-$USER}")"
-    options="-d \"$(pwd)\" -p \"$(get_profile_path $home)\""
-    run_unpriv /bin/sh -c "$command $options python3 -m app get-parameters"
+    home="$(get_home_directory "$(get_user_name)")"
+    path="$(get_profile_path "$home")"
+    script="\"$script_dir/run-app.sh\" -d \"$(pwd)\" -h \"$home\" -p \"$path\""
+    run_unpriv /bin/sh -c "$script python3 -m app get-parameters"
 }
 
 get_realpath() (

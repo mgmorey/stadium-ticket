@@ -160,6 +160,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 eval $("$script_dir/get-parameters.sh")
+set_unpriv_environment
 configure_baseline
 start_app
 

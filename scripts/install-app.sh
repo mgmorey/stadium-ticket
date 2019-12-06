@@ -166,10 +166,6 @@ install_app() {
 	configure_defaults
     fi
 
-    if [ -n "${source_dir-}" ]; then
-	cd "$source_dir"
-    fi
-
     for dryrun in true false; do
 	if [ "$(is_uwsgi_packaged)" = false ]; then
 	    configure_defaults
@@ -224,9 +220,9 @@ install_uwsgi_from_source() (
     if [ $dryrun = false ]; then
 	install_dependencies
 	build_uwsgi_from_source $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION
-	home_dir="$(get_home_directory $(get_user_name))"
+	home="$(get_home_directory $(get_user_name))"
 
-	if ! cd "$home_dir/git/$UWSGI_BRANCH"; then
+	if ! cd "$home/git/$UWSGI_BRANCH"; then
 	    return 1
 	fi
     fi
@@ -281,11 +277,11 @@ parse_arguments() {
 }
 
 preinstall_app() {
-    command="$script_dir/run-app.sh"
-    home="$(get_home_directory "${SUDO_USER-$USER}")"
-    options="-d \"$(pwd)\" -p \"$(get_profile_path $home)\""
-    run_unpriv /bin/sh -c "$command $options pylint app"
-    run_unpriv /bin/sh -c "$command $options pytest tests"
+    home="$(get_home_directory "$(get_user_name)")"
+    path="$(get_profile_path "$home")"
+    script="\"$script_dir/run-app.sh\" -d \"$(pwd)\" -h \"$home\" -p \"$path\""
+    run_unpriv /bin/sh -c "$script pylint app"
+    run_unpriv /bin/sh -c "$script pytest tests"
 }
 
 print_status() {
@@ -323,7 +319,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
-source_dir=$(get_source_directory)
+set_unpriv_environment
 parse_arguments "$@"
 preinstall_app
 install_app

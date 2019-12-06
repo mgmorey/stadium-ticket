@@ -566,21 +566,25 @@ set_path() {
 }
 
 set_unpriv_environment() {
-    home_dir="$(get_home_directory $(get_user_name))"
+    home="$(get_home_directory $(get_user_name))"
+    path="$(get_profile_path "$home")"
 
-    if [ "$HOME" != "$home_dir" ]; then
-	export HOME="$home_dir"
-	cd $HOME
-
-	if [ -r .profile ]; then
-	    set +u
-	    . ./.profile
-	    set -u
+    if [ "$HOME" != "$home" ]; then
+	if [ "${ENV_VERBOSE-false}" = true ]; then
+	    printf "Changing HOME from: %s\n" "$HOME" >&2
+	    printf "Changing HOME to: %s\n" "$home" >&2
 	fi
+
+	export HOME="$home"
     fi
 
-    if ! grep_path $PATH '^'"$HOME"'/.local/bin$'; then
-	export PATH="$HOME/.local/bin:$PATH"
+    if [ "$PATH" != "$path" ]; then
+	if [ "${ENV_VERBOSE-false}" = true ]; then
+	    printf "Changing PATH from: %s\n" "$PATH" >&2
+	    printf "Changing PATH to: %s\n" "$path" >&2
+	fi
+
+	export PATH="$path"
     fi
 }
 

@@ -128,5 +128,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/get-parameters.sh")
 parse_arguments "$@"
+set_unpriv_environment
 configure_baseline
 uninstall_app

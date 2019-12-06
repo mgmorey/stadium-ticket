@@ -47,17 +47,23 @@ get_realpath() (
 )
 
 run_in_virtualenv() {
-    while getopts hd:p: opt; do
+    while getopts d:h:p: opt; do
 	case $opt in
-	    (h)
-		usage
-		exit 0
-		;;
 	    (d)
 		if [ "$OPTARG" != "$(pwd)" ]; then
 		    if [ "${ENV_VERBOSE-false}" = true ]; then
 			printf "Changing directory from: %s\n" "$(pwd)" >&2
 			printf "Changing directory to: %s\n" "$OPTARG" >&2
+		    fi
+
+		    cd "$OPTARG"
+		fi
+		;;
+	    (h)
+		if [ "$OPTARG" != "$HOME" ]; then
+		    if [ "${ENV_VERBOSE-false}" = true ]; then
+			printf "Changing HOME from: %s\n" "$HOME" >&2
+			printf "Changing HOME to: %s\n" "$OPTARG" >&2
 		    fi
 
 		    cd "$OPTARG"
@@ -153,4 +159,5 @@ eval $("$script_dir/get-os-release.sh" -x)
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
+set_unpriv_environment
 run_in_virtualenv "$@"
