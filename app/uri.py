@@ -35,7 +35,7 @@ PATTERN = {
     'DATABASE_PATHNAME': re.compile(r'(/?\.?[\w\d-]+)+'),
     'DATABASE_PORT': re.compile(r'\d{1,5}'),
     'DATABASE_SCHEMA': re.compile(r'[a-z\d-]+'),
-    'DATABASE_USER': re.compile(r'[\w\d\-]+'),
+    'DATABASE_USER': re.compile(r'[\w\d-]+'),
 }
 
 
