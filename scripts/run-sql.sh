@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# sql: wrapper for invoking SQL database client command line
+# run-sql: invoke SQL DBMS command line client
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
