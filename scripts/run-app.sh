@@ -115,7 +115,10 @@ run_via_pip() {
     done
 
     if [ -r .env ]; then
-	printf "%s\n" "Loading .env environment variables" >&2
+	if [ "${VENV_VERBOSE-false}" = true ]; then
+	    printf "%s\n" "Loading .env environment variables" >&2
+	fi
+
 	. ./.env
     fi
 

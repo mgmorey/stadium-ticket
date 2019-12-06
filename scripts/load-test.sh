@@ -61,20 +61,11 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$(pwd)
-
-until [ "$source_dir" = / -o -r "$source_dir/.env" ]; do
-    source_dir="$(dirname $source_dir)"
-done
-
-if [ "$source_dir" = / ]; then
-    unset source_dir
-fi
-
-if [ -r "${source_dir+$source_dir/}.env" ]; then
+if [ "${VENV_VERBOSE-false}" = true ]; then
     printf "%s\n" "Loading .env environment variables" >&2
-    . "${source_dir+$source_dir/}.env"
 fi
+
+. ./.env
 
 host=${FLASK_HOST-localhost}
 port=${FLASK_PORT-5000}

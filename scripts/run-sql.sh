@@ -125,20 +125,28 @@ run_sql() {
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-source_dir=$(pwd)
+env_dir=$(pwd)
 
-until [ "$source_dir" = / -o -r "$source_dir/.env" ]; do
-    source_dir="$(dirname $source_dir)"
+until [ "$env_dir" = / -o -r "$env_dir/.env" ]; do
+    env_dir="$(dirname $env_dir)"
 done
 
-if [ -r "$source_dir/.env" ]; then
-    printf "%s\n" "Loading .env environment variables" >&2
-    . "$source_dir/.env"
+if [ -r "$env_dir/.env" ]; then
+    env_file="$env_dir/.env"
 elif [ -r "$HOME/.env" ]; then
-    printf "%s\n" "Loading .env environment variables" >&2
-    . "$HOME/.env"
+    env_file="$HOME/.env"
+else
+    env_file=
 fi
 
-sql_dir=$source_dir/sql
+if [ -n "$env_file" ]; then
+    if [ "${VENV_VERBOSE-false}" = true ]; then
+	printf "%s\n" "Loading .env environment variables" >&2
+    fi
+
+    . "$env_file"
+fi
+
+sql_dir=$env_dir/sql
 parse_arguments "$@"
 run_sql

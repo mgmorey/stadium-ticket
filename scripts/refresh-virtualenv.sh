@@ -130,10 +130,6 @@ refresh_via_pipenv() {
 }
 
 refresh_virtualenv() (
-    if [ -n "${source_dir-}" ]; then
-	cd "$source_dir"
-    fi
-
     for utility in ${pypi_utilities-$PYPI_UTILITIES}; do
 	case "$utility" in
 	    (pipenv)
@@ -190,6 +186,5 @@ eval $("$script_dir/get-os-release.sh" -x)
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 
-source_dir=$(get_source_directory)
 parse_arguments "$@"
 refresh_virtualenv

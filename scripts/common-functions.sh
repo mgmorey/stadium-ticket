@@ -20,7 +20,11 @@ activate_virtualenv() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
     assert [ -d $1/bin -a -r $1/bin/activate ]
-    printf "%s\n" "Activating virtual environment" >&2
+
+    if [ "${VENV_VERBOSE-false}" = true ]; then
+	printf "%s\n" "Activating virtual environment" >&2
+    fi
+
     set +u
     . "$1/bin/activate"
     set -u
@@ -349,16 +353,6 @@ get_sort_command() {
 	    printf "%s\n" "sort -Vr"
 	    ;;
     esac
-}
-
-get_source_directory() {
-    source_dir=$(pwd)
-
-    until [ "$source_dir" = / -o -r "$source_dir/Pipfile" ]; do
-	source_dir="$(dirname $source_dir)"
-    done
-
-    printf "%s\n" "$source_dir"
 }
 
 get_user_name() {
