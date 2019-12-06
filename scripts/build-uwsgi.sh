@@ -119,8 +119,8 @@ script_dir=$(get_realpath "$(dirname "$0")")
 SYSTEM_PYTHON=$1
 SYSTEM_PYTHON_VERSION=$2
 
+set_unpriv_environment
 eval $("$script_dir/get-parameters.sh")
 configure_all
-set_unpriv_environment
 build_uwsgi_from_source $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION \
 			$UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME

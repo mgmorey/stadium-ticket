@@ -159,5 +159,4 @@ eval $("$script_dir/get-os-release.sh" -x)
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 
-set_unpriv_environment
 run_in_virtualenv "$@"

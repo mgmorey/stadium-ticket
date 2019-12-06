@@ -159,7 +159,6 @@ install_dependencies() {
 }
 
 install_app() {
-    eval $("$script_dir/get-parameters.sh")
     configure_baseline
 
     if [ "$(is_uwsgi_packaged)" = false ]; then
@@ -320,6 +319,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 set_unpriv_environment
+eval $("$script_dir/get-parameters.sh")
 parse_arguments "$@"
 preinstall_app
 install_app
