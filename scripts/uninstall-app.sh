@@ -45,12 +45,12 @@ get_realpath() (
 )
 
 parse_arguments() {
-    purge=false
+    all=false
 
-    while getopts hp opt; do
+    while getopts ah opt; do
 	case $opt in
-	    (p)
-		purge=true
+	    (a)
+		all=true
 		;;
 	    (h)
 		usage
@@ -74,7 +74,7 @@ parse_arguments() {
 remove_service() {
     files="$APP_ETCDIR $APP_DIR"
 
-    if [ $purge = true ]; then
+    if [ $all = true ]; then
 	files="$files $APP_VARDIR"
 
 	if [ $APP_RUNDIR != /run -a $APP_RUNDIR != /var/run ]; then

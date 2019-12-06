@@ -82,7 +82,7 @@ uninstall:	stop
 	$(script_dir)/uninstall-app.sh
 
 uninstall-all:	stop
-	$(script_dir)/uninstall-app.sh -p
+	$(script_dir)/uninstall-app.sh -a
 
 .PHONY:	all build clean clean-virtualenv client client-debug compose debug
 .PHONY:	drop-db init-db install pycode pylint pytest init-db realclean
