@@ -25,7 +25,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-build_uwsgi_binary() (
+build_binary() (
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
@@ -44,7 +44,7 @@ build_uwsgi_binary() (
     esac
 )
 
-build_uwsgi_from_source() (
+build_uwsgi() (
     assert [ $# -ge 3 -a $# -le 4 ]
     assert [ -n "$1" ]
     assert [ -n "$2" ]
@@ -58,7 +58,7 @@ build_uwsgi_from_source() (
     fi
 
     for binary; do
-	build_uwsgi_binary $python $binary
+	build_binary $python $binary
     done
 )
 
@@ -109,6 +109,10 @@ elif [ $# -gt 2 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
 
+if [ "$(id -u)" -eq 0 ]; then
+    abort "%s: Must be run as a non-privileged user\n" "$0"
+fi
+
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-parameters.sh"
@@ -119,8 +123,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 SYSTEM_PYTHON=$1
 SYSTEM_PYTHON_VERSION=$2
 
-set_unpriv_environment
 eval $("$script_dir/get-parameters.sh")
 configure_all
-build_uwsgi_from_source $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION \
-			$UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
+build_uwsgi $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION \
+	    $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME
