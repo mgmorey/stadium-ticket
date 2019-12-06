@@ -61,11 +61,13 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-if [ "${VENV_VERBOSE-false}" = true ]; then
-    printf "%s\n" "Loading .env environment variables" >&2
-fi
+if [ -r .env ]; then
+    if [ "${VENV_VERBOSE-false}" = true ]; then
+	printf "%s\n" "Loading .env environment variables" >&2
+    fi
 
-. ./.env
+    . ./.env
+fi
 
 host=${FLASK_HOST-localhost}
 port=${FLASK_PORT-5000}
