@@ -284,6 +284,7 @@ preinstall_app() {
     command="$script_dir/run-app.sh"
     home="$(get_home_directory "${SUDO_USER-$USER}")"
     options="-d \"$(pwd)\" -p \"$(get_profile_path $home)\""
+    run_unpriv /bin/sh -c "$command $options pylint app"
     run_unpriv /bin/sh -c "$command $options pytest tests"
 }
 
