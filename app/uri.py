@@ -7,23 +7,28 @@ import urllib.parse
 
 from decouple import config
 
+CHARSET = {
+    'mysql': 'utf8mb4',
+    None: 'utf8',
+}
 DIALECT = 'sqlite'
 DRIVER = {
-    'mysql': 'py{0}'
+    'mysql': 'py{0}',
 }
 HOST = 'localhost'
 PORT = {
-    'mysql': '3306'
+    'mysql': '3306',
 }
 URI = {
-    'sqlite': "{0}:///{4}",
-    None: "{0}://{3}@{2}/{1}"
+    'mysql': "{0}://{3}@{2}/{1}?charset={4}",
+    'sqlite': "{0}:///{5}",
 }
 USER = 'root'
 
 PATTERN = {
-    'DATABASE_DIALECT': re.compile(r'[\w]+'),
-    'DATABASE_DRIVER': re.compile(r'[\w\d\-]+'),
+    'DATABASE_CHARSET': re.compile(r'[\w\d]+'),
+    'DATABASE_DIALECT': re.compile(r'(mysql|sqlite)'),
+    'DATABASE_DRIVER': re.compile(r'pymysql'),
     'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
     'DATABASE_PASSWORD': re.compile(r'.*'),
     'DATABASE_PATHNAME': re.compile(r'([/]?[\.]?[\w\d\-]+)+'),
@@ -31,6 +36,15 @@ PATTERN = {
     'DATABASE_SCHEMA': re.compile(r'[\w\d\-]+'),
     'DATABASE_USER': re.compile(r'[\w\d\-]+'),
 }
+
+
+def _get_charset(dialect: str):
+    """Return a database character set (encoding)."""
+    if '{4}' not in URI.get(dialect):
+        return None
+
+    charset = CHARSET.get(dialect, CHARSET[None])
+    return _get_string('DATABASE_CHARSET', default=charset)
 
 
 def _get_driver(dialect: str):
@@ -46,7 +60,7 @@ def _get_driver_default(dialect: str):
 
 def _get_endpoint(dialect: str):
     """Return a database URI endpoint parameter value."""
-    if '{2}' not in _get_uri(dialect):
+    if '{2}' not in URI.get(dialect):
         return None
 
     host = _get_string('DATABASE_HOST', default=HOST)
@@ -56,7 +70,7 @@ def _get_endpoint(dialect: str):
 
 def _get_login(dialect: str):
     """Return a database URI login parameter value."""
-    if '{3}' not in _get_uri(dialect):
+    if '{3}' not in URI.get(dialect):
         return None
 
     password = _get_string('DATABASE_PASSWORD', default='')
@@ -67,7 +81,7 @@ def _get_login(dialect: str):
 
 def _get_pathname(dialect: str, schema: str, vardir: str):
     """Return a database filename (SQLite3 only)."""
-    if '{4}' not in _get_uri(dialect):
+    if '{5}' not in URI.get(dialect):
         return None
 
     dirs = [vardir]
@@ -104,11 +118,6 @@ def _get_string(parameter: str, default: str):
     return _validate(parameter, value) if value else None
 
 
-def _get_uri(dialect: str):
-    """Return a database URI format specifier."""
-    return URI.get(dialect, URI[None])
-
-
 def _validate(parameter: str, value: str) -> str:
     """Raise a ValueError if parameter value is invalid."""
     if not PATTERN[parameter].fullmatch(value):
@@ -120,9 +129,10 @@ def _validate(parameter: str, value: str) -> str:
 def get_uri(schema: str, vardir: str):
     """Return a database connection URI string."""
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
+    charset = _get_charset(dialect)
     endpoint = _get_endpoint(dialect)
     login = _get_login(dialect)
     pathname = _get_pathname(dialect, schema, vardir)
     scheme = _get_scheme(dialect)
-    uri = _get_uri(dialect)
-    return uri.format(scheme, schema, endpoint, login, pathname)
+    uri = URI.get(dialect)
+    return uri.format(scheme, schema, endpoint, login, charset, pathname)
