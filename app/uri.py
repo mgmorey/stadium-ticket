@@ -29,10 +29,10 @@ PATTERN = {
     'DATABASE_CHARSET': re.compile(r'utf8(mb[34])?'),
     'DATABASE_DIALECT': re.compile(r'(mysql|sqlite)'),
     'DATABASE_DRIVER': re.compile(r'pymysql'),
-    'DATABASE_HOST': re.compile(r'[\w\d\-\.]+'),
+    'DATABASE_HOST': re.compile(r'[\w\d\-]+([\.][\w\d\-]+)*'),
     'DATABASE_PASSWORD': re.compile(r'.*'),
     'DATABASE_PATHNAME': re.compile(r'([/]?[\.]?[\w\d\-]+)+'),
-    'DATABASE_PORT': re.compile(r'([\d]+|[\w-]+)'),
+    'DATABASE_PORT': re.compile(r'[\d]{1,5}'),
     'DATABASE_SCHEMA': re.compile(r'[\w\d\-]+'),
     'DATABASE_USER': re.compile(r'[\w\d\-]+'),
 }
