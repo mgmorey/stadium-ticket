@@ -56,7 +56,7 @@ create_database() (
 	check_permissions $APP_VARDIR
     else
 	cd $APP_DIR
-	.venv/bin/python3 -m app init-db
+	$VENV_DIRNAME/bin/python3 -m app init-db
     fi
 )
 
@@ -191,7 +191,7 @@ install_app() {
 	fi
 
 	install_app_files 644 app $APP_DIR
-	install_virtualenv $APP_DIR/$VENV_FILENAME
+	install_virtualenv $APP_DIR/$VENV_DIRNAME
 	generate_service_ini $APP_CONFIG "$APP_VARS"
 	create_dirs $APP_VARDIR $APP_LOGDIR $APP_RUNDIR
 	create_database
