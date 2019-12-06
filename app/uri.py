@@ -41,7 +41,7 @@ PATTERN = {
 def _get_charset(dialect: str):
     """Return a database character set (encoding)."""
     if '{4}' not in URI.get(dialect):
-        return None
+        return ''
 
     charset = CHARSET.get(dialect, CHARSET[None])
     return _get_string('DATABASE_CHARSET', default=charset)
@@ -61,7 +61,7 @@ def _get_driver_default(dialect: str):
 def _get_endpoint(dialect: str):
     """Return a database URI endpoint parameter value."""
     if '{2}' not in URI.get(dialect):
-        return None
+        return ''
 
     host = _get_string('DATABASE_HOST', default=HOST)
     port = _get_string('DATABASE_PORT', default=PORT.get(dialect))
@@ -71,7 +71,7 @@ def _get_endpoint(dialect: str):
 def _get_login(dialect: str):
     """Return a database URI login parameter value."""
     if '{3}' not in URI.get(dialect):
-        return None
+        return ''
 
     password = _get_string('DATABASE_PASSWORD', default='')
     username = _get_string('DATABASE_USER', default='root')
@@ -82,7 +82,7 @@ def _get_login(dialect: str):
 def _get_pathname(dialect: str, schema: str, vardir: str):
     """Return a database filename (SQLite3 only)."""
     if '{5}' not in URI.get(dialect):
-        return None
+        return ''
 
     dirs = [vardir]
     home = os.getenv('HOME')
