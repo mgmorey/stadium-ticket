@@ -44,21 +44,43 @@ class TestUriMethods(unittest.TestCase):
                           'DATABASE_DIALECT',
                           'mysql+')
 
-    def test_validate_dialect_pass(self):
+    def test_validate_dialect_pass_1(self):
         value = _validate('DATABASE_DIALECT', 'mysql')
         self.assertEqual(value, 'mysql')
+
+    def test_validate_dialect_pass_1(self):
+        value = _validate('DATABASE_DIALECT', 'sqlite')
+        self.assertEqual(value, 'sqlite')
 
     def test_validate_host_fail_1(self):
         self.assertRaises(ValueError,
                           _validate,
                           'DATABASE_HOST',
+                          '')
+
+    def test_validate_host_fail_2(self):
+        self.assertRaises(ValueError,
+                          _validate,
+                          'DATABASE_HOST',
                           '.')
+
+    def test_validate_host_fail_3(self):
+        self.assertRaises(ValueError,
+                          _validate,
+                          'DATABASE_HOST',
+                          '123abc')
+
+    def test_validate_host_fail_4(self):
+        self.assertRaises(ValueError,
+                          _validate,
+                          'DATABASE_HOST',
+                          'localhost.localdomain')
 
     def test_validate_host_pass_1(self):
         value = _validate('DATABASE_HOST', '127.0.0.1')
         self.assertEqual(value, '127.0.0.1')
 
-    def test_validate_host_pass_1(self):
+    def test_validate_host_pass_2(self):
         value = _validate('DATABASE_HOST', 'localhost')
         self.assertEqual(value, 'localhost')
 
