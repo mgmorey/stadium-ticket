@@ -54,7 +54,7 @@ install_dependencies() {
     pattern=$("$script_dir/get-development-pattern.sh")
 
     if [ -n "$packages" ]; then
-	"$script_dir/install-packages.sh" ${pattern:+-p $pattern }$packages
+	"$script_dir/install-packages.sh" ${pattern:+-p "$pattern" }$packages
     fi
 
     if [ -n "${package:-}" ]; then
