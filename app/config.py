@@ -9,11 +9,9 @@ FILENAME = 'app.ini'
 
 def _get_dirname(pathname: str):
     if os.path.isfile(pathname):
-        dirname = os.path.dirname(pathname)
-    else:
-        dirname = pathname
+        return os.path.dirname(pathname)
 
-    return dirname
+    return pathname
 
 
 def _get_pathname(pathname: str):
