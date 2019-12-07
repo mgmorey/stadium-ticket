@@ -7,16 +7,29 @@ import os
 FILENAME = 'app.ini'
 
 
-def _get_pathname(dirname: str):
-    dirname = os.path.dirname(os.path.dirname(os.path.realpath(dirname)))
+def _get_dirname(pathname: str):
+    if os.path.isfile(pathname):
+        dirname = os.path.dirname(pathname)
+    else:
+        dirname = pathname
+
+    return dirname
+
+
+def _get_pathname(pathname: str):
+    dirname = _get_dirname(pathname)
     pathname = os.path.join(dirname, FILENAME)
-    return pathname
+
+    if os.path.exists(pathname):
+        return pathname
+
+    return _get_pathname(os.path.dirname(dirname))
 
 
-def get_config(dirname: str):
+def get_config():
     """Return application configuration."""
+    pathname = _get_pathname(os.path.realpath(__file__))
     config = configparser.ConfigParser()
-    pathname = _get_pathname(dirname)
     config.read(pathname)
     return config
 
