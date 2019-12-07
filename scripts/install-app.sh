@@ -320,7 +320,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 set_unpriv_environment
-eval $("$script_dir/get-app-names.py")
 parse_arguments "$@"
 preinstall_app
 install_app
