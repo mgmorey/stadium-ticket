@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-parameters.sh: print application parameter values
+# get-app-config.sh: print application configuration
 # Copyright (C) 2019  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
