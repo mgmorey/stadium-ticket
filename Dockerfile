@@ -47,6 +47,7 @@ RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 # Install application files
 COPY Pipfile-docker $APP_DIR/Pipfile
 COPY app/ $APP_DIR/app/
+COPY app.ini $APP_DIR/
 COPY uwsgi/app.ini $APP_ETCDIR/
 
 # Grant application ownership of app, run and data directories

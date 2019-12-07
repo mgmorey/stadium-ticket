@@ -123,7 +123,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 SYSTEM_PYTHON=$1
 SYSTEM_PYTHON_VERSION=$2
 
-eval $("$script_dir/get-parameters.sh")
+eval $("$script_dir/get-parameters.py")
 configure_all
 build_uwsgi $SYSTEM_PYTHON $SYSTEM_PYTHON_VERSION \
 	    $UWSGI_BINARY_NAME $UWSGI_PLUGIN_NAME

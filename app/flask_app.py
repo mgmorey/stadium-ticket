@@ -3,18 +3,21 @@
 """Manage ticket sales for stadium events via a RESTful API."""
 
 import logging
+import os
 
 from flask import abort, jsonify, request
 from sqlalchemy.exc import IntegrityError
 
 from .app import create_app, db
 from .apps import Events
+from .config import get_config, get_name, get_schema, get_vardir
 from .tickets import SoldOut, Tickets
 from .uri import get_uri
 
-APP_NAME = 'stadium-ticket'
-APP_SCHEMA = 'stadium-tickets'
-APP_VARDIR = '/var/opt/{}'.format(APP_NAME)
+APP_CONFIG = get_config(os.path.realpath(__file__))
+APP_NAME = get_name(APP_CONFIG)
+APP_SCHEMA = get_schema(APP_CONFIG)
+APP_VARDIR = get_vardir(APP_CONFIG)
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 SQLALCHEMY_DATABASE_URI = get_uri(APP_SCHEMA, APP_VARDIR)
 SQLALCHEMY_TRACK_MODIFICATIONS = False

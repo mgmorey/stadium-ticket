@@ -140,24 +140,6 @@ get_realpath() (
     fi
 )
 
-install_app_files() (
-    assert [ $# -eq 3 ]
-    assert [ -n "$1" ]
-    assert [ -n "$2" ]
-    assert [ -n "$3" ]
-    assert [ -d $2 ]
-
-    for file in $(find $2 -type f ! -name '*.pyc' -print | sort); do
-	install_file $1 $file $3/$file
-    done
-)
-
-install_dependencies() {
-    if ! "$script_dir/install-dependencies.sh"; then
-	abort "%s: Unable to install dependencies\n" "$0"
-    fi
-}
-
 install_app() {
     configure_baseline
 
@@ -185,6 +167,7 @@ install_app() {
 	    install_file 600 .env $APP_DIR/.env
 	fi
 
+	install_file 600 app.ini $APP_DIR
 	install_app_files 644 app $APP_DIR
 	install_virtualenv $APP_DIR/$VENV_DIRNAME
 	generate_service_ini $APP_CONFIG "$APP_VARS"
@@ -194,6 +177,24 @@ install_app() {
     done
 
     validate_parameters_postinstallation
+}
+
+install_app_files() (
+    assert [ $# -eq 3 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    assert [ -n "$3" ]
+    assert [ -d $2 ]
+
+    for file in $(find $2 -type f ! -name '*.pyc' -print | sort); do
+	install_file $1 $file $3/$file
+    done
+)
+
+install_dependencies() {
+    if ! "$script_dir/install-dependencies.sh"; then
+	abort "%s: Unable to install dependencies\n" "$0"
+    fi
 }
 
 install_uwsgi_from_package() (
@@ -319,7 +320,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-functions.sh"
 
 set_unpriv_environment
-eval $("$script_dir/get-parameters.sh")
+eval $("$script_dir/get-parameters.py")
 parse_arguments "$@"
 preinstall_app
 install_app

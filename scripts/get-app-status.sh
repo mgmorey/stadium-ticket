@@ -108,6 +108,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
-eval $("$script_dir/get-parameters.sh")
+eval $("$script_dir/get-parameters.py")
 configure_all
 print_status $(get_app_status)
