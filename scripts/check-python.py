@@ -20,7 +20,6 @@
 
 from __future__ import print_function
 import argparse
-import os
 import re
 import sys
 
@@ -42,9 +41,9 @@ class ParseError(Exception):
     """Represent error parsing text."""
 
 
-def get_difference(v1, v2):
+def get_difference(str_1: str, str_2: str):
     """Compute difference between Python semantic version strings."""
-    return get_scalar_version(v1) - get_scalar_version(v2)
+    return get_scalar_version(str_1) - get_scalar_version(str_2)
 
 
 def get_filepath():
@@ -61,18 +60,18 @@ def get_minimum_version():
     try:
         return parse_version(unquote(config.get(PYTHON_VERSION_PATH[0],
                                                 PYTHON_VERSION_PATH[1])))
-    except (NoOptionError, NoSectionError, ParseError) as e:
-        raise ParseError("{}: Unable to parse: {}".format(path, e))
+    except (NoOptionError, NoSectionError, ParseError) as exception:
+        raise ParseError("{}: Unable to parse: {}".format(path, exception))
 
 
-def get_scalar_version(s):
+def get_scalar_version(version_str: str):
     """Return the integer equivalent of a semantic version string."""
     result = 0
-    v = s.split('.')
+    version_ints = version_str.split('.')
 
     for i in range(PYTHON_VERSION_LEN):
         result *= 1000
-        result += int(v[i]) if i < len(v) else 0
+        result += int(version_ints[i]) if i < len(version_ints) else 0
 
     return result
 
@@ -100,12 +99,13 @@ def parse_args():
     return parser.parse_args()
 
 
-def parse_version(s):
+def parse_version(version_str: str):
     """Parse quoted Python semantic version string."""
     try:
-        return re.search(PYTHON_VERSION_REGEX, s).group(1)
-    except AttributeError as e:
-        raise ParseError("Invalid quoted string '{}': {}".format(s, e))
+        return re.search(PYTHON_VERSION_REGEX, version_str).group(1)
+    except AttributeError as exception:
+        raise ParseError("Invalid quoted string '{}': {}".format(version_str,
+                                                                 exception))
 
 
 def print_difference(difference, actual, minimum):
@@ -116,17 +116,18 @@ def print_difference(difference, actual, minimum):
     print(message.format(actual, verb, INPUT, minimum), file=output)
 
 
-def print_versions(s, delimiter):
+def print_versions(version_str: str, delimiter: str):
     """Print Python semantic version strings using a given delimiter."""
-    print(' '.join(get_versions(s, delimiter)))
+    print(' '.join(get_versions(version_str, delimiter)))
 
 
-def unquote(s):
+def unquote(version_str: str):
     """Parse a quoted string, stripping quotation marks."""
     try:
-        return re.search(QUOTED_REGEX, s).group(1)
-    except AttributeError as e:
-        raise ParseError("Invalid quoted string '{}': {}".format(s, e))
+        return re.search(QUOTED_REGEX, version_str).group(1)
+    except AttributeError as exception:
+        raise ParseError("Invalid quoted string '{}': {}".format(version_str,
+                                                                 exception))
 
 
 def main():
@@ -136,17 +137,17 @@ def main():
     try:
         actual = parse_version(args.version) if args.version else None
         minimum = get_minimum_version()
-    except ParseError as e:
-        print("{}: {}".format(sys.argv[0], e), file=sys.stderr)
-        exit(2)
+    except ParseError as exception:
+        print("{}: {}".format(sys.argv[0], exception), file=sys.stderr)
+        sys.exit(2)
     else:
         if actual:
             difference = get_difference(actual, minimum)
             print_difference(difference, actual, minimum)
-            exit(0 if difference >= 0 else 1)
+            sys.exit(0 if difference >= 0 else 1)
         else:
             print_versions(minimum, args.delimiter)
-            exit(0)
+            sys.exit(0)
 
 
 if __name__ == '__main__':
