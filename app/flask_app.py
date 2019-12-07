@@ -14,7 +14,7 @@ from .tickets import SoldOut, Tickets
 from .uri import get_uri
 
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
-SQLALCHEMY_DATABASE_URI = get_uri(get_config())
+SQLALCHEMY_DATABASE_URI = get_uri(get_config('app.ini'))
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 app = create_app(__name__)  # pylint: disable=invalid-name

@@ -14,19 +14,20 @@ def _get_dirname(pathname: str):
     return pathname
 
 
-def _get_pathname(pathname: str):
+def _get_pathname(pathname: str, filename: str):
     dirname = _get_dirname(pathname)
-    pathname = os.path.join(dirname, FILENAME)
+    pathname = os.path.join(dirname, filename)
 
     if os.path.exists(pathname):
         return pathname
 
-    return _get_pathname(os.path.dirname(dirname))
+    dirname = os.path.dirname(dirname)
+    return _get_pathname(dirname, filename)
 
 
-def get_config():
+def get_config(filename: str):
     """Return application configuration."""
-    pathname = _get_pathname(os.path.realpath(__file__))
+    pathname = _get_pathname(os.path.realpath(__file__), filename)
     config = configparser.ConfigParser()
     config.read(pathname)
     return config
