@@ -179,8 +179,12 @@ find_user_python() (
 		fi
 	    fi
 
-	    if [ -z "$python" ] && install_python_version >&2; then
-		python=$(find_user_python_installed $pyenv_root $version)
+	    if [ -z "$python" ]; then
+		if install_python_version >&2; then
+		    python=$(find_user_python_installed $pyenv_root $version)
+		else
+		    break
+		fi
 	    fi
 
 	    if [ -n "$python" ]; then
@@ -428,9 +432,7 @@ install_python_version() (
 	printenv | egrep '^(CC|CFLAGS|CPPFLAGS|LDFLAGS|PATH)=' | sort
     fi
 
-    if ! pyenv install -s $python; then
-	abort "%s: Unable to build and install python via pyenv\n" "$0"
-    fi
+    pyenv install -s $python
 )
 
 install_via_pip() (
@@ -524,7 +526,7 @@ set_compiler() {
 	    export CC=/usr/bin/gcc
 	    ;;
 	(macos)
-	    export CC=/usr/local/bin/gcc*
+	    export CC=/usr/bin/clang
 	    ;;
 	(solaris)
 	    export CC=/opt/developerstudio12.6/bin/cc
@@ -537,7 +539,11 @@ set_flags() {
 	case "$id" in
 	    (solaris)
 		export CFLAGS=-m64
+		unset CPPFLAGS LDFLAGS
 		break
+		;;
+	    (*)
+		unset CFLAGS CPPFLAGS LDFLAGS
 		;;
 	esac
     done
