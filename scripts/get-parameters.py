@@ -6,11 +6,11 @@ import configparser
 
 def format_parameter(key: str, value: str):
     """Format (key, value) pair for app parameter."""
-    return f"{get_app_parameter(key)}='{value}'"
+    return "{0}='{1}'".format(get_app_parameter(key), value)
 
 
 def get_app_parameter(key: str):
-    """Return uppercase parameter name with prefix of 'APP_'."""
+    """Return key prefixed with 'APP_' in uppercase"""
     return '_'.join(['app', key]).upper()
 
 
