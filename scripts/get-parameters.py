@@ -2,8 +2,22 @@
 
 import configparser
 
-config = configparser.ConfigParser()
-config.read('app.ini')
+def format_parameter(key, value):
+    return f"{get_app_parameter(key)}='{value}'"
 
-for key, value in config['names'].items():
-    print("{}={}".format('_'.join(['app', key]).upper(), value))
+
+def get_app_parameter(key):
+    return '_'.join(['app', key]).upper()
+
+
+def get_parameters():
+    config = configparser.ConfigParser()
+    config.read('app.ini')
+    names = config['names']
+
+    for key, value in names.items():
+        print(format_parameter(key, value))
+
+
+if __name__ == '__main__':
+    get_parameters()
