@@ -3,7 +3,11 @@
 
 import click
 
-from .flask_app import APP_NAME, APP_SCHEMA, APP_VARDIR, app, db
+from .flask_app import app, db
+
+
+def _format_parameter(key, value):
+    return f"{key}='{value}'"
 
 
 @click.group()
@@ -32,9 +36,8 @@ def drop_db():
 @cli.command()
 def get_parameters():
     """Print application parameter values."""
-    click.echo("APP_NAME={}".format(APP_NAME))
-    click.echo("APP_SCHEMA={}".format(APP_SCHEMA))
-    click.echo("APP_VARDIR={}".format(APP_VARDIR))
+    for key, value in app.config.items():
+        click.echo(_format_parameter(key, value))
 
 
 @cli.command()

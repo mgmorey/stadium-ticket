@@ -8,7 +8,7 @@ FILENAME = 'app.ini'
 
 
 def _get_pathname(dirname: str):
-    dirname = os.path.dirname(os.path.dirname(dirname))
+    dirname = os.path.dirname(os.path.dirname(os.path.realpath(dirname)))
     pathname = os.path.join(dirname, FILENAME)
     return pathname
 
