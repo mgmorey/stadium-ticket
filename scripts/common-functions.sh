@@ -405,11 +405,11 @@ have_same_device_and_inode() (
 )
 
 install_python_version() (
-    case "${kernel_name=$(uname -s)}" in
-	(CYGWIN_NT-*)
+    case "$ID" in
+	(solaris)
 	    return 1
 	    ;;
-	(Darwin)
+	(windows)
 	    return 1
 	    ;;
     esac
@@ -519,31 +519,27 @@ refresh_via_pip() {
 }
 
 set_compiler() {
-    for id in $ID $ID_LIKE; do
-	case "$id" in
-	    (illumos)
-		unset CC
-	    	break
-	    	;;
-	    (solaris)
-		export CC=cc
-		break
-		;;
-	esac
-    done
-
-    if [ -n "${compiler-}" ]; then
-	printf "%s\n" "$compiler"
-    fi
+    case "$ID" in
+	(illumos)
+	    export CC=/usr/bin/gcc
+	    ;;
+	(macos)
+	    export CC=/usr/local/bin/gcc*
+	    ;;
+	(solaris)
+	    export CC=/opt/developerstudio12.6/bin/cc
+	    ;;
+    esac
 }
 
 set_flags() {
     for id in $ID $ID_LIKE; do
-    	case "$id" in
-    	    (solaris)
-    		break
-    		;;
-    	esac
+	case "$id" in
+	    (solaris)
+		export CFLAGS=-m64
+		break
+		;;
+	esac
     done
 }
 
