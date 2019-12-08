@@ -156,7 +156,7 @@ find_system_pythons() (
 
 find_user_python() (
     assert [ $# -eq 1 ]
-    python_versions=$($1 "$script_dir/check-python.py")
+    python_versions=$($1 "$script_dir/test-python-version.py")
 
     if pyenv --version >/dev/null 2>&1; then
 	pyenv_root="$(pyenv root)"
@@ -372,7 +372,7 @@ get_versions_all() {
 
 get_versions_passed() (
     python=$(find_system_python | awk '{print $1}')
-    python_versions=$($python "$script_dir/check-python.py" --delim '\.')
+    python_versions=$($python "$script_dir/test-python-version.py" --delim '\.')
 
     for python_version in ${python_versions-$PYTHON_VERSIONS}; do
 	if get_versions_all $python_version; then
