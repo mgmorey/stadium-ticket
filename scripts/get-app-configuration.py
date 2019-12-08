@@ -6,12 +6,13 @@ import configparser
 
 
 def format_key(key: str, prefix: str):
-    """Return key prefixed with 'APP_' in uppercase"""
+    """Format application configuration parameter key."""
+    key = key.translate(str.maketrans("-", "_"))
     return '_'.join([prefix, key]).upper()
 
 
 def format_pair(key: str, value: str, prefix: str):
-    """Format (key, value) pair for app parameter."""
+    """Format application configuration parameter."""
     return "{0}='{1}'".format(format_key(key, prefix), value)
 
 
