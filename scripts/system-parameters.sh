@@ -37,8 +37,8 @@ configure_all() {
 }
 
 configure_baseline() {
-    eval $("$script_dir/get-os-release.sh" -x)
     eval $("$script_dir/get-app-names.py")
+    eval $(get-os-release -x)
 
     case "$kernel_name" in
 	(CYGWIN_NT-*)

@@ -154,6 +154,6 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $("$script_dir/get-os-release.sh" -x)
+eval $(get-os-release -x)
 
 get_dbms_client_packages
