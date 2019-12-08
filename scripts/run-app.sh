@@ -92,6 +92,11 @@ run_in_virtualenv() {
 
     shift $(($OPTIND - 1))
     eval $(get-os-release -x)
+    eval $("$script_dir/get-app-configuration.py" --input app.ini)
+
+    . "$script_dir/common-parameters.sh"
+    . "$script_dir/common-functions.sh"
+
     pipenv=$(get_command pipenv || true)
 
     if [ -z "$pipenv" ]; then
@@ -159,10 +164,5 @@ if [ "$(id -u)" -eq 0 ]; then
 fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
-
-eval $("$script_dir/get-app-configuration.py" --input app.ini)
-
-. "$script_dir/common-parameters.sh"
-. "$script_dir/common-functions.sh"
 
 run_in_virtualenv "$@"
