@@ -316,7 +316,7 @@ get_home_directory() {
 get_profile_path() {
     path=$PATH
 
-    for prefix in "$1/.pyenv" "$1/.local"; do
+    for prefix in "$1" "$1/.local" "$1/.pyenv"; do
 	if is_to_be_included "$prefix/bin" "$path"; then
 	   path="$prefix/bin:$path"
 	fi
