@@ -58,13 +58,7 @@ install_dependencies() {
     fi
 
     if [ -n "${package:-}" ]; then
-	"$script_dir/install-build-deps.sh" "$@" $package
-    fi
-}
-
-install_pkgsrc() {
-    if ! which $UWSGI_PREFIX/bin/pkgin >/dev/null 2>/dev/null; then
-	"$script_dir/install-pkgsrc.sh" "${PKGSRC_PREFIX-/}"
+	install-build-deps "$@" $package
     fi
 }
 
