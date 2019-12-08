@@ -7,7 +7,7 @@ import configparser
 
 def format_key(key: str, prefix: str):
     """Format application configuration parameter key."""
-    key = key.translate(str.maketrans("-", "_"))
+    key = key.translate(str.maketrans('-', '_'))
     return '_'.join([prefix, key]).upper()
 
 
