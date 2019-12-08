@@ -5,14 +5,14 @@ import argparse
 import configparser
 
 
-def format_key(key: str, args):
+def format_key(key: str, prefix: str):
     """Return key prefixed with 'APP_' in uppercase"""
-    return '_'.join([args.prefix, key]).upper()
+    return '_'.join([prefix, key]).upper()
 
 
-def format_pair(key: str, value: str, args):
+def format_pair(key: str, value: str, prefix: str):
     """Format (key, value) pair for app parameter."""
-    return "{0}='{1}'".format(format_key(key, args), value)
+    return "{0}='{1}'".format(format_key(key, prefix), value)
 
 
 def get_configuration(args):
@@ -28,7 +28,7 @@ def get_configuration(args):
         pairs = config[section]
 
         for key, value in pairs.items():
-            print(format_pair(key, value, args))
+            print(format_pair(key, value, section))
 
 
 def parse_args():
