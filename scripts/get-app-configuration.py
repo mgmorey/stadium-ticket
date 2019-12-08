@@ -16,23 +16,6 @@ def format_pair(key: str, value: str, prefix: str):
     return "{0}='{1}'".format(format_key(key, prefix), value)
 
 
-def get_configuration(args):
-    """Print applicaton configuration parameters."""
-    config = configparser.ConfigParser()
-    sections = args.sections.split(',') if args.sections else None
-    config.read(args.input)
-
-    if not sections:
-        sections = config.sections()
-
-    for section in sections:
-        pairs = config[section]
-        prefix = args.prefix if args.prefix else section
-
-        for key, value in pairs.items():
-            print(format_pair(key, value, prefix))
-
-
 def parse_args():
     """Parse script arguments."""
     description = 'Print application configuration parameters'
@@ -54,9 +37,21 @@ def parse_args():
 
 
 def main():
-    """Main program of script."""
+    """Print applicaton configuration parameters."""
     args = parse_args()
-    get_configuration(args)
+    config = configparser.ConfigParser()
+    sections = args.sections.split(',') if args.sections else None
+    config.read(args.input)
+
+    if not sections:
+        sections = config.sections()
+
+    for section in sections:
+        pairs = config[section]
+        prefix = args.prefix if args.prefix else section
+
+        for key, value in pairs.items():
+            print(format_pair(key, value, prefix))
 
 
 if __name__ == '__main__':
