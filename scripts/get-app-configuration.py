@@ -12,12 +12,12 @@ def format_key(key: str, prefix: str):
 
 
 def format_pair(key: str, value: str, prefix: str):
-    """Format application configuration parameter."""
+    """Format application configuration parameter key and value."""
     return "{0}='{1}'".format(format_key(key, prefix), value)
 
 
 def get_configuration(args):
-    """Return list of app parameters."""
+    """Print applicaton configuration parameters."""
     config = configparser.ConfigParser()
     sections = args.sections.split(',') if args.sections else None
     config.read(args.input)
