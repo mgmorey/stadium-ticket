@@ -151,7 +151,7 @@ refresh_virtualenv() (
 		venv_force_sync=true
 		venv_requirements=$VENV_REQUIREMENTS
 
-		if refresh_via_pip ${venv_dir-VENV_DIR}; then
+		if refresh_via_pip ${venv_dir-$VENV_DIR}; then
 		    return 0
 		fi
 		;;
