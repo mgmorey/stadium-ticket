@@ -58,7 +58,7 @@ mode=$1
 script_dir=$(get_realpath "$(dirname "$0")")
 
 create_tmpfile
-"$script_dir/get-installed-packages.sh" >$tmpfile
+get-installed-packages >$tmpfile
 "$script_dir/grep-dbms-package.sh" $mode-core <$tmpfile || \
     "$script_dir/grep-dbms-package.sh" $mode <$tmpfile || \
     "$script_dir/grep-dbms-package.sh" <$tmpfile || \
