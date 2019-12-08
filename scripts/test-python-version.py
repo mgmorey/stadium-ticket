@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# check-python-version: determine if Python version meets requirements
+# test-python-version: test Python interpreter version string
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -41,30 +41,24 @@ class ParseError(Exception):
     """Represent error parsing text."""
 
 
-def get_difference(str_1: str, str_2: str):
+def get_difference(str_1, str_2):
     """Compute difference between Python semantic version strings."""
     return get_scalar_version(str_1) - get_scalar_version(str_2)
-
-
-def get_filepath():
-    """Return the fully-qualified path name of the input file."""
-    return INPUT
 
 
 def get_minimum_version():
     """Return the minimum Python version requirement."""
     config = ConfigParser()
-    path = get_filepath()
-    config.read(path)
+    config.read(INPUT)
 
     try:
         return parse_version(unquote(config.get(PYTHON_VERSION_PATH[0],
                                                 PYTHON_VERSION_PATH[1])))
     except (NoOptionError, NoSectionError, ParseError) as exception:
-        raise ParseError("{}: Unable to parse: {}".format(path, exception))
+        raise ParseError("{}: Unable to parse: {}".format(INPUT, exception))
 
 
-def get_scalar_version(version_str: str):
+def get_scalar_version(version_str):
     """Return the integer equivalent of a semantic version string."""
     result = 0
     version_ints = version_str.split('.')
@@ -99,7 +93,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def parse_version(version_str: str):
+def parse_version(version_str):
     """Parse quoted Python semantic version string."""
     try:
         return re.search(PYTHON_VERSION_REGEX, version_str).group(1)
@@ -116,12 +110,12 @@ def print_difference(difference, actual, minimum):
     print(message.format(actual, verb, INPUT, minimum), file=output)
 
 
-def print_versions(version_str: str, delimiter: str):
+def print_versions(version_str, delimiter):
     """Print Python semantic version strings using a given delimiter."""
     print(' '.join(get_versions(version_str, delimiter)))
 
 
-def unquote(version_str: str):
+def unquote(version_str):
     """Parse a quoted string, stripping quotation marks."""
     try:
         return re.search(QUOTED_REGEX, version_str).group(1)

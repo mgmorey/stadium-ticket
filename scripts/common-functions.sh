@@ -36,7 +36,7 @@ check_python() {
     assert [ -n "$2" ]
     printf "Python %s interpreter found: %s\n" "$2" "$1" >&2
 
-    if ! "$1" "$script_dir/check-python.py" $2 >&2; then
+    if ! "$1" "$script_dir/test-python-version.py" $2 >&2; then
 	return 1
     fi
 
