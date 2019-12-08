@@ -522,6 +522,9 @@ refresh_via_pip() {
 
 set_compiler() {
     case "$ID" in
+	(freebsd)
+	    export CC=/usr/bin/clang
+	    ;;
 	(illumos)
 	    export CC=/usr/bin/gcc
 	    ;;
@@ -539,11 +542,7 @@ set_flags() {
 	case "$id" in
 	    (solaris)
 		export CFLAGS=-m64
-		unset CPPFLAGS LDFLAGS
 		break
-		;;
-	    (*)
-		unset CFLAGS CPPFLAGS LDFLAGS
 		;;
 	esac
     done
