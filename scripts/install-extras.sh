@@ -49,7 +49,7 @@ get_realpath() (
 install_extras() {
     validate_platform
     packages=$("$script_dir/get-extra-packages.sh")
-    "$script_dir/install-packages.sh" $packages
+    install-packages $packages
 }
 
 validate_platform() {

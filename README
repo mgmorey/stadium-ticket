@@ -55,6 +55,7 @@ The various OS ports have been tested on the following processors:
 
 1.  To install dependencies (may require root):
 
+    scripts/install-utility-scripts.sh
     scripts/install-dependencies.sh
 
 2.  To initialize the database schema:

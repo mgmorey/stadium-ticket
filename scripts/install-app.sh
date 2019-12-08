@@ -207,7 +207,7 @@ install_uwsgi_from_package() (
 	    packages=$(get_packages_in $CATEGORIES | sort -u)
 
 	    if [ -n "$packages" ]; then
-		"$script_dir/install-packages.sh" $packages
+		install-packages $packages
 	    fi
 	    ;;
 	(pypi)
