@@ -26,9 +26,10 @@ def get_configuration(args):
 
     for section in sections:
         pairs = config[section]
+        prefix = args.prefix if args.prefix else section
 
         for key, value in pairs.items():
-            print(format_pair(key, value, section))
+            print(format_pair(key, value, prefix))
 
 
 def parse_args():
@@ -41,7 +42,6 @@ def parse_args():
                         nargs='?',
                         help='read from file INPUT')
     parser.add_argument('--prefix',
-                        default='app',
                         metavar='PREFIX',
                         nargs='?',
                         help='prepend string PREFIX')
