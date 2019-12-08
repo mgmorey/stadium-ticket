@@ -37,7 +37,7 @@ configure_all() {
 }
 
 configure_baseline() {
-    eval $("$script_dir/get-app-names.py")
+    eval $("$script_dir/get-app-configuration.py" --input app.ini)
     eval $(get-os-release -x)
 
     case "$kernel_name" in

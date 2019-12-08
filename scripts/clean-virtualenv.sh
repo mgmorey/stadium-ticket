@@ -52,6 +52,8 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
+eval $("$script_dir/get-app-configuration.py" --input app.ini)
+
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
 
@@ -63,4 +65,4 @@ if [ -n "$pipenv" ]; then
     fi
 fi
 
-/bin/rm -rf ${VENV_DIR}
+/bin/rm -rf ${APP_VENV_DIR}

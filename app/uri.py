@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Define methods to construct a SQLAlchemy database URI string."""
 
-import configparser
 import os
 import re
 import urllib.parse
@@ -115,11 +114,6 @@ def _get_pathname(dialect: str, schema: str, vardir: str):
     return _get_string('DATABASE_PATHNAME', default=pathname)
 
 
-def _get_schema(config: configparser.ConfigParser):
-    """Return a database URI scheme parameter value."""
-    return config['names']['schema']
-
-
 def _get_scheme(dialect: str):
     """Return a database URI scheme parameter value."""
     driver = _get_string('DATABASE_DRIVER', default=_get_driver(dialect))
@@ -136,11 +130,6 @@ def _get_string(parameter: str, default: str):
     return _validate(parameter, value) if value else None
 
 
-def _get_vardir(config: configparser.ConfigParser):
-    """Return a database URI scheme parameter value."""
-    return config['names']['vardir']
-
-
 def _validate(parameter: str, value: str) -> str:
     """Raise a ValueError if parameter value is invalid."""
     if not PATTERN[parameter].fullmatch(value):
@@ -149,20 +138,20 @@ def _validate(parameter: str, value: str) -> str:
     return value
 
 
-def get_uri(config: configparser.ConfigParser):
+def get_uri(app_config):
     """Return a database connection URI string."""
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
     endpoint = _get_endpoint(dialect)
     login = _get_login(dialect)
     pathname = _get_pathname(dialect,
-                             _get_schema(config),
-                             _get_vardir(config))
+                             app_config['schema'],
+                             app_config['vardir'])
     scheme = _get_scheme(dialect)
     tuples = _get_tuples(dialect)
     uri = URI.get(dialect, URI[None])
     return uri.format(scheme,
                       login,
                       endpoint,
-                      _get_schema(config),
+                      app_config['schema'],
                       tuples,
                       pathname)

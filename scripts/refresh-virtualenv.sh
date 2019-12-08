@@ -151,7 +151,7 @@ refresh_virtualenv() (
 		venv_force_sync=true
 		venv_requirements=$VENV_REQUIREMENTS
 
-		if refresh_via_pip ${venv_dir-$VENV_DIR}; then
+		if refresh_via_pip ${venv_dir-$APP_VENV_DIR}; then
 		    return 0
 		fi
 		;;
@@ -182,6 +182,8 @@ fi
 script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $(get-os-release -x)
+
+eval $("$script_dir/get-app-configuration.py" --input app.ini)
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"

@@ -95,7 +95,7 @@ def parse_args():
     parser.add_argument('version',
                         metavar='VERSION',
                         nargs='?',
-                        help='Check Python version VERSION')
+                        help='check Python version VERSION')
     return parser.parse_args()
 
 

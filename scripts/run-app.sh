@@ -108,7 +108,7 @@ run_in_virtualenv() {
 
 run_via_pip() {
     venv_requirements=$VENV_REQUIREMENTS
-    refresh_via_pip $VENV_DIR
+    refresh_via_pip $APP_VENV_DIR
 
     # Export nonempty parameters only
     for var in $APP_ENV_VARS; do
@@ -159,10 +159,10 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
+eval $("$script_dir/get-app-configuration.py" --input app.ini)
 eval $(get-os-release -x)
 
 . "$script_dir/common-parameters.sh"
 . "$script_dir/common-functions.sh"
-. "$script_dir/system-parameters.sh"
 
 run_in_virtualenv "$@"

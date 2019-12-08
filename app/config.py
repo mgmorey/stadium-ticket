@@ -25,24 +25,12 @@ def _get_pathname(pathname: str, filename: str):
     return _get_pathname(dirname, filename)
 
 
-def get_config(filename: str):
+def get_config(filename: str, section: str = None):
     """Return application configuration."""
+    if not section:
+        section = 'app'
+
     pathname = _get_pathname(os.path.realpath(__file__), filename)
     config = configparser.ConfigParser()
     config.read(pathname)
-    return config
-
-
-def get_name(app_config):
-    """Return application name."""
-    return app_config['names']['name']
-
-
-def get_schema(app_config):
-    """Return application schema."""
-    return app_config['names']['schema']
-
-
-def get_vardir(app_config):
-    """Return application data directory."""
-    return app_config['names']['vardir']
+    return config[section]
