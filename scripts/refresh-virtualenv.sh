@@ -29,7 +29,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-generate_requirements_files() (
+generate_requirements() (
     assert [ $# -ge 1 ]
     assert [ -n "$1" ]
     pipenv=$1
@@ -80,10 +80,10 @@ get_realpath() (
 )
 
 parse_arguments() {
-    while getopts gp:v:h opt; do
+    while getopts d:p:v:h opt; do
 	case $opt in
-	    (g)
-		env_debug=true
+	    (d)
+		venv_dir=$OPTARG
 		;;
 	    (p)
 		pypi_utilities=$OPTARG
@@ -140,7 +140,7 @@ refresh_virtualenv() (
 		fi
 
 		if refresh_via_pipenv $pipenv; then
-		    if generate_requirements_files $pipenv $VENV_REQUIREMENTS; then
+		    if generate_requirements $pipenv $VENV_REQUIREMENTS; then
 			if $pipenv sync -d; then
 			    return 0
 			fi
@@ -151,7 +151,7 @@ refresh_virtualenv() (
 		venv_force_sync=true
 		venv_requirements=$VENV_REQUIREMENTS
 
-		if refresh_via_pip $VENV_DIRNAME; then
+		if refresh_via_pip ${venv_dir-VENV_DIR}; then
 		    return 0
 		fi
 		;;
@@ -166,7 +166,7 @@ usage() {
     fi
 
     cat <<-EOF >&2
-	Usage: $0: [-g] [-p <PYPI-UTILITIES>] [-v <VENV-UTILITIES>]
+	Usage: $0: [-d <DIR>] [-p <PYPI>] [-v <VENV>]
 	       $0: -h
 	EOF
 }

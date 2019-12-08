@@ -586,7 +586,7 @@ set_unpriv_environment() {
 }
 
 upgrade_requirements_via_pip() (
-    pip=$(get_pip_command ${1-$VENV_DIRNAME}/bin/python)
+    pip=$(get_pip_command ${1-$VENV_DIR}/bin/python)
 
     if [ -z "$pip" ]; then
 	abort "%s: No pip command found in PATH\n" "$0"
