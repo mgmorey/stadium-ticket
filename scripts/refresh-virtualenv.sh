@@ -137,7 +137,7 @@ refresh_virtualenv() (
 		fi
 
 		if refresh_via_pipenv $pipenv; then
-		    if generate_requirements $pipenv $VENV_REQUIREMENTS; then
+		    if generate_requirements $pipenv $PIP_REQUIREMENTS; then
 			if $pipenv sync -d; then
 			    return 0
 			fi
@@ -146,7 +146,7 @@ refresh_virtualenv() (
 		;;
 	    (pip)
 		venv_force_sync=true
-		venv_requirements=$VENV_REQUIREMENTS
+		venv_requirements=$PIP_REQUIREMENTS
 
 		if refresh_via_pip ${VENV_DIR-venv}; then
 		    return 0

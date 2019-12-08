@@ -113,7 +113,7 @@ run_in_virtualenv() {
 }
 
 run_via_pip() {
-    venv_requirements=$VENV_REQUIREMENTS
+    venv_requirements=$PIP_REQUIREMENTS
     refresh_via_pip ${VENV_DIR-venv}
 
     # Export nonempty parameters only

@@ -27,6 +27,5 @@ PYENV_INSTALL_VERBOSE=false
 PYPI_UTILITIES="pipenv pip"
 PYTHON_VERSIONS="3.7 3.6 3.5 3"
 
-VENV_REQUIREMENTS=requirements*.txt
 VENV_UTILITIES="pyvenv virtualenv"
 VENV_VERBOSE=false
