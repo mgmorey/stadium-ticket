@@ -80,11 +80,8 @@ get_realpath() (
 )
 
 parse_arguments() {
-    while getopts d:p:v:h opt; do
+    while getopts p:v:h opt; do
 	case $opt in
-	    (d)
-		venv_dir=$OPTARG
-		;;
 	    (p)
 		pypi_utilities=$OPTARG
 		;;
@@ -151,7 +148,7 @@ refresh_virtualenv() (
 		venv_force_sync=true
 		venv_requirements=$VENV_REQUIREMENTS
 
-		if refresh_via_pip ${venv_dir-$APP_VENV_DIR}; then
+		if refresh_via_pip ${APP_VENV_DIR-venv}; then
 		    return 0
 		fi
 		;;
