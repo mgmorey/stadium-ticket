@@ -21,7 +21,9 @@ all:	.env .update pycode pylint pytest
 build:	.env .update Dockerfile Pipfile-docker
 	docker build -t stadium-ticket .
 
-clean:
+clean:	clean-app-caches clean-virtualenv
+
+clean-app-caches:
 	clean-app-caches
 
 clean-virtualenv:
@@ -58,31 +60,16 @@ pytest:	.update
 	$(script_dir)/run-app.sh pytest tests
 
 realclean:	clean clean-virtualenv
-	@/bin/rm -f .update app/app/*.sqlite
-
-restart:
-	$(script_dir)/restart-app.sh
+	@/bin/rm -f .update
 
 scripts:
 	$(script_dir)/install-utility-scripts.sh
 
-start:
-	$(script_dir)/start-app.sh
-
 status:
 	get-app-status
 
-stop:
-	$(script_dir)/stop-app.sh
-
 stress:
 	$(script_dir)/load-test.sh
-
-uninstall:	stop
-	$(script_dir)/uninstall-app.sh
-
-uninstall-all:	stop
-	$(script_dir)/uninstall-app.sh -a
 
 .PHONY:	all build clean clean-virtualenv client client-debug compose debug
 .PHONY:	drop-db init-db install pycode pylint pytest init-db realclean

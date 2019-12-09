@@ -84,20 +84,20 @@ The various OS ports have been tested on the following processors:
 
 8.  To install the app as a service (may require root):
 
-    scripts/install-service.sh (or "make install")
+    scripts/install-app.sh
 
 9.  To start the app running as a service (may require root):
 
-    scripts/start-service.sh (or "make start")
+    start-app
 
 10. To stop the app running as a service (may require root):
 
-    scripts/stop-service.sh (or "make stop")
+    stop-app
 
 11. To uninstall the app as a service (may require root):
 
-    scripts/uninstall-service.sh (or "make uninstall")
+    uninstall-app
 
 12. To report the current status of the app service:
 
-    scripts/get-service-status.sh (or "make status")
+    get-app-status
