@@ -28,8 +28,10 @@ assert() {
 }
 
 build_uwsgi_from_source() {
-    if ! run_unpriv /bin/sh -c "\"$script_dir/build-uwsgi.sh\" $*"; then
-	abort "%s: Unable to build uWSGI from source\n" "$0"
+    build_script="$script_dir/../../../bin/build-uwsgi.sh"
+
+    if ! run_unpriv /bin/sh -c "\"$build_script\" $*"; then
+	abort "%s: Unable to build uWSGI\n" "$0"
     fi
 }
 
