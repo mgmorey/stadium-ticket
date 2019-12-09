@@ -249,7 +249,7 @@ install_virtualenv() (
 	printf "Installing virtual environment in %s\n" "$1" >&2
 	[ -n "${UWSGI_CC-}" ] && export CC="$UWSGI_CC"
 	[ -n "${UWSGI_CFLAGS-}" ] && export CFLAGS="$UWSGI_CFLAGS"
-	pip_requirements=requirements.txt
+	pip_requirements=$PIP_REQUIREMENTS
 	venv_force_sync=true
 	refresh_via_pip $1 $SYSTEM_PYTHON
     fi

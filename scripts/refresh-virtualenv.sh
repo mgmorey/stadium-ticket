@@ -131,7 +131,7 @@ refresh_virtualenv() (
 		fi
 
 		if refresh_via_pipenv $pipenv; then
-		    if generate_requirements $pipenv $PIP_REQUIREMENTS; then
+		    if generate_requirements $pipenv $PIP_ALL_REQUIREMENTS; then
 			if $pipenv sync -d; then
 			    return 0
 			fi
