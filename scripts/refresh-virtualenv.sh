@@ -139,7 +139,7 @@ refresh_virtualenv() (
 		fi
 		;;
 	    (pip)
-		pip_requirements=$PIP_REQUIREMENTS
+		pip_requirements=$PIP_ALL_REQUIREMENTS
 		venv_force_sync=true
 
 		if refresh_via_pip ${VENV_DIRECTORY-venv}; then
