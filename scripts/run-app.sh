@@ -18,6 +18,7 @@
 
 APP_ENV_VARS="DATABASE_DIALECT DATABASE_HOST DATABASE_PASSWORD DATABASE_PORT \
 DATABASE_SCHEMA DATABASE_USER FLASK_APP FLASK_ENV"
+ENV_VERBOSE=false
 
 : ${LANG:=en_US.UTF-8}
 : ${LC_ALL:=en_US.UTF-8}
@@ -93,8 +94,6 @@ run_in_virtualenv() {
     shift $(($OPTIND - 1))
     eval $(get-os-release -x)
     eval $("$script_dir/get-app-configuration.py" --input app.ini)
-
-    . "$script_dir/common-parameters.sh"
     . "$script_dir/common-functions.sh"
 
     pipenv=$(get_command pipenv || true)

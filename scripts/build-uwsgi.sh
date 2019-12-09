@@ -115,7 +115,7 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-. "$script_dir/common-parameters.sh"
+eval $("$script_dir/get-app-configuration.py" --input app.ini)
 . "$script_dir/common-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
