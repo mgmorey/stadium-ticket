@@ -37,17 +37,11 @@ generate_requirements() (
     create_tmpfile
 
     for file; do
-	case $file in
-	    (requirements-dev*.txt)
+	if [ "$file" = "$PIP_DEV_REQUIREMENTS" ]; then
 		pipenv_opts=-dr
-		;;
-	    (requirements.txt)
+	else
 		pipenv_opts=-r
-		;;
-	    (*)
-		abort "%s: %s: Invalid filename\n" "$0" "$file"
-		;;
-	esac
+	fi
 
 	printf "Generating %s\n" $file
 
