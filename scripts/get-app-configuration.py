@@ -32,7 +32,7 @@ def parse_args():
                         help='prepend string PREFIX')
     parser.add_argument('--sections',
                         metavar='SECTIONS',
-                        nargs='?',
+                        nargs='*',
                         help='read sections SECTIONS')
     return parser.parse_args()
 
@@ -41,13 +41,9 @@ def main():
     """Print applicaton configuration parameters."""
     args = parse_args()
     config = configparser.ConfigParser()
-    sections = args.sections.split(',') if args.sections else None
     config.read(args.input)
 
-    if not sections:
-        sections = config.sections()
-
-    for section in sections:
+    for section in (args.sections if args.sections else config.sections()):
         pairs = config[section]
         prefix = args.prefix if args.prefix else section
 
