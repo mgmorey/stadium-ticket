@@ -172,7 +172,7 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $(get-app-configuration.py --input app.ini)
+eval $(get-app-configuration --input app.ini)
 . utility-functions.sh
 
 eval $(get-os-release -x)

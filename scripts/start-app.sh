@@ -154,7 +154,7 @@ start_app() {
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $("$script_dir/../../../bin/get-app-configuration.py" --input app.ini)
+eval $("$script_dir/../../../bin/get-app-configuration" --input app.ini)
 . "$script_dir/../../../bin/utility-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"

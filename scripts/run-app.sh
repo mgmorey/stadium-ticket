@@ -93,7 +93,7 @@ run_in_virtualenv() {
 
     shift $(($OPTIND - 1))
     eval $("$script_dir/../../../bin/get-os-release" -x)
-    eval $("$script_dir/../../../bin/get-app-configuration.py" --input app.ini)
+    eval $("$script_dir/../../../bin/get-app-configuration" --input app.ini)
     . "$script_dir/../../../bin/utility-functions.sh"
 
     pipenv=$(get_command pipenv || true)
