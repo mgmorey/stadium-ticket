@@ -51,7 +51,7 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-. "$script_dir/common-functions.sh"
+. utility-functions.sh
 . "$script_dir/system-functions.sh"
 
 get_parameters

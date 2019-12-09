@@ -246,50 +246,6 @@ get_service_status() {
     fi
 }
 
-get_setpriv_command() (
-    version="$(setpriv --version 2>/dev/null)"
-
-    case "${version##* }" in
-	('')
-	    return 1
-	    ;;
-	([01].*)
-	    return 1
-	    ;;
-	(2.[0-9].*)
-	    return 1
-	    ;;
-	(2.[12][0-9].*)
-	    return 1
-	    ;;
-	(2.3[012].*)
-	    return 1
-	    ;;
-    esac
-
-    printf "%s\n" setpriv
-)
-
-get_setpriv_options() (
-    assert [ $# -eq 1 ]
-    assert [ -n "$1" ]
-    regid="$(id -g $1)"
-    reuid="$(id -u $1)"
-    printf -- "%s\n" "--init-groups --reset-env --reuid $reuid --regid $regid"
-)
-
-get_su_command() (
-    case "${kernel_name=$(uname -s)}" in
-	(GNU|Linux)
-	    if get_setpriv_command; then
-		return
-	    fi
-	    ;;
-    esac
-
-    printf "%s\n" su
-)
-
 get_symlinks() (
     if [ -z "${UWSGI_APPDIRS-}" ]; then
 	return 0
@@ -462,33 +418,6 @@ remove_files() {
 	/bin/rm -rf "$@"
     fi
 }
-
-run_unpriv() (
-    assert [ $# -ge 1 ]
-
-    if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	command="$(get_su_command $SUDO_USER)"
-
-	case "$command" in
-	    (setpriv)
-		command="$command $(get_setpriv_options $SUDO_USER)"
-		;;
-	    (su)
-		command="$command $SUDO_USER"
-
-		if [ "${1-}${2+ $2}" = "/bin/sh -c" ]; then
-		    shift
-		else
-		    command="$command -c"
-		fi
-		;;
-	esac
-    else
-	command=
-    fi
-
-    ${command+$command }"$@"
-)
 
 signal_process() {
     assert [ $# -ge 3 ]

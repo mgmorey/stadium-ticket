@@ -50,6 +50,6 @@ fi
 script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $(get-app-configuration.py --input app.ini)
-. "$script_dir/common-functions.sh"
+. utility-functions.sh
 
 check_python "$@"

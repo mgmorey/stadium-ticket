@@ -174,7 +174,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $(get-os-release -x)
 eval $(get-app-configuration.py --input app.ini)
-. "$script_dir/common-functions.sh"
+. utility-functions.sh
 
 parse_arguments "$@"
 refresh_virtualenv
