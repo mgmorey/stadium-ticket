@@ -22,10 +22,10 @@ build:	.env .update Dockerfile Pipfile-docker
 	docker build -t stadium-ticket .
 
 clean:
-	$(script_dir)/clean-app-caches.sh
+	clean-app-caches
 
 clean-virtualenv:
-	$(script_dir)/clean-virtualenv.sh
+	clean-virtualenv
 
 client:	.env
 	$(script_dir)/app-test.sh
@@ -70,7 +70,7 @@ start:
 	$(script_dir)/start-app.sh
 
 status:
-	$(script_dir)/get-app-status.sh
+	get-app-status
 
 stop:
 	$(script_dir)/stop-app.sh
