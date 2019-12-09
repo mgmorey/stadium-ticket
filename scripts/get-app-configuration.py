@@ -44,10 +44,9 @@ def main():
     config.read(args.input)
 
     for section in (args.sections if args.sections else config.sections()):
-        pairs = config[section]
         prefix = args.prefix if args.prefix else section
 
-        for key, value in pairs.items():
+        for key, value in config[section].items():
             print(format_pair(key, value, prefix))
 
 
