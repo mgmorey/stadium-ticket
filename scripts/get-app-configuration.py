@@ -4,7 +4,8 @@
 import argparse
 import configparser
 
-TRANSLATE=str.maketrans('-', '_')
+TRANSLATE = str.maketrans('-', '_')
+
 
 def format_key(key: str, prefix: str):
     """Format application configuration parameter key."""
