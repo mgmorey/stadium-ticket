@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# clean-caches: clean Python 3 caches
+# clean-app-caches: clean Python 3 caches
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-dirs=$(find . -type d \( -name '.venv*' -prune -o -name .pytest_cache -print -o -name __pycache__ -print \))
+abort() {
+    printf "$@" >&2
+    exit 1
+}
 
-if [ -n "$dirs" ]; then
-    /bin/rm -rf $dirs
+find_caches() {
+    find . -type d \( -name "$VENV_DIRECTORY" -prune -o \
+	 -name .pytest_cache -print -o \
+	 -name __pycache__ -print \)
+}
+
+if [ "$(id -u)" -eq 0 ]; then
+    abort "%s: Must be run as a non-privileged user\n" "$0"
 fi
+
+eval $(get-app-configuration --input app.ini)
+
+/bin/rm -rf $(find_caches)
