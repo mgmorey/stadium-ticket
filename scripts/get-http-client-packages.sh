@@ -88,8 +88,6 @@ get_realpath() (
     fi
 )
 
-script_dir=$(get_realpath "$(dirname "$0")")
-
 eval $(get-os-release -x)
 
 get_http_client_packages

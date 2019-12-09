@@ -80,8 +80,6 @@ request_tickets() {
 	EOF
 }
 
-script_dir=$(get_realpath "$(dirname "$0")")
-
 if [ -r .env ]; then
     if [ "${VENV_VERBOSE-false}" = true ]; then
 	printf "%s\n" "Loading .env environment variables" >&2

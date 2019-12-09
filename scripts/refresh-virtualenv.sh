@@ -170,8 +170,6 @@ if [ -n "${VIRTUAL_ENV:-}" ]; then
     abort "%s: Must not be run within a virtual environment\n" "$0"
 fi
 
-script_dir=$(get_realpath "$(dirname "$0")")
-
 eval $(get-app-configuration --input app.ini)
 . utility-functions.sh
 
