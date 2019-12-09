@@ -22,7 +22,7 @@ build:	.env .update Dockerfile Pipfile-docker
 	docker build -t stadium-ticket .
 
 clean:
-	$(script_dir)/clean-caches.sh
+	$(script_dir)/clean-app-caches.sh
 
 clean-virtualenv:
 	$(script_dir)/clean-virtualenv.sh
