@@ -4,10 +4,11 @@
 import argparse
 import configparser
 
+TRANSLATE=str.maketrans('-', '_')
 
 def format_key(key: str, prefix: str):
     """Format application configuration parameter key."""
-    return '_'.join([prefix, key]).upper().translate(str.maketrans('-', '_'))
+    return '_'.join([prefix, key]).translate(TRANSLATE).upper()
 
 
 def format_pair(key: str, value: str, prefix: str):
