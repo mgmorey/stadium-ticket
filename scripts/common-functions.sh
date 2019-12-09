@@ -435,6 +435,22 @@ install_python_version() (
     pyenv install -s $python
 )
 
+install_requirements_via_pip() (
+    pip=$(get_pip_command ${1-${VENV_DIR-venv}}/bin/python)
+
+    if [ -z "$pip" ]; then
+	abort "%s: No pip command found in PATH\n" "$0"
+    fi
+
+    if [ "$PIP_UPGRADE_VENV" = true ]; then
+	printf "%s\n" "Upgrading virtual environment packages via pip" >&2
+	install_via_pip "$pip" --upgrade pip || true
+    fi
+
+    printf "%s\n" "Installing virtual environment packages via pip" >&2
+    install_via_pip "$pip" $(get_pip_requirements)
+)
+
 install_via_pip() (
     assert [ $# -ge 1 ]
     pip=$1
@@ -511,7 +527,7 @@ refresh_via_pip() {
 	assert [ -n "${VIRTUAL_ENV-}" ]
 
 	if [ "${venv_force_sync:-$sync}" = true ]; then
-	    upgrade_requirements_via_pip $1
+	    install_requirements_via_pip $1
 	fi
     elif [ -d $1 ]; then
 	abort "%s: Unable to activate environment\n" "$0"
@@ -584,22 +600,6 @@ set_unpriv_environment() {
 	export PATH="$path"
     fi
 }
-
-upgrade_requirements_via_pip() (
-    pip=$(get_pip_command ${1-${VENV_DIR-venv}}/bin/python)
-
-    if [ -z "$pip" ]; then
-	abort "%s: No pip command found in PATH\n" "$0"
-    fi
-
-    if [ "$PIP_UPGRADE_VENV" = true ]; then
-	printf "%s\n" "Upgrading virtual environment packages via pip" >&2
-	install_via_pip "$pip" --upgrade pip || true
-    fi
-
-    printf "%s\n" "Installing virtual environment packages via pip" >&2
-    install_via_pip "$pip" $(get_pip_requirements)
-)
 
 upgrade_via_pip() (
     pip=$(get_pip_command)
