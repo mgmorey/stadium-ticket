@@ -33,7 +33,7 @@ before_install:
   - scripts/app-test.sh
 
 install:
-  - pip install -r requirements-dev.txt -r requirements.txt
+  - pip install -r dev-requirements.txt -r requirements.txt
 
 script:
   - pycodestyle app tests
