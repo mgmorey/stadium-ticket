@@ -61,8 +61,8 @@ print_status() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $(get-app-configuration.py --input app.ini)
-. utility-functions.sh
+eval $("$script_dir/../../../bin/get-app-configuration.py" --input app.ini)
+. "$script_dir/../../../bin/utility-functions.sh"
 . "$script_dir/system-parameters.sh"
 . "$script_dir/system-functions.sh"
 
