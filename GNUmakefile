@@ -39,25 +39,22 @@ compose:	.env .env-mysql .update Dockerfile Pipfile-docker
 	docker-compose up --build
 
 debug:		.update init-db
-	$(script_dir)/run-app.sh flask run --port 5001
+	run-app flask run --port 5001
 
 drop-db:
-	$(script_dir)/run-app.sh python3 -m app drop-db
+	run-app python3 -m app drop-db
 
 init-db:
-	$(script_dir)/run-app.sh python3 -m app init-db
-
-install:	.env .update
-	$(script_dir)/install-app.sh
+	run-app python3 -m app init-db
 
 pycode:	.update
-	$(script_dir)/run-app.sh pycodestyle app tests
+	run-app pycodestyle app tests
 
 pylint:	.update
-	$(script_dir)/run-app.sh pylint app tests
+	run-app pylint app tests
 
 pytest:	.update
-	$(script_dir)/run-app.sh pytest tests
+	run-app pytest tests
 
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update
@@ -82,7 +79,7 @@ stress:
 	$(script_dir)/configure-env.sh $@ $<
 
 .update:	Pipfile Pipfile.lock
-	$(script_dir)/refresh-virtualenv.sh && touch $@
+	refresh-virtualenv && touch $@
 
 Makefile:	GNUmakefile
 	ln -s $< $@
