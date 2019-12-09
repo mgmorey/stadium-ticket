@@ -63,4 +63,4 @@ if [ -n "$pipenv" ]; then
     fi
 fi
 
-/bin/rm -rf ${VENV_DIR-venv}
+/bin/rm -rf ${VENV_DIRECTORY-venv}

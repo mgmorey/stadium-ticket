@@ -436,7 +436,7 @@ install_python_version() (
 )
 
 install_requirements_via_pip() (
-    pip=$(get_pip_command ${1-${VENV_DIR-venv}}/bin/python)
+    pip=$(get_pip_command ${1-${VENV_DIRECTORY-venv}}/bin/python)
 
     if [ -z "$pip" ]; then
 	abort "%s: No pip command found in PATH\n" "$0"
