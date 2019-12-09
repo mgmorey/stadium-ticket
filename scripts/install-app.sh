@@ -192,7 +192,7 @@ install_app_files() (
 )
 
 install_dependencies() {
-    if ! "$script_dir/install-dependencies.sh"; then
+    if ! install-python-build-deps; then
 	abort "%s: Unable to install dependencies\n" "$0"
     fi
 }
