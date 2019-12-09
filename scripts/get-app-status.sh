@@ -105,8 +105,8 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $(get-app-configuration --input app.ini)
 . utility-functions.sh
-. "$script_dir/system-parameters.sh"
-. "$script_dir/system-functions.sh"
+. restapi-parameters.sh
+. restapi-functions.sh
 
 configure_all
 print_status $(get_app_status)

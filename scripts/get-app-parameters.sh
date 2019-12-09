@@ -52,6 +52,6 @@ get_realpath() (
 script_dir=$(get_realpath "$(dirname "$0")")
 
 . utility-functions.sh
-. "$script_dir/system-functions.sh"
+. restapi-functions.sh
 
 get_parameters

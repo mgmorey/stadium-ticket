@@ -123,8 +123,8 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 eval $("$script_dir/../../../bin/get-app-configuration" --input app.ini)
 . "$script_dir/../../../bin/utility-functions.sh"
-. "$script_dir/system-parameters.sh"
-. "$script_dir/system-functions.sh"
+. "$script_dir/../../../bin/restapi-parameters.sh"
+. "$script_dir/../../../bin/restapi-functions.sh"
 
 set_unpriv_environment
 parse_arguments "$@"
