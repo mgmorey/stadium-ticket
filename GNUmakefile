@@ -68,9 +68,9 @@ status:
 stress:
 	$(script_dir)/load-test.sh
 
-.PHONY:	all build clean clean-virtualenv client client-debug compose debug
-.PHONY:	drop-db init-db install pycode pylint pytest init-db realclean
-.PHONY:	restart scripts start status stop stress uninstall uninstall-all
+.PHONY:	all build clean clean-app-caches clean-virtualenv client client-debug
+.PHONY:	compose debug drop-db init-db pycode pylint pytest realclean scripts
+.PHONY:	status stress
 
 .env:		.env-template
 	$(script_dir)/configure-env.sh $@ $<
