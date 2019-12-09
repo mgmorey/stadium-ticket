@@ -49,7 +49,7 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $("$script_dir/get-app-configuration.py" --input app.ini)
+eval $(get-app-configuration.py --input app.ini)
 . "$script_dir/common-functions.sh"
 
 check_python "$@"
