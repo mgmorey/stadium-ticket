@@ -336,7 +336,7 @@ get_pip_command() {
 }
 
 get_pip_requirements() {
-    printf -- "--requirement %s\n" ${venv_requirements:-requirements.txt}
+    printf -- "--requirement %s\n" ${pip_requirements:-requirements.txt}
 }
 
 get_python_version() (

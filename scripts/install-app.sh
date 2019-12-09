@@ -247,10 +247,10 @@ install_virtualenv() (
 	check_permissions_single "$1"
     else
 	printf "Installing virtual environment in %s\n" "$1" >&2
-	venv_force_sync=true
-	venv_requirements=requirements.txt
 	[ -n "${UWSGI_CC-}" ] && export CC="$UWSGI_CC"
 	[ -n "${UWSGI_CFLAGS-}" ] && export CFLAGS="$UWSGI_CFLAGS"
+	pip_requirements=requirements.txt
+	venv_force_sync=true
 	refresh_via_pip $1 $SYSTEM_PYTHON
     fi
 )
