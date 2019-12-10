@@ -14,7 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-home_dir = $(shell get-sudo-user-home)
+home = $(shell if [ $$(uname -s) = Darwin ]; then $(macos); else $(posix); fi)
+macos = printf "/Users/%s\n" $(user)
+posix = getent passwd $(user) | awk -F: '{print $$6}'
+user = $(shell printf "%s\n" "$${SUDO_USER-$${USER-$$LOGIN}}")
 
 all:	.env .update pycode pylint pytest
 
@@ -48,7 +51,7 @@ create-db:
 	run-app python3 -m app create-db
 
 install:
-	$(home_dir)/bin/install-app
+	$(home)/bin/install-app
 
 pycode:	.update
 	run-app pycodestyle app tests
@@ -63,7 +66,7 @@ realclean:	clean clean-virtualenv
 	@/bin/rm -f .update
 
 restart:
-	$(home_dir)/bin/restart-app
+	$(home)/bin/restart-app
 
 run-app:	.update create-db
 	run-app flask run
@@ -75,13 +78,13 @@ scripts:
 	scripts/install-utility-scripts.sh
 
 start:		install
-	$(home_dir)/bin/start-app
+	$(home)/bin/start-app
 
 stop:
-	$(home_dir)/bin/stop-app
+	$(home)/bin/stop-app
 
 uninstall:	stop
-	$(home_dir)/bin/install-app
+	$(home)/bin/install-app
 
 .PHONY:	all build clean clean-app-caches clean-virtualenv client client-debug
 .PHONY:	compose create-db drop-db get-status install pycode pylint pytest
