@@ -107,7 +107,7 @@ uninstall-all:	stop
 	scripts/configure-env.sh $@ $<
 
 .update:	Pipfile Pipfile.lock
-	refresh-virtualenv && touch $@
+	$(bin)/refresh-virtualenv && touch $@
 
 Pipfile-docker:	Pipfile
 	@sed 's/^python_version = "3\.[0-9]*"/python_version = "3"/g' $< >$@
