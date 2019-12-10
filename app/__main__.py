@@ -40,14 +40,5 @@ def get_parameters():
         click.echo(_format_parameter(key, value))
 
 
-@cli.command()
-def init_db():
-    """Create database schema and tables."""
-    click.echo('Initializing the database')
-    with app.app_context():
-        db.create_all()
-    click.echo('Initialized the database')
-
-
 if __name__ == '__main__':
     cli()
