@@ -81,7 +81,7 @@ run-debug:	.update create-database
 scripts:
 	scripts/install-utility-scripts.sh
 
-start:		install
+start:
 	$(bin)/start-app
 
 stop:
