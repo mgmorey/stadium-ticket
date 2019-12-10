@@ -86,13 +86,18 @@ start:		install
 stop:
 	$(home)/bin/stop-app
 
+superclean:	realclean uninstall-all
+
 uninstall:	stop
-	$(home)/bin/install-app
+	$(home)/bin/uninstall-app
+
+uninstall-all:	stop
+	$(home)/bin/uninstall-app -a
 
 .PHONY:	all clean clean-app-caches clean-virtualenv client client-debug
 .PHONY:	create-db docker-build docker-compose drop-db get-status install
 .PHONY:	pycode pylint pytest realclean restart run run-debug scripts
-.PHONY:	start stop uninstall
+.PHONY:	start stop superclean uninstall uninstall-all
 
 .env:		.env-template
 	scripts/configure-env.sh $@ $<
