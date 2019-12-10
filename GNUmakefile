@@ -14,10 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-home = $(shell if [ $$(uname -s) = Darwin ]; then $(macos); else $(posix); fi)
+home = $(shell if $(ismac); then $(macos); else $(posix); fi)
+ismac = [ $$(uname -s) = Darwin ]
 macos = printf "/Users/%s\n" $(user)
 posix = getent passwd $(user) | awk -F: '{print $$6}'
-user = $(shell printf "%s\n" "$${SUDO_USER-$${USER-$$LOGIN}}")
+user = "$${SUDO_USER-$${USER-$$LOGIN}}"
 
 all:	.env .update pycode pylint pytest
 
