@@ -28,6 +28,31 @@ get_bin_directory() (
     done
 )
 
+get_home_directory() {
+    assert [ $# -eq 1 ]
+
+    case "${kernel_name=$(uname -s)}" in
+	(Darwin)
+	    printf "/Users/%s\n" "$1"
+	    ;;
+	(*)
+	    getent passwd "$1" | awk -F: '{print $6}'
+	    ;;
+    esac
+}
+
+get_profile_path() {
+    path=$PATH
+
+    for prefix in "$1" "$1/.local" "$1/.pyenv"; do
+	if is_to_be_included "$prefix/bin" "$path"; then
+	   path="$prefix/bin:$path"
+	fi
+    done
+
+    printf "%s\n" "$path"
+}
+
 get_setpriv_command() (
     version="$(setpriv --version 2>/dev/null)"
 
@@ -71,6 +96,22 @@ get_su_command() (
 
     printf "%s\n" su
 )
+
+get_user_name() {
+    printf "%s\n" "${SUDO_USER-${USER-${LOGNAME}}}"
+}
+
+is_included() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    printf "%s\n" "$2" | egrep '(^|:)'$1'(:|$)' >/dev/null
+}
+
+is_to_be_included() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    test -d $1 && ! is_included $1 "$2"
+}
 
 run_unpriv() (
     assert [ $# -ge 1 ]
