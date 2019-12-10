@@ -5,6 +5,7 @@ import configparser
 import os
 
 FILENAME = 'app.ini'
+SECTION = 'app'
 
 
 def _get_dirname(pathname: str):
@@ -25,10 +26,13 @@ def _get_pathname(pathname: str, filename: str):
     return _get_pathname(dirname, filename)
 
 
-def get_config(filename: str, section: str = None):
+def get_config(filename: str = None, section: str = None):
     """Return application configuration."""
+    if not filename:
+        filename = FILENAME
+
     if not section:
-        section = 'app'
+        section = SECTION
 
     pathname = _get_pathname(os.path.realpath(__file__), filename)
     config = configparser.ConfigParser()
