@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-app-config.sh: print application configuration
+# get-app-parameters.sh: print application configuration
 # Copyright (C) 2019  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ assert() {
 get_parameters() {
     home="$(get_home_directory "$(get_user_name)")"
     path="$(get_profile_path "$home")"
-    script="\"$script_dir/run-app.sh\" -d \"$(pwd)\" -h \"$home\" -p \"$path\""
+    script="\"$bin_dir/run-app\" -d \"$(pwd)\" -h \"$home\" -p \"$path\""
     run_unpriv /bin/sh -c "$script python3 -m app get-parameters"
 }
 
@@ -51,7 +51,8 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-. utility-functions.sh
-. restapi-functions.sh
+. "$script_dir/common-functions.sh"
+
+bin_dir="$(get_bin_directory "$script_dir")"
 
 get_parameters
