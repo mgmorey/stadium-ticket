@@ -38,5 +38,5 @@ install:
 script:
   - pycodestyle app tests
   - pylint app
-  - python3 -m app init-db
+  - python3 -m app create-db
   - pytest tests
