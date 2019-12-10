@@ -16,7 +16,7 @@ def cli():
 
 
 @cli.command()
-def create_db():
+def create_database():
     """Create database schema and tables."""
     click.echo('Creating the database')
     with app.app_context():
@@ -25,7 +25,7 @@ def create_db():
 
 
 @cli.command()
-def drop_db():
+def drop_database():
     """Drop database schema and tables."""
     click.echo('Dropping the database')
     with app.app_context():

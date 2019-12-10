@@ -37,8 +37,8 @@ client:	.env
 client-debug:	.env
 	scripts/app-test.sh -h localhost -p 5001
 
-create-db:
-	run-app python3 -m app create-db
+create-database:
+	run-app python3 -m app create-database
 
 docker-build:	.env .update Dockerfile Pipfile-docker
 	docker build -t stadium-ticket .
@@ -46,8 +46,8 @@ docker-build:	.env .update Dockerfile Pipfile-docker
 docker-compose:	.env .env-mysql .update Dockerfile Pipfile-docker
 	docker-compose up --build
 
-drop-db:
-	run-app python3 -m app drop-db
+drop-database:
+	run-app python3 -m app drop-database
 
 get-status:
 	get-app-status
@@ -72,10 +72,10 @@ reinstall:	uninstall install
 restart:
 	$(bin)/restart-app
 
-run-app:	.update create-db
+run-app:	.update create-database
 	run-app flask run
 
-run-debug:	.update create-db
+run-debug:	.update create-database
 	run-app flask run --port 5001
 
 scripts:
@@ -96,8 +96,8 @@ uninstall-all:	stop
 	$(bin)/uninstall-app -a
 
 .PHONY:	all clean clean-app-caches clean-virtualenv client client-debug
-.PHONY:	create-db docker-build docker-compose drop-db get-status install
-.PHONY:	pycode pylint pytest realclean restart run run-debug scripts
+.PHONY:	create-database docker-build docker-compose drop-database get-status
+.PHONY:	install pycode pylint pytest realclean restart run run-debug scripts
 .PHONY:	start stop superclean uninstall uninstall-all
 
 .env:		.env-template
