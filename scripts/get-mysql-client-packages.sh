@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-dbms-client-packages: get DBMS client package names
+# get-mysql-client-packages: get MySQL database client package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -57,8 +57,8 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_dbms_client_packages() {
-    package=$("$script_dir/get-installed-dbms-package.sh" client)
+get_mysql_client_packages() {
+    package=$("$script_dir/get-installed-mysql-package.sh" client)
 
     case "$package" in
 	(*-client-core-*)
@@ -132,7 +132,7 @@ get_dbms_client_packages() {
 	    ;;
     esac
 
-    "$script_dir/get-python-packages.sh" ${packages-}
+    "$bin_dir/get-python-packages" ${packages-}
 }
 
 get_realpath() (
@@ -154,6 +154,9 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $(get-os-release -x)
+. "$script_dir/common-functions.sh"
 
-get_dbms_client_packages
+bin_dir="$(get_bin_directory "$script_dir")"
+eval $("$bin_dir/get-os-release" -x)
+
+get_mysql_client_packages

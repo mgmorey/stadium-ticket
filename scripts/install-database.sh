@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# install-extra-packages: install extra packages
+# install-database-packages: install MySQL database packages
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -46,9 +46,9 @@ get_realpath() (
     fi
 )
 
-install_extras() {
+install_database() {
     validate_platform
-    packages=$("$script_dir/get-extra-packages.sh")
+    packages=$("$script_dir/get-database-packages.sh")
     install-packages $packages
 }
 
@@ -188,6 +188,9 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $(get-os-release -x)
+. "$script_dir/common-functions.sh"
 
-install_extras
+bin_dir="$(get_bin_directory "$script_dir")"
+eval $("$bin_dir/get-os-release" -x)
+
+install_database

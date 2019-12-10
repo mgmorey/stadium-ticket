@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CATEGORIES="dbms-client dbms-server"
+CATEGORIES="mysql-client mysql-server"
 
 abort() {
     printf "$@" >&2
@@ -27,7 +27,7 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_extra_packages() {
+get_database_packages() {
     get_packages_in $CATEGORIES | sort -u
 }
 
@@ -56,4 +56,4 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-get_extra_packages
+get_database_packages

@@ -51,7 +51,8 @@ get_realpath() (
 install_dependencies() {
     validate_platform
     packages=$("$script_dir/get-dependencies.sh")
-    pattern=$("$script_dir/get-development-pattern.sh")
+    pattern=$("$bin_dir/get-development-pattern")
+    "$script_dir/install-utility-scripts.sh"
 
     if [ -n "$packages" ]; then
 	install-packages ${pattern:+-p "$pattern" }$packages
@@ -198,6 +199,9 @@ fi
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $(get-os-release -x)
+. "$script_dir/common-functions.sh"
+
+bin_dir="$(get_bin_directory "$script_dir")"
+eval $("$bin_dir/get-os-release" -x)
 
 install_dependencies

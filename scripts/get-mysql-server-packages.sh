@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-dbms-server-packages: get database server package names
+# get-mysql-server-packages: get MySQL database server package names
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -50,8 +50,8 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-get_dbms_server_packages() {
-    package=$("$script_dir/get-installed-dbms-package.sh" server)
+get_mysql_server_packages() {
+    package=$("$script_dir/get-installed-mysql-package.sh" server)
 
     case "$package" in
 	(*-server-core-*)
@@ -149,6 +149,9 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
-eval $(get-os-release -x)
+. "$script_dir/common-functions.sh"
 
-get_dbms_server_packages
+bin_dir="$(get_bin_directory "$script_dir")"
+eval $("$bin_dir/get-os-release" -x)
+
+get_mysql_server_packages

@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-installed-dbms-package: get installed database package name
+# get-installed-mysql-package: get installed database package name
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -59,7 +59,7 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 create_tmpfile
 get-installed-packages >$tmpfile
-"$script_dir/grep-dbms-package.sh" $mode-core <$tmpfile || \
-    "$script_dir/grep-dbms-package.sh" $mode <$tmpfile || \
-    "$script_dir/grep-dbms-package.sh" <$tmpfile || \
+"$script_dir/grep-mysql-package.sh" $mode-core <$tmpfile || \
+    "$script_dir/grep-mysql-package.sh" $mode <$tmpfile || \
+    "$script_dir/grep-mysql-package.sh" <$tmpfile || \
     true

@@ -1,7 +1,7 @@
-#!/bin/sh -eu
+# -*- Mode: Shell-script -*-
 
-# grep-dbms-package: grep for database package names
-# Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
+# common-functions.sh: define commonly used shell functions
+# Copyright (C) 2019  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,11 +13,17 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+get_bin_directory() (
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+    dir=$1
 
-if [ $# -gt 0 ]; then
-    egrep "^(database/)?(mariadb|mysql)([0-9]+-$1|-[0-9]+/$1|-$1(-[0-9\.]+)?)\$"
-else
-    egrep "^(database/)?(mariadb|mysql)([0-9]*|-[0-9\.]+)?\$"
-fi
+    while [ "$(dirname "$dir")" != / ]; do
+	dir="$(dirname "$dir")"
+
+	if [ -d "$dir/bin" ]; then
+	    printf "$dir/bin"
+	    return
+	fi
+    done
+)
