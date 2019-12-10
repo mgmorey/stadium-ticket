@@ -22,9 +22,6 @@ user = "$${SUDO_USER-$${USER-$$LOGIN}}"
 
 all:	.env .update pycode pylint pytest
 
-build:	.env .update Dockerfile Pipfile-docker
-	docker build -t stadium-ticket .
-
 clean:	clean-app-caches clean-virtualenv
 
 clean-app-caches:
@@ -39,11 +36,14 @@ client:	.env
 client-debug:	.env
 	scripts/app-test.sh -h localhost -p 5001
 
-compose:	.env .env-mysql .update Dockerfile Pipfile-docker
-	docker-compose up --build
-
 create-db:
 	run-app python3 -m app create-db
+
+docker-build:	.env .update Dockerfile Pipfile-docker
+	docker build -t stadium-ticket .
+
+docker-compose:	.env .env-mysql .update Dockerfile Pipfile-docker
+	docker-compose up --build
 
 drop-db:
 	run-app python3 -m app drop-db
@@ -66,6 +66,8 @@ pytest:	.update
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update
 
+reinstall:	uninstall install
+
 restart:
 	$(home)/bin/restart-app
 
@@ -87,9 +89,10 @@ stop:
 uninstall:	stop
 	$(home)/bin/install-app
 
-.PHONY:	all build clean clean-app-caches clean-virtualenv client client-debug
-.PHONY:	compose create-db drop-db get-status install pycode pylint pytest
-.PHONY:	realclean restart run run-debug scripts start stop uninstall
+.PHONY:	all clean clean-app-caches clean-virtualenv client client-debug
+.PHONY:	create-db docker-build docker-compose drop-db get-status install
+.PHONY:	pycode pylint pytest realclean restart run run-debug scripts
+.PHONY:	start stop uninstall
 
 .env:		.env-template
 	scripts/configure-env.sh $@ $<
