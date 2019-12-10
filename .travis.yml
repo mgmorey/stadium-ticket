@@ -30,7 +30,6 @@ before_install:
   - docker build -t stadium-ticket .
   - docker run -d -p 127.0.0.1:5000:5000 stadium-ticket
   - docker ps -a
-  - scripts/app-test.sh
 
 install:
   - pip install -r dev-requirements.txt -r requirements.txt
@@ -39,3 +38,4 @@ script:
   - pycodestyle app tests
   - pylint app
   - pytest tests
+  - scripts/app-test.sh
