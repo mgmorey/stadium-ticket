@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-script_dir = scripts
+home_dir = $(shell get-sudo-user-home)
 
 all:	.env .update pycode pylint pytest
 
@@ -30,22 +30,25 @@ clean-virtualenv:
 	clean-virtualenv
 
 client:	.env
-	$(script_dir)/app-test.sh
+	scripts/app-test.sh
 
 client-debug:	.env
-	$(script_dir)/app-test.sh -h localhost -p 5001
+	scripts/app-test.sh -h localhost -p 5001
 
 compose:	.env .env-mysql .update Dockerfile Pipfile-docker
 	docker-compose up --build
 
-debug:		.update init-db
-	run-app flask run --port 5001
-
 drop-db:
 	run-app python3 -m app drop-db
 
-init-db:
-	run-app python3 -m app init-db
+get-status:
+	get-app-status
+
+create-db:
+	run-app python3 -m app create-db
+
+install:
+	$(home_dir)/bin/install-app
 
 pycode:	.update
 	run-app pycodestyle app tests
@@ -59,24 +62,36 @@ pytest:	.update
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update
 
+restart:
+	$(home_dir)/bin/restart-app
+
+run-app:	.update create-db
+	run-app flask run
+
+run-debug:	.update create-db
+	run-app flask run --port 5001
+
 scripts:
-	$(script_dir)/install-utility-scripts.sh
+	scripts/install-utility-scripts.sh
 
-status:
-	get-app-status
+start:		install
+	$(home_dir)/bin/start-app
 
-stress:
-	$(script_dir)/load-test.sh
+stop:
+	$(home_dir)/bin/stop-app
+
+uninstall:	stop
+	$(home_dir)/bin/install-app
 
 .PHONY:	all build clean clean-app-caches clean-virtualenv client client-debug
-.PHONY:	compose debug drop-db init-db pycode pylint pytest realclean scripts
-.PHONY:	status stress
+.PHONY:	compose create-db drop-db get-status install pycode pylint pytest
+.PHONY:	realclean restart run run-debug scripts start stop uninstall
 
 .env:		.env-template
-	$(script_dir)/configure-env.sh $@ $<
+	scripts/configure-env.sh $@ $<
 
 .env-mysql:	.env-template-mysql
-	$(script_dir)/configure-env.sh $@ $<
+	scripts/configure-env.sh $@ $<
 
 .update:	Pipfile Pipfile.lock
 	refresh-virtualenv && touch $@
