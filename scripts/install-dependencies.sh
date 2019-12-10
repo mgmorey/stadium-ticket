@@ -55,11 +55,11 @@ install_dependencies() {
     "$script_dir/install-utility-scripts.sh"
 
     if [ -n "$packages" ]; then
-	install-packages ${pattern:+-p "$pattern" }$packages
+	"$bin_dir/install-packages" ${pattern:+-p "$pattern" }$packages
     fi
 
     if [ -n "${package:-}" ]; then
-	install-build-deps "$@" $package
+	"$bin_dir/install-build-deps" "$@" $package
     fi
 }
 
