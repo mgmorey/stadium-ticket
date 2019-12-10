@@ -25,10 +25,10 @@ all:	.env .update pycode pylint pytest
 clean:	clean-app-caches clean-virtualenv
 
 clean-app-caches:
-	clean-app-caches
+	$(home)/bin/clean-app-caches
 
 clean-virtualenv:
-	clean-virtualenv
+	$(home)/bin/clean-virtualenv
 
 client:	.env
 	scripts/app-test.sh
