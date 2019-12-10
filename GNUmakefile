@@ -42,14 +42,14 @@ client-debug:	.env
 compose:	.env .env-mysql .update Dockerfile Pipfile-docker
 	docker-compose up --build
 
+create-db:
+	run-app python3 -m app create-db
+
 drop-db:
 	run-app python3 -m app drop-db
 
 get-status:
 	get-app-status
-
-create-db:
-	run-app python3 -m app create-db
 
 install:
 	$(home)/bin/install-app
