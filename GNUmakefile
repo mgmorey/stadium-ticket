@@ -108,8 +108,5 @@ uninstall-all:	stop
 .update:	Pipfile Pipfile.lock
 	refresh-virtualenv && touch $@
 
-Makefile:	GNUmakefile
-	ln -s $< $@
-
 Pipfile-docker:	Pipfile
 	@sed 's/^python_version = "3\.[0-9]*"/python_version = "3"/g' $< >$@
