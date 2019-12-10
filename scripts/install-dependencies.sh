@@ -52,7 +52,7 @@ install_dependencies() {
     validate_platform
     packages=$("$script_dir/get-dependencies.sh")
     pattern=$("$bin_dir/get-development-pattern")
-    "$script_dir/install-utility-scripts.sh"
+    run_unpriv /bin/sh -c "\"$script_dir/install-utility-scripts.sh\""
 
     if [ -n "$packages" ]; then
 	"$bin_dir/install-packages" ${pattern:+-p "$pattern" }$packages
