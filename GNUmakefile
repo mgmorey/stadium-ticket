@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+bin = $(home)/bin
 home = $(shell if $(ismac); then $(macos); else $(posix); fi)
 ismac = [ $$(uname -s) = Darwin ]
 macos = printf "/Users/%s\n" $(user)
@@ -25,10 +26,10 @@ all:	.env .update pycode pylint pytest
 clean:	clean-app-caches clean-virtualenv
 
 clean-app-caches:
-	$(home)/bin/clean-app-caches
+	$(bin)/clean-app-caches
 
 clean-virtualenv:
-	$(home)/bin/clean-virtualenv
+	$(bin)/clean-virtualenv
 
 client:	.env
 	scripts/app-test.sh
@@ -51,8 +52,8 @@ drop-db:
 get-status:
 	get-app-status
 
-install:
-	$(home)/bin/install-app
+install:	.update
+	$(bin)/install-app
 
 pycode:	.update
 	run-app pycodestyle app tests
@@ -69,7 +70,7 @@ realclean:	clean clean-virtualenv
 reinstall:	uninstall install
 
 restart:
-	$(home)/bin/restart-app
+	$(bin)/restart-app
 
 run-app:	.update create-db
 	run-app flask run
@@ -81,18 +82,18 @@ scripts:
 	scripts/install-utility-scripts.sh
 
 start:		install
-	$(home)/bin/start-app
+	$(bin)/start-app
 
 stop:
-	$(home)/bin/stop-app
+	$(bin)/stop-app
 
 superclean:	realclean uninstall-all
 
 uninstall:	stop
-	$(home)/bin/uninstall-app
+	$(bin)/uninstall-app
 
 uninstall-all:	stop
-	$(home)/bin/uninstall-app -a
+	$(bin)/uninstall-app -a
 
 .PHONY:	all clean clean-app-caches clean-virtualenv client client-debug
 .PHONY:	create-db docker-build docker-compose drop-db get-status install
