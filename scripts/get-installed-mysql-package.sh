@@ -25,12 +25,6 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-create_tmpfile() {
-    tmpfile=$(mktemp)
-    tmpfiles="${tmpfiles+$tmpfiles }$tmpfile"
-    trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
-}
-
 get_realpath() (
     assert [ $# -ge 1 ]
     realpath=$(which realpath)
@@ -56,6 +50,8 @@ fi
 
 mode=$1
 script_dir=$(get_realpath "$(dirname "$0")")
+
+. "$script_dir/common-functions.sh"
 
 create_tmpfile
 get-installed-packages >$tmpfile

@@ -21,29 +21,59 @@ abort() {
     exit 1
 }
 
-create_tmpfile() {
-    tmpfile=$(mktemp)
-    tmpfiles="${tmpfiles+$tmpfiles }$tmpfile ${tmpfile}~"
-    trap "/bin/rm -f $tmpfiles" EXIT INT QUIT TERM
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-if [ -z "${TERM-}" ]; then
-    exit 0
-elif [ -z "${EDITOR-}" ]; then
-    exit 0
-elif [ $TERM = dumb ]; then
-    if [ $EDITOR != emacs ]; then
+configure_env() {
+    if [ -z "${TERM-}" ]; then
 	exit 0
-    elif [ -z "${DISPLAY-}" ]; then
+    elif [ -z "${EDITOR-}" ]; then
 	exit 0
+    elif [ $TERM = dumb ]; then
+	if [ $EDITOR != emacs ]; then
+	    exit 0
+	elif [ -z "${DISPLAY-}" ]; then
+	    exit 0
+	fi
     fi
-fi
+
+    file="$1"
+    template="$2"
+    create_tmpfile
+
+    if [ -r $file ]; then
+	/bin/cp -f $file $tmpfile
+    elif [ -r $template ]; then
+	/bin/cp -f $template $tmpfile
+    fi
+
+    if $EDITOR $tmpfile; then
+	/bin/mv -f $tmpfile $file
+	chgrp $(id -g) $file
+    fi
+}
+
+get_realpath() (
+    assert [ $# -ge 1 ]
+    realpath=$(which realpath)
+
+    if [ -n "$realpath" ]; then
+	$realpath "$@"
+    else
+	for file; do
+	    if expr "$file" : '/.*' >/dev/null; then
+		printf "%s\n" "$file"
+	    else
+		printf "%s\n" "$PWD/${file#./}"
+	    fi
+	done
+    fi
+)
 
 if [ $# -lt 1 ]; then
     abort "%s: Not enough arguments\n" "$0"
-fi
-
-if [ $# -gt 2 ]; then
+elif [ $# -gt 2 ]; then
     abort "%s: Too many arguments\n" "$0"
 fi
 
@@ -51,17 +81,8 @@ if [ "$(id -u)" -eq 0 ]; then
     abort "%s: Must be run as a non-privileged user\n" "$0"
 fi
 
-file="$1"
-template="$2"
-create_tmpfile
+script_dir=$(get_realpath "$(dirname "$0")")
 
-if [ -r $file ]; then
-    /bin/cp -f $file $tmpfile
-elif [ -r $template ]; then
-    /bin/cp -f $template $tmpfile
-fi
+. "$script_dir/common-functions.sh"
 
-if $EDITOR $tmpfile; then
-    /bin/mv -f $tmpfile $file
-    chgrp $(id -g) $file
-fi
+configure_env "$@"
