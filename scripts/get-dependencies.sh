@@ -34,7 +34,7 @@ get_dependencies() {
 
 get_packages_in() {
     for category; do
-	"$bin_dir/get-$category-packages"
+	get-$category-packages
     done
 }
 
@@ -59,6 +59,5 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-functions.sh"
 
-bin_dir="$(get_bin_directory "$script_dir")"
-
+set_user_profile
 get_dependencies

@@ -190,7 +190,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-functions.sh"
 
-bin_dir="$(get_bin_directory "$script_dir")"
-eval $("$bin_dir/get-os-release" -x)
-
+set_user_profile
+eval $(get-os-release -x)
 install_database

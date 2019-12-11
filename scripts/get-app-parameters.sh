@@ -53,6 +53,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-functions.sh"
 
-bin_dir="$(get_bin_directory "$script_dir")"
-
+bin_dir=$(get_bin_directory "$script_dir")
+set_user_profile
 get_parameters

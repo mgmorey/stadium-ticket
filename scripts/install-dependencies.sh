@@ -50,16 +50,16 @@ get_realpath() (
 
 install_dependencies() {
     validate_platform
-    packages=$("$script_dir/get-dependencies.sh")
-    pattern=$("$bin_dir/get-development-pattern")
     run_unpriv "$script_dir/install-utility-scripts.sh"
+    packages=$("$script_dir/get-dependencies.sh")
+    pattern=$(get-development-pattern)
 
     if [ -n "$packages" ]; then
-	"$bin_dir/install-packages" ${pattern:+-p "$pattern" }$packages
+	install-packages ${pattern:+-p "$pattern" }$packages
     fi
 
     if [ -n "${package:-}" ]; then
-	"$bin_dir/install-build-deps" "$@" $package
+	install-build-deps "$@" $package
     fi
 }
 
@@ -201,7 +201,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-functions.sh"
 
-bin_dir="$(get_bin_directory "$script_dir")"
-eval $("$bin_dir/get-os-release" -x)
-
+set_user_profile
+eval $(get-os-release -x)
 install_dependencies

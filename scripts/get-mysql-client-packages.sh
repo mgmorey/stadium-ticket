@@ -132,7 +132,7 @@ get_mysql_client_packages() {
 	    ;;
     esac
 
-    "$bin_dir/get-python-packages" ${packages-}
+    get-python-packages ${packages-}
 }
 
 get_realpath() (
@@ -156,7 +156,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-functions.sh"
 
-bin_dir="$(get_bin_directory "$script_dir")"
-eval $("$bin_dir/get-os-release" -x)
-
+set_user_profile
+eval $(get-os-release -x)
 get_mysql_client_packages
