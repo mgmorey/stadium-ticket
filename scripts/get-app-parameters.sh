@@ -27,7 +27,7 @@ assert() {
 
 get_parameters() {
     home="$(get_home_directory "$(get_user_name)")"
-    path="$(get_profile_path "$home")"
+    path="$(get_profile_path "$home" "$bin_dir")"
     script="\"$bin_dir/run-app\" -d \"$(pwd)\" -h \"$home\" -p \"$path\""
     run_unpriv /bin/sh -c "$script python3 -m app get-parameters"
 }
