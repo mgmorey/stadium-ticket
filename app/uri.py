@@ -2,10 +2,11 @@
 """Define methods to construct a SQLAlchemy database URI string."""
 
 import os
-import re
 import urllib.parse
 
 import decouple
+
+from .pattern import get_pattern
 
 CHARSET = {
     None: 'utf8',
@@ -24,19 +25,6 @@ URI = {
     'sqlite': "{0}:///{5}",
 }
 USER = 'root'
-
-PATTERN = {
-    'DATABASE_CHARSET': re.compile(r'utf8(mb[34])?'),
-    'DATABASE_DIALECT': re.compile(r'(mysql|sqlite)'),
-    'DATABASE_DRIVER': re.compile(r'pymysql'),
-    'DATABASE_HOST':
-    re.compile(r'(\d{1,3}(\.\d{1,3}){3}|[a-z][a-z\d]+([\.-][a-z\d]+)*)'),
-    'DATABASE_PASSWORD': re.compile(r'.*'),
-    'DATABASE_PATHNAME': re.compile(r'(/?\.?[\w\d-]+)+'),
-    'DATABASE_PORT': re.compile(r'\d{1,5}'),
-    'DATABASE_SCHEMA': re.compile(r'[a-z\d-]+'),
-    'DATABASE_USER': re.compile(r'[\w\d-]+'),
-}
 
 
 def _get_charset(dialect: str):
@@ -132,7 +120,7 @@ def _get_string(parameter: str, default: str):
 
 def _validate(parameter: str, value: str) -> str:
     """Raise a ValueError if parameter value is invalid."""
-    if not PATTERN[parameter].fullmatch(value):
+    if not get_pattern(parameter).fullmatch(value):
         raise ValueError(f"Invalid {parameter} value: \"{value}\"")
 
     return value
