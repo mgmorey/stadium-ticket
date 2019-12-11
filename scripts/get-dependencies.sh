@@ -59,5 +59,5 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-functions.sh"
 
-set_user_profile
+set_user_profile "$script_dir"
 get_dependencies

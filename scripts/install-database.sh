@@ -190,6 +190,6 @@ script_dir=$(get_realpath "$(dirname "$0")")
 
 . "$script_dir/common-functions.sh"
 
-set_user_profile
+set_user_profile "$script_dir"
 eval $(get-os-release -x)
 install_database
