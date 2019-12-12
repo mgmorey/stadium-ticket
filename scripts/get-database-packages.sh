@@ -33,7 +33,7 @@ get_database_packages() {
 
 get_packages_in() {
     for category; do
-	"$script_dir/get-$category-packages.sh"
+	get-$category-packages
     done
 }
 
@@ -56,4 +56,7 @@ get_realpath() (
 
 script_dir=$(get_realpath "$(dirname "$0")")
 
+. "$script_dir/common-functions.sh"
+
+set_user_profile "$script_dir"
 get_database_packages
