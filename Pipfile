@@ -39,8 +39,8 @@ pylint-sqlalchemy = "*"
 pytest = "*"
 
 [scripts]
-drop-db = "python3 -m app drop-db"
-init-db = "python3 -m app init-db"
+create-database = "python3 -m app create-database"
+drop-database = "python3 -m app drop-database"
 pycodestyle = "python3 -m pycodestyle"
 pylint = "python3 -m pylint"
 pytest = "python3 -m pytest"
