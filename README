@@ -72,19 +72,19 @@ The various OS ports have been tested on the following processors:
 
 5.  To test the app:
 
-    scripts/app-test.sh (or "make client")
+    tests/app-test (or "make client")
 
 6.  To stress test the app:
 
-    scripts/load-test.sh (or "make stress")
+    tests/load-test (or "make stress")
 
 7.  Build and run Docker container (may require root):
 
-    docker-compose up --build (or "make compose")
+    docker-compose up --build (or "make docker-compose")
 
 8.  To report the current status of the app service:
 
-    get-app-status (or "make status")
+    get-app-status (or "make get-status")
 
 9.  To install the app as a service (may require root):
 
