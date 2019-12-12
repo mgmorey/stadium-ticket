@@ -32,10 +32,10 @@ clean-virtualenv:
 	$(bin)/clean-virtualenv
 
 client:	.env
-	scripts/app-test.sh
+	tests/app-test
 
 client-debug:	.env
-	scripts/app-test.sh -h localhost -p 5001
+	tests/app-test -h localhost -p 5001
 
 create-database:
 	run-app python3 -m app create-database
@@ -79,13 +79,16 @@ run-debug:	.update create-database
 	run-app flask run --port 5001
 
 scripts:
-	scripts/install-utility-scripts.sh
+	scripts/install-utility-scripts
 
 start:
 	$(bin)/start-app
 
 stop:
 	$(bin)/stop-app
+
+stress:	.env
+	tests/load-test
 
 superclean:	realclean uninstall-all
 
@@ -101,10 +104,10 @@ uninstall-all:	stop
 .PHONY:	start stop superclean uninstall uninstall-all
 
 .env:		.env-template
-	scripts/configure-env.sh $@ $<
+	scripts/configure-env $@ $<
 
 .env-mysql:	.env-template-mysql
-	scripts/configure-env.sh $@ $<
+	scripts/configure-env $@ $<
 
 .update:	Pipfile Pipfile.lock
 	$(bin)/refresh-virtualenv && touch $@
