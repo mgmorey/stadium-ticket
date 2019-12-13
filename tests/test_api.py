@@ -73,6 +73,7 @@ def test_03_event_get():
             'total': 1000,
         }
 
+
 def test_04_event_delete():
     response = delete_event('SoldOut')
     assert response.status_code == 200
