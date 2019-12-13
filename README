@@ -72,11 +72,11 @@ The various OS ports have been tested on the following processors:
 
 5.  To test the app:
 
-    tests/app-test (or "make client")
+    clients/app-test (or "make client")
 
 6.  To stress test the app:
 
-    tests/load-test (or "make stress")
+    clients/load-test (or "make stress")
 
 7.  Build and run Docker container (may require root):
 

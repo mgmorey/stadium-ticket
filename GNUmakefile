@@ -32,10 +32,10 @@ clean-virtualenv:
 	$(bin)/clean-virtualenv
 
 client:	.env
-	tests/app-test
+	clients/app-test
 
 client-debug:	.env
-	tests/app-test -h localhost -p 5001
+	clients/app-test -h localhost -p 5001
 
 create-database:
 	run-app python3 -m app create-database
@@ -88,7 +88,7 @@ stop:
 	$(bin)/stop-app
 
 stress:	.env
-	tests/load-test
+	clients/load-test
 
 superclean:	realclean uninstall-all
 
