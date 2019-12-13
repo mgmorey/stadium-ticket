@@ -46,10 +46,10 @@ ENV WWW_VARDIR=/var/www
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
 # Install application files
-COPY Pipfile-docker $APP_DIR/Pipfile
+COPY Pipfile $APP_DIR/Pipfile
 COPY app/ $APP_DIR/app/
-COPY app.ini $APP_DIR/
-COPY uwsgi/app.ini $APP_ETCDIR/
+COPY app.ini $APP_DIR/app.ini
+COPY uwsgi/app.ini $APP_ETCDIR/app.ini
 
 # Grant application ownership of app, run and data directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR

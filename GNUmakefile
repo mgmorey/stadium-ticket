@@ -40,10 +40,10 @@ client-debug:	.env
 create-database:
 	run-app python3 -m app create-database
 
-docker-build:	.env .update Dockerfile Pipfile-docker
+docker-build:	.env .update Dockerfile
 	docker build -t stadium-ticket .
 
-docker-compose:	.env .env-mysql .update Dockerfile Pipfile-docker
+docker-compose:	.env .env-mysql .update Dockerfile
 	docker-compose up --build
 
 drop-database:
@@ -111,6 +111,3 @@ uninstall-all:	stop
 
 .update:	Pipfile Pipfile.lock
 	$(bin)/refresh-virtualenv && touch $@
-
-Pipfile-docker:	Pipfile
-	@sed 's/^python_version = "3\.[0-9]*"/python_version = "3"/g' $< >$@
