@@ -64,7 +64,7 @@ The various OS ports have been tested on the following processors:
 
 3.  To run the unit tests using pytest:
 
-    run-app pytest (or "make pytest")
+    run-app pytest tests/unit (or "make pytest")
 
 4.  To run the app in debugging mode:
 

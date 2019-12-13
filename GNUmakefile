@@ -62,7 +62,7 @@ pylint:	.update
 	run-app pylint app tests
 
 pytest:	.update
-	run-app pytest tests
+	run-app pytest tests/unit
 
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update
