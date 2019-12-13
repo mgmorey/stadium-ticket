@@ -74,11 +74,18 @@ def test_03_event_get():
         }
 
 
-def test_04_event_delete():
-    response = delete_event('SoldOut')
-    assert response.status_code == 200
-
-
 def test_05_ticket_post():
-    response = post_ticket('The Beatles', 1)
+    for name in EVENTS:
+        response = post_ticket(name, 1)
+        assert response.status_code == 200
+
+
+def test_04_event_delete():
+    for name in EVENTS:
+        response = delete_event(name)
+        assert response.status_code == 200
+
+    response = get_events()
     assert response.status_code == 200
+    events = response.json().get('events')
+    assert events == []
