@@ -3,13 +3,11 @@
 
 import requests
 
-from app.apps import Events
-from app.flask_app import app, db
-
 HOST = 'localhost'
 PORT = '5000'
 
 BASE_URL = f"http://{HOST}:{PORT}"
+URL_EVENT = f"{BASE_URL}/stadium/event"
 URL_EVENTS = f"{BASE_URL}/stadium/events"
 
 EVENT_1 = 'The Beatles'
@@ -22,23 +20,28 @@ EVENT_7 = 'SoldOut'
 EVENTS = {EVENT_1, EVENT_2, EVENT_3, EVENT_4, EVENT_5, EVENT_6, EVENT_7}
 
 
-def set_up():
-    with app.app_context():
-        db.create_all()
-        events = {Events(name=name, sold=0, total=1000) for name in EVENTS}
-
-        for event in events:
-            db.session.add(event)
-            try:
-                db.session.commit()
-            except Exception as error:
-                db.session.rollback()
+def add_event(event, total):
+    return requests.put(URL_EVENT, json={
+        'command': 'add_event',
+        'event': event,
+        'total': total
+    })
 
 
-def test_api():
-    set_up()
-    response = requests.get(URL_EVENTS)
+def get_events():
+    return requests.get(URL_EVENTS)
+
+
+def test_events_add():
+    events = {name for name in EVENTS}
+
+    for event in events:
+        response = add_event(event, 1000)
+        assert response.status_code == 200
+
+
+def test_event_get():
+    response = get_events()
     assert response.status_code == 200
-    json_response = response.json()
-    events = json_response.get('events')
+    events = response.json().get('events')
     assert set(events) == EVENTS
