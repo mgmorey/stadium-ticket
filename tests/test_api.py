@@ -74,13 +74,13 @@ def test_03_event_get():
         }
 
 
-def test_05_ticket_post():
+def test_04_ticket_post():
     for name in EVENTS:
         response = post_ticket(name, 1)
         assert response.status_code == 200
 
 
-def test_04_event_delete():
+def test_05_event_delete():
     for name in EVENTS:
         response = delete_event(name)
         assert response.status_code == 200
