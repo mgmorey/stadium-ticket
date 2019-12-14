@@ -52,7 +52,7 @@ drop-database:
 get-status:
 	get-app-status
 
-install:	.update
+install:
 	$(bin)/install-app
 
 pycode:	.update
