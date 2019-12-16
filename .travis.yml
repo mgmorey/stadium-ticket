@@ -38,4 +38,3 @@ script:
   - pycodestyle app tests
   - pylint app
   - pytest tests
-  - clients/app-test
