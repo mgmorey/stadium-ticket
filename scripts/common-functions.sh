@@ -48,17 +48,17 @@ get_home_directory() {
     esac
 }
 
-get_profile_path() {
+get_profile_path() (
     path=$PATH
 
-    for dir in "$1/bin" "$1/.local/bin" "$1/.pyenv/bin" "$2"; do
+    for dir in /usr/gnu/bin "$1/bin" "$1/.local/bin" "$1/.pyenv/bin" "$2"; do
 	if is_to_be_included "$dir" "$path"; then
 	   path="$dir:$path"
 	fi
     done
 
     printf "%s\n" "$path"
-}
+)
 
 get_setpriv_command() (
     version="$(setpriv --version 2>/dev/null)"
