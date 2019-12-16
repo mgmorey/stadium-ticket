@@ -52,12 +52,12 @@ def put_event(name: str, total: int):
 def test_01_events_put():
     for name in EVENTS:
         response = put_event(name, 1000)
-        assert response.status_code == 200
+        assert response
 
 
 def test_02_events_get():
     response = get_events()
-    assert response.status_code == 200
+    assert response
     events = response.json().get('events')
     assert set(events) == EVENTS
 
@@ -65,7 +65,7 @@ def test_02_events_get():
 def test_03_event_get():
     for name in EVENTS:
         response = get_event(name)
-        assert response.status_code == 200
+        assert response
         event = response.json().get('event')
         assert event == {
             'name': name,
@@ -77,15 +77,15 @@ def test_03_event_get():
 def test_04_ticket_post():
     for name in EVENTS:
         response = post_ticket(name, 1)
-        assert response.status_code == 200
+        assert response
 
 
 def test_05_event_delete():
     for name in EVENTS:
         response = delete_event(name)
-        assert response.status_code == 200
+        assert response
 
     response = get_events()
-    assert response.status_code == 200
+    assert response
     events = response.json().get('events')
     assert events == []
