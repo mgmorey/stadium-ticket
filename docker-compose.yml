@@ -25,6 +25,7 @@ services:
             - 3306:3306
         volumes:
             - data:/var/lib/mysql
+            - run:/var/run/mysqld
 
     web:
         build:
@@ -35,3 +36,4 @@ services:
 
 volumes:
     data:
+    run:
