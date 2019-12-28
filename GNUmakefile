@@ -21,7 +21,7 @@ macos = printf "/Users/%s\n" $(user)
 posix = getent passwd $(user) | awk -F: '{print $$6}'
 user = "$${SUDO_USER-$${USER-$$LOGIN}}"
 
-all:	.env .update pycode pylint pytest
+all:	.env .update pycode pytest
 
 clean:	clean-app-caches clean-virtualenv
 
@@ -62,7 +62,7 @@ pylint:	.update
 	run-app pylint app tests
 
 pytest:	.update
-	run-app pytest tests/unit
+	run-app pytest --pylint tests/unit
 
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update
