@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+APP_NAME = stadium-ticket
+APP_PORT = 5000
+
 bin = $(home)/bin
 home = $(shell if $(ismac); then $(macos); else $(posix); fi)
 ismac = [ $$(uname -s) = Darwin ]
@@ -41,13 +44,13 @@ create-database:
 	run-app python3 -m app create-database
 
 docker-build:	.env .update Dockerfile
-	docker build -t stadium-ticket .
+	docker build -t $(APP_NAME) .
 
 docker-compose:	.env .env-mysql .update Dockerfile
 	docker-compose up --build
 
 docker-run:
-	docker run -dp 5000:5000 stadium-ticket
+	docker run -dp $(APP_PORT):$(APP_PORT) $(APP_NAME)
 
 drop-database:
 	run-app python3 -m app drop-database
