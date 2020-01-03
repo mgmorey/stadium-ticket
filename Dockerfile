@@ -56,7 +56,7 @@ RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
 # Change to application directory and drop privileges
 WORKDIR $APP_DIR
-USER $APP_UID
+USER $APP_UID:$APP_GID
 
 # Install PyPI dependencies
 ENV LANG=${LANG:-C.UTF-8}
