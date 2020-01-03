@@ -20,7 +20,7 @@ FROM ubuntu:18.04
 ENV APP_NAME=stadium-ticket
 ENV APP_PORT=5000
 
-# Set Ubuntu GID/UID
+# Define app GID/UID variables
 ENV APP_GID=www-data
 ENV APP_UID=www-data
 
@@ -31,12 +31,11 @@ ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
 ENV APP_VARDIR=/var/opt/$APP_NAME
 
 # Define app filename variables
+ENV APP_INIFILE=$APP_ETCDIR/app.ini
 ENV APP_PIDFILE=$APP_RUNDIR/pid
 
-# Define uWSGI plugin variable
-ENV UWSGI_PLUGIN_NAME=python3
-
 # Define other variables
+ENV UWSGI_PLUGIN_NAME=python3
 ENV VENV_DIRECTORY=.venv
 ENV WWW_VARDIR=/var/www
 
@@ -50,32 +49,32 @@ uwsgi-plugin-python3
 # Install PyPI packages
 RUN pip3 install pipenv
 
-# Create application directories
+# Create app directories
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
-# Grant application ownership of app, run and data directories
+# Grant ownership of app, run and data directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
-# Change to application directory and drop privileges
-WORKDIR $APP_DIR
+# Drop privileges and change to app directory
 USER $APP_UID:$APP_GID
+WORKDIR $APP_DIR
 
-# Install PyPI dependencies
+# Install app dependencies
 ENV LANG=${LANG:-C.UTF-8}
 ENV LC_ALL=${LC_ALL:-C.UTF-8}
 ENV PIPENV_VENV_IN_PROJECT=true
 COPY Pipfile $APP_DIR/Pipfile
 RUN pipenv install
 
-# Install application files
+# Install app files
 COPY app/ $APP_DIR/app/
 COPY app.ini $APP_DIR/app.ini
-COPY scripts/entrypoint.sh $APP_DIR/entrypoint.sh
+COPY scripts/uwsgi.sh $APP_DIR/uwsgi.sh
 
 # Install uWSGI configuration file
 COPY uwsgi.ini $APP_ETCDIR/app.ini
 
 # Expose port and start app
 EXPOSE $APP_PORT
-ENTRYPOINT ["./entrypoint.sh"]
-CMD ["--ini", "/etc/opt/stadium-ticket/app.ini"]
+ENTRYPOINT ["./uwsgi.sh"]
+CMD ["pipenv", "run", "create-database"]
