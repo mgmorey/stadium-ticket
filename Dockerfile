@@ -52,6 +52,15 @@ RUN pip3 install pipenv
 # Create app directories
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
+# Copy app files
+COPY Pipfile $APP_DIR/Pipfile
+COPY app/ $APP_DIR/app/
+COPY app.ini $APP_DIR
+COPY uwsgi.sh $APP_DIR
+
+# Copy uWSGI configuration file
+COPY uwsgi.ini $APP_INIFILE
+
 # Grant ownership of app, run and data directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
@@ -63,16 +72,7 @@ WORKDIR $APP_DIR
 ENV LANG=${LANG:-C.UTF-8}
 ENV LC_ALL=${LC_ALL:-C.UTF-8}
 ENV PIPENV_VENV_IN_PROJECT=true
-COPY Pipfile $APP_DIR/Pipfile
 RUN pipenv install
-
-# Install app files
-COPY app/ $APP_DIR/app/
-COPY app.ini $APP_DIR/app.ini
-COPY scripts/uwsgi.sh $APP_DIR/uwsgi.sh
-
-# Install uWSGI configuration file
-COPY uwsgi.ini $APP_ETCDIR/app.ini
 
 # Expose port and start app
 EXPOSE $APP_PORT
