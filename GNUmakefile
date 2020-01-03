@@ -46,6 +46,9 @@ docker-build:	.env .update Dockerfile
 docker-compose:	.env .env-mysql .update Dockerfile
 	docker-compose up --build
 
+docker-run:
+	docker run -dp 5000:5000 stadium-ticket
+
 drop-database:
 	run-app python3 -m app drop-database
 
