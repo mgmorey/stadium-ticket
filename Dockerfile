@@ -16,6 +16,7 @@
 
 FROM ubuntu:18.04
 
+# Define app name and port variables
 ENV APP_NAME=stadium-ticket
 ENV APP_PORT=5000
 
@@ -23,8 +24,21 @@ ENV APP_PORT=5000
 ENV APP_GID=www-data
 ENV APP_UID=www-data
 
-# Set Ubuntu uWSGI plugin
+# Define app directory variables
+ENV APP_DIR=/opt/$APP_NAME
+ENV APP_ETCDIR=/etc/opt/$APP_NAME
+ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
+ENV APP_VARDIR=/var/opt/$APP_NAME
+
+# Define app filename variables
+ENV APP_PIDFILE=$APP_RUNDIR/pid
+
+# Define uWSGI plugin variable
 ENV UWSGI_PLUGIN_NAME=python3
+
+# Define other variables
+ENV VENV_DIRECTORY=.venv
+ENV WWW_VARDIR=/var/www
 
 # Update Debian package repository index and install binary packages
 ENV DEBIAN_FRONTEND=noninteractive
@@ -37,19 +51,7 @@ uwsgi-plugin-python3
 RUN pip3 install pipenv
 
 # Create application directories
-ENV APP_DIR=/opt/$APP_NAME
-ENV APP_ETCDIR=/etc/opt/$APP_NAME
-ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME
-ENV APP_VARDIR=/var/opt/$APP_NAME
-ENV VENV_DIRECTORY=.venv
-ENV WWW_VARDIR=/var/www
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
-
-# Install application files
-COPY Pipfile $APP_DIR/Pipfile
-COPY app/ $APP_DIR/app/
-COPY app.ini $APP_DIR/app.ini
-COPY uwsgi.ini $APP_ETCDIR/app.ini
 
 # Grant application ownership of app, run and data directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
@@ -62,11 +64,18 @@ USER $APP_UID:$APP_GID
 ENV LANG=${LANG:-C.UTF-8}
 ENV LC_ALL=${LC_ALL:-C.UTF-8}
 ENV PIPENV_VENV_IN_PROJECT=true
+COPY Pipfile $APP_DIR/Pipfile
 RUN pipenv install
-RUN pipenv run python3 -m app create-database
 
-# Change to data directory, expose port and start app
-WORKDIR $APP_VARDIR
+# Install application files
+COPY app/ $APP_DIR/app/
+COPY app.ini $APP_DIR/app.ini
+COPY scripts/entrypoint.sh $APP_DIR/entrypoint.sh
+
+# Install uWSGI configuration file
+COPY uwsgi.ini $APP_ETCDIR/app.ini
+
+# Expose port and start app
 EXPOSE $APP_PORT
-ENV APP_PIDFILE=$APP_RUNDIR/pid
-CMD uwsgi --ini $APP_ETCDIR/app.ini
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["--ini", "/etc/opt/stadium-ticket/app.ini"]
