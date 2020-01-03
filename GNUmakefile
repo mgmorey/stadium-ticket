@@ -102,9 +102,9 @@ uninstall-all:	stop
 	$(bin)/uninstall-app -a
 
 .PHONY:	all clean clean-app-caches clean-virtualenv client client-debug
-.PHONY:	create-database docker-build docker-compose drop-database get-status
-.PHONY:	install pycode pylint pytest realclean restart run run-debug scripts
-.PHONY:	start stop superclean uninstall uninstall-all
+.PHONY:	create-database docker-build docker-compose docker-run drop-database
+.PHONY:	get-status install pycode pylint pytest realclean restart run run-debug
+.PHONY:	scripts start stop superclean uninstall uninstall-all
 
 .env:		.env-template
 	scripts/configure-env $@ $<
