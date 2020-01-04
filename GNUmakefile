@@ -43,10 +43,10 @@ client-debug:	.env
 create-database:
 	run-app python3 -m app create-database
 
-docker-build:	.env .update Dockerfile
+docker-build:	.env Dockerfile
 	docker build -t $(APP_NAME) .
 
-docker-compose:	.env .env-mysql .update Dockerfile
+docker-compose:	.env .env-mysql Dockerfile
 	docker-compose up --build
 
 docker-run:
