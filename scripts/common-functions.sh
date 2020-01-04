@@ -42,6 +42,9 @@ get_home_directory() {
 	(Darwin)
 	    printf "/Users/%s\n" "$1"
 	    ;;
+	(FreeBSD)
+	    awk -F: '$1 == "'"$1"'" {print $6}' /etc/passwd
+	    ;;
 	(*)
 	    getent passwd "$1" | awk -F: '{print $6}'
 	    ;;
@@ -59,6 +62,22 @@ get_profile_path() (
 
     printf "%s\n" "$path"
 )
+
+get_shell() {
+    assert [ $# -eq 1 ]
+
+    case "${kernel_name=$(uname -s)}" in
+	(Darwin)
+	    printf "%s\n" /bin/bash
+	    ;;
+	(FreeBSD)
+	    awk -F: '$1 == "'"$1"'" {print $7}' /etc/passwd
+	    ;;
+	(*)
+	    getent passwd "$1" | awk -F: '{print $7}'
+	    ;;
+    esac
+}
 
 get_setpriv_command() (
     version="$(setpriv --version 2>/dev/null)"
@@ -148,8 +167,8 @@ run_unpriv() (
 )
 
 set_user_profile() {
-    home="$(get_home_directory $(get_user_name))"
-    path="$(get_profile_path "$home" "$1")"
+    user=$(get_user_name)
+    home="$(get_home_directory $user)"
 
     if [ "$HOME" != "$home" ]; then
 	if [ "${ENV_VERBOSE-false}" = true ]; then
@@ -160,12 +179,20 @@ set_user_profile() {
 	export HOME="$home"
     fi
 
-    if [ "$PATH" != "$path" ]; then
+    shell="$(get_shell $user)"
+
+    if [ "$SHELL" != "$shell" ]; then
 	if [ "${ENV_VERBOSE-false}" = true ]; then
-	    printf "Changing PATH from: %s\n" "$PATH" >&2
-	    printf "Changing PATH to: %s\n" "$path" >&2
+	    printf "Changing SHELL from: %s\n" "$SHELL" >&2
+	    printf "Changing SHELL to: %s\n" "$shell" >&2
 	fi
 
-	export PATH="$path"
+	export SHELL="$shell"
+    fi
+
+    if [ -x "$HOME/bin/set-parameters" ]; then
+	eval "$($HOME/bin/set-parameters)"
+    else
+	export PATH="$(get_profile_path "$home" "$1")"
     fi
 }
