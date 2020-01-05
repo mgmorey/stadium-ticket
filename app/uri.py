@@ -53,7 +53,7 @@ def _get_dirname(vardir: str):
     home = os.getenv('HOME')
 
     if home:
-        dirs.append(os.path.join(home, '.local'))
+        dirs.append(os.path.join(home, '.local', 'share'))
         dirs.append(home)
 
     dirs.append(os.getenv('TMPDIR', '.'))
