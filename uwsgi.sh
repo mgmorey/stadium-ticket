@@ -20,4 +20,4 @@ if [ $# -gt 0 ]; then
     pipenv "$@"
 fi
 
-uwsgi --ini $APP_INIFILE
+exec uwsgi --ini $APP_INIFILE
