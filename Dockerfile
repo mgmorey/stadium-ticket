@@ -30,9 +30,7 @@ ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME APP_VARDIR=/var/opt/$APP_NAME
 ENV APP_INIFILE=$APP_ETCDIR/app.ini APP_PIDFILE=$APP_RUNDIR/pid
 
 # Define other variables
-ENV UWSGI_PLUGIN_NAME=python3
-ENV VENV_DIRECTORY=.venv
-ENV WWW_VARDIR=/var/www
+ENV UWSGI_PLUGIN_NAME=python3 VENV_DIRECTORY=.venv WWW_VARDIR=/var/www
 
 # Update Debian package repository index and install binary packages
 ENV DEBIAN_FRONTEND=noninteractive
@@ -47,17 +45,15 @@ RUN pip3 install pipenv
 # Create app directories
 RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
-# Grant ownership of app, run and data directories
-RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
-
 # Copy app files
-COPY --chown=$APP_UID:$APP_GID Pipfile $APP_DIR/Pipfile
-COPY --chown=$APP_UID:$APP_GID app/ $APP_DIR/app/
-COPY --chown=$APP_UID:$APP_GID app.ini $APP_DIR
-COPY --chown=$APP_UID:$APP_GID uwsgi.sh $APP_DIR
+COPY app/ $APP_DIR/app/
+COPY Pipfile app.ini uwsgi.sh $APP_DIR/
 
 # Copy uWSGI configuration file
-COPY --chown=$APP_UID:$APP_GID uwsgi.ini $APP_INIFILE
+COPY uwsgi.ini $APP_INIFILE
+
+# Grant ownership of app, run and data directories
+RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
 # Drop privileges and change to app directory
 USER $APP_UID:$APP_GID
