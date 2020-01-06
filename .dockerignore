@@ -1,17 +1,4 @@
 **/*.log
 **/*.py~
-**/.pylintrc
 **/.pytest_cache
-**/.python-version
-**/GNUmakefile
-**/Makefile
 **/__pycache__
-**/pylintrc
-**/test_*.py
-**/tests
-*/*.sqlite
-*/.env-mysql
-*/.env-template*
-*/.git
-*/.venv*
-.env
