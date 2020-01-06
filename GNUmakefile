@@ -50,7 +50,7 @@ docker-compose:	.env .env-mysql Dockerfile
 	docker-compose up --build
 
 docker-run:
-	docker run -dp $(APP_PORT):$(APP_PORT) $(APP_NAME)
+	docker run -dp $(APP_PORT):$(APP_PORT) --rm $(APP_NAME)
 
 drop-database:
 	run-app python3 -m app drop-database
