@@ -16,20 +16,13 @@
 
 FROM ubuntu:18.04
 
-# Define app name and port variables
-ENV APP_NAME=stadium-ticket APP_PORT=5000
+# Define app name, port, UID and GID variables
+ENV APP_NAME=stadium-ticket APP_PORT=5000 APP_UID=www-data APP_GID=www-data
 
-# Define app GID/UID variables
-ENV APP_GID=www-data APP_UID=www-data
-
-# Define app directory variables
+# Define app directory and filename variables
 ENV APP_DIR=/opt/$APP_NAME APP_ETCDIR=/etc/opt/$APP_NAME
 ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME APP_VARDIR=/var/opt/$APP_NAME
-
-# Define app filename variables
 ENV APP_INIFILE=$APP_ETCDIR/app.ini APP_PIDFILE=$APP_RUNDIR/pid
-
-# Define other variables
 ENV UWSGI_PLUGIN_NAME=python3 VENV_DIRECTORY=.venv WWW_VARDIR=/var/www
 
 # Update Debian package repository index and install binary packages
@@ -48,8 +41,6 @@ RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 # Copy app files
 COPY app/ $APP_DIR/app/
 COPY Pipfile app.ini uwsgi.sh $APP_DIR/
-
-# Copy uWSGI configuration file
 COPY uwsgi.ini $APP_INIFILE
 
 # Grant ownership of app, run and data directories
@@ -60,8 +51,7 @@ USER $APP_UID:$APP_GID
 WORKDIR $APP_DIR
 
 # Install app dependencies
-ENV LANG=${LANG:-C.UTF-8} LC_ALL=${LC_ALL:-C.UTF-8}
-ENV PIPENV_VENV_IN_PROJECT=true
+ENV LANG=${LANG:-C.UTF-8} LC_ALL=${LC_ALL:-C.UTF-8} PIPENV_VENV_IN_PROJECT=true
 RUN pipenv install
 
 # Expose port and start app
