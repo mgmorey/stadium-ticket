@@ -19,21 +19,21 @@ version: '3'
 services:
 
     mysql:
-        image: mariadb
+        image: mysql:5
         env_file: .env-mysql
         ports:
             - 3306:3306
-        volumes:
-            - data:/var/lib/mysql
-            - run:/var/run/mysqld
+        # volumes:
+        #     - data:/var/lib/mysql
+        #     - run:/var/run/mysqld
 
-    web:
+    api:
         build:
             context: .
         env_file: .env
         ports:
             - 5000:5000
 
-volumes:
-    data:
-    run:
+# volumes:
+#     data:
+#     run:
