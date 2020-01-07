@@ -20,6 +20,13 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 app = create_app(__name__)  # pylint: disable=invalid-name
 
 
+@app.route('/database', methods=['GET'])
+def database_get():
+    """Create the database."""
+    db.create_all()
+    return jsonify({})
+
+
 @app.route('/stadium/event', methods=['DELETE'])
 def stadium_event_delete():
     """Remove an event."""
@@ -96,7 +103,6 @@ def stadium_event_put():
 @app.route('/stadium/events', methods=['GET'])
 def stadium_events_get():
     """Retrieve a list of all events."""
-
     events = [e.name for e in db.session.query(Events).all()]
     return jsonify({'events': events})
 

@@ -57,4 +57,3 @@ RUN pipenv install
 # Expose port and start app
 EXPOSE $APP_PORT
 ENTRYPOINT ["uwsgi.sh"]
-CMD ["run", "create-database"]

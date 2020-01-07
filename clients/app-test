@@ -37,6 +37,10 @@ assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
+create_database() {
+    curl -H "$HEADER" -X GET -i $url_database
+}
+
 encode_url() {
     printf "%s\n" "$1" | sed -e 's/ /%20/g'
 }
@@ -109,10 +113,12 @@ done
 shift $(($OPTIND - 1))
 
 base_url="http://${host}${port:+:}${port}"
+url_database="$base_url/database"
 url_event="$base_url/stadium/event"
 url_events="$base_url/stadium/events"
 url_tickets="$base_url/stadium/tickets"
 
+create_database
 add_event "$EVENT_1" 1000
 list_event "$EVENT_1"
 remove_event "$EVENT_1"
