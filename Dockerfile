@@ -29,7 +29,7 @@ ENV UWSGI_PLUGIN_NAME=python3 VENV_DIRECTORY=.venv WWW_VARDIR=/var/www
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qy && apt-get install -qy --no-install-recommends \
 build-essential mariadb-client-10.1 python3 python3-dev python3-pip \
-sqlite3 uwsgi uwsgi-plugin-python3
+sqlite3 uwsgi uwsgi-plugin-python3 && rm -rf /var/lib/apt/lists/*
 
 # Install PyPI packages
 RUN pip3 install pipenv
@@ -39,8 +39,9 @@ RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
 # Copy app files
 COPY app/ $APP_DIR/app/
-COPY Pipfile app.ini uwsgi.sh $APP_DIR/
+COPY Pipfile app.ini $APP_DIR/
 COPY uwsgi.ini $APP_INIFILE
+COPY uwsgi.sh /usr/local/bin/
 
 # Grant ownership of app, run and data directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
@@ -55,5 +56,5 @@ RUN pipenv install
 
 # Expose port and start app
 EXPOSE $APP_PORT
-ENTRYPOINT ["./uwsgi.sh"]
+ENTRYPOINT ["uwsgi.sh"]
 CMD ["run", "create-database"]
