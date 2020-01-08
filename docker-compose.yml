@@ -30,7 +30,7 @@ services:
     api:
         build:
             context: .
-        env_file: .env
+        env_file: .env-api
         ports:
             - 5000:5000
 
