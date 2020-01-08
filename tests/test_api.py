@@ -7,6 +7,7 @@ HOST = 'localhost'
 PORT = '5000'
 
 BASE_URL = f"http://{HOST}:{PORT}"
+URL_DATABASE = f"{BASE_URL}/database"
 URL_EVENT = f"{BASE_URL}/stadium/event"
 URL_EVENTS = f"{BASE_URL}/stadium/events"
 URL_TICKETS = f"{BASE_URL}/stadium/tickets"
@@ -19,6 +20,10 @@ EVENT_5 = 'Alizée'
 EVENT_6 = 'Maître Gims'
 EVENT_7 = 'SoldOut'
 EVENTS = {EVENT_1, EVENT_2, EVENT_3, EVENT_4, EVENT_5, EVENT_6, EVENT_7}
+
+
+def get_database():
+    return requests.get(f"{URL_DATABASE}")
 
 
 def delete_event(name: str):
@@ -47,6 +52,11 @@ def put_event(name: str, total: int):
         'event': name,
         'total': total,
     })
+
+
+def test_00_database_get():
+    response = get_database()
+    assert response
 
 
 def test_01_events_put():
