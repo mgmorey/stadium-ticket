@@ -23,63 +23,46 @@ EVENT_4="The Who"
 EVENT_5="SoldOut"
 HEADER="Content-Type: application/json"
 
-add_event() {
-    curl -H "$HEADER" -X PUT -d @- -i $url_event <<-EOF
-	{
-		"command": "add_event",
-		"event": "$1",
-		"total": $2
-	}
-	EOF
-}
-
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
 }
 
-create_database() {
-    curl -H "$HEADER" -X GET -i $url_database
+delete_event() {
+    curl -H "$HEADER" -X DELETE -i "$(encode_url "${url_event}?name=$1")"
 }
 
 encode_url() {
     printf "%s\n" "$1" | sed -e 's/ /%20/g'
 }
 
-get_realpath() (
-    assert [ $# -ge 1 ]
-    realpath=$(which realpath)
+get_database() {
+    curl -H "$HEADER" -X GET -i $url_database
+}
 
-    if [ -n "$realpath" ]; then
-	$realpath "$@"
-    else
-	for file; do
-	    if expr "$file" : '/.*' >/dev/null; then
-		printf "%s\n" "$file"
-	    else
-		printf "%s\n" "$PWD/${file#./}"
-	    fi
-	done
-    fi
-)
-
-list_event() {
+get_event() {
     curl -H "$HEADER" -X GET -i "$(encode_url "${url_event}?name=$1")"
 }
 
-list_events() {
+get_events() {
     curl -H "$HEADER" -X GET -i $url_events
 }
 
-remove_event() {
-    curl -H "$HEADER" -X DELETE -i "$(encode_url "${url_event}?name=$1")"
-}
-
-request_tickets() {
+post_tickets() {
     curl -H "$HEADER" -X POST -d @- -i $url_tickets <<-EOF
 	{
 	    "command": "request_tickets",
 	    "event": "$1",
 	    "count": $2
+	}
+	EOF
+}
+
+put_event() {
+    curl -H "$HEADER" -X PUT -d @- -i $url_event <<-EOF
+	{
+		"command": "add_event",
+		"event": "$1",
+		"total": $2
 	}
 	EOF
 }
@@ -118,25 +101,25 @@ url_event="$base_url/stadium/event"
 url_events="$base_url/stadium/events"
 url_tickets="$base_url/stadium/tickets"
 
-create_database
-add_event "$EVENT_1" 1000
-list_event "$EVENT_1"
-remove_event "$EVENT_1"
+get_database
+put_event "$EVENT_1" 1000
+get_event "$EVENT_1"
+delete_event "$EVENT_1"
 
 for event in "$EVENT_1" "$EVENT_2" "$EVENT_3" "$EVENT_4" "$EVENT_5"; do
-    add_event "$event" 1000
+    put_event "$event" 1000
 done
 
-list_events
-request_tickets "The Beatles" 1
-request_tickets "The Cure" 10
-request_tickets "The Doors" 100
-request_tickets "The Doors" 100
-request_tickets "The Doors" 100
-request_tickets "The Doors" 100
-request_tickets "The Doors" 100
-request_tickets "The Doors" 100
-request_tickets "The Doors" 100
-request_tickets "The Doors" 100
-request_tickets "The Doors" 100
-request_tickets "The Doors" 100
+get_events
+post_tickets "The Beatles" 1
+post_tickets "The Cure" 10
+post_tickets "The Doors" 100
+post_tickets "The Doors" 100
+post_tickets "The Doors" 100
+post_tickets "The Doors" 100
+post_tickets "The Doors" 100
+post_tickets "The Doors" 100
+post_tickets "The Doors" 100
+post_tickets "The Doors" 100
+post_tickets "The Doors" 100
+post_tickets "The Doors" 100
