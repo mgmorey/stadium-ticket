@@ -41,7 +41,7 @@ RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 COPY app/ $APP_DIR/app/
 COPY Pipfile app.ini $APP_DIR/
 COPY uwsgi.ini $APP_INIFILE
-COPY uwsgi.sh /usr/local/bin/
+COPY scripts/docker-entrypoint.sh /usr/local/bin/
 
 # Grant ownership of app, run and data directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
@@ -56,4 +56,4 @@ RUN pipenv install
 
 # Expose port and start app
 EXPOSE $APP_PORT
-ENTRYPOINT ["uwsgi.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
