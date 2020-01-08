@@ -3,6 +3,7 @@
 *.stackdump
 *~
 .env
+.env-api
 .env-mysql
 .python-version
 .update
