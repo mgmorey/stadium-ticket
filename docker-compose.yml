@@ -18,15 +18,6 @@ version: '3'
 
 services:
 
-    mysql:
-        image: mysql:5
-        env_file: .env-mysql
-        ports:
-            - 3306:3306
-        # volumes:
-        #     - data:/var/lib/mysql
-        #     - run:/var/run/mysqld
-
     api:
         build:
             context: .
@@ -34,6 +25,8 @@ services:
         ports:
             - 5000:5000
 
-# volumes:
-#     data:
-#     run:
+    mysql:
+        image: mysql:5
+        env_file: .env-mysql
+        ports:
+            - 3306:3306
