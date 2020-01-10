@@ -92,8 +92,7 @@ def _get_pathname(dialect: str, schema: str, vardir: str):
         return ''
 
     dirname = _get_dirname(vardir)
-    filename = f"{schema}.sqlite"
-    pathname = os.path.join(dirname, filename)
+    pathname = os.path.join(dirname, f"{schema}.sqlite")
     return _get_string('DATABASE_PATHNAME', default=pathname)
 
 
