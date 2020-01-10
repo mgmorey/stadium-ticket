@@ -117,14 +117,6 @@ def _get_tuples(dialect: str):
     return f"?charset={charset}" if charset else ''
 
 
-def _validate(parameter: str, value: str) -> str:
-    """Raise a ValueError if parameter value is invalid."""
-    if not get_pattern(parameter).fullmatch(value):
-        raise ValueError(f"Invalid {parameter} value: \"{value}\"")
-
-    return value
-
-
 def get_uri(app_config):
     """Return a database connection URI string."""
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
@@ -142,3 +134,11 @@ def get_uri(app_config):
                       app_config['schema'],
                       tuples,
                       pathname)
+
+
+def _validate(parameter: str, value: str) -> str:
+    """Raise a ValueError if parameter value is invalid."""
+    if not get_pattern(parameter).fullmatch(value):
+        raise ValueError(f"Invalid {parameter} value: \"{value}\"")
+
+    return value
