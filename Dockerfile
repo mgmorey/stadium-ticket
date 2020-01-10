@@ -20,10 +20,12 @@ FROM ubuntu:18.04
 ENV APP_NAME=stadium-ticket APP_PORT=5000 APP_UID=www-data APP_GID=www-data
 
 # Define app directory and filename variables
-ENV APP_DIR=/opt/$APP_NAME APP_ETCDIR=/etc/opt/$APP_NAME
+ENV APP_DIR=/opt/$APP_NAME APP_ETCDIR=/etc/opt/$APP_NAME VENV_DIRECTORY=.venv
 ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME APP_VARDIR=/var/opt/$APP_NAME
 ENV APP_INIFILE=$APP_ETCDIR/app.ini APP_PIDFILE=$APP_RUNDIR/pid
-ENV UWSGI_PLUGIN_NAME=python3 VENV_DIRECTORY=.venv WWW_VARDIR=/var/www
+ENV APP_VENVDIR=$APP_DIR/$VENV_DIRECTORY
+ENV UWSGI_PLUGIN_NAME=python3
+ENV WWW_VARDIR=/var/www
 
 # Update Debian package repository index and install binary packages
 ENV DEBIAN_FRONTEND=noninteractive
