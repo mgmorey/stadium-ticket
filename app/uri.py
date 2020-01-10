@@ -86,11 +86,6 @@ def _get_login(dialect: str):
             if password else username)
 
 
-def _get_tuples(dialect: str):
-    charset = _get_charset(dialect)
-    return f"?charset={charset}" if charset else ''
-
-
 def _get_pathname(dialect: str, schema: str, vardir: str):
     """Return a database filename (SQLite3 only)."""
     if '{5}' not in URI.get(dialect, URI[None]):
@@ -116,6 +111,11 @@ def _get_string(parameter: str, default: str):
         value = default
 
     return _validate(parameter, value) if value else None
+
+
+def _get_tuples(dialect: str):
+    charset = _get_charset(dialect)
+    return f"?charset={charset}" if charset else ''
 
 
 def _validate(parameter: str, value: str) -> str:
