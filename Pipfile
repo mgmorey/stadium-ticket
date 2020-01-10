@@ -37,8 +37,6 @@ pycodestyle = "*"
 pylint = "*"
 pylint-sqlalchemy = "*"
 pytest = "*"
-pytest-pycodestyle = "*"
-pytest-pylint = "*"
 requests = "*"
 
 [scripts]
