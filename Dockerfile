@@ -24,8 +24,9 @@ ENV APP_DIR=/opt/$APP_NAME APP_ETCDIR=/etc/opt/$APP_NAME VENV_DIRECTORY=.venv
 ENV APP_RUNDIR=/var/run/uwsgi/app/$APP_NAME APP_VARDIR=/var/opt/$APP_NAME
 ENV APP_INIFILE=$APP_ETCDIR/app.ini APP_PIDFILE=$APP_RUNDIR/pid
 ENV APP_VENVDIR=$APP_DIR/$VENV_DIRECTORY
-ENV UWSGI_PLUGIN_NAME=python3
-ENV WWW_VARDIR=/var/www
+
+# Define additional app variables
+ENV UWSGI_PLUGIN_NAME=python3 WWW_VARDIR=/var/www
 
 # Update Debian package repository index and install binary packages
 ENV DEBIAN_FRONTEND=noninteractive
@@ -43,6 +44,8 @@ RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 COPY app/ $APP_DIR/app/
 COPY Pipfile app.ini $APP_DIR/
 COPY uwsgi.ini $APP_INIFILE
+
+# Copy Docker ENTRYPOINT script
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
 
 # Grant ownership of app, run and data directories
