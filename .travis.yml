@@ -36,5 +36,5 @@ install:
 
 script:
   - pycodestyle app tests
-  - pylint app
+  - pylint app tests
   - pytest tests
