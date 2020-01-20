@@ -7,7 +7,7 @@ from .flask_app import app, db
 
 
 def _format_parameter(key, value):
-    return f"{key}='{value}'"
+    return "{}='{}'".format(key, value)
 
 
 @click.group()
