@@ -57,6 +57,7 @@ WORKDIR $APP_DIR
 
 # Install app dependencies
 ENV LANG=${LANG:-C.UTF-8} LC_ALL=${LC_ALL:-C.UTF-8} PIPENV_VENV_IN_PROJECT=true
+RUN sed -i 's/3.5/3.6/g' Pipfile
 RUN pipenv install
 
 # Expose port and start app
