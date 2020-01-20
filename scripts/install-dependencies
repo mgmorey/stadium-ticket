@@ -126,7 +126,7 @@ validate_platform() {
 		(7.[78])
 		    true
 		    ;;
-		(8.[012])
+		(8.[12])
 		    true
 		    ;;
 		(*)
