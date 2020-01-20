@@ -72,7 +72,7 @@ def _get_endpoint(dialect: str):
 
     host = _get_string('DATABASE_HOST', default=HOST)
     port = _get_string('DATABASE_PORT', default=PORT.get(dialect))
-    return f"{host}:{port}" if port else host
+    return ':'.join([host, port]) if port else host
 
 
 def _get_login(dialect: str):
@@ -82,7 +82,7 @@ def _get_login(dialect: str):
 
     password = _get_string('DATABASE_PASSWORD', default='')
     username = _get_string('DATABASE_USER', default='root')
-    return (f"{username}:{urllib.parse.quote_plus(password)}"
+    return (':'.join([username, urllib.parse.quote_plus(password)])
             if password else username)
 
 
@@ -92,14 +92,14 @@ def _get_pathname(dialect: str, schema: str, vardir: str):
         return ''
 
     dirname = _get_dirname(vardir)
-    pathname = os.path.join(dirname, f"{schema}.sqlite")
+    pathname = os.path.join(dirname, '.'.join([schema, 'sqlite']))
     return _get_string('DATABASE_PATHNAME', default=pathname)
 
 
 def _get_scheme(dialect: str):
     """Return a database URI scheme parameter value."""
     driver = _get_string('DATABASE_DRIVER', default=_get_driver(dialect))
-    return f"{dialect}+{driver}" if driver else dialect
+    return '+'.join([dialect, driver]) if driver else dialect
 
 
 def _get_string(parameter: str, default: str):
@@ -114,7 +114,7 @@ def _get_string(parameter: str, default: str):
 
 def _get_tuples(dialect: str):
     charset = _get_charset(dialect)
-    return f"?charset={charset}" if charset else ''
+    return "?charset={}".format(charset) if charset else ''
 
 
 def get_uri(app_config):
@@ -139,6 +139,6 @@ def get_uri(app_config):
 def _validate(parameter: str, value: str) -> str:
     """Raise a ValueError if parameter value is invalid."""
     if not get_pattern(parameter).fullmatch(value):
-        raise ValueError(f"Invalid {parameter} value: \"{value}\"")
+        raise ValueError("Invalid {} value: \"{}\"".format(parameter, value))
 
     return value
