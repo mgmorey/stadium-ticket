@@ -27,11 +27,11 @@ def get_database():
 
 
 def delete_event(name: str):
-    return requests.delete("{}?name={}".format(URL_EVENT, name)∑)
+    return requests.delete("{}?name={}".format(URL_EVENT, name))
 
 
 def get_event(name: str):
-    return requests.get("{}?name={}".format(URL_EVENT, name)∑)
+    return requests.get("{}?name={}".format(URL_EVENT, name))
 
 
 def get_events():
