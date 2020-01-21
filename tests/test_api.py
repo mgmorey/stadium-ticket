@@ -6,11 +6,11 @@ import requests
 HOST = 'localhost'
 PORT = '5000'
 
-BASE_URL = f"http://{HOST}:{PORT}"
-URL_DATABASE = f"{BASE_URL}/database"
-URL_EVENT = f"{BASE_URL}/stadium/event"
-URL_EVENTS = f"{BASE_URL}/stadium/events"
-URL_TICKETS = f"{BASE_URL}/stadium/tickets"
+BASE_URL = "http://{}:{}".format(HOST, PORT)
+URL_DATABASE = "{}/database".format(BASE_URL)
+URL_EVENT = "{}/stadium/event".format(BASE_URL)
+URL_EVENTS = "{}/stadium/events".format(BASE_URL)
+URL_TICKETS = "{}/stadium/tickets".format(BASE_URL)
 
 EVENT_1 = 'The Beatles'
 EVENT_2 = 'The Cure'
@@ -23,15 +23,15 @@ EVENTS = {EVENT_1, EVENT_2, EVENT_3, EVENT_4, EVENT_5, EVENT_6, EVENT_7}
 
 
 def get_database():
-    return requests.get(f"{URL_DATABASE}")
+    return requests.get(URL_DATABASE)
 
 
 def delete_event(name: str):
-    return requests.delete(f"{URL_EVENT}?name={name}")
+    return requests.delete("{}?name={}".format(URL_EVENT, name)∑)
 
 
 def get_event(name: str):
-    return requests.get(f"{URL_EVENT}?name={name}")
+    return requests.get("{}?name={}".format(URL_EVENT, name)∑)
 
 
 def get_events():
