@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CATEGORIES="development http-client postgres python-build \
+CATEGORIES="development http-client postgres-client python-build \
 python-development python-flask python-postgres python-sqlite sqlite"
 
 abort() {
