@@ -64,8 +64,6 @@ def _get_dirname(vardir: str, app_config):
     dirs.append(os.getenv('TMPDIR', '.'))
 
     for dirname in dirs:
-        print("Data directory: {}".format(dirname))
-
         if os.access(dirname, os.W_OK):
             break
 
