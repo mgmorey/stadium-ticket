@@ -2,6 +2,7 @@
 """Define methods to construct a SQLAlchemy database URI string."""
 
 import os
+import sys
 import urllib.parse
 
 import decouple
@@ -26,6 +27,10 @@ URI = {
     'sqlite': "{0}:///{5}",
 }
 USER = 'root'
+VARDIR = {
+    None: os.path.join(os.path.sep, 'var', 'opt'),
+    'darwin': os.path.join(os.path.sep, 'usr', 'local', 'var', 'opt'),
+}
 
 
 def _get_charset(dialect: str):
@@ -47,9 +52,9 @@ def _get_driver_default(dialect: str):
     return driver.format(dialect) if driver else None
 
 
-def _get_dirname(vardir: str):
+def _get_dirname(vardir: str, app_config):
     """Return a database directory name (SQLite3 only)."""
-    dirs = [vardir]
+    dirs = [os.path.join(vardir, app_config['name'])]
     home = os.getenv('HOME')
 
     if home:
@@ -59,6 +64,8 @@ def _get_dirname(vardir: str):
     dirs.append(os.getenv('TMPDIR', '.'))
 
     for dirname in dirs:
+        print("Data directory: {}".format(dirname))
+
         if os.access(dirname, os.W_OK):
             break
 
@@ -86,13 +93,13 @@ def _get_login(dialect: str):
             if password else username)
 
 
-def _get_pathname(dialect: str, schema: str, vardir: str):
+def _get_pathname(dialect: str, app_config):
     """Return a database filename (SQLite3 only)."""
     if '{5}' not in URI.get(dialect, URI[None]):
         return ''
 
-    dirname = _get_dirname(vardir)
-    pathname = os.path.join(dirname, '.'.join([schema, 'sqlite']))
+    dirname = _get_dirname(VARDIR.get(sys.platform, VARDIR[None]), app_config)
+    pathname = os.path.join(dirname, '.'.join([app_config['schema'], dialect]))
     return _get_string('DATABASE_PATHNAME', default=pathname)
 
 
@@ -122,9 +129,7 @@ def get_uri(app_config):
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
     endpoint = _get_endpoint(dialect)
     login = _get_login(dialect)
-    pathname = _get_pathname(dialect,
-                             app_config['schema'],
-                             app_config['vardir'])
+    pathname = _get_pathname(dialect, app_config)
     scheme = _get_scheme(dialect)
     tuples = _get_tuples(dialect)
     uri = URI.get(dialect, URI[None])
