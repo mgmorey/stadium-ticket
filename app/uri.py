@@ -9,7 +9,6 @@ import decouple
 from .pattern import get_pattern
 
 CHARSET = {
-    None: 'utf8',
     'mysql': 'utf8mb4',
 }
 DIALECT = 'sqlite'
@@ -32,10 +31,9 @@ USER = 'root'
 def _get_charset(dialect: str):
     """Return a database character set (encoding)."""
     if '{4}' not in URI.get(dialect, URI[None]):
-        return ''
+        return None
 
-    charset = CHARSET.get(dialect, CHARSET[None])
-    return _get_string('DATABASE_CHARSET', default=charset)
+    return _get_string('DATABASE_CHARSET', default=CHARSET.get(dialect))
 
 
 def _get_driver(dialect: str):
