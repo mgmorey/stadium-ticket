@@ -43,6 +43,7 @@ requests = "*"
 [scripts]
 create-database = "python3 -m app create-database"
 drop-database = "python3 -m app drop-database"
+get-parameters = "python3 -m app get-parameters"
 pycodestyle = "python3 -m pycodestyle"
 pylint = "python3 -m pylint"
 pytest = "python3 -m pytest"
