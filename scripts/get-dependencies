@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CATEGORIES="development http-client python-build python-development \
-python-flask python-sqlite sqlite"
+CATEGORIES="development http-client postgres python-build \
+python-development python-flask python-postgres python-sqlite sqlite"
 
 abort() {
     printf "$@" >&2

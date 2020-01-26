@@ -33,6 +33,15 @@ services:
         volumes:
             - mysql:/var/lib/mysql
 
+    postgres:
+        image: postgres:10
+        env_file: .env-postgres
+        ports:
+            - 5432:5432
+        volumes:
+            - postgres:/var/lib/postgresql/data
+
 volumes:
 
     mysql:
+    postgres:

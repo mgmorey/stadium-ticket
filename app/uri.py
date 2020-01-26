@@ -15,10 +15,12 @@ CHARSET = {
 DIALECT = 'sqlite'
 DRIVER = {
     'mysql': 'py{0}',
+    'postgresql': 'psycopg2',
 }
 HOST = 'localhost'
 PORT = {
     'mysql': '3306',
+    'postgres': '5432',
 }
 URI = {
     None: "{0}://{1}@{2}/{3}{4}",

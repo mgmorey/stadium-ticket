@@ -5,6 +5,7 @@
 .env
 .env-api
 .env-mysql
+.env-postgres
 .python-version
 .update
 .venv*
