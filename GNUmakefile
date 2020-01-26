@@ -18,6 +18,7 @@ APP_NAME = stadium-ticket
 APP_PORT = 5000
 
 bin = $(home)/bin
+group = $(shell id -gn $(user))
 home = $(shell if $(ismac); then $(macos); else $(posix); fi)
 ismac = [ $$(uname -s) = Darwin ]
 macos = printf "/Users/%s\n" $(user)
@@ -62,16 +63,17 @@ get-status:
 	get-app-status
 
 install:
+	scripts/install-dependencies
 	$(bin)/install-app
 
 pycode:	.update
-	run-app pycodestyle app tests
+	$(bin)/run-app pycodestyle app tests
 
 pylint:	.update
-	run-app pylint app tests
+	$(bin)/run-app pylint app tests
 
 pytest:	.update
-	run-app pytest
+	$(bin)/run-app pytest
 
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update
@@ -122,4 +124,5 @@ uninstall-all:	stop
 	scripts/configure-env $@ $<
 
 .update:	Pipfile Pipfile.lock
-	$(bin)/refresh-virtualenv && touch $@
+	scripts/install-dependencies
+	$(bin)/refresh-virtualenv && touch $@ && chown "$(user):$(group)" $@
