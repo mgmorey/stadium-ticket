@@ -14,8 +14,12 @@ CHARSET = {
 }
 DIALECT = 'sqlite'
 DRIVER = {
-    'mysql': 'py{0}',
+    'mysql': 'pymysql',
     'postgresql': 'psycopg2',
+}
+FLASK_DATADIR = {
+    None: os.path.join(os.path.sep, 'var', 'opt'),
+    'darwin': os.path.join(os.path.sep, 'usr', 'local', 'var', 'opt'),
 }
 HOST = 'localhost'
 PORT = {
@@ -27,10 +31,6 @@ URI = {
     'sqlite': "{0}:///{5}",
 }
 USER = 'root'
-VARDIR = {
-    None: os.path.join(os.path.sep, 'var', 'opt'),
-    'darwin': os.path.join(os.path.sep, 'usr', 'local', 'var', 'opt'),
-}
 
 
 def _get_charset(dialect: str):
@@ -43,31 +43,29 @@ def _get_charset(dialect: str):
 
 def _get_driver(dialect: str):
     """Return a database URI driver parameter default value."""
-    return _get_string('DATABASE_DRIVER', default=_get_driver_default(dialect))
+    return _get_string('DATABASE_DRIVER', default=DRIVER.get(dialect))
 
 
-def _get_driver_default(dialect: str):
-    """Return a database URI driver parameter value."""
-    driver = DRIVER.get(dialect)
-    return driver.format(dialect) if driver else None
-
-
-def _get_dirname(vardir: str, app_config):
+def _get_dirname(app_config):
     """Return a database directory name (SQLite3 only)."""
-    dirs = [os.path.join(vardir, app_config['name'])]
+    dirs = []
     home = os.getenv('HOME')
+    tmpdir = os.getenv('TMPDIR', '.')
 
-    if home:
+    if _is_production():
+        flask_datadir = FLASK_DATADIR.get(sys.platform, FLASK_DATADIR[None])
+        dirs.append(os.path.join(flask_datadir, app_config['name']))
+    elif home:
         dirs.append(os.path.join(home, '.local', 'share'))
         dirs.append(home)
 
-    dirs.append(os.getenv('TMPDIR', '.'))
+    dirs.append(tmpdir)
 
     for dirname in dirs:
         if os.access(dirname, os.W_OK):
-            break
+            return dirname
 
-    return dirname
+    return None
 
 
 def _get_endpoint(dialect: str):
@@ -91,13 +89,14 @@ def _get_login(dialect: str):
             if password else username)
 
 
-def _get_pathname(dialect: str, app_config):
+def _get_pathname(dialect: str, schema: str, app_config):
     """Return a database filename (SQLite3 only)."""
     if '{5}' not in URI.get(dialect, URI[None]):
         return ''
 
-    dirname = _get_dirname(VARDIR.get(sys.platform, VARDIR[None]), app_config)
-    pathname = os.path.join(dirname, '.'.join([app_config['schema'], dialect]))
+    dirname = _get_dirname(app_config)
+    filename = '.'.join([schema, dialect])
+    pathname = os.path.join(dirname, filename)
     return _get_string('DATABASE_PATHNAME', default=pathname)
 
 
@@ -125,18 +124,19 @@ def _get_tuples(dialect: str):
 def get_uri(app_config):
     """Return a database connection URI string."""
     dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
-    endpoint = _get_endpoint(dialect)
-    login = _get_login(dialect)
-    pathname = _get_pathname(dialect, app_config)
-    scheme = _get_scheme(dialect)
-    tuples = _get_tuples(dialect)
-    uri = URI.get(dialect, URI[None])
-    return uri.format(scheme,
-                      login,
-                      endpoint,
-                      app_config['schema'],
-                      tuples,
-                      pathname)
+    pathname = _get_pathname(dialect, app_config['schema'], app_config)
+    uri_format = URI.get(dialect, URI[None])
+    return uri_format.format(_get_scheme(dialect),
+                             _get_login(dialect),
+                             _get_endpoint(dialect),
+                             app_config['schema'],
+                             _get_tuples(dialect),
+                             pathname)
+
+
+def _is_production():
+    return (os.getenv('FLASK_ENV', 'production') == 'production' and
+            os.getenv('WERKZEUG_RUN_MAIN', 'false') == 'false')
 
 
 def _validate(parameter: str, value: str) -> str:
