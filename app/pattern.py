@@ -4,8 +4,8 @@
 import re
 
 REGEX_CHARSET = r'utf8(mb[34])?'
-REGEX_DIALECT = r'(mysql|sqlite)'
-REGEX_DRIVER = r'pymysql'
+REGEX_DIALECT = r'(mysql|postgresql|sqlite)'
+REGEX_DRIVER = r'(pymysql|psycopg2)'
 REGEX_HOST = r'(\d{1,3}(\.\d{1,3}){3}|[a-z][a-z\d]+([\.-][a-z\d]+)*)'
 REGEX_PASSWORD = r'.*'
 REGEX_PATHNAME = r'(/?\.?[\w\d-]+)+'
