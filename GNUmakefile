@@ -47,7 +47,7 @@ create-database:
 docker-build:	.env Dockerfile
 	docker build -t $(APP_NAME) .
 
-docker-compose:	.env-api .env-mysql Dockerfile
+docker-compose:	.env-api .env-mysql .env-postgres Dockerfile
 	docker-compose up --build
 
 docker-run:
@@ -121,6 +121,9 @@ uninstall-all:	stop
 	scripts/configure-env $@ $<
 
 .env-mysql:	.env-template-mysql
+	scripts/configure-env $@ $<
+
+.env-postgres:	.env-template-postgres
 	scripts/configure-env $@ $<
 
 .update:	Pipfile Pipfile.lock
