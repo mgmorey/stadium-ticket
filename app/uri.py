@@ -50,22 +50,26 @@ def _get_dirname(app_config):
     """Return a database directory name (SQLite3 only)."""
     dirs = []
     home = os.getenv('HOME')
-    tmpdir = os.getenv('TMPDIR', '.')
+    tmpdir = os.getenv('TMPDIR')
 
     if _is_production():
         flask_datadir = FLASK_DATADIR.get(sys.platform, FLASK_DATADIR[None])
         dirs.append(os.path.join(flask_datadir, app_config['name']))
-    elif home:
+
+    if home:
         dirs.append(os.path.join(home, '.local', 'share'))
         dirs.append(home)
 
-    dirs.append(tmpdir)
+    if tmpdir:
+        dirs.append(tmpdir)
+
+    dirs.append(os.path.join(os.path.sep, 'tmp'))
 
     for dirname in dirs:
         if os.access(dirname, os.W_OK):
             return dirname
 
-    return None
+    return ''
 
 
 def _get_endpoint(dialect: str):
