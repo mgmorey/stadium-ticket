@@ -13,7 +13,6 @@ from .config import get_config
 from .tickets import SoldOut, Tickets
 from .uri import get_uri
 
-LOGGING_LEVEL = logging.DEBUG
 LOGGING_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 SQLALCHEMY_DATABASE_URI = get_uri(get_config('app.ini'))
 SQLALCHEMY_TRACK_MODIFICATIONS = False
