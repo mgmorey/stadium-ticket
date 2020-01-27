@@ -30,7 +30,10 @@ URI = {
     None: "{0}://{1}@{2}/{3}{4}",
     'sqlite': "{0}:///{5}",
 }
-USER = 'root'
+USERNAME = {
+    'mysql': 'root',
+    'postgresql': 'postgres',
+}
 
 
 def _get_charset(dialect: str):
@@ -52,7 +55,7 @@ def _get_dirname(app_config):
     home = os.getenv('HOME')
     tmpdir = os.getenv('TMPDIR')
 
-    if _is_production():
+    if not _is_development():
         flask_datadir = FLASK_DATADIR.get(sys.platform, FLASK_DATADIR[None])
         dirs.append(os.path.join(flask_datadir, app_config['name']))
 
@@ -88,7 +91,7 @@ def _get_login(dialect: str):
         return ''
 
     password = _get_string('DATABASE_PASSWORD', default='')
-    username = _get_string('DATABASE_USER', default='root')
+    username = _get_string('DATABASE_USER', default=USERNAME.get(dialect))
     return (':'.join([username, urllib.parse.quote_plus(password)])
             if password else username)
 
@@ -138,9 +141,9 @@ def get_uri(app_config):
                              pathname)
 
 
-def _is_production():
-    return (os.getenv('FLASK_ENV', 'production') == 'production' and
-            os.getenv('WERKZEUG_RUN_MAIN', 'false') == 'false')
+def _is_development():
+    return (os.getenv('FLASK_ENV', 'production') == 'development' or
+            os.getenv('WERKZEUG_RUN_MAIN', 'false') == 'true')
 
 
 def _validate(parameter: str, value: str) -> str:
