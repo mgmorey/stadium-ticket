@@ -26,11 +26,11 @@ platforms:
 +-----------+---------------+-------------------------------+----------+
 | GNU/Linux | Red Hat       | Enterprise Linux 8.1 (x86_64) | 3.6.8    |
 +-----------+---------------+-------------------------------+----------+
-| GNU/Linux | Ubuntu        | 18.04 LTS (amd64)             | 3.6.8+   |
+| GNU/Linux | Ubuntu        | 18.04 LTS (amd64)             | 3.6.9+   |
 +-----------+---------------+-------------------------------+----------+
 | GNU/Linux | Ubuntu        | 19.10 (amd64)                 | 3.7.5+   |
 +-----------+---------------+-------------------------------+----------+
-| Unix      | Apple macOS   | 10.14 (x86_64)                | 3.7.5*   |
+| Unix      | Apple macOS   | 10.14 (x86_64)                | 3.7.6*   |
 +-----------+---------------+-------------------------------+----------+
 | Unix      | FreeBSD       | 11.3 (amd64)                  | 3.6.6    |
 +-----------+---------------+-------------------------------+----------+
@@ -57,8 +57,8 @@ The various OS ports have been tested on the following processors:
 
 1.  To install dependencies (may require root):
 
-    scripts/install-utility-scripts.sh
-    scripts/install-dependencies.sh
+    scripts/install-utility-scripts
+    scripts/install-dependencies
 
 2.  To initialize the database schema:
 
