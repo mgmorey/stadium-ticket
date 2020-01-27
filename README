@@ -57,12 +57,11 @@ The various OS ports have been tested on the following processors:
 
 1.  To install dependencies (may require root):
 
-    scripts/install-utility-scripts
     scripts/install-dependencies
 
 2.  To initialize the database schema:
 
-    run-app python3 -m app init-db (or "make init-db")
+    run-app python3 -m app create-database (or "make create-database")
 
 3.  To run the unit tests using pytest:
 
@@ -70,11 +69,11 @@ The various OS ports have been tested on the following processors:
 
 4.  To run the app in debugging mode:
 
-    run-app flask run (or "make debug")
+    run-app flask run --port 5001 (or "make run-debug")
 
-5.  To test the app:
+5.  To test the app in debugging mode:
 
-    clients/app-test (or "make client")
+    clients/app-test -h localhost -p 5001 (or "make client-debug")
 
 6.  To stress test the app:
 
