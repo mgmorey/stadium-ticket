@@ -20,18 +20,18 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [requires]
-python_version = "3"
+python_version = "3.6"
 
 [packages]
-Click = "*"
-Flask = "*"
-Flask-SQLAlchemy = "*"
-PyMySQL = "*"
-SQLAlchemy = "*"
+click = "*"
 cryptography = "*"
-psycopg2 = "*"
+flask = "*"
+flask-sqlalchemy = "*"
+psycopg2-binary = "*"
+pymysql = "*"
 python-decouple = "*"
 python-dotenv = "*"
+sqlalchemy = "*"
 
 [dev-packages]
 pycodestyle = "*"
