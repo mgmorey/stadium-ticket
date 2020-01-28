@@ -63,7 +63,6 @@ get-status:
 	get-app-status
 
 install:
-	scripts/install-dependencies
 	$(bin)/install-app
 
 pycode:	.update
@@ -127,5 +126,4 @@ uninstall-all:	stop
 	scripts/configure-env $@ $<
 
 .update:	Pipfile Pipfile.lock
-	scripts/install-dependencies
 	$(bin)/refresh-virtualenv && touch $@ && chown "$(user):$(group)" $@
