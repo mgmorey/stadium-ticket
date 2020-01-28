@@ -16,6 +16,9 @@
 
 FROM ubuntu:18.04
 
+# Define locale variables
+ENV LANG=${LANG:-C.UTF-8} LC_ALL=${LC_ALL:-C.UTF-8}
+
 # Define app name, port, UID and GID variables
 ENV APP_NAME=stadium-ticket APP_PORT=5000 APP_UID=www-data APP_GID=www-data
 
@@ -47,7 +50,7 @@ COPY Pipfile app.ini $APP_DIR/
 COPY uwsgi.ini $APP_INIFILE
 
 # Copy Docker ENTRYPOINT script
-COPY scripts/docker-entrypoint.sh /usr/local/bin/
+COPY docker-entrypoint.sh /usr/local/bin/
 
 # Grant ownership of app, run and data directories
 RUN chown -R $APP_UID:$APP_GID $APP_DIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
@@ -57,8 +60,7 @@ USER $APP_UID:$APP_GID
 WORKDIR $APP_DIR
 
 # Install app dependencies
-ENV LANG=${LANG:-C.UTF-8} LC_ALL=${LC_ALL:-C.UTF-8} PIPENV_VENV_IN_PROJECT=true
-RUN sed -i 's/3.5/3.6/g' Pipfile
+ENV PIPENV_VENV_IN_PROJECT=true
 RUN pipenv install
 
 # Expose port and start app
