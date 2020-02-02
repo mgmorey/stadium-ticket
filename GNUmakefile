@@ -14,9 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-APP_NAME = stadium-ticket
-APP_PORT = 5000
-
 bin = $(home)/bin
 group = $(shell id -gn "$(user)")
 home = $(shell if $(ismac); then $(macos); else $(posix); fi)
@@ -45,13 +42,22 @@ create-database:
 	run-app python3 -m app create-database
 
 docker-build:	.env Dockerfile
-	docker build -t $(APP_NAME) .
+	docker-image build
 
 docker-compose:	.env-api .env-mysql .env-postgres Dockerfile
 	docker-compose up --build
 
-docker-run:
-	docker run -dp "$(APP_PORT):$(APP_PORT)" --rm $(APP_NAME)
+docker-pull:
+	docker-image pull
+
+docker-push:	docker-tag
+	docker-image push
+
+docker-run:	docker-build
+	docker-image run
+
+docker-tag:	docker-build
+	docker-image tag
 
 drop-database:
 	run-app python3 -m app drop-database
@@ -112,10 +118,10 @@ uninstall-all:	stop
 	$(bin)/uninstall-app -a
 
 .PHONY:	all clean clean-app-caches clean-virtualenv client client-debug
-.PHONY:	create-database docker-build docker-compose docker-run drop-database
-.PHONY:	get-confiuguration get-parameters get-status install pycode pylint
-.PHONY:	pytest realclean restart run run-debug scripts start stop superclean
-.PHONY:	uninstall uninstall-all
+.PHONY:	create-database docker-build docker-compose docker-pull docker-push
+.PHONY:	docker-run docker-tag drop-database get-confiuguration get-parameters
+.PHONY:	get-status install pycode pylint pytest realclean restart run run-debug
+.PHONY:	scripts start stop superclean uninstall uninstall-all
 
 .env:		.env-template
 	scripts/configure-env $@ $<
