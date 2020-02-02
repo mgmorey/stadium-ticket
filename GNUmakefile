@@ -44,22 +44,22 @@ create-database:
 	run-app python3 -m app create-database
 
 docker-build:	.env Dockerfile
-	docker-image build
+	docker-app build
 
 docker-compose:	.env-api .env-mysql .env-postgres Dockerfile
 	docker-compose up --build
 
 docker-pull:
-	docker-image pull
+	docker-app pull
 
 docker-push:	docker-tag
-	docker-image push
+	docker-app push
 
 docker-run:	docker-build
-	docker-image run
+	docker-app run
 
 docker-tag:	docker-build
-	docker-image tag
+	docker-app tag
 
 drop-database:
 	run-app python3 -m app drop-database
