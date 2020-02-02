@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+APP_PORT = 5000
+
 bin = $(home)/bin
 group = $(shell id -gn "$(user)")
 home = $(shell if $(ismac); then $(macos); else $(posix); fi)
@@ -36,7 +38,7 @@ client:	.env
 	clients/app-test
 
 client-debug:	.env
-	clients/app-test -h localhost -p 5001
+	clients/app-test -h localhost -p $$(($(APP_PORT) + 1))
 
 create-database:
 	run-app python3 -m app create-database
@@ -95,7 +97,7 @@ run-app:	.update create-database
 	run-app flask run
 
 run-debug:	.update create-database
-	run-app flask run --port 5001
+	run-app flask run --port $$(($(APP_PORT) + 1))
 
 scripts:
 	scripts/install-utility-scripts
