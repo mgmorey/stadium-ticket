@@ -56,6 +56,9 @@ docker-run:
 drop-database:
 	run-app python3 -m app drop-database
 
+get-configuration:
+	get-configuration app.ini
+
 get-parameters:
 	run-app python3 -m app get-parameters
 
@@ -110,8 +113,9 @@ uninstall-all:	stop
 
 .PHONY:	all clean clean-app-caches clean-virtualenv client client-debug
 .PHONY:	create-database docker-build docker-compose docker-run drop-database
-.PHONY:	get-parameters get-status install pycode pylint pytest realclean restart
-.PHONY:	run run-debug scripts start stop superclean uninstall uninstall-all
+.PHONY:	get-confiuguration get-parameters get-status install pycode pylint
+.PHONY:	pytest realclean restart run run-debug scripts start stop superclean
+.PHONY:	uninstall uninstall-all
 
 .env:		.env-template
 	scripts/configure-env $@ $<
