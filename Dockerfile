@@ -33,8 +33,8 @@ ENV UWSGI_PLUGIN_NAME=python3 WWW_VARDIR=/var/www
 
 # Update Debian package repository index and install binary packages
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update -qy && apt-get upgrade -qy && apt-get install \
---no-install-recommends -qy build-essential libpq-dev python3-dev \
+RUN apt-get update -qqy && apt-get upgrade -qqy && apt-get install \
+--no-install-recommends -qqy build-essential libpq-dev python3-dev \
 python3-pip python3-setuptools uwsgi uwsgi-plugin-python3 && \
 rm -rf /var/lib/apt/lists/*
 
