@@ -47,7 +47,7 @@ RUN mkdir -p $APP_DIR $APP_ETCDIR $APP_RUNDIR $APP_VARDIR $WWW_VARDIR
 
 # Copy app files
 COPY app/ $APP_DIR/app/
-COPY Pipfile app.ini $APP_DIR/
+COPY Pipfile Pipfile.lock app.ini $APP_DIR/
 COPY uwsgi.ini $APP_INIFILE
 
 # Copy Docker ENTRYPOINT script
