@@ -14,7 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-APP_PORT = 5000
+APP_PORT := 5000
+
+tag := $(shell date +%Y%m%d%H%M)
 
 bin = $(home)/bin
 group = $(shell id -gn "$(user)")
@@ -22,7 +24,6 @@ home = $(shell if $(ismac); then $(macos); else $(posix); fi)
 ismac = [ $$(uname -s) = Darwin ]
 macos = printf "/Users/%s\n" $(user)
 posix = getent passwd "$(user)" | awk -F: '{print $$6}'
-tag = $(shell date +%Y%m%d%H%M)
 user = $(shell printf '%s\n' "$${SUDO_USER-$${USER-$$LOGIN}}")
 
 all:	.env .update pycode pylint pytest
