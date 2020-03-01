@@ -22,6 +22,7 @@ home = $(shell if $(ismac); then $(macos); else $(posix); fi)
 ismac = [ $$(uname -s) = Darwin ]
 macos = printf "/Users/%s\n" $(user)
 posix = getent passwd "$(user)" | awk -F: '{print $$6}'
+tag = $(shell date +%Y%m%d%H%M)
 user = $(shell printf '%s\n' "$${SUDO_USER-$${USER-$$LOGIN}}")
 
 all:	.env .update pycode pylint pytest
@@ -44,7 +45,7 @@ create-database:
 	run-app python3 -m app create-database
 
 docker-build:	.env Dockerfile
-	docker-app build
+	docker-app -t $(tag) build
 
 docker-compose:	.env-api .env-mysql .env-postgres Dockerfile
 	docker-compose up --build
@@ -52,14 +53,12 @@ docker-compose:	.env-api .env-mysql .env-postgres Dockerfile
 docker-pull:
 	docker-app pull
 
-docker-push:	docker-tag
-	docker-app push
+docker-push:	docker-build
+	docker-app -t $(tag) push
+	docker-app -l push
 
 docker-run:	docker-build
 	docker-app run
-
-docker-tag:	docker-build
-	docker-app tag
 
 drop-database:
 	run-app python3 -m app drop-database
