@@ -1,6 +1,6 @@
 -i https://pypi.org/simple
 cffi==1.14.0
-click==7.0
+click==7.1.1
 cryptography==2.8
 flask-sqlalchemy==2.4.1
 flask==1.1.1
