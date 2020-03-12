@@ -45,7 +45,7 @@ The various OS ports have been tested on the following processors:
 +---------+----------------------------------+---------+---------+
 | ARMv8-A | ARM Cortex-A53                   | armhf   | aarch64 |
 +---------+----------------------------------+---------+---------+
-| x86-64  | Intel SkyLake-U                  | i686    | amd64/  |
+| x86-64  | Intel Haswell, SkyLake-U         | i686    | amd64/  |
 |         |                                  |         | x86_64  |
 +---------+----------------------------------+---------+---------+
 | z/Arch  | IBM z900 via Hercules emulator   | N/A     | s390x   |
