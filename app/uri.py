@@ -26,6 +26,7 @@ PORT = {
     'mysql': '3306',
     'postgres': '5432',
 }
+PREFIX = 'database'
 URI = {
     None: "{0}://{1}@{2}/{3}{4}",
     'sqlite': "{0}:///{5}",
@@ -41,12 +42,12 @@ def _get_charset(dialect: str):
     if '{4}' not in URI.get(dialect, URI[None]):
         return None
 
-    return _get_string('DATABASE_CHARSET', default=CHARSET.get(dialect))
+    return _get_string('charset', default=CHARSET.get(dialect))
 
 
 def _get_driver(dialect: str):
     """Return a database URI driver parameter default value."""
-    return _get_string('DATABASE_DRIVER', default=DRIVER.get(dialect))
+    return _get_string('driver', default=DRIVER.get(dialect))
 
 
 def _get_dirname(app_config):
@@ -80,8 +81,8 @@ def _get_endpoint(dialect: str):
     if '{2}' not in URI.get(dialect, URI[None]):
         return ''
 
-    host = _get_string('DATABASE_HOST', default=HOST)
-    port = _get_string('DATABASE_PORT', default=PORT.get(dialect))
+    host = _get_string('host', default=HOST)
+    port = _get_string('port', default=PORT.get(dialect))
     return ':'.join([host, port]) if port else host
 
 
@@ -90,8 +91,8 @@ def _get_login(dialect: str):
     if '{1}' not in URI.get(dialect, URI[None]):
         return ''
 
-    password = _get_string('DATABASE_PASSWORD', default='')
-    username = _get_string('DATABASE_USER', default=USERNAME.get(dialect))
+    password = _get_string('password', default='')
+    username = _get_string('user', default=USERNAME.get(dialect))
     return (':'.join([username, urllib.parse.quote_plus(password)])
             if password else username)
 
@@ -104,18 +105,20 @@ def _get_pathname(dialect: str, schema: str, app_config):
     dirname = _get_dirname(app_config)
     filename = '.'.join([schema, dialect])
     pathname = os.path.join(dirname, filename)
-    return _get_string('DATABASE_PATHNAME', default=pathname)
+    return _get_string('pathname', default=pathname)
 
 
 def _get_scheme(dialect: str):
     """Return a database URI scheme parameter value."""
-    driver = _get_string('DATABASE_DRIVER', default=_get_driver(dialect))
+    driver = _get_string('driver', default=_get_driver(dialect))
     return '+'.join([dialect, driver]) if driver else dialect
 
 
-def _get_string(parameter: str, default: str):
+def _get_string(parameter: str, default: str, dialect: str = None):
     """Return a validated string parameter value."""
-    value = decouple.config(parameter, default=default)
+    prefix = dialect[:8] if dialect else PREFIX
+    string = '_'.join([prefix, parameter]).upper()
+    value = decouple.config(string, default=default)
 
     if not value:
         value = default
@@ -130,7 +133,7 @@ def _get_tuples(dialect: str):
 
 def get_uri(app_config):
     """Return a database connection URI string."""
-    dialect = _get_string('DATABASE_DIALECT', default=DIALECT)
+    dialect = _get_string('dialect', default=DIALECT)
     pathname = _get_pathname(dialect, app_config['schema'], app_config)
     uri_format = URI.get(dialect, URI[None])
     return uri_format.format(_get_scheme(dialect),

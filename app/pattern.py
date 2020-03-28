@@ -14,15 +14,15 @@ REGEX_SCHEMA = r'[a-z\d-]+'
 REGEX_USER = r'[\w\d-]+'
 
 REGEX = {
-    'DATABASE_CHARSET': re.compile(REGEX_CHARSET),
-    'DATABASE_DIALECT': re.compile(REGEX_DIALECT),
-    'DATABASE_DRIVER': re.compile(REGEX_DRIVER),
-    'DATABASE_HOST': re.compile(REGEX_HOST),
-    'DATABASE_PASSWORD': re.compile(REGEX_PASSWORD),
-    'DATABASE_PATHNAME': re.compile(REGEX_PATHNAME),
-    'DATABASE_PORT': re.compile(REGEX_PORT),
-    'DATABASE_SCHEMA': re.compile(REGEX_SCHEMA),
-    'DATABASE_USER': re.compile(REGEX_USER),
+    'charset': re.compile(REGEX_CHARSET),
+    'dialect': re.compile(REGEX_DIALECT),
+    'driver': re.compile(REGEX_DRIVER),
+    'host': re.compile(REGEX_HOST),
+    'password': re.compile(REGEX_PASSWORD),
+    'pathname': re.compile(REGEX_PATHNAME),
+    'port': re.compile(REGEX_PORT),
+    'schema': re.compile(REGEX_SCHEMA),
+    'user': re.compile(REGEX_USER),
 }
 
 
