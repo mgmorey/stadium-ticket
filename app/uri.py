@@ -42,12 +42,12 @@ def _get_charset(dialect: str):
     if '{4}' not in URI.get(dialect, URI[None]):
         return None
 
-    return _get_string('charset', default=CHARSET.get(dialect))
+    return _get_string('charset', CHARSET.get(dialect))
 
 
 def _get_driver(dialect: str):
     """Return a database URI driver parameter default value."""
-    return _get_string('driver', default=DRIVER.get(dialect))
+    return _get_string('driver', DRIVER.get(dialect))
 
 
 def _get_dirname(app_config):
@@ -76,13 +76,23 @@ def _get_dirname(app_config):
     return ''
 
 
+def _get_default_host(dialect: str):
+    """Return a default host value."""
+    return _get_string('host', HOST, dialect)
+
+
+def _get_default_port(dialect: str):
+    """Return a default port value."""
+    return _get_string('port', PORT.get(dialect), dialect)
+
+
 def _get_endpoint(dialect: str):
     """Return a database URI endpoint parameter value."""
     if '{2}' not in URI.get(dialect, URI[None]):
         return ''
 
-    host = _get_string('host', default=HOST)
-    port = _get_string('port', default=PORT.get(dialect))
+    host = _get_string('host', _get_default_host(dialect))
+    port = _get_string('port', _get_default_port(dialect))
     return ':'.join([host, port]) if port else host
 
 
@@ -91,8 +101,8 @@ def _get_login(dialect: str):
     if '{1}' not in URI.get(dialect, URI[None]):
         return ''
 
-    password = _get_string('password', default='')
-    username = _get_string('user', default=USERNAME.get(dialect))
+    password = _get_string('password', '')
+    username = _get_string('user', USERNAME.get(dialect))
     return (':'.join([username, urllib.parse.quote_plus(password)])
             if password else username)
 
@@ -105,12 +115,12 @@ def _get_pathname(dialect: str, schema: str, app_config):
     dirname = _get_dirname(app_config)
     filename = '.'.join([schema, dialect])
     pathname = os.path.join(dirname, filename)
-    return _get_string('pathname', default=pathname)
+    return _get_string('pathname', pathname)
 
 
 def _get_scheme(dialect: str):
     """Return a database URI scheme parameter value."""
-    driver = _get_string('driver', default=_get_driver(dialect))
+    driver = _get_string('driver', _get_driver(dialect))
     return '+'.join([dialect, driver]) if driver else dialect
 
 
