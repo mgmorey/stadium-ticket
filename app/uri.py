@@ -7,8 +7,8 @@ import urllib.parse
 import decouple
 
 from .datafile import get_datafile
-from .default import get_default
-from .pattern import get_pattern
+from .defaults import get_default
+from .patterns import get_pattern
 
 PREFIX = 'database'
 
