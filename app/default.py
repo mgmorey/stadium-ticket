@@ -14,8 +14,7 @@ DEFAULT = {
         'postgresql': 'psycopg2',
     },
     'host': {
-        'mysql': '127.0.0.1',
-        'postgresql': 'localhost',
+        None: 'localhost',
     },
     'port': {
         'mysql': '3306',
