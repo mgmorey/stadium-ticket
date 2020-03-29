@@ -82,7 +82,7 @@ def _get_tuples(dialect: str, uri: str):
     return "?charset={}".format(charset) if charset else ''
 
 
-def _get_valid(suffix: str, dialect: str, default: str = None):
+def _get_valid(suffix: str, dialect: str = None, default: str = None):
     """Return a validated string parameter value."""
     value = _get_value(suffix, dialect, default)
 
@@ -92,7 +92,7 @@ def _get_valid(suffix: str, dialect: str, default: str = None):
     return _validate(suffix, value)
 
 
-def _get_value(suffix: str, dialect: str, default: str = None):
+def _get_value(suffix: str, dialect: str = None, default: str = None):
     """Return a string parameter value."""
     if default is None:
         default = get_default(suffix, dialect)
@@ -108,7 +108,7 @@ def _get_value(suffix: str, dialect: str, default: str = None):
 
 def get_uri(config: configparser.ConfigParser):
     """Return a database connection URI string."""
-    dialect = _get_valid('dialect', None)
+    dialect = _get_valid('dialect')
     uri = get_default('uri', dialect)
     return uri.format(_get_scheme(dialect),
                       _get_login(dialect, uri),
