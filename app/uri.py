@@ -32,7 +32,7 @@ URI = {
     None: "{0}://{1}@{2}/{3}{4}",
     'sqlite': "{0}:///{5}",
 }
-USERNAME = {
+USER = {
     'mysql': 'root',
     'postgresql': 'postgres',
 }
@@ -61,9 +61,9 @@ def _get_default_port(dialect: str):
     return _get_string('port', PORT.get(dialect), dialect)
 
 
-def _get_default_user(dialect: str):
+def _get_default_username(dialect: str):
     """Return a default user value."""
-    return _get_string('user', USERNAME.get(dialect), dialect)
+    return _get_string('user', USER.get(dialect), dialect)
 
 
 def _get_dirname(app_name: str):
@@ -113,7 +113,7 @@ def _get_login(dialect: str):
         return ''
 
     password = _get_string('password', _get_default_password(dialect))
-    username = _get_string('user', _get_default_user(dialect))
+    username = _get_string('user', _get_default_username(dialect))
     return (':'.join([username, urllib.parse.quote_plus(password)])
             if password else username)
 
