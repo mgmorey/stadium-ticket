@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Define methods to construct a SQLAlchemy database URI string."""
 
+import configparser
 import os
 import sys
 import urllib.parse
@@ -45,12 +46,17 @@ def _get_charset(dialect: str):
     return _get_string('charset', CHARSET.get(dialect))
 
 
-def _get_driver(dialect: str):
-    """Return a database URI driver parameter default value."""
-    return _get_string('driver', DRIVER.get(dialect))
+def _get_default_host(dialect: str):
+    """Return a default host value."""
+    return _get_string('host', HOST, dialect)
 
 
-def _get_dirname(app_config):
+def _get_default_port(dialect: str):
+    """Return a default port value."""
+    return _get_string('port', PORT.get(dialect), dialect)
+
+
+def _get_dirname(config: configparser.ConfigParser):
     """Return a database directory name (SQLite3 only)."""
     dirs = []
     home = os.getenv('HOME')
@@ -58,7 +64,7 @@ def _get_dirname(app_config):
 
     if not _is_development():
         flask_datadir = FLASK_DATADIR.get(sys.platform, FLASK_DATADIR[None])
-        dirs.append(os.path.join(flask_datadir, app_config['name']))
+        dirs.append(os.path.join(flask_datadir, config['app']['name']))
 
     if home:
         dirs.append(os.path.join(home, '.local', 'share'))
@@ -76,14 +82,9 @@ def _get_dirname(app_config):
     return ''
 
 
-def _get_default_host(dialect: str):
-    """Return a default host value."""
-    return _get_string('host', HOST, dialect)
-
-
-def _get_default_port(dialect: str):
-    """Return a default port value."""
-    return _get_string('port', PORT.get(dialect), dialect)
+def _get_driver(dialect: str):
+    """Return a database URI driver parameter default value."""
+    return _get_string('driver', DRIVER.get(dialect))
 
 
 def _get_endpoint(dialect: str):
@@ -107,15 +108,15 @@ def _get_login(dialect: str):
             if password else username)
 
 
-def _get_pathname(dialect: str, schema: str, app_config):
+def _get_path(dialect: str, schema: str, config: configparser.ConfigParser):
     """Return a database filename (SQLite3 only)."""
     if '{5}' not in URI.get(dialect, URI[None]):
         return ''
 
-    dirname = _get_dirname(app_config)
+    dirname = _get_dirname(config)
     filename = '.'.join([schema, dialect])
-    pathname = os.path.join(dirname, filename)
-    return _get_string('pathname', pathname)
+    path = os.path.join(dirname, filename)
+    return _get_string('pathname', path)
 
 
 def _get_scheme(dialect: str):
@@ -141,15 +142,15 @@ def _get_tuples(dialect: str):
     return "?charset={}".format(charset) if charset else ''
 
 
-def get_uri(app_config):
+def get_uri(config: configparser.ConfigParser):
     """Return a database connection URI string."""
     dialect = _get_string('dialect', default=DIALECT)
-    pathname = _get_pathname(dialect, app_config['schema'], app_config)
+    pathname = _get_path(dialect, config['app']['schema'], config)
     uri_format = URI.get(dialect, URI[None])
     return uri_format.format(_get_scheme(dialect),
                              _get_login(dialect),
                              _get_endpoint(dialect),
-                             app_config['schema'],
+                             config['app']['schema'],
                              _get_tuples(dialect),
                              pathname)
 
