@@ -2,19 +2,14 @@
 """Define methods to construct a SQLAlchemy database URI string."""
 
 import configparser
-import os
-import sys
 import urllib.parse
 
 import decouple
 
+from .datafile import get_datafile
 from .default import get_default
 from .pattern import get_pattern
 
-FLASK_DATADIR = {
-    None: os.path.join(os.path.sep, 'var', 'opt'),
-    'darwin': os.path.join(os.path.sep, 'usr', 'local', 'var', 'opt'),
-}
 PREFIX = 'database'
 
 
@@ -24,40 +19,6 @@ def _get_charset(dialect: str, uri: str):
         return None
 
     return _get_valid('charset', dialect)
-
-
-def _get_default_pathname(config: configparser.ConfigParser, dialect: str):
-    """Return the default SQLite database pathname."""
-    dirname = _get_dirname(config['app']['name'])
-    instance = config['database']['instance']
-    filename = '.'.join([instance, dialect])
-    return os.path.join(dirname, filename)
-
-
-def _get_dirname(app_name: str):
-    """Return a SQLite database directory name."""
-    dirs = []
-    home = os.getenv('HOME')
-    tmpdir = os.getenv('TMPDIR')
-
-    if not _is_development():
-        flask_datadir = FLASK_DATADIR.get(sys.platform, FLASK_DATADIR[None])
-        dirs.append(os.path.join(flask_datadir, app_name))
-
-    if home:
-        dirs.append(os.path.join(home, '.local', 'share'))
-        dirs.append(home)
-
-    if tmpdir:
-        dirs.append(tmpdir)
-
-    dirs.append(os.path.join(os.path.sep, 'tmp'))
-
-    for dirname in dirs:
-        if os.access(dirname, os.W_OK):
-            return dirname
-
-    return ''
 
 
 def _get_driver(dialect: str):
@@ -92,13 +53,11 @@ def _get_parameter(prefix: str, suffix: str):
 
 
 def _get_pathname(config: configparser.ConfigParser, dialect: str, uri: str):
-    """Return a SQLite database pathname."""
+    """Return a database pathname."""
     if '{5}' not in uri:
         return ''
 
-    return _get_valid('pathname',
-                      dialect,
-                      _get_default_pathname(config, dialect))
+    return _get_valid('pathname', dialect, get_datafile(config, dialect))
 
 
 def _get_prefixes(dialect: str):
@@ -157,11 +116,6 @@ def get_uri(config: configparser.ConfigParser):
                       config['database']['instance'],
                       _get_tuples(dialect, uri),
                       _get_pathname(config, dialect, uri))
-
-
-def _is_development():
-    return (os.getenv('FLASK_ENV', 'production') == 'development' or
-            os.getenv('WERKZEUG_RUN_MAIN', 'false') == 'true')
 
 
 def _validate(parameter: str, value: str) -> str:
