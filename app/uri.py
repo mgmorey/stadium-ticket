@@ -8,66 +8,34 @@ import urllib.parse
 
 import decouple
 
+from .default import get_default
 from .pattern import get_pattern
 
-CHARSET = {
-    'mysql': 'utf8mb4',
-}
-DIALECT = 'sqlite'
-DRIVER = {
-    'mysql': 'pymysql',
-    'postgresql': 'psycopg2',
-}
 FLASK_DATADIR = {
     None: os.path.join(os.path.sep, 'var', 'opt'),
     'darwin': os.path.join(os.path.sep, 'usr', 'local', 'var', 'opt'),
 }
-HOST = 'localhost'
-PORT = {
-    'mysql': '3306',
-    'postgres': '5432',
-}
 PREFIX = 'database'
-URI = {
-    None: "{0}://{1}@{2}/{3}{4}",
-    'sqlite': "{0}:///{5}",
-}
-USER = {
-    'mysql': 'root',
-    'postgresql': 'postgres',
-}
 
 
-def _get_charset(dialect: str):
+def _get_charset(dialect: str, uri: str):
     """Return a database character set (encoding)."""
-    if '{4}' not in URI.get(dialect, URI[None]):
+    if '{4}' not in uri:
         return None
 
-    return _get_string('charset', CHARSET.get(dialect))
+    return _get_valid('charset', dialect)
 
 
-def _get_default_host(dialect: str):
-    """Return a default host value."""
-    return _get_string('host', HOST, dialect)
-
-
-def _get_default_password(dialect: str):
-    """Return a default password value."""
-    return _get_string('password', '', dialect)
-
-
-def _get_default_port(dialect: str):
-    """Return a default port value."""
-    return _get_string('port', PORT.get(dialect), dialect)
-
-
-def _get_default_username(dialect: str):
-    """Return a default user value."""
-    return _get_string('user', USER.get(dialect), dialect)
+def _get_default_pathname(config: configparser.ConfigParser, dialect: str):
+    """Return the default SQLite database pathname."""
+    dirname = _get_dirname(config['app']['name'])
+    instance = config['database']['instance']
+    filename = '.'.join([instance, dialect])
+    return os.path.join(dirname, filename)
 
 
 def _get_dirname(app_name: str):
-    """Return a database directory name (SQLite3 only)."""
+    """Return a SQLite database directory name."""
     dirs = []
     home = os.getenv('HOME')
     tmpdir = os.getenv('TMPDIR')
@@ -94,77 +62,101 @@ def _get_dirname(app_name: str):
 
 def _get_driver(dialect: str):
     """Return a database URI driver parameter default value."""
-    return _get_string('driver', DRIVER.get(dialect))
+    return _get_valid('driver', dialect)
 
 
-def _get_endpoint(dialect: str):
+def _get_endpoint(dialect: str, uri: str):
     """Return a database URI endpoint parameter value."""
-    if '{2}' not in URI.get(dialect, URI[None]):
+    if '{2}' not in uri:
         return ''
 
-    host = _get_string('host', _get_default_host(dialect))
-    port = _get_string('port', _get_default_port(dialect))
+    host = _get_valid('host', dialect)
+    port = _get_valid('port', dialect)
     return ':'.join([host, port]) if port else host
 
 
-def _get_login(dialect: str):
+def _get_login(dialect: str, uri: str):
     """Return a database URI login parameter value."""
-    if '{1}' not in URI.get(dialect, URI[None]):
+    if '{1}' not in uri:
         return ''
 
-    password = _get_string('password', _get_default_password(dialect))
-    username = _get_string('user', _get_default_username(dialect))
-    return (':'.join([username, urllib.parse.quote_plus(password)])
-            if password else username)
+    password = _get_valid('password', dialect, '')
+    quotedpw = urllib.parse.quote_plus(password)
+    username = _get_valid('user', dialect)
+    return ':'.join([username, quotedpw]) if password else username
 
 
-def _get_pathname(dialect: str, config: configparser.ConfigParser):
-    """Return a database filename (SQLite3 only)."""
-    if '{5}' not in URI.get(dialect, URI[None]):
+def _get_parameter(prefix: str, suffix: str):
+    """Return a parameter name given a prefix and suffix."""
+    return '_'.join([prefix, suffix]).upper()
+
+
+def _get_pathname(config: configparser.ConfigParser, dialect: str, uri: str):
+    """Return a SQLite database pathname."""
+    if '{5}' not in uri:
         return ''
 
-    dirname = _get_dirname(config['app']['name'])
-    instance = config['database']['instance']
-    filename = '.'.join([instance, dialect])
-    pathname = os.path.join(dirname, filename)
-    return _get_string('pathname', pathname)
+    return _get_valid('pathname',
+                      dialect,
+                      _get_default_pathname(config, dialect))
+
+
+def _get_prefixes(dialect: str):
+    """Return a list of parameter prefixes."""
+    prefixes = [PREFIX]
+
+    if dialect is not None:
+        prefixes.append(dialect[:8])
+
+    return prefixes
 
 
 def _get_scheme(dialect: str):
     """Return a database URI scheme parameter value."""
-    driver = _get_string('driver', _get_driver(dialect))
+    driver = _get_valid('driver', dialect)
     return '+'.join([dialect, driver]) if driver else dialect
 
 
-def _get_string(parameter: str, default: str, dialect: str = None):
-    """Return a validated string parameter value."""
-    prefix = dialect[:8] if dialect else PREFIX
-    string = '_'.join([prefix, parameter]).upper()
-    value = decouple.config(string, default=default)
-
-    if not value:
-        value = default
-
-    return _validate(parameter, value) if value else None
-
-
-def _get_tuples(dialect: str):
-    charset = _get_charset(dialect)
+def _get_tuples(dialect: str, uri: str):
+    """Return tuples formatted as query parameters."""
+    charset = _get_charset(dialect, uri)
     return "?charset={}".format(charset) if charset else ''
+
+
+def _get_valid(suffix: str, dialect: str, default: str = None):
+    """Return a validated string parameter value."""
+    value = _get_value(suffix, dialect, default)
+
+    if value is None:
+        return None
+
+    return _validate(suffix, value)
+
+
+def _get_value(suffix: str, dialect: str, default: str = None):
+    """Return a string parameter value."""
+    if default is None:
+        default = get_default(suffix, dialect)
+
+    parameters = [_get_parameter(prefix, suffix) for prefix in
+                  _get_prefixes(dialect)]
+    return decouple.config(parameters[0],
+                           default=(decouple.config(parameters[1],
+                                                    default=default) if
+                                    len(parameters) > 1 else
+                                    default))
 
 
 def get_uri(config: configparser.ConfigParser):
     """Return a database connection URI string."""
-    dialect = _get_string('dialect', default=DIALECT)
-    instance = config['database']['instance']
-    pathname = _get_pathname(dialect, config)
-    uri_format = URI.get(dialect, URI[None])
-    return uri_format.format(_get_scheme(dialect),
-                             _get_login(dialect),
-                             _get_endpoint(dialect),
-                             instance,
-                             _get_tuples(dialect),
-                             pathname)
+    dialect = _get_valid('dialect', None)
+    uri = get_default('uri', dialect)
+    return uri.format(_get_scheme(dialect),
+                      _get_login(dialect, uri),
+                      _get_endpoint(dialect, uri),
+                      config['database']['instance'],
+                      _get_tuples(dialect, uri),
+                      _get_pathname(config, dialect, uri))
 
 
 def _is_development():
