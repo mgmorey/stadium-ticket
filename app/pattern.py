@@ -10,7 +10,6 @@ PATTERN_HOST = r'(\d{1,3}(\.\d{1,3}){3}|[a-z][a-z\d]+([\.-][a-z\d]+)*)'
 PATTERN_PASSWORD = r'.*'
 PATTERN_PATHNAME = r'(/?\.?[\w\d-]+)+'
 PATTERN_PORT = r'\d{1,5}'
-PATTERN_SCHEMA = r'[a-z\d-]+'
 PATTERN_USER = r'[\w\d-]+'
 
 PATTERN = {
@@ -21,7 +20,6 @@ PATTERN = {
     'password': re.compile(PATTERN_PASSWORD),
     'pathname': re.compile(PATTERN_PATHNAME),
     'port': re.compile(PATTERN_PORT),
-    'schema': re.compile(PATTERN_SCHEMA),
     'user': re.compile(PATTERN_USER),
 }
 

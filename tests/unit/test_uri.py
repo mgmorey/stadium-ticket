@@ -40,6 +40,17 @@ class TestUriMethods(unittest.TestCase):
         value = _validate('dialect', 'sqlite')
         self.assertEqual(value, 'sqlite')
 
+    def test_validate_driver_fail_1(self):
+        self.assertRaises(ValueError, _validate, 'driver', '.')
+
+    def test_validate_driver_pass_1(self):
+        value = _validate('driver', 'pymysql')
+        self.assertEqual(value, 'pymysql')
+
+    def test_validate_driver_pass_1(self):
+        value = _validate('driver', 'psycopg2')
+        self.assertEqual(value, 'psycopg2')
+
     def test_validate_host_fail_1(self):
         self.assertRaises(ValueError, _validate, 'host', '')
 
@@ -112,14 +123,6 @@ class TestUriMethods(unittest.TestCase):
     def test_validate_port_pass_1(self):
         value = _validate('port', '3306')
         self.assertEqual(value, '3306')
-
-    def test_validate_schema_fail_1(self):
-        self.assertRaises(ValueError, _validate, 'schema',
-                          'my-database-schema/')
-
-    def test_validate_schema_pass_1(self):
-        value = _validate('schema', 'my-database-schema')
-        self.assertEqual(value, 'my-database-schema')
 
     def test_validate_user_fail_1(self):
         self.assertRaises(ValueError, _validate, 'user', '.')
