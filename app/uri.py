@@ -56,7 +56,7 @@ def _get_default_port(dialect: str):
     return _get_string('port', PORT.get(dialect), dialect)
 
 
-def _get_dirname(config: configparser.ConfigParser):
+def _get_dirname(app_name: str):
     """Return a database directory name (SQLite3 only)."""
     dirs = []
     home = os.getenv('HOME')
@@ -64,7 +64,7 @@ def _get_dirname(config: configparser.ConfigParser):
 
     if not _is_development():
         flask_datadir = FLASK_DATADIR.get(sys.platform, FLASK_DATADIR[None])
-        dirs.append(os.path.join(flask_datadir, config['app']['name']))
+        dirs.append(os.path.join(flask_datadir, app_name))
 
     if home:
         dirs.append(os.path.join(home, '.local', 'share'))
@@ -108,15 +108,16 @@ def _get_login(dialect: str):
             if password else username)
 
 
-def _get_path(dialect: str, schema: str, config: configparser.ConfigParser):
+def _get_pathname(dialect: str, config: configparser.ConfigParser):
     """Return a database filename (SQLite3 only)."""
     if '{5}' not in URI.get(dialect, URI[None]):
         return ''
 
-    dirname = _get_dirname(config)
-    filename = '.'.join([schema, dialect])
-    path = os.path.join(dirname, filename)
-    return _get_string('pathname', path)
+    dirname = _get_dirname(config['app']['name'])
+    instance = config['database']['instance']
+    filename = '.'.join([instance, dialect])
+    pathname = os.path.join(dirname, filename)
+    return _get_string('pathname', pathname)
 
 
 def _get_scheme(dialect: str):
@@ -145,12 +146,13 @@ def _get_tuples(dialect: str):
 def get_uri(config: configparser.ConfigParser):
     """Return a database connection URI string."""
     dialect = _get_string('dialect', default=DIALECT)
-    pathname = _get_path(dialect, config['app']['schema'], config)
+    instance = config['database']['instance']
+    pathname = _get_pathname(dialect, config)
     uri_format = URI.get(dialect, URI[None])
     return uri_format.format(_get_scheme(dialect),
                              _get_login(dialect),
                              _get_endpoint(dialect),
-                             config['app']['schema'],
+                             instance,
                              _get_tuples(dialect),
                              pathname)
 
