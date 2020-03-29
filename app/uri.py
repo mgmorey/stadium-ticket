@@ -51,9 +51,19 @@ def _get_default_host(dialect: str):
     return _get_string('host', HOST, dialect)
 
 
+def _get_default_password(dialect: str):
+    """Return a default password value."""
+    return _get_string('password', '', dialect)
+
+
 def _get_default_port(dialect: str):
     """Return a default port value."""
     return _get_string('port', PORT.get(dialect), dialect)
+
+
+def _get_default_user(dialect: str):
+    """Return a default user value."""
+    return _get_string('user', USERNAME.get(dialect), dialect)
 
 
 def _get_dirname(app_name: str):
@@ -102,8 +112,8 @@ def _get_login(dialect: str):
     if '{1}' not in URI.get(dialect, URI[None]):
         return ''
 
-    password = _get_string('password', '')
-    username = _get_string('user', USERNAME.get(dialect))
+    password = _get_string('password', _get_default_password(dialect))
+    username = _get_string('user', _get_default_user(dialect))
     return (':'.join([username, urllib.parse.quote_plus(password)])
             if password else username)
 
