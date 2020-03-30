@@ -125,9 +125,9 @@ def get_uri(config: configparser.ConfigParser) -> str:
                       _get_pathname(config, dialect, uri))
 
 
-def _validate(parameter: str, value: str) -> str:
-    """Raise a ValueError if parameter value is invalid."""
-    if not get_pattern(parameter).fullmatch(value):
-        raise ValueError("Invalid {} value: \"{}\"".format(parameter, value))
+def _validate(suffix: str, value: str) -> str:
+    """Raise a ValueError if suffix value is invalid."""
+    if not get_pattern(suffix).fullmatch(value):
+        raise ValueError("Invalid {} value: \"{}\"".format(suffix, value))
 
     return value
