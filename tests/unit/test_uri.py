@@ -108,12 +108,11 @@ class TestUriMethods(unittest.TestCase):
         value = _validate('pathname', '/home/jdoe/foo-bar.sqlite')
         self.assertEqual(value, '/home/jdoe/foo-bar.sqlite')
 
-    def test_validate_password_pass_1(self):
-        value = _validate('password', '')
-        self.assertEqual(value, '')
+    def test_validate_password_fail_1(self):
+        self.assertRaises(ValueError, _validate, 'password', '')
 
-    def test_validate_password_pass_2(self):
-        password = 'AaBbCc123!@#$%^&*()-=_+[]{}|;:,./<>?'
+    def test_validate_password_pass_1(self):
+        password = '!@#$%^&*()-=_+[]{}|;:,./<>?'
         value = _validate('password', password)
         self.assertEqual(value, password)
 

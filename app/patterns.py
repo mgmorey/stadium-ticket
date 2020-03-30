@@ -7,10 +7,10 @@ PATTERN_CHARSET = r'utf8(mb[34])?'
 PATTERN_DIALECT = r'(mysql|postgresql|sqlite)'
 PATTERN_DRIVER = r'(pymysql|psycopg2)'
 PATTERN_HOST = r'(\d{1,3}(\.\d{1,3}){3}|[a-z][a-z\d]+([\.-][a-z\d]+)*)'
-PATTERN_PASSWORD = r'.*'
+PATTERN_PASSWORD = r'[^\x00-\x1F]{8,31}'
 PATTERN_PATHNAME = r'(/?\.?[\w\d-]+)+'
 PATTERN_PORT = r'\d{1,5}'
-PATTERN_USER = r'[\w\d-]+'
+PATTERN_USER = r'\w[\w\d-]{0,30}'
 
 PATTERN = {
     'charset': re.compile(PATTERN_CHARSET),
