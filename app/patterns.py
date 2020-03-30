@@ -24,6 +24,6 @@ PATTERN = {
 }
 
 
-def get_pattern(parameter: str):
-    """Return a compiled regular expression given a parameter name."""
-    return PATTERN[parameter]
+def get_pattern(key: str):
+    """Return a compiled regular expression given a key."""
+    return PATTERN[key]

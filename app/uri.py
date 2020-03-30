@@ -90,22 +90,22 @@ def _get_tuples(dialect: str, uri: str) -> str:
     return "?charset={}".format(charset) if charset else ''
 
 
-def _get_valid(suffix: str, dialect: str = None, default: str = None) -> str:
+def _get_valid(key: str, dialect: str = None, default: str = None) -> str:
     """Return a validated string parameter value."""
-    value = _get_value(suffix, dialect, default)
+    value = _get_value(key, dialect, default)
 
     if value is None:
         return None
 
-    return _validate(suffix, value)
+    return _validate(key, value)
 
 
-def _get_value(suffix: str, dialect: str = None, default: str = None) -> str:
+def _get_value(key: str, dialect: str = None, default: str = None) -> str:
     """Return a string parameter value."""
     if default is None:
-        default = get_default(suffix, dialect)
+        default = get_default(key, dialect)
 
-    parameters = _get_parameters(suffix, dialect)
+    parameters = _get_parameters(key, dialect)
     return decouple.config(parameters[0],
                            default=(decouple.config(parameters[1],
                                                     default=default) if
@@ -125,9 +125,9 @@ def get_uri(config: configparser.ConfigParser) -> str:
                       _get_pathname(config, dialect, uri))
 
 
-def _validate(suffix: str, value: str) -> str:
-    """Raise a ValueError if suffix value is invalid."""
-    if not get_pattern(suffix).fullmatch(value):
-        raise ValueError("Invalid {} value: \"{}\"".format(suffix, value))
+def _validate(key: str, value: str) -> str:
+    """Raise a ValueError if a given value is invalid."""
+    if not get_pattern(key).fullmatch(value):
+        raise ValueError("Invalid {} value: \"{}\"".format(key, value))
 
     return value

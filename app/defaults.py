@@ -31,7 +31,7 @@ DEFAULT = {
 }
 
 
-def get_default(suffix: str, dialect: str) -> str:
-    """Return a default value for a given suffix and SQL dialect."""
-    default = DEFAULT.get(suffix)
-    return default.get(dialect, default.get(None))
+def get_default(key: str, dialect: str) -> str:
+    """Return a default value for a given key and SQL dialect."""
+    value = DEFAULT.get(key)
+    return value.get(dialect, value.get(None))
