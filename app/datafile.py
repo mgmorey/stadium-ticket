@@ -19,7 +19,7 @@ def get_datafile(config: configparser.ConfigParser, dialect: str):
 
 
 def _get_dirname(config: configparser.ConfigParser):
-    """Return the default datafile directory name."""
+    """Return the default datafile directory."""
     dirs = []
     home_dir = os.getenv('HOME')
     temp_dir = os.getenv('TMPDIR')
@@ -50,6 +50,7 @@ def _get_filename(config: configparser.ConfigParser, dialect: str):
 
 
 def _get_flask_datadir():
+    """Return the default Flask data directory."""
     return FLASK_DATADIR.get(sys.platform, FLASK_DATADIR.get(None))
 
 
