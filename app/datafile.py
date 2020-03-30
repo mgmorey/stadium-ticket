@@ -11,14 +11,14 @@ FLASK_DATADIR = {
 }
 
 
-def get_datafile(config: configparser.ConfigParser, dialect: str):
+def get_datafile(config: configparser.ConfigParser, dialect: str) -> str:
     """Return the default datafile pathname."""
     dirname = _get_dirname(config)
     filename = _get_filename(config, dialect)
     return os.path.join(dirname, filename)
 
 
-def _get_dirname(config: configparser.ConfigParser):
+def _get_dirname(config: configparser.ConfigParser) -> str:
     """Return the default datafile directory."""
     dirs = []
     home_dir = os.getenv('HOME')
@@ -43,18 +43,18 @@ def _get_dirname(config: configparser.ConfigParser):
     return ''
 
 
-def _get_filename(config: configparser.ConfigParser, dialect: str):
+def _get_filename(config: configparser.ConfigParser, dialect: str) -> str:
     """Return the default datafile filename."""
     instance = config['database']['instance']
     return '.'.join([instance, dialect])
 
 
-def _get_flask_datadir():
+def _get_flask_datadir() -> str:
     """Return the default Flask data directory."""
     return FLASK_DATADIR.get(sys.platform, FLASK_DATADIR.get(None))
 
 
-def _is_development():
+def _is_development() -> bool:
     """Return true if Flask is running in a development environment."""
     return (os.getenv('FLASK_ENV', 'production') == 'development' or
             os.getenv('WERKZEUG_RUN_MAIN', 'false') == 'true')

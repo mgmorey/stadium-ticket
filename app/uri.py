@@ -13,7 +13,7 @@ from .patterns import get_pattern
 PREFIX = 'database'
 
 
-def _get_charset(dialect: str, uri: str):
+def _get_charset(dialect: str, uri: str) -> str:
     """Return a database character set (encoding)."""
     if '{4}' not in uri:
         return None
@@ -21,12 +21,12 @@ def _get_charset(dialect: str, uri: str):
     return _get_valid('charset', dialect)
 
 
-def _get_driver(dialect: str):
+def _get_driver(dialect: str) -> str:
     """Return a database URI driver parameter default value."""
     return _get_valid('driver', dialect)
 
 
-def _get_endpoint(dialect: str, uri: str):
+def _get_endpoint(dialect: str, uri: str) -> str:
     """Return a database URI endpoint parameter value."""
     if '{2}' not in uri:
         return ''
@@ -36,7 +36,7 @@ def _get_endpoint(dialect: str, uri: str):
     return ':'.join([host, port]) if port else host
 
 
-def _get_login(dialect: str, uri: str):
+def _get_login(dialect: str, uri: str) -> str:
     """Return a database URI login parameter value."""
     if '{1}' not in uri:
         return ''
@@ -47,12 +47,20 @@ def _get_login(dialect: str, uri: str):
     return ':'.join([username, quotedpw]) if password else username
 
 
-def _get_parameter(prefix: str, suffix: str):
+def _get_parameter(prefix: str, suffix: str) -> str:
     """Return a parameter name given a prefix and suffix."""
     return '_'.join([prefix, suffix]).upper()
 
 
-def _get_pathname(config: configparser.ConfigParser, dialect: str, uri: str):
+def _get_parameters(suffix: str, dialect: str) -> list:
+    """Return a list of parameters given a prefix and SQL dialect."""
+    return [_get_parameter(prefix, suffix) for prefix in
+            _get_prefixes(dialect)]
+
+
+def _get_pathname(config: configparser.ConfigParser,
+                  dialect: str,
+                  uri: str) -> str:
     """Return a database pathname."""
     if '{5}' not in uri:
         return ''
@@ -70,19 +78,19 @@ def _get_prefixes(dialect: str):
     return prefixes
 
 
-def _get_scheme(dialect: str):
+def _get_scheme(dialect: str) -> str:
     """Return a database URI scheme parameter value."""
     driver = _get_valid('driver', dialect)
     return '+'.join([dialect, driver]) if driver else dialect
 
 
-def _get_tuples(dialect: str, uri: str):
+def _get_tuples(dialect: str, uri: str) -> str:
     """Return tuples formatted as query parameters."""
     charset = _get_charset(dialect, uri)
     return "?charset={}".format(charset) if charset else ''
 
 
-def _get_valid(suffix: str, dialect: str = None, default: str = None):
+def _get_valid(suffix: str, dialect: str = None, default: str = None) -> str:
     """Return a validated string parameter value."""
     value = _get_value(suffix, dialect, default)
 
@@ -92,13 +100,12 @@ def _get_valid(suffix: str, dialect: str = None, default: str = None):
     return _validate(suffix, value)
 
 
-def _get_value(suffix: str, dialect: str = None, default: str = None):
+def _get_value(suffix: str, dialect: str = None, default: str = None) -> str:
     """Return a string parameter value."""
     if default is None:
         default = get_default(suffix, dialect)
 
-    parameters = [_get_parameter(prefix, suffix) for prefix in
-                  _get_prefixes(dialect)]
+    parameters = _get_parameters(suffix, dialect)
     return decouple.config(parameters[0],
                            default=(decouple.config(parameters[1],
                                                     default=default) if
@@ -106,7 +113,7 @@ def _get_value(suffix: str, dialect: str = None, default: str = None):
                                     default))
 
 
-def get_uri(config: configparser.ConfigParser):
+def get_uri(config: configparser.ConfigParser) -> str:
     """Return a database connection URI string."""
     dialect = _get_valid('dialect')
     uri = get_default('uri', dialect)
