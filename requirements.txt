@@ -1,9 +1,9 @@
 -i https://pypi.org/simple
 cffi==1.14.0
 click==7.1.1
-cryptography==2.8
+cryptography==2.9
 flask-sqlalchemy==2.4.1
-flask==1.1.1
+flask==1.1.2
 itsdangerous==1.1.0
 jinja2==2.11.1
 markupsafe==1.1.1
