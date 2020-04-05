@@ -67,13 +67,13 @@ The various OS ports have been tested on the following processors:
 
     run-app pytest tests/unit (or "make pytest")
 
-4.  To run the app in debugging mode:
+4.  To run the app:
 
-    run-app flask run --port 5001 (or "make run-debug")
+    run-app flask run (or "make run")
 
-5.  To test the app in debugging mode:
+5.  To run the app client:
 
-    clients/app-test -h localhost -p 5001 (or "make client-debug")
+    clients/app-test (or "make client")
 
 6.  To stress test the app:
 
@@ -89,16 +89,16 @@ The various OS ports have been tested on the following processors:
 
 9.  To install the app as a service (may require root):
 
-    install-app
+    install-app (or "make install")
 
 10. To start the app as a service (may require root):
 
-    start-app
+    start-app (or "make start")
 
 11. To stop the app as a service (may require root):
 
-    stop-app
+    stop-app (or "make stop")
 
 12. To uninstall the app as a service (may require root):
 
-    uninstall-app
+    uninstall-app (or "make uninstall")

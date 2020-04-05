@@ -93,7 +93,7 @@ reinstall:	uninstall install
 restart:
 	$(bin)/restart-app
 
-run-app:	.update create-database
+run:		.update create-database
 	run-app flask run
 
 run-debug:	.update create-database
