@@ -7,7 +7,7 @@ flask==1.1.2
 itsdangerous==1.1.0
 jinja2==2.11.1
 markupsafe==1.1.1
-psycopg2-binary==2.8.4
+psycopg2-binary==2.8.5
 pycparser==2.20
 pymysql==0.9.3
 python-decouple==3.3
