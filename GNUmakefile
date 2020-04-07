@@ -43,6 +43,7 @@ client-debug:	.env
 	clients/app-test -h localhost -p $$(($(APP_PORT) + 1))
 
 create-database:
+	create-app-database || true
 	run-app python3 -m app create-database
 
 docker-build:	.env Dockerfile
@@ -63,6 +64,7 @@ docker-run:	docker-build
 
 drop-database:
 	run-app python3 -m app drop-database
+	drop-app-database || true
 
 get-configuration:
 	get-configuration app.ini
