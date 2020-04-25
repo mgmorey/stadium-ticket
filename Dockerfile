@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Define locale variables
 ENV LANG=${LANG:-C.UTF-8} LC_ALL=${LC_ALL:-C.UTF-8}
@@ -62,6 +62,7 @@ WORKDIR $APP_DIR
 
 # Install app dependencies
 ENV PIPENV_VENV_IN_PROJECT=true
+RUN sed -e 's/"\([0-9]\)\.[0-9]*"/"\1"/' -i Pipfile
 RUN pipenv install
 
 # Expose port and start app
