@@ -39,8 +39,8 @@ platforms:
 | Unix      | OpenIndiana   | Hipster 2019.10 (x86_64)      | 3.7.5*   |
 +-----------+---------------+-------------------------------+----------+
 
-NOTE: (*) denotes a non-native (third-party) Python interpreter
-      (+) denotes installation as a service tested on platform
+NOTE: (+) denotes installation as a service tested on platform
+      (*) denotes a non-native (third-party) Python interpreter
 
 The various OS ports have been tested on the following processors:
 
