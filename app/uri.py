@@ -105,7 +105,7 @@ def _get_value(key: str, dialect: str = None, default: str = None) -> str:
         default = get_default(key, dialect)
 
     for parameter in _get_parameters(key, dialect):
-        value = decouple.config(parameter, default=default)
+        value = decouple.config(parameter, default='')
 
         if value:
             return value
