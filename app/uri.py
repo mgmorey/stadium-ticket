@@ -41,10 +41,9 @@ def _get_login(dialect: str, uri: str) -> str:
     if '{1}' not in uri:
         return ''
 
+    user = _get_valid('user', dialect)
     password = _get_valid('password', dialect, '')
-    quotedpw = urllib.parse.quote_plus(password)
-    username = _get_valid('user', dialect)
-    return ':'.join([username, quotedpw]) if password else username
+    return ':'.join([user, _quote(password)]) if password else user
 
 
 def _get_parameter(prefix: str, suffix: str) -> str:
@@ -94,7 +93,7 @@ def _get_valid(key: str, dialect: str = None, default: str = None) -> str:
     """Return a validated string parameter value."""
     value = _get_value(key, dialect, default)
 
-    if value is None:
+    if not value:
         return None
 
     return _validate(key, value)
@@ -105,24 +104,30 @@ def _get_value(key: str, dialect: str = None, default: str = None) -> str:
     if default is None:
         default = get_default(key, dialect)
 
-    parameters = _get_parameters(key, dialect)
-    return decouple.config(parameters[0],
-                           default=(decouple.config(parameters[1],
-                                                    default=default) if
-                                    len(parameters) > 1 else
-                                    default))
+    for parameter in _get_parameters(key, dialect):
+        value = decouple.config(parameter, default=default)
+
+        if value:
+            return value
+
+    return default
 
 
 def get_uri(config: configparser.ConfigParser) -> str:
     """Return a database connection URI string."""
     dialect = _get_valid('dialect')
-    uri = get_default('uri', dialect)
-    return uri.format(_get_scheme(dialect),
-                      _get_login(dialect, uri),
-                      _get_endpoint(dialect, uri),
-                      config['database']['instance'],
-                      _get_tuples(dialect, uri),
-                      _get_pathname(config, dialect, uri))
+    fmt = get_default('uri', dialect)
+    uri = fmt.format(_get_scheme(dialect),
+                     _get_login(dialect, fmt),
+                     _get_endpoint(dialect, fmt),
+                     config['database']['instance'],
+                     _get_tuples(dialect, fmt),
+                     _get_pathname(config, dialect, fmt))
+    return uri
+
+
+def _quote(password: str) -> str:
+    return urllib.parse.quote_plus(password)
 
 
 def _validate(key: str, value: str) -> str:
