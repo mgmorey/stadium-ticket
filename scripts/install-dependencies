@@ -103,6 +103,9 @@ validate_platform() {
 		(31)
 		    true
 		    ;;
+		(32)
+		    true
+		    ;;
 		(*)
 		    abort_not_supported Release
 		    ;;
@@ -110,7 +113,7 @@ validate_platform() {
 	    ;;
 	(opensuse-leap)
 	    case "$VERSION_ID" in
-		(15.0|15.1)
+		(15.1)
 		    true
 		    ;;
 		(*)
@@ -120,10 +123,10 @@ validate_platform() {
 	    ;;
 	(opensuse-tumbleweed)
 	    case "$VERSION_ID" in
-		(2019????)
+		(2019*)
 		    true
 		    ;;
-		(2020????)
+		(2020*)
 		    true
 		    ;;
 		(*)
@@ -175,7 +178,10 @@ validate_platform() {
 	    ;;
 	(illumos)
 	    case "$VERSION_ID" in
-		(2019.10)
+		(2019.*)
+		    true
+		    ;;
+		(2020.*)
 		    true
 		    ;;
 		(*)
@@ -186,6 +192,9 @@ validate_platform() {
 	(macos)
 	    case "$VERSION_ID" in
 		(10.14.*)
+		    true
+		    ;;
+		(10.15.*)
 		    true
 		    ;;
 		(*)
