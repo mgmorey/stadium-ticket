@@ -50,7 +50,6 @@ get_realpath() (
 
 install_dependencies() {
     validate_platform
-    run_unpriv "$script_dir/install-utility-scripts"
     packages=$("$script_dir/get-dependencies")
     pattern=$(get-development-pattern)
 
