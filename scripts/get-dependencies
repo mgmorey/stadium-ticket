@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 CATEGORIES="development python-library python-mysql python-pip \
-python-postgres python-sqlite python-virtualenv"
+python-postgresql python-sqlalchemy python-sqlite python-virtualenv"
 
 abort() {
     printf "$@" >&2
