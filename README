@@ -47,8 +47,8 @@ The various OS ports have been tested on the following processors:
 +---------+------------------------------------+---------+---------+
 | ARMv8-A | ARM Cortex-A53                     | armhf   | aarch64 |
 +---------+------------------------------------+---------+---------+
-| x86-64  | Intel Kaby Lake, Coffee Lake       | N/A     | amd64/  |
-|         |                                    |         | x86_64  |
+| x86-64  | Intel Silvermont, Kaby Lake,       | N/A     | amd64/  |
+|         | and Coffee Lake                    |         | x86_64  |
 +---------+------------------------------------+---------+---------+
 | z/Arch  | IBM z900 via Hercules emulator     | N/A     | s390x   |
 +---------+------------------------------------+---------+---------+
