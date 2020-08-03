@@ -28,7 +28,7 @@ user = $(shell printf '%s\n' "$${SUDO_USER-$${USER-$$LOGIN}}")
 
 all:	.env .update pycode pylint pytest
 
-clean:	clean-app-caches clean-virtualenv
+clean:	clean-app-caches
 
 clean-app-caches:
 	$(bin)/clean-app-caches
@@ -87,7 +87,7 @@ pylint:	.update
 pytest:	.update
 	$(bin)/run-app pytest
 
-realclean:	clean clean-virtualenv
+realclean:	clean-app-caches clean-virtualenv
 	@/bin/rm -f .update
 
 reinstall:	uninstall install
@@ -113,7 +113,7 @@ stop:
 stress:	.env
 	clients/load-test
 
-superclean:	realclean uninstall-all
+superclean:	clean-app-caches clean-virtualenv uninstall-all
 
 uninstall:	stop
 	$(bin)/uninstall-app
