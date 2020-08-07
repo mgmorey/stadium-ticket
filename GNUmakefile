@@ -31,10 +31,10 @@ all:	.env .update pycode pylint pytest
 clean:	clean-app-caches
 
 clean-app-caches:
-	$(bin)/clean-app-caches
+	$(bin)/clean-up-app-caches
 
 clean-virtualenv:
-	$(bin)/clean-virtualenv
+	$(bin)/clean-up-virtualenv
 
 client:	.env
 	clients/app-test
@@ -87,7 +87,7 @@ pylint:	.update
 pytest:	.update
 	$(bin)/run-app pytest
 
-realclean:	clean-app-caches clean-virtualenv
+realclean:	clean clean-virtualenv
 	@/bin/rm -f .update
 
 reinstall:	uninstall install
@@ -113,7 +113,7 @@ stop:
 stress:	.env
 	clients/load-test
 
-superclean:	clean-app-caches clean-virtualenv uninstall-all
+superclean:	realclean uninstall-all
 
 uninstall:	stop
 	$(bin)/uninstall-app
