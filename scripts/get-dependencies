@@ -18,7 +18,7 @@
 
 CATEGORIES="development http-client python-library python-mysql \
 python-pip python-postgresql python-sqlalchemy python-sqlite \
-python-virtualenv"
+python-utility python-virtualenv"
 
 abort() {
     printf "$@" >&2
