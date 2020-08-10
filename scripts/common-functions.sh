@@ -13,6 +13,15 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
+abort() {
+    printf "$@" >&2
+    exit 1
+}
+
+assert() {
+    "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
 create_tmpfile() {
     tmpfile=$(mktemp)
     assert [ -n "${tmpfile}" ]
@@ -23,10 +32,10 @@ create_tmpfile() {
 get_bin_directory() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    dir=$1
+    dir="$1"
 
     while [ "$(dirname "$dir")" != / ]; do
-	dir="$(dirname "$dir")"
+	dir=$(dirname "$dir")
 
 	if [ -d "$dir/bin" ]; then
 	    printf "$dir/bin"
@@ -35,24 +44,28 @@ get_bin_directory() (
     done
 )
 
-get_home_directory() {
-    assert [ $# -eq 1 ]
+get_effective_user() {
+    printf "%s\n" "${LOGNAME-${USER-${USERNAME-$(id -nu)}}}"
+}
 
-    case "${kernel_name=$(uname -s)}" in
-	(MINGW64_NT-*)
-	    printf "/c/Users/%s\n" "$1"
-	    ;;
-	(Darwin)
-	    printf "/Users/%s\n" "$1"
-	    ;;
-	(*)
-	    if which getent >/dev/null 2>&1; then
-		getent passwd "$1" | awk -F: '{print $6}'
-	    elif [ -r /etc/passwd ]; then
-		awk -F: '$1 == "'"$1"'" {print $6}' /etc/passwd
-	    fi
-	    ;;
-    esac
+get_entry() {
+    assert [ $# -eq 2 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+
+    if which getent >/dev/null 2>&1; then
+	getent $1 "$2"
+    elif [ -r /etc/$1 ]; then
+	cat /etc/$1 | grep "^$2:"
+    fi
+}
+
+get_field() {
+    assert [ $# -eq 3 ]
+    assert [ -n "$1" ]
+    assert [ -n "$2" ]
+    assert [ -n "$3" ]
+    get_entry $1 "$2" | cut -d: -f $3
 }
 
 get_profile_path() (
@@ -67,27 +80,12 @@ get_profile_path() (
     printf "%s\n" "$path"
 )
 
-get_shell() {
-    assert [ $# -eq 1 ]
-
-    case "${kernel_name=$(uname -s)}" in
-	(MINGW64_NT-*)
-	    printf "%s\n" /bin/bash
-	    ;;
-	(Darwin)
-	    printf "%s\n" /bin/bash
-	    ;;
-	(*BSD)
-	    awk -F: '$1 == "'"$1"'" {print $7}' /etc/passwd
-	    ;;
-	(*)
-	    getent passwd "$1" | awk -F: '{print $7}'
-	    ;;
-    esac
+get_real_user() {
+    printf "%s\n" "${SUDO_USER-$(get_effective_user)}"
 }
 
 get_setpriv_command() (
-    version="$(setpriv --version 2>/dev/null)"
+    version=$(setpriv --version 2>/dev/null)
 
     case "${version##* }" in
 	('')
@@ -113,8 +111,8 @@ get_setpriv_command() (
 get_setpriv_options() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    regid="$(id -g $1)"
-    reuid="$(id -u $1)"
+    regid=$(id -g $1)
+    reuid=$(id -u $1)
     printf -- "%s\n" "--init-groups --reset-env --reuid $reuid --regid $regid"
 )
 
@@ -130,14 +128,44 @@ get_su_command() (
     printf "%s\n" su
 )
 
-get_user_name() {
-    printf "%s\n" "${SUDO_USER-${USER-${LOGNAME}}}"
+get_user_home() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case "${kernel_name=$(uname -s)}" in
+	(MINGW64_NT-*)
+	    printf "/c/Users/%s\n" $1
+	    ;;
+	(Darwin)
+	    printf "/Users/%s\n" $1
+	    ;;
+	(*)
+	    get_field passwd $1 6
+	    ;;
+    esac
+}
+
+get_user_shell() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    case "${kernel_name=$(uname -s)}" in
+	(MINGW64_NT-*)
+	    printf "%s\n" /bin/bash
+	    ;;
+	(Darwin)
+	    printf "%s\n" /bin/bash
+	    ;;
+	(*)
+	    get_field passwd $1 7
+	    ;;
+    esac
 }
 
 is_included() {
     assert [ $# -eq 2 ]
     assert [ -n "$1" ]
-    printf "%s\n" "$2" | egrep '(^|:)'$1'(:|$)' >/dev/null
+    printf "%s\n" "$2" | egrep '(^|:)'"$1"'(:|$)' >/dev/null
 }
 
 is_to_be_included() {
@@ -150,7 +178,7 @@ run_unpriv() (
     assert [ $# -ge 1 ]
 
     if [ -n "${SUDO_USER-}" ] && [ "$(id -u)" -eq 0 ]; then
-	command="$(get_su_command $SUDO_USER)"
+	command=$(get_su_command $SUDO_USER)
 
 	case "$command" in
 	    (setpriv)
@@ -174,8 +202,8 @@ run_unpriv() (
 )
 
 set_user_profile() {
-    user="$(get_user_name)"
-    home="$(get_home_directory "$user")"
+    user=$(get_real_user)
+    home=$(get_user_home "$user")
 
     if [ -n "$home" -a "$HOME" != "$home" ]; then
 	if [ "${ENV_VERBOSE-false}" = true ]; then
@@ -186,7 +214,7 @@ set_user_profile() {
 	export HOME="$home"
     fi
 
-    shell="$(get_shell $user)"
+    shell=$(get_user_shell "$user")
 
     if [ -n "$shell" -a "$SHELL" != "$shell" ]; then
 	if [ "${ENV_VERBOSE-false}" = true ]; then
@@ -198,10 +226,46 @@ set_user_profile() {
     fi
 
     if [ -n "${HOME-}" ]; then
-	if [ -x "$HOME/bin/set-parameters" ]; then
-	    eval "$($HOME/bin/set-parameters -s /bin/sh)"
+	if [ -x "$HOME/bin/set-profile-parameters" ]; then
+	    eval "$($HOME/bin/set-profile-parameters -s /bin/sh)"
 	else
-	    export PATH="$(get_profile_path "$home" "$1")"
+	    export PATH=$(get_profile_path "$home" "$1")
 	fi
+    fi
+}
+
+validate_group_id() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ "$(id -g)" != $1 ]; then
+	abort "%s: Please try again with group GID %s\n" "$0" "$1"
+    fi
+}
+
+validate_group_name() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ "$(id -ng)" != $1 ]; then
+	abort "%s: Please try again with group %s\n" "$0" "$1"
+    fi
+}
+
+validate_user_id() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ "$(id -u)" != $1 ]; then
+	abort "%s: Please try again as user UID %s\n" "$0" "$1"
+    fi
+}
+
+validate_user_name() {
+    assert [ $# -eq 1 ]
+    assert [ -n "$1" ]
+
+    if [ "$(id -nu)" != $1 ]; then
+	abort "%s: Please try again as user %s\n" "$0" "$1"
     fi
 }

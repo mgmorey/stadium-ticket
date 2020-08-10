@@ -30,7 +30,11 @@ assert() {
 }
 
 get_dependencies() {
-    get_packages_in $CATEGORIES | sort -u
+    get_packages | sort -u
+}
+
+get_packages() {
+    get_packages_in $CATEGORIES
 }
 
 get_packages_in() {
@@ -56,9 +60,18 @@ get_realpath() (
     fi
 )
 
-script_dir=$(get_realpath "$(dirname "$0")")
+case "$0" in
+    (*/*)
+	script_dir=$(dirname "$0")
+	;;
+    (*)
+	script_dir=
+	;;
+esac
 
-. "$script_dir/common-functions.sh"
+script_prefix=${script_dir:+$(get_realpath "$script_dir")/}
+
+. "${script_prefix}common-functions.sh"
 
 set_user_profile "$script_dir"
 get_dependencies
