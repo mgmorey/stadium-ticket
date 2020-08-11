@@ -26,6 +26,7 @@ assert() {
 }
 
 get_app_parameters() {
+    validate_user_name "$(get_real_user)"
     run_unpriv /bin/sh -c "run-app python3 -m app get-parameters"
 }
 
