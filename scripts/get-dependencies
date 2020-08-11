@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-CATEGORIES="development http-client python-library python-mysql \
-python-pip python-postgresql python-sqlalchemy python-sqlite \
-python-utility python-virtualenv"
+CATEGORIES="development http-client python-development python-library \
+python-mysql python-postgresql python-sqlalchemy python-sqlite \
+python-utility"
 
 abort() {
     printf "$@" >&2
