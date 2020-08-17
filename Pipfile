@@ -39,7 +39,6 @@ pylint = "*"
 pylint-sqlalchemy = "*"
 pytest = "*"
 requests = "*"
-wheel = "*"
 
 [scripts]
 create-database = "python3 -m app create-database"
