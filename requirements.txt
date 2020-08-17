@@ -1,5 +1,5 @@
 -i https://pypi.org/simple
-cffi==1.14.1
+cffi==1.14.2
 click==7.1.2
 cryptography==3.0
 flask-sqlalchemy==2.4.4
