@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-dependencies: get list of prerequisites for developing app
+# get-dependencies: get list of app development dependencies
 # Copyright (C) 2018  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -30,21 +30,13 @@ assert() {
 }
 
 get_dependencies() {
-    get_packages | sort -u
-}
-
-get_packages() {
     if [ "$use_config" = true ]; then
         ${bin_dir}/get-packages $CATEGORIES
     else
-        get_packages_in $CATEGORIES
+        for category in $CATEGORIES; do
+	    get-$category-packages
+        done | sort -u
     fi
-}
-
-get_packages_in() {
-    for category; do
-	get-$category-packages
-    done
 }
 
 get_realpath() (
