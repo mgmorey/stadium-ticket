@@ -139,5 +139,5 @@ uninstall-all:	stop
 .env-postgres:	.env-template-postgres
 	scripts/configure-env $@ $<
 
-.update:	Pipfile Pipfile.lock
+.update:	Pipfile
 	$(bin)/refresh-virtualenv && touch $@ && chown "$(user):$(group)" $@
