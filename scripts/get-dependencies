@@ -30,13 +30,7 @@ assert() {
 }
 
 get_dependencies() {
-    if [ "$use_config" = true ]; then
-        ${bin_dir}/get-packages $CATEGORIES
-    else
-        for category in $CATEGORIES; do
-	    get-$category-packages
-        done | sort -u
-    fi
+    "${bin_dir}/get-packages" $CATEGORIES
 }
 
 get_realpath() (
@@ -56,48 +50,6 @@ get_realpath() (
     fi
 )
 
-parse_arguments() {
-    use_config=false
-
-    while getopts ch opt; do
-	case $opt in
-	    (c)
-		use_config=true
-		;;
-	    (h)
-		usage
-		exit 0
-		;;
-	    (\?)
-		usage_error
-		;;
-	esac
-    done
-
-    shift $(($OPTIND - 1))
-
-    if [ $# -gt 0 ]; then
-	usage_error "%s: Too many arguments\n" "$0"
-    fi
-}
-
-usage() {
-    cat <<EOF >&2
-Usage: $0 [-c]
-       $0 -h
-EOF
-}
-
-usage_error() {
-    if [ $# -gt 0 ]; then
-	printf "$@" >&2
-    fi
-
-    printf "%s\n" '' >&2
-    usage
-    exit 2
-}
-
 case "$0" in
     (*/*)
 	script_dir=$(get_realpath "$(dirname "$0")")
@@ -113,5 +65,4 @@ script_prefix=${script_dir:+$script_dir/}
 
 bin_dir=$(get_bin_directory "$script_dir")
 set_user_profile "$bin_dir"
-parse_arguments "$@"
 get_dependencies
