@@ -34,8 +34,6 @@ following platforms:
 +-----------+---------------+-------------------------------+----------+
 | Unix      | NetBSD        | 9.0 (amd64)                   | 3.7.7    |
 +-----------+---------------+-------------------------------+----------+
-| Unix      | OpenIndiana   | Hipster 2020.04 (x86_64)      | 3.7.7*   |
-+-----------+---------------+-------------------------------+----------+
 
 NOTE: (+) denotes installation as a service tested on platform
       (*) denotes a non-native (third-party) Python interpreter
