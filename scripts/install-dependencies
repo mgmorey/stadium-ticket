@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+CATEGORIES="development http-client python-development python-library \
+python-mysql python-postgresql python-sqlalchemy python-sqlite \
+python-utility"
+
 DEBIAN_PKG=python3-defaults
 
 abort() {
@@ -29,6 +33,10 @@ abort_not_supported() {
 
 assert() {
     "$@" || abort "%s: Assertion failed: %s\n" "$0" "$*"
+}
+
+get_dependencies() {
+    "${bin_dir}/get-packages" $CATEGORIES
 }
 
 get_realpath() (
@@ -50,7 +58,7 @@ get_realpath() (
 
 install_dependencies() {
     validate_platform
-    packages=$("${script_prefix}get-dependencies")
+    packages=$(get_dependencies)
     pattern=$(get-development-pattern)
 
     if [ -n "$packages" ]; then
