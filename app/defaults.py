@@ -2,6 +2,8 @@
 """Represent a dicionary of defaults keyed by parameter and SQL
 dialect."""
 
+from .hostname import get_hostname
+
 DEFAULT = {
     'charset': {
         'mysql': 'utf8mb4',
@@ -14,7 +16,7 @@ DEFAULT = {
         'postgresql': 'psycopg2',
     },
     'host': {
-        None: 'localhost',
+        None: get_hostname(),
     },
     'port': {
         'mysql': '3306',
