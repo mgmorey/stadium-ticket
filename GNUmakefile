@@ -87,6 +87,9 @@ pylint:	.update
 pytest:	.update
 	$(bin)/run-app pytest
 
+pytest-all:	.update
+	$(bin)/run-app pytest tests
+
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update
 
@@ -124,8 +127,8 @@ uninstall-all:	stop
 .PHONY:	all clean clean-app-caches clean-virtualenv client client-debug
 .PHONY:	create-database docker-build docker-compose docker-pull docker-push
 .PHONY:	docker-run docker-tag drop-database get-confiuguration get-parameters
-.PHONY:	get-status install pycode pylint pytest realclean restart run run-debug
-.PHONY:	scripts start stop superclean uninstall uninstall-all
+.PHONY:	get-status install pycode pylint pytest pytest-all realclean restart
+.PHONY:	run run-debug scripts start stop superclean uninstall uninstall-all
 
 .env:		.env-template
 	scripts/configure-env $@ $<
