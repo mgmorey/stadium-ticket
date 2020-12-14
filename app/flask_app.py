@@ -153,6 +153,7 @@ def stadium_tickets_post():
     except SoldOut as error:
         logging.error("Error requesting tickets: %s", str(error))
         abort(400, 'No tickets available')
-    return jsonify({'ticket_number': tickets.serial,
-                    'ticket_count': tickets.count,
-                    'time': tickets.issue})
+    else:
+        return jsonify({'ticket_number': tickets.serial,
+                        'ticket_count': tickets.count,
+                        'time': tickets.issue})
