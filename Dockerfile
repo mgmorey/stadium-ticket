@@ -15,6 +15,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 FROM ubuntu:20.04
+ARG FTP_PROXY
+ARG HTTPS_PROXY
+ARG HTTP_PROXY
+ARG ftp_proxy
+ARG http_proxy
+ARG https_proxy
+ARG no_proxy
 
 # Define locale variables
 ENV LANG=${LANG:-C.UTF-8} LC_ALL=${LC_ALL:-C.UTF-8}
