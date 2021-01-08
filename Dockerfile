@@ -16,8 +16,9 @@
 
 FROM ubuntu:20.04
 ARG FTP_PROXY
-ARG HTTPS_PROXY
 ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
 ARG ftp_proxy
 ARG http_proxy
 ARG https_proxy
