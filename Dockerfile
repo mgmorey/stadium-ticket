@@ -47,7 +47,7 @@ python3-pip python3-setuptools uwsgi uwsgi-plugin-python3 && \
 rm -rf /var/lib/apt/lists/*
 
 # Install PyPI packages
-RUN python3 -m pip install --upgrade --user pip
+RUN python3 -m pip install --no-warn-script-location --upgrade --user pip
 RUN python3 -m pip install pipenv
 
 # Create app directories
