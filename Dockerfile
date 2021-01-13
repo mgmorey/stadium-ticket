@@ -70,7 +70,7 @@ WORKDIR $APP_DIR
 
 # Install app dependencies
 ENV PIPENV_VENV_IN_PROJECT=true
-RUN sed -e 's/^\(python_version = \)"\([0-9]\)\.[0-9]*"/\1"\2"/' -i Pipfile
+RUN sed -i 's/^\(python_version = \)"\([0-9]\)\.[0-9]*"/\1"\2"/' Pipfile
 RUN pipenv install
 
 # Expose port and start app
