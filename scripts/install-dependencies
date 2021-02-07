@@ -41,7 +41,7 @@ get_dependencies() {
 
 get_realpath() (
     assert [ $# -ge 1 ]
-    realpath=$(which realpath)
+    realpath=$(which realpath || true)
 
     if [ -n "$realpath" ]; then
 	$realpath "$@"
@@ -219,6 +219,9 @@ validate_platform() {
 		    true
 		    ;;
 		(11.0.*)
+		    true
+		    ;;
+		(11.1)
 		    true
 		    ;;
 		(*)
