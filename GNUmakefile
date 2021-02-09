@@ -136,4 +136,6 @@ uninstall-all:	stop
 	scripts/configure-env $@ $<
 
 .update:	Pipfile
-	$(home)/bin/refresh-virtualenv && touch $@ && scripts/chown-real-user $@
+	$(home)/bin/refresh-virtualenv
+	touch $@
+	scripts/chown-real-user $@
