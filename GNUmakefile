@@ -16,25 +16,18 @@
 
 APP_PORT := 5000
 
+home := $(shell scripts/get-real-user-home)
 tag := $(shell date +%Y%m%d%H%M)
-
-bin = $(home)/bin
-group = $(shell id -gn "$(user)")
-home = $(shell if $(ismac); then $(macos); else $(posix); fi)
-ismac = [ $$(uname -s) = Darwin ]
-macos = printf "/Users/%s\n" $(user)
-posix = getent passwd "$(user)" | awk -F: '{print $$6}'
-user = $(shell printf '%s\n' "$${SUDO_USER-$${USER-$$LOGIN}}")
 
 all:	.env .update pycode pylint pytest
 
 clean:	clean-app-caches
 
 clean-app-caches:
-	$(bin)/clean-up-app-caches
+	$(home)/bin/clean-up-app-caches
 
 clean-virtualenv:
-	$(bin)/clean-up-virtualenv
+	$(home)/bin/clean-up-virtualenv
 
 client:	.env
 	clients/app-test
@@ -76,19 +69,19 @@ get-status:
 	get-app-status
 
 install:
-	$(bin)/install-app
+	$(home)/bin/install-app
 
 pycode:	.update
-	$(bin)/run-app pycodestyle app tests
+	$(home)/bin/run-app pycodestyle app tests
 
 pylint:	.update
-	$(bin)/run-app pylint app tests
+	$(home)/bin/run-app pylint app tests
 
 pytest:	.update
-	$(bin)/run-app pytest
+	$(home)/bin/run-app pytest
 
 pytest-all:	.update
-	$(bin)/run-app pytest tests
+	$(home)/bin/run-app pytest tests
 
 realclean:	clean clean-virtualenv
 	@/bin/rm -f .update
@@ -96,7 +89,7 @@ realclean:	clean clean-virtualenv
 reinstall:	uninstall install
 
 restart:
-	$(bin)/restart-app
+	$(home)/bin/restart-app
 
 run:		.update create-database
 	run-app flask run
@@ -108,10 +101,10 @@ scripts:
 	scripts/install-utility-scripts
 
 start:
-	$(bin)/start-app
+	$(home)/bin/start-app
 
 stop:
-	$(bin)/stop-app
+	$(home)/bin/stop-app
 
 stress:	.env
 	clients/load-test
@@ -119,10 +112,10 @@ stress:	.env
 superclean:	realclean uninstall-all
 
 uninstall:	stop
-	$(bin)/uninstall-app
+	$(home)/bin/uninstall-app
 
 uninstall-all:	stop
-	$(bin)/uninstall-app -a
+	$(home)/bin/uninstall-app -a
 
 .PHONY:	all clean clean-app-caches clean-virtualenv client client-debug
 .PHONY:	create-database docker-build docker-compose docker-pull docker-push
@@ -143,4 +136,4 @@ uninstall-all:	stop
 	scripts/configure-env $@ $<
 
 .update:	Pipfile
-	$(bin)/refresh-virtualenv && touch $@ && chown "$(user):$(group)" $@
+	$(home)/bin/refresh-virtualenv && touch $@ && scripts/chown-real-user $@
