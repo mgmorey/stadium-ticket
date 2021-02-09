@@ -17,8 +17,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 CATEGORIES="development http-client python-development python-library \
-python-mysql python-postgresql python-sqlalchemy python-sqlite \
-python-utility"
+python-mysql python-package python-postgresql python-sqlalchemy \
+python-sqlite python-utility"
 
 DEBIAN_PKG=python3-defaults
 
@@ -44,15 +44,15 @@ get_realpath() (
     realpath=$(which realpath || true)
 
     if [ -n "$realpath" ]; then
-	$realpath "$@"
+        $realpath "$@"
     else
-	for file; do
-	    if expr "$file" : '/.*' >/dev/null; then
-		printf "%s\n" "$file"
-	    else
-		printf "%s\n" "$PWD/${file#./}"
-	    fi
-	done
+        for file; do
+            if expr "$file" : '/.*' >/dev/null; then
+                printf "%s\n" "$file"
+            else
+                printf "%s\n" "$PWD/${file#./}"
+            fi
+        done
     fi
 )
 
@@ -62,11 +62,11 @@ install_dependencies() {
     pattern=$(get-development-pattern)
 
     if [ -n "$packages" ]; then
-	install-packages ${pattern:+-p "$pattern" }$packages
+        install-packages ${pattern:+-p "$pattern" }$packages
     fi
 
     if [ -n "${package:-}" ]; then
-	install-build-deps "$@" $package
+        install-build-deps "$@" $package
     fi
 }
 
@@ -77,187 +77,197 @@ usage_error() {
 
 validate_platform() {
     case "$ID" in
-	(amzn)
-	    case "$VERSION_ID" in
-		(2)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(centos)
-	    case "$VERSION_ID" in
-		(7)
-		    true
-		    ;;
-		(8)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(debian|raspbian)
-	    case "$VERSION_ID" in
-		(10)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(fedora)
-	    case "$VERSION_ID" in
-		(31)
-		    true
-		    ;;
-		(32)
-		    true
-		    ;;
-		(33)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(opensuse-leap)
-	    case "$VERSION_ID" in
-		(15.1)
-		    true
-		    ;;
-		(15.2)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(opensuse-tumbleweed)
-	    case "$VERSION_ID" in
-		(2019*)
-		    true
-		    ;;
-		(2020*)
-		    true
-		    ;;
-		(2021*)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(rhel|ol)
-	    case "$VERSION_ID" in
-		(7.*)
-		    true
-		    ;;
-		(8.*)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(ubuntu)
-	    case "$VERSION_ID" in
-		(18.04)
-		    true
-		    ;;
-		(20.04)
-		    true
-		    ;;
-		(20.10)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(freebsd)
-	    case "$VERSION_ID" in
-		(11.*)
-		    true
-		    ;;
-		(12.*)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(illumos)
-	    case "$VERSION_ID" in
-		(2019.*)
-		    true
-		    ;;
-		(2020.*)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(macos)
-	    case "$VERSION_ID" in
-		(10.14.*)
-		    true
-		    ;;
-		(10.15.*)
-		    true
-		    ;;
-		(11.0.*)
-		    true
-		    ;;
-		(11.1)
-		    true
-		    ;;
-		(11.2)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(netbsd)
-	    case "$VERSION_ID" in
-		(8.*)
-		    true
-		    ;;
-		(9.*)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(solaris)
-	    case "$VERSION_ID" in
-		(11.4)
-		    true
-		    ;;
-		(*)
-		    abort_not_supported Release
-		    ;;
-	    esac
-	    ;;
-	(*)
-	    abort_not_supported "Operating system"
-	    ;;
+        (amzn)
+            case "$VERSION_ID" in
+                (2)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (centos)
+            case "$VERSION_ID" in
+                (7)
+                    true
+                    ;;
+                (8)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (debian|raspbian)
+            case "$VERSION_ID" in
+                (10)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (fedora)
+            case "$VERSION_ID" in
+                (31)
+                    true
+                    ;;
+                (32)
+                    true
+                    ;;
+                (33)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (opensuse-leap)
+            case "$VERSION_ID" in
+                (15.1)
+                    true
+                    ;;
+                (15.2)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (opensuse-tumbleweed)
+            case "$VERSION_ID" in
+                (2019*)
+                    true
+                    ;;
+                (2020*)
+                    true
+                    ;;
+                (2021*)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (rhel|ol)
+            case "$VERSION_ID" in
+                (7.*)
+                    true
+                    ;;
+                (8.*)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (ubuntu)
+            case "$VERSION_ID" in
+                (18.04)
+                    true
+                    ;;
+                (20.04)
+                    true
+                    ;;
+                (20.10)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (freebsd)
+            case "$VERSION_ID" in
+                (11.*)
+                    true
+                    ;;
+                (12.*)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (illumos)
+            case "$VERSION_ID" in
+                (2019.*)
+                    true
+                    ;;
+                (2020.*)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (macos)
+            case "$VERSION_ID" in
+                (10.14.*)
+                    true
+                    ;;
+                (10.15.*)
+                    true
+                    ;;
+                (11.0.*)
+                    true
+                    ;;
+                (11.1)
+                    true
+                    ;;
+                (11.2)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (netbsd)
+            case "$VERSION_ID" in
+                (8.*)
+                    true
+                    ;;
+                (9.*)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (solaris)
+            case "$VERSION_ID" in
+                (11.4)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (windows)
+            case "$kernel_name" in
+                (MINGW64)
+                    true
+                    ;;
+                (*)
+                    abort_not_supported Release
+                    ;;
+            esac
+            ;;
+        (*)
+            abort_not_supported "Operating system"
+            ;;
     esac
 }
 
@@ -267,11 +277,11 @@ fi
 
 case "$0" in
     (*/*)
-	script_dir=$(get_realpath "$(dirname "$0")")
-	;;
+        script_dir=$(get_realpath "$(dirname "$0")")
+        ;;
     (*)
-	script_dir=
-	;;
+        script_dir=
+        ;;
 esac
 
 script_prefix=${script_dir:+$script_dir/}
