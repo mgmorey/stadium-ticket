@@ -29,15 +29,15 @@ configure_env() {
     validate_user_name "$(get_real_user)"
 
     if [ -z "${TERM-}" ]; then
-	exit 0
+        exit 0
     elif [ -z "${EDITOR-}" ]; then
-	exit 0
+        exit 0
     elif [ $TERM = dumb ]; then
-	if [ $EDITOR != emacs ]; then
-	    exit 0
-	elif [ -z "${DISPLAY-}" ]; then
-	    exit 0
-	fi
+        if [ $EDITOR != emacs ]; then
+            exit 0
+        elif [ -z "${DISPLAY-}" ]; then
+            exit 0
+        fi
     fi
 
     file="$1"
@@ -45,14 +45,14 @@ configure_env() {
     create_tmpfile
 
     if [ -r $file ]; then
-	/bin/cp -f $file $tmpfile
+        /bin/cp -f $file $tmpfile
     elif [ -r $template ]; then
-	/bin/cp -f $template $tmpfile
+        /bin/cp -f $template $tmpfile
     fi
 
     if $EDITOR $tmpfile; then
-	/bin/mv -f $tmpfile $file
-	chgrp $(id -g) $file
+        /bin/mv -f $tmpfile $file
+        chgrp $(id -g) $file
     fi
 }
 
@@ -61,15 +61,15 @@ get_realpath() (
     realpath=$(which realpath)
 
     if [ -n "$realpath" ]; then
-	$realpath "$@"
+        $realpath "$@"
     else
-	for file; do
-	    if expr "$file" : '/.*' >/dev/null; then
-		printf "%s\n" "$file"
-	    else
-		printf "%s\n" "$PWD/${file#./}"
-	    fi
-	done
+        for file; do
+            if expr "$file" : '/.*' >/dev/null; then
+                printf "%s\n" "$file"
+            else
+                printf "%s\n" "$PWD/${file#./}"
+            fi
+        done
     fi
 )
 
@@ -86,11 +86,11 @@ fi
 
 case "$0" in
     (*/*)
-	script_dir=$(get_realpath "$(dirname "$0")")
-	;;
+        script_dir=$(get_realpath "$(dirname "$0")")
+        ;;
     (*)
-	script_dir=
-	;;
+        script_dir=
+        ;;
 esac
 
 script_prefix=${script_dir:+$script_dir/}

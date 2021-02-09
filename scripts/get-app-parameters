@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-# get-app-parameters.sh: print application configuration
+# get-app-parameters: print application configuration
 # Copyright (C) 2019  "Michael G. Morey" <mgmorey@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
@@ -35,15 +35,15 @@ get_realpath() (
     realpath=$(which realpath)
 
     if [ -n "$realpath" ]; then
-	$realpath "$@"
+        $realpath "$@"
     else
-	for file; do
-	    if expr "$file" : '/.*' >/dev/null; then
-		printf "%s\n" "$file"
-	    else
-		printf "%s\n" "$PWD/${file#./}"
-	    fi
-	done
+        for file; do
+            if expr "$file" : '/.*' >/dev/null; then
+                printf "%s\n" "$file"
+            else
+                printf "%s\n" "$PWD/${file#./}"
+            fi
+        done
     fi
 )
 
@@ -58,11 +58,11 @@ fi
 
 case "$0" in
     (*/*)
-	script_dir=$(get_realpath "$(dirname "$0")")
-	;;
+        script_dir=$(get_realpath "$(dirname "$0")")
+        ;;
     (*)
-	script_dir=
-	;;
+        script_dir=
+        ;;
 esac
 
 script_prefix=${script_dir:+$script_dir/}
