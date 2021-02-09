@@ -55,15 +55,17 @@ script_prefix=${script_dir:+$script_dir/}
 
 . "${script_prefix}common-functions.sh"
 
-user="$(get_real_user)"
+user=$(get_real_user)
 
 if [ -n "$user" ]; then
     getent=$(which getent || true)
-    group="$(get_group $user)"
+    group=$(get_group $user)
 
     if [ -n "$getent" ]; then
-        user=$(getent passwd | awk -F: '$1 ~ /(^|+)'"$user"'/ {print $1}')
+	user=$(get_user_name $user)
     fi
 
-    chown "$user${group:+:$group}" "$@"
+    if [ -n "$user" ]; then
+        chown "$user${group:+:$group}" "$@"
+    fi
 fi
