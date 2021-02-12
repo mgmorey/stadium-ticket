@@ -19,7 +19,7 @@ APP_PORT := 5000
 home := $(shell scripts/get-real-user-home)
 tag := $(shell date +%Y%m%d%H%M)
 
-all:	.env .update pycode pylint pytest
+all:	.env .update pytest
 
 clean:	clean-app-caches
 
