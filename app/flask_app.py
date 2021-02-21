@@ -50,6 +50,7 @@ def stadium_event_delete():
 
     if not event_name:
         abort(400)
+        return None
 
     query = db.session.query(Events)
     query = query.filter(Events.name == event_name)
@@ -59,6 +60,7 @@ def stadium_event_delete():
     except IntegrityError as error:
         logging.error("Error removing event: %s", str(error))
         abort(500, 'Integrity error')
+        return None
     else:
         return jsonify({})
 
@@ -70,6 +72,7 @@ def stadium_event_get():
 
     if not event_name:
         abort(400)
+        return None
 
     query = db.session.query(Events)
     query = query.filter(Events.name == event_name)
@@ -77,6 +80,7 @@ def stadium_event_get():
 
     if not event:
         abort(404)
+        return None
 
     result = {
         'event': {
@@ -94,12 +98,15 @@ def stadium_event_put():
     # pylint: disable=inconsistent-return-statements
     if not request.json:
         abort(400)
+        return None
 
     if set(request.json.keys()) != {'command', 'event', 'total'}:
         abort(400)
+        return None
 
     if request.json['command'] not in {'add_event', 'replace_event'}:
         abort(400)
+        return None
 
     event_name = request.json['event']
     event_total = request.json['total']
@@ -113,6 +120,7 @@ def stadium_event_put():
     except IntegrityError as error:
         logging.error("Error adding event: %s", str(error))
         abort(500, 'Integrity error')
+        return None
     else:
         return jsonify({'event_name': event_name})
 
@@ -133,12 +141,15 @@ def stadium_tickets_post():
 
     if not request.json:
         abort(400)
+        return None
 
     if set(request.json.keys()) != {'command', 'count', 'event'}:
         abort(400)
+        return None
 
     if request.json['command'] != 'request_tickets':
         abort(400)
+        return None
 
     count = request.json['count']
 
@@ -147,6 +158,7 @@ def stadium_tickets_post():
             count = int(count)
         else:
             abort(400)
+            return None
 
     count = max(count, min_count)
     count = min(count, max_count)
@@ -156,6 +168,7 @@ def stadium_tickets_post():
     except SoldOut as error:
         logging.error("Error requesting tickets: %s", str(error))
         abort(400, 'No tickets available')
+        return None
     else:
         return jsonify({'ticket_number': tickets.serial,
                         'ticket_count': tickets.count,
