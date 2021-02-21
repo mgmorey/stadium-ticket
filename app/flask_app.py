@@ -45,7 +45,7 @@ def database_get():
 @app.route('/stadium/event', methods=['DELETE'])
 def stadium_event_delete():
     """Remove an event."""
-    # pylint: disable=inconsistent-return-statements)
+    # pylint: disable=inconsistent-return-statements
     event_name = request.args.get('name')
 
     if not event_name:
@@ -91,7 +91,7 @@ def stadium_event_get():
 @app.route('/stadium/event', methods=['PUT'])
 def stadium_event_put():
     """Add, replace an event."""
-    # pylint: disable=inconsistent-return-statements)
+    # pylint: disable=inconsistent-return-statements
     if not request.json:
         abort(400)
 
@@ -127,7 +127,7 @@ def stadium_events_get():
 @app.route('/stadium/tickets', methods=['POST'])
 def stadium_tickets_post():
     """Request one or more tickets for an event."""
-    # pylint: disable=inconsistent-return-statements)
+    # pylint: disable=inconsistent-return-statements
     max_count = 10
     min_count = 1
 
