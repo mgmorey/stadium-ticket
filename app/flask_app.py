@@ -139,8 +139,7 @@ def stadium_tickets_post():
         abort(400)  # pylint: disable=inconsistent-return-statements
 
     if request.json['command'] != 'request_tickets':
-        abort(400)
-        return None
+        abort(400)  # pylint: disable=inconsistent-return-statements
 
     count = request.json['count']
 
