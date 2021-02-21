@@ -49,7 +49,7 @@ def stadium_event_delete():
     event_name = request.args.get('name')
 
     if not event_name:
-        abort(400) # pylint: disable=inconsistent-return-statements
+        abort(400)  # pylint: disable=inconsistent-return-statements
 
     query = db.session.query(Events)
     query = query.filter(Events.name == event_name)
@@ -70,14 +70,14 @@ def stadium_event_get():
     event_name = request.args.get('name')
 
     if not event_name:
-        abort(400) # pylint: disable=inconsistent-return-statements
+        abort(400)  # pylint: disable=inconsistent-return-statements
 
     query = db.session.query(Events)
     query = query.filter(Events.name == event_name)
     event = query.first()
 
     if not event:
-        abort(404) # pylint: disable=inconsistent-return-statements
+        abort(404)  # pylint: disable=inconsistent-return-statements
 
     result = {
         'event': {
