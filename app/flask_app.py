@@ -45,12 +45,11 @@ def database_get():
 @app.route('/stadium/event', methods=['DELETE'])
 def stadium_event_delete():
     """Remove an event."""
-    # pylint: disable=inconsistent-return-statements
+
     event_name = request.args.get('name')
 
     if not event_name:
-        abort(400)
-        return None
+        abort(400) # pylint: disable=inconsistent-return-statements
 
     query = db.session.query(Events)
     query = query.filter(Events.name == event_name)
@@ -71,16 +70,14 @@ def stadium_event_get():
     event_name = request.args.get('name')
 
     if not event_name:
-        abort(400)
-        return None
+        abort(400) # pylint: disable=inconsistent-return-statements
 
     query = db.session.query(Events)
     query = query.filter(Events.name == event_name)
     event = query.first()
 
     if not event:
-        abort(404)
-        return None
+        abort(404) # pylint: disable=inconsistent-return-statements
 
     result = {
         'event': {
@@ -97,16 +94,13 @@ def stadium_event_put():
     """Add, replace an event."""
     # pylint: disable=inconsistent-return-statements
     if not request.json:
-        abort(400)
-        return None
+        abort(400)  # pylint: disable=inconsistent-return-statements
 
     if set(request.json.keys()) != {'command', 'event', 'total'}:
-        abort(400)
-        return None
+        abort(400)  # pylint: disable=inconsistent-return-statements
 
     if request.json['command'] not in {'add_event', 'replace_event'}:
-        abort(400)
-        return None
+        abort(400)  # pylint: disable=inconsistent-return-statements
 
     event_name = request.json['event']
     event_total = request.json['total']
@@ -135,17 +129,14 @@ def stadium_events_get():
 @app.route('/stadium/tickets', methods=['POST'])
 def stadium_tickets_post():
     """Request one or more tickets for an event."""
-    # pylint: disable=inconsistent-return-statements
     max_count = 10
     min_count = 1
 
     if not request.json:
-        abort(400)
-        return None
+        abort(400)  # pylint: disable=inconsistent-return-statements
 
     if set(request.json.keys()) != {'command', 'count', 'event'}:
-        abort(400)
-        return None
+        abort(400)  # pylint: disable=inconsistent-return-statements
 
     if request.json['command'] != 'request_tickets':
         abort(400)
@@ -157,8 +148,7 @@ def stadium_tickets_post():
         if count.isdigit():
             count = int(count)
         else:
-            abort(400)
-            return None
+            abort(400)  # pylint: disable=inconsistent-return-statements
 
     count = max(count, min_count)
     count = min(count, max_count)
