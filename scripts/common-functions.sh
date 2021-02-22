@@ -112,7 +112,7 @@ get_field() {
     assert [ -n "$1" ]
     assert [ -n "$2" ]
     assert [ -n "$3" ]
-    get_entry $1 "$2" | cut -d: -f $3
+    get_entry $1 "$2" | cut -d: -f $3 -s
 }
 
 get_gecos() {
@@ -372,10 +372,35 @@ set_user_profile() {
 	export SHELL=$shell
     fi
 
-    profile=$("${1:+$1/}set-profile-parameters" -s ${shell:-/bin/sh})
+    case "$(basename ${shell:-/bin/sh})" in
+	(bash)
+	    profiles=".bash_profile .profile"
+	    ;;
+	(zsh)
+	    profiles=".zprofile"
+	    ;;
+	([k]sh)
+	    profiles=".profile"
+	    ;;
+	(*)
+	    profiles=
+	    ;;
+    esac
 
-    if [ -n "$profile" ]; then
-	eval "$profile"
+    for profile in $profiles; do
+	if [ -r "$HOME/$profile" ]; then
+	    shell_state=$(set +o)
+	    set +euvx
+    	    . "$HOME/$profile"
+	    eval "$shell_state"
+	    return 0
+	fi
+    done
+
+    params=$("${1:+$1/}set-profile-parameters" -s ${shell:-/bin/sh})
+
+    if [ -n "$params" ]; then
+	eval "$params"
     elif [ -n "$home" ]; then
 	export PATH=$(get_profile_path "$home" "$1")
     fi
