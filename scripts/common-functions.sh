@@ -44,15 +44,15 @@ create_tmpfile() {
 get_bin_directory() (
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-    dir="$1"
+    dir=$1
 
     if [ $dir != . ]; then
 	while [ "$(dirname "$dir")" != / ]; do
 	    dir=$(dirname "$dir")
 
 	    if [ -d "$dir/bin" ]; then
-		printf "$dir/bin"
-		return
+		printf '%s\n' "$dir/bin"
+		return 0
 	    fi
 	done
     fi
@@ -209,7 +209,7 @@ get_gnu_diff_command() {
 	case "$id" in
 	    (solaris)
 		printf '%s\n' gdiff
-		return
+		return 0
 		;;
 	esac
     done
@@ -222,7 +222,7 @@ get_gnu_grep_command() {
 	case "$id" in
 	    (solaris)
 		printf '%s\n' ggrep
-		return
+		return 0
 		;;
 	esac
     done
@@ -235,7 +235,7 @@ get_gnu_install_command() {
 	case "$id" in
 	    (solaris)
 		printf '%s\n' ginstall
-		return
+		return 0
 		;;
 	esac
     done
@@ -266,15 +266,7 @@ get_group_id() {
 get_home() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-
-    case "${uname_kernel=$(uname -s)}" in
-	(MINGW64_NT-*)
-	    printf "/c/Users/%s\n" ${1#*+}
-	    ;;
-	(*)
-	    get_field passwd $1 6
-	    ;;
-    esac
+    get_field passwd $1 6
 }
 
 get_profile_path() (
@@ -337,22 +329,14 @@ get_setpriv_options() (
 get_shell() {
     assert [ $# -eq 1 ]
     assert [ -n "$1" ]
-
-    case "${uname_kernel=$(uname -s)}" in
-	(MINGW64_NT-*)
-	    printf '%s\n' /bin/bash
-	    ;;
-	(*)
-	    get_field passwd $1 7
-	    ;;
-    esac
+    get_field passwd $1 7
 }
 
 get_su_command() (
     case "${uname_kernel=$(uname -s)}" in
 	(GNU|Linux)
 	    if get_setpriv_command; then
-		return
+		return 0
 	    fi
 	    ;;
     esac
@@ -431,19 +415,19 @@ set_user_profile() {
 
     if [ -n "$home" -a "$HOME" != "$home" ]; then
 	if [ "${ENV_VERBOSE-false}" = true ]; then
-	    printf "Changing HOME from: %s\n" "$HOME" >&2
-	    printf "Changing HOME to: %s\n" "$home" >&2
+	    printf 'Changing HOME from: %s\n' "$HOME" >&2
+	    printf 'Changing HOME to: %s\n' "$home" >&2
 	fi
 
-	export HOME="$home"
+	export HOME=$home
     fi
 
     shell=$(get_shell "$user")
 
     if [ -n "$shell" -a $(basename ${SHELL%.exe}) != $(basename $shell) ]; then
 	if [ "${ENV_VERBOSE-false}" = true ]; then
-	    printf "Changing SHELL from: %s\n" "$SHELL" >&2
-	    printf "Changing SHELL to: %s\n" "$shell" >&2
+	    printf 'Changing SHELL from: %s\n' "$SHELL" >&2
+	    printf 'Changing SHELL to: %s\n' "$shell" >&2
 	fi
 
 	export SHELL=$shell
