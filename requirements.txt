@@ -7,7 +7,7 @@
 
 -i https://pypi.org/simple
 click==7.1.2
-flask-sqlalchemy==2.4.4
+flask-sqlalchemy==2.5.1
 flask==1.1.2
 greenlet==1.0.0; python_version >= '3'
 importlib-metadata==3.7.3; python_version < '3.8'
