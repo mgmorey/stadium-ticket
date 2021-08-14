@@ -75,6 +75,9 @@ validate_platform() {
         (rhel|ol)
             true
             ;;
+        (rocky)
+            true
+            ;;
         (ubuntu)
             true
             ;;
