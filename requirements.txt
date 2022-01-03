@@ -20,4 +20,4 @@ python-dotenv==0.19.2
 sqlalchemy==1.4.29
 typing-extensions==4.0.1; python_version < '3.8'
 werkzeug==2.0.2; python_version >= '3.6'
-zipp==3.6.0; python_version >= '3.6'
+zipp==3.7.0; python_version >= '3.7'
