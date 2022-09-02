@@ -72,7 +72,7 @@ validate_platform() {
         (opensuse-tumbleweed)
             true
             ;;
-        (rhel|ol)
+        (rhel|ol|almalinux)
             true
             ;;
         (rocky)
