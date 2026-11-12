@@ -1,0 +1,32 @@
+[project]
+name = "stadium-ticket"
+version = "0.1.0"
+description = "Example of a Flask-RESTful application using SQLAlchemy."
+authors = [
+    {name = "Michael G. Morey",email = "mgmorey@gmail.com"}
+]
+license = {text = "GNU General Public License 2"}
+readme = "README"
+requires-python = ">=3.9"
+dependencies = [
+    "click (>=8.1.8,<9.0.0)",
+    "flask (>=3.1.0,<4.0.0)",
+    "flask-sqlalchemy (>=3.1.1,<4.0.0)",
+    "pymysql (>=1.1.1,<2.0.0)",
+    "python-decouple (>=3.8,<4.0)",
+    "python-dotenv (>=1.1.0,<2.0.0)",
+    "sqlalchemy (>=2.0.40,<3.0.0)"
+]
+
+[tool.poetry]
+
+[tool.poetry.group.dev.dependencies]
+pycodestyle = "^2.13.0"
+pylint = "^3.3.6"
+pylint-sqlalchemy = "^0.3.0"
+pytest = "^8.3.5"
+requests = "^2.32.3"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
